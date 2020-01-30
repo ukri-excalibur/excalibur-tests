@@ -1,0 +1,3 @@
+Load compiler + mpi modules, then run
+mpicc -o helloworld helloworld.c
+to compile.
