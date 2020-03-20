@@ -1,3 +1,11 @@
 Load compiler + mpi modules, then run
-mpicc -o helloworld helloworld.c
+
+`mpicc -o helloworld helloworld.c`
+
 to compile.
+
+To run use something like:
+
+`sbatch -N 4 -n 4 runhello`
+
+to run on 4 nodes (-N) and with 4 processes (-n).
