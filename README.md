@@ -1,2 +1,2 @@
 # hpc-tests
-WIP Tests for HPC systems
+WIP tests for HPC systems using OpenHPC
