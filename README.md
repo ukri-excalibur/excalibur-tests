@@ -10,13 +10,13 @@ sudo pip install -U pip # update pip
 sudo pip install virtualenv
 virtualenv .venv
 . .venv/bin/activate
-pip install -U -r requirements.txt # TODO:
+pip install -U -r requirements.txt
 ```
 
 If you need to set up a public Jupyter notebook server run:
 ```
 cd setup
-./jupyter-server.sh <<< PASSWORD # add a password here
+./jupyter-server.sh <<< PASSWORD # replace with a password for Jupyter
 cd ..
 jupyter notebook
 ```
