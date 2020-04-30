@@ -39,11 +39,17 @@ TODO: don't actually use {build_id} or {version} at the moment
 
 Each `{app}-{version}` directory should contain 3 scripts:
 
-- `build.sh`: downloads and compiles the application
+- `build.sh`: Downloads and compiles the application. Run:
+      
+      ./build.sh {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/bin/build.json
+
 - `setup.sh`: downloads and configures the benchmark
 - `run.sh`: slurm sbatch script
 
 All of these are controlled by `.json` files in the appropriate directory (e.g. `bin` for build step)
 
+
+TODO: Maybe the .json file should be common? But then how do we separate run and build options?
+ - idea: have "build" key in `run.json` which points to/loads that file
 TODO: results processing.
 TODO: build IDs and run IDs and integration
