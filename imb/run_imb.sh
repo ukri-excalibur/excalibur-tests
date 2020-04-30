@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+set -x #echo on
 #SBATCH -N 2
 #SBATCH -n 2
 module purge
