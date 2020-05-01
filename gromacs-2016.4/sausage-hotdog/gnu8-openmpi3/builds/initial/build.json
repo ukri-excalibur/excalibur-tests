@@ -3,7 +3,7 @@
     "modules": {
         "compiler": "gnu8/8.3.0",
         "mpi": "openmpi3/3.1.4",
-        "other": ["imb/2018.1"]
+        "other": []
     },
     "cmake": [
         "-DGMX_MPI=ON",
