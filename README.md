@@ -32,9 +32,28 @@ jupyter notebook
 This uses a directory structure like:
 
 TODO: don't actually use {build_id} or {version} at the moment
+
+Directory structure:
 ```
-{repo}/{app}-{version}/{system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/bin/{BUILD_ID?}/
-                                                                                 /run/{BUILD_ID?}/
+{repo}/{app}-{version}/
+                       build.sh
+                       setup.sh
+                       run.sh
+                       {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/
+```
+
+Then in that last directory:
+```
+builds/
+      {build_label}/
+                  build.json
+                  build/        # temporary files - transient
+                  install/      # keep for duration
+benchmarks/
+      {bench_label}/
+runs/
+      {run_label/}
+                  run.json
 ```
 
 Each `{app}-{version}` directory should contain 3 scripts:
@@ -44,9 +63,9 @@ Each `{app}-{version}` directory should contain 3 scripts:
       ./build.sh {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/bin/build.json
 
 - `setup.sh`: downloads and configures the benchmark
-- `run.sh`: slurm sbatch script
+- `run.sh`: Run the benchmark
 
-All of these are controlled by `.json` files in the appropriate directory (e.g. `bin` for build step)
+All of these are controlled by the `.json` files of the same name in the appropriate directory
 
 
 TODO: Maybe the .json file should be common? But then how do we separate run and build options?
