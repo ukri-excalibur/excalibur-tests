@@ -8,14 +8,28 @@ Requires:
 
 # Setup
 
+This is in the process of getting moved to conda because matplotlib wasn't installable with pip and didn't work with 
 On the cluster login node run:
 
 ```shell
-sudo yum install -y python-pip
-sudo pip install -U pip # update pip
-sudo pip install virtualenv
-virtualenv .venv
+sudo yum install -y conda
+conda create --name hpc-tests --python=2.7 # TODO: move to python3?
+conda init
+```
+
+It'll ask you to close and reopen your shell, so do that, then:
+```shell
+conda activate hpc-tests
+conda install numpy matplotlib jupyter
+```
+
+# TODO: sort .env file
+
+# TODO: update this lot ...
+```
+virtualenv --system-site-packages .venv
 . .venv/bin/activate
+cd setup
 pip install -U -r requirements.txt
 ```
 
@@ -23,15 +37,17 @@ If you need to set up a public Jupyter notebook server run:
 ```
 cd setup
 ./jupyter-server.sh <<< PASSWORD # replace with a password for Jupyter
-cd ..
+```
+
+To start jupyter run:
+```
+cd hpc-tests
 jupyter notebook
 ```
 
 # Conventions
 
 This uses a directory structure like:
-
-TODO: don't actually use {build_id} or {version} at the moment
 
 Directory structure:
 ```
@@ -70,5 +86,4 @@ All of these are controlled by the `.json` files of the same name in the appropr
 
 TODO: Maybe the .json file should be common? But then how do we separate run and build options?
  - idea: have "build" key in `run.json` which points to/loads that file
-TODO: results processing.
-TODO: build IDs and run IDs and integration
+TODO: results processing (started)
