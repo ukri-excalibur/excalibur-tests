@@ -25,19 +25,12 @@ conda install numpy matplotlib jupyter
 
 # TODO: sort .env file
 
-# TODO: update this lot ...
-```
-virtualenv --system-site-packages .venv
-. .venv/bin/activate
-cd setup
-pip install -U -r requirements.txt
-```
-
-If you need to set up a public Jupyter notebook server run:
+If you need to set up a public Jupyter notebook server run):
 ```
 cd setup
 ./jupyter-server.sh <<< PASSWORD # replace with a password for Jupyter
 ```
+This only needs to be done once and sets up a self-signed SSL cert - note your browser will complain when connecting to the notebook.
 
 To start jupyter run:
 ```
@@ -57,6 +50,8 @@ Directory structure:
                        run.sh
                        {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/
 ```
+
+(ideally, we want that last line to contain any arbitrary parts really - with this just being an OpenHPC-based example)
 
 Then in that last directory:
 ```
@@ -83,7 +78,8 @@ Each `{app}-{version}` directory should contain 3 scripts:
 
 All of these are controlled by the `.json` files of the same name in the appropriate directory
 
-
 TODO: Maybe the .json file should be common? But then how do we separate run and build options?
  - idea: have "build" key in `run.json` which points to/loads that file
 TODO: results processing (started)
+TODO: handle multiple benchmarks per app - i.e. actually use setup from run?
+TODO: put versions/hashing into metadata
