@@ -17,9 +17,9 @@ from reframe.utility.sanity import defer
 from pprint import pprint
 import sys
 
-@rfm.simple_test
+@rfm.parameterized_test([2, 2], [2, 1])
 class HelloworldTest(rfm.RegressionTest):
-    def __init__(self):
+    def __init__(self, num_tasks, num_tasks_per_node):
         self.descr = 'Test of using reframe'
         self.valid_systems = ['sausage-newslurm:compute']
         self.valid_prog_environs = ['gnu8-openmpi3']
@@ -33,8 +33,8 @@ class HelloworldTest(rfm.RegressionTest):
         self.sanity_patterns = sn.assert_found('newslurm.compute', self.stdout)
         self.perf_patterns = {}
         self.reference = {}
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
+        self.num_tasks = num_tasks
+        self.num_tasks_per_node = num_tasks_per_node
 
 if __name__ == '__main__':
     # hacky test of extraction:
