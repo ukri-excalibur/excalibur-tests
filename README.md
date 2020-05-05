@@ -11,15 +11,28 @@ Requires:
 This is in the process of getting moved to conda because matplotlib wasn't installable with pip and didn't work with 
 On the cluster login node run:
 
-```shell
-sudo yum install -y conda
-conda create --name hpc-tests python=2.7 # TODO: move to python3?
-conda init
-```
+# old shell-based version:
+#```shell
+#sudo yum install -y conda
+#conda create --name hpc-tests python=2.7 # TODO: move to python3?
+#conda init
+#```
+#It'll ask you to close and reopen your shell, so do that, then:
+#```shell
+#conda activate hpc-tests
+#conda install numpy matplotlib jupyter
+#```
+
+# new reframe-based version:
+#```shell
+#sudo yum install -y conda
+#conda create --name reframe python=3.7 pytest jsonschema jupyter matplotlib
+#conda init
+#```
 
 It'll ask you to close and reopen your shell, so do that, then:
 ```shell
-conda activate hpc-tests
+conda activate reframe
 conda install numpy matplotlib jupyter
 ```
 
