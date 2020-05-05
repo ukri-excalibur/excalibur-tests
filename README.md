@@ -13,7 +13,7 @@ On the cluster login node run:
 
 ```shell
 sudo yum install -y conda
-conda create --name hpc-tests --python=2.7 # TODO: move to python3?
+conda create --name hpc-tests python=2.7 # TODO: move to python3?
 conda init
 ```
 
