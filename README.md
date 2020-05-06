@@ -1,39 +1,21 @@
 # hpc-tests
-WIP tests for HPC systems using OpenHPC
+WIP tests for OpenHPC systems using [reframe](https://reframe-hpc.readthedocs.io/en/latest/index.html) and [juypter](https://jupyter.readthedocs.io/en/latest/) notebooks.
 
 Requires:
-- OpenHPC + Slurm cluster with required modules (see individual test cases)
+- OpenHPC + Slurm cluster with required modules (see individual test case READMEs)
 - `git`, `wget`, `cmake` to be installed on the login node
-- `jq` to be installed on all nodes
 
 # Setup
 
-This is in the process of getting moved to conda because matplotlib wasn't installable with pip and didn't work with 
-On the cluster login node run:
-
-# old shell-based version:
-#```shell
-#sudo yum install -y conda
-#conda create --name hpc-tests python=2.7 # TODO: move to python3?
-#conda init
-#```
-#It'll ask you to close and reopen your shell, so do that, then:
-#```shell
-#conda activate hpc-tests
-#conda install numpy matplotlib jupyter
-#```
-
-# new reframe-based version:
-#```shell
-#sudo yum install -y conda
-#conda create --name reframe python=3.7 pytest jsonschema jupyter matplotlib
-#conda init
-#```
+```shell
+sudo yum install -y conda
+conda create --name reframe python=3.7 pytest jsonschema jupyter matplotlib
+conda init
+```
 
 It'll ask you to close and reopen your shell, so do that, then:
 ```shell
 conda activate reframe
-conda install numpy matplotlib jupyter
 ```
 
 # TODO: sort .env file
@@ -45,54 +27,8 @@ cd setup
 ```
 This only needs to be done once and sets up a self-signed SSL cert - note your browser will complain when connecting to the notebook.
 
-To start jupyter run:
-```
+To start jupyter, with the conda environment active run:
+```shell
 cd hpc-tests
 jupyter notebook
 ```
-
-# Conventions
-
-This uses a directory structure like:
-
-Directory structure:
-```
-{repo}/{app}-{version}/
-                       build.sh
-                       setup.sh
-                       run.sh
-                       {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/
-```
-
-(ideally, we want that last line to contain any arbitrary parts really - with this just being an OpenHPC-based example)
-
-Then in that last directory:
-```
-builds/
-      {build_label}/
-                  build.json
-                  build/        # temporary files - transient
-                  install/      # keep for duration
-benchmarks/
-      {bench_label}/
-runs/
-      {run_label/}
-                  run.json
-```
-
-Each `{app}-{version}` directory should contain 3 scripts:
-
-- `build.sh`: Downloads and compiles the application. Run:
-      
-      ./build.sh {system_name}-{compute_instance_type}/{compiler_family}-{mpi_family}/bin/build.json
-
-- `setup.sh`: downloads and configures the benchmark
-- `run.sh`: Run the benchmark
-
-All of these are controlled by the `.json` files of the same name in the appropriate directory
-
-TODO: Maybe the .json file should be common? But then how do we separate run and build options?
- - idea: have "build" key in `run.json` which points to/loads that file
-TODO: results processing (started)
-TODO: handle multiple benchmarks per app - i.e. actually use setup from run?
-TODO: put versions/hashing into metadata
