@@ -17,48 +17,29 @@ from reframe.utility.sanity import defer
 from pprint import pprint
 import sys, re
 
-# def read_omb_bw_out(path):
-#     """ Read stdout from an osu_bw run.
+def read_omb_out(path):
+    """ Read stdout from a 2-column OMB output file.
         
-#         Returns dict with keys 'data.size', 'data.bandwidth' and 'file'.
-        
-#         TODO: use numpy instead?
-#     """
-
-#     results = {'file':path,
-#                'data':{
-#                     'size':[],
-#                     'bandwidth':[],
-#                 },
-#     }
-#     COL_TYPES = (int, float)
-#     with open(path) as f:
-#         for line in f:
-#             if line.startswith('#'):
-#                 continue
-#             values = [opr(v) for (opr, v) in zip(COL_TYPES, line.split())]
-#             results['data']['size'].append(values[0])
-#             results['data']['bandwidth'].append(values[1])
-#     return results
-
-def read_omb_bw_out(path, columns):
-    """ Read stdout from an osu_bw run.
-        
-        Returns dict with keys 'data.size', 'data.bandwidth' and 'file'.
+        TODO: Returns dict with keys ?? and 'file'.
         
         TODO: use numpy instead?
     """
     
     results = {'file': path,
-               'data': dict((c, list()) for c in columns),
+               'data': {},
     }
     COL_TYPES = (int, float)
-    assert len(COL_TYPES) == len(columns)
-    assert len(COL_TYPES) == len(results['data'])
-
+    
     with open(path) as f:
         for line in f:
-            if line.startswith('#') or line.strip() == '':
+            if line.startswith('# OSU'):
+                continue
+            elif line.startswith('#'):
+                columns = line.strip().split(None, 2)[1:] # will get written twice!
+                for col in columns:
+                    results['data'][col] = []
+                continue
+            if line.strip() == '':
                 continue
             values = [opr(v) for (opr, v) in zip(COL_TYPES, line.split())]
             assert len(values) == len(COL_TYPES), "len(values):%i len(COL_TYPES):%i line:%s" % (len(values), len(COL_TYPES), line)
@@ -67,19 +48,14 @@ def read_omb_bw_out(path, columns):
                 results['data'][col].append(v)
     return results
 
-
 @sn.sanity_function
-def max_bandwidth(path):
-    results = read_omb_bw_out(path) # TODO: caching
-    bw = results['data']['bandwidth']
-    return max(bw)
-
-@sn.sanity_function
-def generic_max(path, columns):
-    results = read_omb_bw_out(path, columns)# TODO: caching
-    axis = results['data'][columns[-1]]
-    return max(axis)
-
+def reduce_omb_out(path, column, func):
+    results = read_omb_out(path) # TODO: caching
+    try:
+        axis = results['data'][column]
+    except KeyError:
+        raise KeyError('%r not found, have %s' % (column, results['data'].keys()))
+    return func(axis)
 
 class OMB_BaseTest(rfm.RunOnlyRegressionTest):
     def __init__(self):
@@ -89,51 +65,15 @@ class OMB_BaseTest(rfm.RunOnlyRegressionTest):
         self.valid_prog_environs = ['gnu8-openmpi3']
         self.sourcedir = None
         self.modules = ['omb']
+        self.exclusive_access = True
         
-#@rfm.simple_test
-class OMB_BWTest(OMB_BaseTest):
-    def __init__(self):
-        super().__init__()
-        self.descr = 'osu_bw: Bandwidth Test'
-        self.executable = 'osu_bw'
-        self.executable_opts = []
-        self.sanity_patterns = sn.assert_found(r'OSU MPI Bandwidth Test', self.stdout)
-        self.perf_patterns = {
-            'max_bandwidth': max_bandwidth(self.stdout),
-        }
-        self.reference = {
-            '*': {
-                'max_bandwidth': (0, None, None, 'Mbytes/sec'),
-            }
-        }
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
-
-#@rfm.simple_test
-class OMB_LatencyTest(OMB_BaseTest):
-    def __init__(self):
-        super().__init__()
-        self.descr = 'osu_latency: Latency Test'
-        self.executable = 'osu_latency'
-        self.executable_opts = []
-        self.sanity_patterns = sn.assert_found(r'OSU MPI Bandwidth Test', self.stdout)
-        self.perf_patterns = {
-            'max_bandwidth': max_bandwidth(self.stdout),
-        }
-        self.reference = {
-            '*': {
-                'max_bandwidth': (0, None, None, 'Mbytes/sec'),
-            }
-        }
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
-
-
-# TODO: add 'metric' field taking column name and function (min, max, etc)
 OSU_TESTS = [
-    #{'descr':'Bandwidth', 'executable':'osu_bw',     'columns':('Size', 'Bandwidth (MB/s)')},
-    #{'descr':'Latency', 'executable':'osu_latency','columns':('Size', 'Latency (us)')},
-    {'descr':'MPI_Alltoall Latency', 'executable':'osu_alltoall','columns':('Size', 'Avg Latency(us)'),},
+    {'descr':'OMB Bandwidth (intra-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
+    {'descr':'OMB Bandwidth (in-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
+    {'descr':'OMB Latency', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
+    {'descr':'OMB MPI_Alltoall Latency', 'executable':'osu_alltoall','metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':0, 'num_tasks_per_core':1},
+    {'descr':'OMB MPI_Allgather Latency Test', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    {'descr':'OMB MPI_Allreduce Latency Test', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
     
 ]
 
@@ -141,24 +81,27 @@ OSU_TESTS = [
 class OMB_GenericTest(OMB_BaseTest):
     def __init__(self, **args):
         super().__init__()
-        self.__dict__.update(args)
 
-        sanity_str = re.escape(self.columns[-1])
-        #sanity_str = re.escape(self.descr.split()[-1])
+        # anything here can be overwritten by config dict:        
+        self.num_tasks = 2
+        self.num_tasks_per_node = 1
+
+        self.__dict__.update(args)
+        self.name = self.descr.replace(' ', '_')
+
+        sanity_str = re.escape(self.metric['column'])
         self.sanity_patterns = sn.assert_found(sanity_str, self.stdout)
-        perf_label = 'max_%s' % self.columns[-1].split()[0]
-        perf_units = self.columns[-1].rsplit('(')[-1].replace(')', '') # i.e. get bit out of brackets in last column
+        perf_label = '%s_%s' % (self.metric['function'].__name__, self.metric['column'].rsplit('(')[0].strip())
+        perf_units = self.metric['column'].rsplit('(')[-1].replace(')', '') # i.e. get bit out of brackets in last column
         self.perf_patterns = {
-            perf_label: generic_max(self.stdout, self.columns),
+            perf_label: reduce_omb_out(self.stdout, self.metric['column'], self.metric['function']),
         }
         self.reference = {
             '*': {
                 perf_label: (0, None, None, perf_units),
             }
         }
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
-
+        
 
 if __name__ == '__main__':
     # hacky test of extraction:
