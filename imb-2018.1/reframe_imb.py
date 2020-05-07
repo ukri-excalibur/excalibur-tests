@@ -4,7 +4,7 @@
         
         cd hpc-tests
         conda activate reframe
-        reframe/bin/reframe -c imb-2018.1/ -R --run --performance-report
+        reframe/bin/reframe -c imb-2018.1/ --run --performance-report
 
  TODO:
  - parameterise to different numbers of nodes/jobs-per-node
@@ -69,10 +69,9 @@ class IMB_MPI1Test(rfm.RunOnlyRegressionTest):
         self.descr = 'Test of using reframe to run IMB-MPI1'
         self.valid_systems = ['sausage-newslurm:compute']
         self.valid_prog_environs = ['gnu8-openmpi3']
-        self.sourcedir = None
         self.modules = ['imb']
         self.executable = 'IMB-MPI1' # mpirun --mca btl_base_warn_component_unused 0 IMB-MPI1 uniband biband
-        self.executable_opts = ['uniband', 'biband']
+        self.executable_opts = ['uniband', 'biband'] # TODO: use parameterised test instead??
         self.sanity_patterns = sn.all([sn.assert_found('# Benchmarking %s' % b.capitalize(), self.stdout) for b in self.executable_opts])
         self.perf_patterns = {
             'uniband_max_bandwidth': max_bandwidth(self.stdout, 'Uniband'),
@@ -86,6 +85,7 @@ class IMB_MPI1Test(rfm.RunOnlyRegressionTest):
         }
         self.num_tasks = 2
         self.num_tasks_per_node = 1
+        # TODO: add exclusive
 
 if __name__ == '__main__':
     # hacky test of extraction:

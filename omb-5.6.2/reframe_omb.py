@@ -60,20 +60,23 @@ def reduce_omb_out(path, column, func):
 class OMB_BaseTest(rfm.RunOnlyRegressionTest):
     def __init__(self):
         self.executable_opts = []
-        self.descr = 'Base class for OSU Micro Benchmarks'
         self.valid_systems = ['sausage-newslurm:compute']
         self.valid_prog_environs = ['gnu8-openmpi3']
-        self.sourcedir = None
         self.modules = ['omb']
         self.exclusive_access = True
+        self.num_tasks = 2
+        self.num_tasks_per_node = 1
         
 OSU_TESTS = [
-    {'descr':'OMB Bandwidth (intra-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
-    {'descr':'OMB Bandwidth (in-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
-    {'descr':'OMB Latency', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
-    {'descr':'OMB MPI_Alltoall Latency', 'executable':'osu_alltoall','metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':0, 'num_tasks_per_core':1},
-    {'descr':'OMB MPI_Allgather Latency Test', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    {'descr':'OMB MPI_Allreduce Latency Test', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    #{'descr':'OMB Bandwidth (intra-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
+    #{'descr':'OMB Bandwidth (in-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
+    #{'descr':'OMB Latency', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
+    {'descr':'OMB MPI_Alltoall Latency1:1', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    # TODO: Note the descr has to be different (as name is created from it).
+    # TODO: Find some way to automate this from number of cores/node ... (maybe as a mixin??)
+    {'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
+    #{'descr':'OMB MPI_Allgather Latency', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    #{'descr':'OMB MPI_Allreduce Latency', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
     
 ]
 
@@ -81,10 +84,6 @@ OSU_TESTS = [
 class OMB_GenericTest(OMB_BaseTest):
     def __init__(self, **args):
         super().__init__()
-
-        # anything here can be overwritten by config dict:        
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
 
         self.__dict__.update(args)
         self.name = self.descr.replace(' ', '_')

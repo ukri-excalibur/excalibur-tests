@@ -55,7 +55,8 @@ class Gromacs_Build_Test(rfm.CompileOnlyRegressionTest):
             '-DGMX_BUILD_OWN_FFTW=ON',
             '-DREGRESSIONTEST_DOWNLOAD=ON',
         ]
-        
+
+        self.sanity_patterns = sn.assert_found('[100%] Built target mdrun_test_objlib')
         
         #self.reference = {}
         #self.num_tasks = 0
