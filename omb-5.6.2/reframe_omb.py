@@ -74,11 +74,15 @@ OSU_TESTS = [
     {'descr':'OMB MPI_Alltoall Latency1:1', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
     # TODO: Note the descr has to be different (as name is created from it).
     # TODO: Find some way to automate this from number of cores/node ... (maybe as a mixin??)
-    {'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
+    #{'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
     #{'descr':'OMB MPI_Allgather Latency', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
     #{'descr':'OMB MPI_Allreduce Latency', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
     
 ]
+
+def set_n_tasks(test):
+    return 'partition: %s' % test.current_partition
+
 
 @rfm.parameterized_test(*OSU_TESTS)
 class OMB_GenericTest(OMB_BaseTest):
@@ -89,7 +93,10 @@ class OMB_GenericTest(OMB_BaseTest):
         self.name = self.descr.replace(' ', '_')
 
         sanity_str = re.escape(self.metric['column'])
-        self.sanity_patterns = sn.assert_found(sanity_str, self.stdout)
+
+        self.foo = set_n_tasks(self)
+
+        self.sanity_patterns = sn.all([sn.assert_found(sanity_str, self.stdout), sn.print(self.foo)])
         perf_label = '%s_%s' % (self.metric['function'].__name__, self.metric['column'].rsplit('(')[0].strip())
         perf_units = self.metric['column'].rsplit('(')[-1].replace(')', '') # i.e. get bit out of brackets in last column
         self.perf_patterns = {
