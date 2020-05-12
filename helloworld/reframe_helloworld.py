@@ -42,37 +42,40 @@ class Helloworld_Build(rfm.CompileOnlyRegressionTest):
         self.modules = []
         self.sanity_patterns = is_empty(self.stdout)
         #self.keep_files = [self.executable]
-    
+        # set this stuff as normal for a build:
+        self.sourcesdir = '.'
+        self.sourcepath = 'helloworld.c'
+        self.build_system = 'SingleSource'
+        self.build_system.cc = 'mpicc'
 
     @rfm.run_before('compile')
     def conditional_compile(self):
-        self.exes_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
-        exe = os.path.join(self.exes_dir, self.executable)
-        if os.path.exists(exe):
-            getlogger().info('found exe at %r', exe)
+        build_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
+        build_path = os.path.join(build_dir, self.executable)
+        if os.path.exists(build_path):
+            self.build_path = build_path
+            getlogger().info('found exe at %r', self.build_path)
             self.build_system = NoBuild()
-            src = os.path.join(self.stagedir, self.executable)
-            dest = os.path.join(self.exes_dir, self.executable)
-            shutil.copy(dest, src)
-            #self.executable = exe
-            #self.sourcesdir = None
-            #self.sourcepath = ''
+            # have to copy it into the stage dir else we get:
+            #  Failing phase: compile_wait
+            #  OS error: [Errno 2] No such file or directory: '/mnt/nfs/hpc-tests/stage/sausage-newslurm/compute/gnu8-openmpi3/Helloworld_Build/./Helloworld_Build'
+            dest = os.path.join(self.stagedir, self.executable)
+            shutil.copy(self.build_path, dest)
+            getlogger().info('copied to %r', dest)
+            self.sourcesdir = None # have to set this to avoid the test dir getting copied over the stage dir         
         else:
-            self.sourcesdir = '.'
-            self.sourcepath = 'helloworld.c'
-            self.build_system = 'SingleSource'
-            self.build_system.cc = 'mpicc'
-        
+            self.build_path = None
 
     @rfm.run_after('compile')
     def copy_executable(self):
-        self.exes_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
-        if not os.path.exists(self.exes_dir):
-            os.makedirs(self.exes_dir)
-        src = os.path.join(self.stagedir, self.executable)
-        dest = os.path.join(self.exes_dir, self.executable)
-        shutil.copy(src, dest)
-        getlogger().info('copied exe to %r', dest)
+        if not self.build_path: # i.e. actually did a compile:
+            self.exes_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
+            if not os.path.exists(self.exes_dir):
+                os.makedirs(self.exes_dir)
+            exe_path = os.path.join(self.stagedir, self.executable)
+            build_path = os.path.join(self.exes_dir, self.executable)
+            shutil.copy(exe_path, build_path)
+            getlogger().info('copied exe to %r', build_path)
 
 def no_compile(self):
     getlogger().info('not compiling!')
@@ -93,7 +96,7 @@ class Helloworld_Run(rfm.RunOnlyRegressionTest):
 
     @rfm.require_deps
     def set_executable(self, Helloworld_Build):
-        self.executable = os.path.join(Helloworld_Build().stagedir, Helloworld_Build().name)
+        self.executable = os.path.join(Helloworld_Build().stagedir, Helloworld_Build().executable)
         
 if __name__ == '__main__':
     # hacky test of extraction:
