@@ -32,22 +32,9 @@ def is_empty(path):
     """ Check `path` is an empty file """
     return not(os.path.getsize(path))
 
-@rfm.simple_test
-class Helloworld_Build(rfm.CompileOnlyRegressionTest):
-    def __init__(self):
 
-        self.descr = 'Build helloworld'
-        self.valid_systems = ['sausage-newslurm:compute']
-        self.valid_prog_environs = ['gnu8-openmpi3']
-        self.modules = []
-        self.sanity_patterns = is_empty(self.stdout)
-        #self.keep_files = [self.executable]
-        # set this stuff as normal for a build:
-        self.sourcesdir = '.'
-        self.sourcepath = 'helloworld.c'
-        self.build_system = 'SingleSource'
-        self.build_system.cc = 'mpicc'
-
+class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
+    """ TODO """
     @rfm.run_before('compile')
     def conditional_compile(self):
         build_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
@@ -77,8 +64,21 @@ class Helloworld_Build(rfm.CompileOnlyRegressionTest):
             shutil.copy(exe_path, build_path)
             getlogger().info('copied exe to %r', build_path)
 
-def no_compile(self):
-    getlogger().info('not compiling!')
+@rfm.simple_test
+class Helloworld_Build(CachedCompileOnlyTest):
+    def __init__(self):
+
+        self.descr = 'Build helloworld'
+        self.valid_systems = ['sausage-newslurm:compute']
+        self.valid_prog_environs = ['gnu8-openmpi3']
+        self.modules = []
+        self.sanity_patterns = is_empty(self.stdout)
+        #self.keep_files = [self.executable]
+        # set this stuff as normal for a build:
+        self.sourcesdir = '.'
+        self.sourcepath = 'helloworld.c'
+        self.build_system = 'SingleSource'
+        self.build_system.cc = 'mpicc'
 
 @rfm.simple_test
 class Helloworld_Run(rfm.RunOnlyRegressionTest):
