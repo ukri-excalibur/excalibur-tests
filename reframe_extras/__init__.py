@@ -3,16 +3,28 @@
     TODO: refactor into modules
 """
 
+import sys
+print(sys.path)
+
 import reframe as rfm
 from reframe.core.buildsystems import BuildSystem
 from reframe.core.logging import getlogger
 
-import os, shutil
+import os, shutil, subprocess
+from pprint import pprint
 
 class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
-    """ NB: This manipulates `sourcesdir` in a run_before('compile') step - so don't do that in any test using this.
-        sets self.build_path to an absolute path if a preexisting build was used.
-        assumes self.executable is correct (i.e. consistent between original compile and a non-compiling run)
+    """ A compile-only test with caching of binaries between `reframe` runs.
+    
+        Test classes derived from this class will save `self.executable` to a ./builds/{system}/{partition}/{environment}/{self.name}` directory after compilation.
+        However if this path (including the filename) exists before compilation (i.e. on the next run):
+            - No compilation occurs
+            - `self.sourcesdir` is set to this directory, so `reframe` will copy the binary to the staging dir (as if compilation had occured)
+            - A new attribute `self.build_path` is set to this path (otherwise None)
+
+        Note that `self.sourcesdir` is only manipulated if no compilation occurs, so compilation test-cases which modify this to specify the source directory should be fine.
+
+        TODO: Make logging tidier - currently produces info-level (stdout by default) messaging on whether cache is used.
     """
     @rfm.run_before('compile')
     def conditional_compile(self):
