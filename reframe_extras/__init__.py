@@ -50,7 +50,35 @@ class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
             getlogger().info('copied exe to %r', build_path)
 
 class NoBuild(BuildSystem):
+    """ A no-op build system """
     def __init__(self):
         super().__init__()
     def emit_build_commands(self, environ):
         return []
+
+def slurm_node_info():
+    """ Get information about slurm nodes.
+    
+        Returns a sequence of dicts, one per node.
+        TODO: document keys - are as per `sinfo --Node --long`
+
+        TODO: add partition selection? with None being current one (note system partition != slurm partition)
+    """
+    nodeinfo = subprocess.run(['sinfo', '--Node', '--long'], capture_output=True).stdout.decode('utf-8') # encoding?
+
+    nodes = []
+    lines = nodeinfo.split('\n')
+    header = lines[1].split() # line[0] is date/time
+    for line in lines[2:]:
+        line = line.split()
+        if not line:
+            continue
+        nodes.append({})
+        for ci, key in enumerate(header):
+            nodes[-1][key] = line[ci]
+    return nodes
+
+if __name__ == '__main__':
+    # will need something like:
+    # [hpc-tests]$ PYTHONPATH='reframe' python reframe_extras/__init__.py
+    pprint(slurm_node_info())
