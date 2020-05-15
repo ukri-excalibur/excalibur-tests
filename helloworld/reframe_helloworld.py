@@ -46,8 +46,8 @@ class Helloworld_Run(rfm.RunOnlyRegressionTest):
     """ This runs one task per core, on as many nodes as are available """
     def __init__(self):
         self.descr = 'Run helloworld'
-        self.valid_systems = ['sausage-newslurm:compute']
-        self.valid_prog_environs = ['gnu8-openmpi3']
+        self.valid_systems = ['*:compute']
+        self.valid_prog_environs = ['*']
         self.sourcesdir = None
         self.modules = []
         self.executable_opts = []
