@@ -6,9 +6,10 @@
         conda activate reframe
         reframe/bin/reframe -c imb-2018.1/ --run --performance-report
 
- TODO:
- - parameterise to different numbers of nodes/jobs-per-node
-
+    Runs:
+    - 2 tasks on same node
+    - 2 tasks on different nodes
+    Both have exclusive node access.
 """
 
 import reframe as rfm
@@ -63,12 +64,12 @@ def max_bandwidth(path, benchmark):
     bw = results[benchmark]['data']['Mbytes/sec']
     return max(bw)
 
-@rfm.simple_test
+@rfm.parameterized_test([1], [2])
 class IMB_MPI1Test(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.descr = 'Test of using reframe to run IMB-MPI1'
-        self.valid_systems = ['sausage-newslurm:compute']
-        self.valid_prog_environs = ['gnu8-openmpi3']
+    def __init__(self, num_nodes):
+        self.name = self.name + "_Nodes" # default names for parameterised tests include argument(s)
+        self.valid_systems = ['*:compute']
+        self.valid_prog_environs = ['*']
         self.modules = ['imb']
         self.executable = 'IMB-MPI1' # mpirun --mca btl_base_warn_component_unused 0 IMB-MPI1 uniband biband
         self.executable_opts = ['uniband', 'biband'] # TODO: use parameterised test instead??
@@ -83,9 +84,10 @@ class IMB_MPI1Test(rfm.RunOnlyRegressionTest):
                 'biband_max_bandwidth': (0, None, None, 'Mbytes/sec'),
             }
         }
+        self.exclusive_access = True
         self.num_tasks = 2
-        self.num_tasks_per_node = 1
-        # TODO: add exclusive
+        self.num_tasks_per_node = int(self.num_tasks / num_nodes)
+
 
 if __name__ == '__main__':
     # hacky test of extraction:
