@@ -14,12 +14,16 @@ from reframe.utility.sanity import defer
 from pprint import pprint
 import sys, os, urllib, tarfile
 
+sys.path.append('.')
+from reframe_extras import CachedCompileOnlyTest
+
 # TODO: note this is mpi/openmp version
 # TODO: need to run make check (and possibly, make install, to avoid rebuilding again?)
-@rfm.simple_test
-class Gromacs_Build_Test(rfm.CompileOnlyRegressionTest):
 
-    @rfm.run_before('compile')
+@rfm.simple_test
+class Gromacs_Build_Test(CachedCompileOnlyTest):
+
+    @rfm.run_before('compile') # TODO: test this works ok with CachedCompileOnlyTest (in progress)
     def get_source(self):
         tar_name = 'gromacs-%s.tar.gz' % self.gromacs_version
         gromacs_url = 'http://ftp.gromacs.org/pub/gromacs/%s' % tar_name
@@ -38,8 +42,8 @@ class Gromacs_Build_Test(rfm.CompileOnlyRegressionTest):
     def __init__(self):
         self.gromacs_version = '2016.4'
         self.descr = 'Test Gromacs'
-        self.valid_systems = ['sausage-newslurm:compute']
-        self.valid_prog_environs = ['gnu8-openmpi3']
+        self.valid_systems = ['*:compute']
+        self.valid_prog_environs = ['*']
         self.modules = []
 
         self.build_system = 'CMake'
@@ -55,6 +59,7 @@ class Gromacs_Build_Test(rfm.CompileOnlyRegressionTest):
             '-DGMX_BUILD_OWN_FFTW=ON',
             '-DREGRESSIONTEST_DOWNLOAD=ON',
         ]
+        self.executable = os.path.join('bin', 'gmx_mpi')
 
         self.sanity_patterns = sn.assert_found('[100%] Built target mdrun_test_objlib', self.stdout)
         

@@ -3,9 +3,6 @@
     TODO: refactor into modules
 """
 
-import sys
-print(sys.path)
-
 import reframe as rfm
 from reframe.core.buildsystems import BuildSystem
 from reframe.core.logging import getlogger
@@ -42,10 +39,11 @@ class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
     def copy_executable(self):
         if not self.build_path: # i.e. only if actually did a compile:
             self.exes_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
-            if not os.path.exists(self.exes_dir):
-                os.makedirs(self.exes_dir)
             exe_path = os.path.join(self.stagedir, self.executable)
             build_path = os.path.join(self.exes_dir, self.executable)
+            build_dir = os.path.dirpath(build_path) # self.executable might include a directory
+            if not os.path.exists(build_dir):
+                os.makedirs(build_dir)
             shutil.copy(exe_path, build_path)
             getlogger().info('copied exe to %r', build_path)
 
