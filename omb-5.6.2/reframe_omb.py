@@ -57,52 +57,53 @@ def reduce_omb_out(path, column, func):
         raise KeyError('%r not found, have %s' % (column, results['data'].keys()))
     return func(axis)
 
-class OMB_BaseTest(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.executable_opts = []
-        self.valid_systems = ['sausage-newslurm:compute']
-        self.valid_prog_environs = ['gnu8-openmpi3']
-        self.modules = ['omb']
-        self.exclusive_access = True
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
-        
 OSU_TESTS = [
-    #{'descr':'OMB Bandwidth (intra-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
-    #{'descr':'OMB Bandwidth (in-node)', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
-    #{'descr':'OMB Latency', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
-    {'descr':'OMB MPI_Alltoall Latency1:1', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    # TODO: Note the descr has to be different (as name is created from it).
-    # TODO: Find some way to automate this from number of cores/node ... (maybe as a mixin??)
+    {'name':'OMB_Bandwidth_2_Nodes', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
+    {'name':'OMB_Bandwidth_1_Node', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
+    {'name':'OMB_Latency_2_Nodes', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
+    {'name':'OMB_Latency_1_Node', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}, 'num_tasks_per_node':2},
+    {'name':'OMB_MPI_Alltoall_Latency_2_Nodes', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    {'name':'OMB_MPI_Alltoall_Latency_1_Node', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks_per_node':2},
     #{'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
-    #{'descr':'OMB MPI_Allgather Latency', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    #{'descr':'OMB MPI_Allreduce Latency', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    
+    {'name':'OMB_MPI_Allgather_Latency_2_Nodes', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    {'name':'OMB_MPI_Allreduce_Latency_2_Nodes', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
 ]
 
-def set_n_tasks(test):
-    return 'partition: %s' % test.current_partition
-
-
 @rfm.parameterized_test(*OSU_TESTS)
-class OMB_GenericTest(OMB_BaseTest):
+class OMB_Test(rfm.RunOnlyRegressionTest):
     def __init__(self, **args):
+        
+        if 'name' not in args:
+            raise KeyError("'name' must be provided in parameters")
+        if ' ' in args['name']:
+            raise ValueError('test names (%r) may not contain spaces' % args['name'])
+
         super().__init__()
-
+        
+        # define defaults:
+        self.num_tasks = 2
+        self.num_tasks_per_node = 1
+        self.exclusive_access = True
+        self.valid_systems = ['*:compute']
+        self.valid_prog_environs = ['*']
+        
+        # potentially override from parameters:
         self.__dict__.update(args)
-        self.name = self.descr.replace(' ', '_')
 
+        # other properties:
+        self.modules = ['omb']
+        
+        # sanity:
         sanity_str = re.escape(self.metric['column'])
+        self.sanity_patterns = sn.assert_found(sanity_str, self.stdout)
 
-        self.foo = set_n_tasks(self)
-
-        self.sanity_patterns = sn.all([sn.assert_found(sanity_str, self.stdout), sn.print(self.foo)])
+        # performance:
         perf_label = '%s_%s' % (self.metric['function'].__name__, self.metric['column'].rsplit('(')[0].strip())
         perf_units = self.metric['column'].rsplit('(')[-1].replace(')', '') # i.e. get bit out of brackets in last column
         self.perf_patterns = {
             perf_label: reduce_omb_out(self.stdout, self.metric['column'], self.metric['function']),
         }
-        self.reference = {
+        self.reference = { # TODO: could provide a helper as we'll always be doing this
             '*': {
                 perf_label: (0, None, None, perf_units),
             }
