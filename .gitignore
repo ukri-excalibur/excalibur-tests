@@ -1,0 +1,14 @@
+# python
+__pycache__
+
+# reframe
+reframe/*
+reframe.log
+reframe.out
+stage/*
+output/*
+perflogs/*
+
+# other
+setup/.sslconfig
+Miniconda*.sh

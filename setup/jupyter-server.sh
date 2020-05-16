@@ -46,7 +46,7 @@ echo
 # create a salted/hashed password:
 read -s -p "Enter password:" password
 echo
-hash=`python -c "from notebook.auth import passwd; import sys; print passwd('$password')"`
+hash=`python -c "from notebook.auth import passwd; import sys; print(passwd('$password'))"`
 echo "password hash: $hash"
 
 # modify config following
