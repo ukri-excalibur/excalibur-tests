@@ -58,15 +58,15 @@ def reduce_omb_out(path, column, func):
     return func(axis)
 
 OSU_TESTS = [
-    {'name':'OMB_Bandwidth_2_Nodes', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
-    {'name':'OMB_Bandwidth_1_Node', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
+    #{'name':'OMB_Bandwidth_2_Nodes', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}},
+    # {'name':'OMB_Bandwidth_1_Node', 'executable':'osu_bw', 'metric':{'column':'Bandwidth (MB/s)', 'function':max}, 'num_tasks_per_node':2},
     {'name':'OMB_Latency_2_Nodes', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}},
-    {'name':'OMB_Latency_1_Node', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}, 'num_tasks_per_node':2},
-    {'name':'OMB_MPI_Alltoall_Latency_2_Nodes', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    {'name':'OMB_MPI_Alltoall_Latency_1_Node', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks_per_node':2},
-    #{'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
-    {'name':'OMB_MPI_Allgather_Latency_2_Nodes', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
-    {'name':'OMB_MPI_Allreduce_Latency_2_Nodes', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    # {'name':'OMB_Latency_1_Node', 'executable':'osu_latency','metric':{'column':'Latency (us)', 'function':min}, 'num_tasks_per_node':2},
+    # {'name':'OMB_MPI_Alltoall_Latency_2_Nodes', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    # {'name':'OMB_MPI_Alltoall_Latency_1_Node', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks_per_node':2},
+    # #{'descr':'OMB MPI_Alltoall LatencyN:N', 'executable':'osu_alltoall', 'metric':{'column':'Avg Latency(us)', 'function':min}, 'num_tasks':8, 'num_tasks_per_node':4},
+    # {'name':'OMB_MPI_Allgather_Latency_2_Nodes', 'executable':'osu_allgather', 'metric':{'column':'Avg Latency(us)', 'function':min}},
+    # {'name':'OMB_MPI_Allreduce_Latency_2_Nodes', 'executable':'osu_allreduce', 'metric':{'column':'Avg Latency(us)', 'function':min}},
 ]
 
 @rfm.parameterized_test(*OSU_TESTS)
@@ -84,14 +84,15 @@ class OMB_Test(rfm.RunOnlyRegressionTest):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.exclusive_access = True
-        self.valid_systems = ['*:compute']
+        self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
         
         # potentially override from parameters:
         self.__dict__.update(args)
 
         # other properties:
-        self.modules = ['omb']
+        #self.modules = ['omb']
+        self.modules = ['osu-micro-benchmarks/5.6.2-bvwk24n']
         
         # sanity:
         sanity_str = re.escape(self.metric['column'])

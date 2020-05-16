@@ -21,10 +21,25 @@ site_configuration = {
             'modules_system':'lmod',
             'partitions':[
                 {
-                    'name':'compute',
+                    'name':'compute-ib',
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'environs': ['gnu-openmpi',],
+                    'variables':[
+                        ['OMPI_MCA_btl', 'openib,self,vader'],
+                        ['OMPI_MCA_btl_openib_if_include', 'mlx5_0:1'],
+                        # TODO: find a way to add --bind-to core option
+                    ]
+                },
+                {
+                    'name':'compute-roce',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'environs': ['gnu-openmpi',],
+                    'variables':[
+                        ['OMPI_MCA_btl', 'openib,self,vader'],
+                        ['OMPI_MCA_btl_openib_if_include', 'mlx5_1:1'],
+                    ]
                 }
             ]
         }
@@ -38,7 +53,8 @@ site_configuration = {
         {
             'name':'gnu-openmpi',
             'target_systems': ['alaska',],
-            'modules': ['gnu7', 'openmpi3'], # OHPC-provided
+            #'modules': ['gnu7', 'openmpi3'], # OHPC-provided
+            'modules': ['gcc/8.3.0-znuxkla', 'openmpi/3.1.6-h4l75yo']
         },
     ],
     'logging': [

@@ -68,7 +68,7 @@ def max_bandwidth(path, benchmark):
 class IMB_MPI1Test(rfm.RunOnlyRegressionTest):
     def __init__(self, num_nodes):
         self.name = self.name + "_Nodes" # default names for parameterised tests include argument(s)
-        self.valid_systems = ['*:compute']
+        self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
         self.modules = ['imb']
         self.executable = 'IMB-MPI1' # mpirun --mca btl_base_warn_component_unused 0 IMB-MPI1 uniband biband
