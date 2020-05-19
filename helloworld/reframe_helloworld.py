@@ -2,7 +2,7 @@
 
     Run using something like:
         
-        conda activate reframe
+        conda activate hpc-tests
         reframe/bin/reframe -c helloworld/ --run
 
  TODO:

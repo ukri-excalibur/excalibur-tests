@@ -3,7 +3,7 @@
     Run using something like:
         
         cd hpc-tests
-        conda activate reframe
+        conda activate hpc-tests
         reframe/bin/reframe -c omb-5.6.2/ -R --run --performance-report
 
  TODO:
