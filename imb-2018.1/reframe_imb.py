@@ -39,14 +39,15 @@ def read_imb_out(path):
     """ Read stdout from an IMB-MPI1 run. Note this can contain multiple benchmarks.
         
         Returns a dict who's keys are the benchmark name (as passed to IMB-MPI1) and values are dicts:
-            'benchmark': str, as above
-            'file': str
+            
             'data': {
                     <column_heading1>: [value0, value1, ...],
                     ...,
                 }
             'meta':
                 'processes':num processes as int
+                'benchmark': str, as above
+                'path': str
     
         TODO: use numpy instead?
     """
@@ -57,14 +58,20 @@ def read_imb_out(path):
     }
         
     results = {}
-    {'file':path}
     with open(path) as f:
         for line in f:
             if line.startswith('# Benchmarking '):
                 benchmark = line.split()[-1].lower()
                 col_types = COLTYPES[benchmark]
                 processes = int(next(f).split()[-1]) # "# #processes = 2"
-                result = {'benchmark':benchmark, 'file':path, 'meta':{'processes:', processes}, 'data':{}}
+                result = {
+                    'meta': {
+                        'processes': processes,
+                        'benchmark':benchmark,
+                        'path':path,
+                    },
+                    'data': {},
+                    }
                 results[benchmark] = result
                 next(f) # skip header
                 while True:
