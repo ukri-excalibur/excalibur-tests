@@ -41,7 +41,7 @@ def parse_path_metadata(path):
     COMPONENTS = ('sysname', 'partition', 'environ', 'testname', 'filename')
     info = dict(zip(COMPONENTS, parts[-5:]))
     info['path'] = path
-    return info   
+    return info
 
 def read_imb_out(path):
     """ Read stdout from an IMB-MPI1 run. Note this may only contain ONE benchmark.

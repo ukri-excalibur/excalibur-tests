@@ -101,9 +101,11 @@ site_configuration = {
             'handlers_perflog': [
                 {
                     'type': 'filelog',
-                    'prefix': '%(check_system)s/%(check_partition)s',
+                    # make this the same as output filenames which are ('sysname', 'partition', 'environ', 'testname', 'filename')
+                    'prefix': '%(check_system)s/%(check_partition)s/%(check_environ)s/%(check_name)s', # <testname>.log gets appended
                     'level': 'info',
-                    'format': '%(check_job_completion_time)s|reframe %(version)s|%(check_info)s|jobid=%(check_jobid)s|%(check_perf_var)s=%(check_perf_value)s|ref=%(check_perf_ref)s (l=%(check_perf_lower_thres)s, u=%(check_perf_upper_thres)s)',  # noqa: E501
+                    # have added same info as above, plus units into this. Reference: https://reframe-hpc.readthedocs.io/en/latest/config_reference.html?highlight=perflog#logging-.handlers_perflog
+                    'format': '%(check_job_completion_time)s|reframe %(version)s|%(check_system)s|%(check_partition)s|%(check_environ)s|%(check_name)s|jobid=%(check_jobid)s|%(check_perf_var)s=%(check_perf_value)s|%(check_perf_unit)s|ref=%(check_perf_ref)s (l=%(check_perf_lower_thres)s, u=%(check_perf_upper_thres)s)',  # noqa: E501
                     'datefmt': '%FT%T%:z',
                     'append': True
                 }
