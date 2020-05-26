@@ -17,7 +17,7 @@ import reframe.utility.sanity as sn
 from reframe.utility.sanity import defer
 from pprint import pprint
 import sys, os
-
+from collections import namedtuple
 from reframe.core.logging import getlogger
 
 # examples of output:
@@ -32,6 +32,9 @@ from reframe.core.logging import getlogger
 # #---------------------------------------------------
 #        #bytes #repetitions      t[usec]   Mbytes/sec
 #             0         1000         2.25         0.00
+
+
+Metric = namedtuple('Metric', ['benchmark', 'function', 'column', 'label'])
 
 
 def parse_path_metadata(path):
@@ -112,23 +115,27 @@ def reduce(path, column, function):
     return function(values)
 
 class IMB_MPI1(rfm.RunOnlyRegressionTest):
+    METRICS = []
+
     def __init__(self):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
         self.modules = ['imb']
         self.executable = 'IMB-MPI1'
         self.exclusive_access = True
-        self.metrics = []
         self.perf_patterns = {} # must do this
         #self.reference['*'] = {} # don't do this ...
         # self.reference = {'*':{}} # or this
+        self.add_metrics()
     
-    def add_metric(self, benchmark, function, column, label):
-        """ e.g. add_metric('pingpong', max, 'Mbytes/sec', 'bandwidth') """
-        benchmark = benchmark.lower()
-        perf_label = '_'.join((benchmark, function.__name__, label))
-        self.perf_patterns[perf_label] = reduce(self.stdout, column, function)
-        self.reference[perf_label] = (0, None, None, column) # oddly we don't have to supply the "*" scope key??
+    def add_metrics(self):
+        """ TODO: """
+
+        for metric in self.METRICS:
+            benchmark = metric.benchmark.lower() # TODO: is this common across tests??
+            perf_label = '_'.join((benchmark, metric.function.__name__, metric.label))
+            self.perf_patterns[perf_label] = reduce(self.stdout, metric.column, metric.function)
+            self.reference[perf_label] = (0, None, None, metric.column) # oddly we don't have to supply the "*" scope key??
         
     @rfm.run_before('run')
     def add_launcher_options(self):
@@ -137,34 +144,41 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
 
 @rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
+    METRICS = [
+        Metric(benchmark='pingpong', function=max, column='Mbytes/sec', label='bandwidth'),
+        Metric(benchmark='pingpong', function=min, column='t[usec]', label='latency'),
+    ]
     def __init__(self):
         super().__init__()
         self.executable_opts = ['pingpong']
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
-        self.add_metric('pingpong', max, 'Mbytes/sec', 'bandwidth')
-        self.add_metric('pingpong', min, 't[usec]', 'latency')
-
+        
 @rfm.simple_test
 class IMB_Uniband(IMB_MPI1):
+    METRICS = [
+        Metric(benchmark='uniband', function=max, column='Mbytes/sec', label='bandwidth')
+    ]
     def __init__(self):
         super().__init__()
         self.executable_opts = ['uniband']
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
-        self.add_metric('uniband', max, 'Mbytes/sec', 'bandwidth')
-
-# @rfm.simple_test this is failing for some reason
+        
+#@rfm.simple_test #this is failing for some reason
 class IMB_Biband(IMB_MPI1):
+    METRICS = [
+        Metric('biband', max, 'Mbytes/sec', 'bandwidth')
+    ]
     def __init__(self):
         super().__init__()
         self.executable_opts = ['biband']
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
-        self.add_metric('biband', max, 'Mbytes/sec', 'bandwidth')
+        
 
 
 #@rfm.parameterized_test([1], [2])
