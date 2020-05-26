@@ -20,7 +20,6 @@ import sys
 
 from reframe.core.logging import getlogger
 
-
 # examples of output:
 # # Benchmarking Uniband 
 # # #processes = 2 
@@ -36,9 +35,9 @@ from reframe.core.logging import getlogger
 
 
 def read_imb_out(path):
-    """ Read stdout from an IMB-MPI1 run. Note this can contain multiple benchmarks.
+    """ Read stdout from an IMB-MPI1 run. Note this may only contain ONE benchmark.
         
-        Returns a dict who's keys are the benchmark name (as passed to IMB-MPI1) and values are dicts:
+        Returns a dict with keys:
             
             'data': {
                     <column_heading1>: [value0, value1, ...],
@@ -57,22 +56,21 @@ def read_imb_out(path):
         'pingpong':(int, int, float, float),
     }
         
-    results = {}
+    result = {
+        'meta': {
+            'path':path,
+        },
+        'data': {},
+        }
     with open(path) as f:
         for line in f:
             if line.startswith('# Benchmarking '):
                 benchmark = line.split()[-1].lower()
+                if 'benchmark' in result['meta']:
+                    raise ValueError('%s may only contain one benchmark, found both %r and %r' % (result['meta']['benchmark'], benchmark))
+                result['meta']['benchmark'] = benchmark
                 col_types = COLTYPES[benchmark]
-                processes = int(next(f).split()[-1]) # "# #processes = 2"
-                result = {
-                    'meta': {
-                        'processes': processes,
-                        'benchmark':benchmark,
-                        'path':path,
-                    },
-                    'data': {},
-                    }
-                results[benchmark] = result
+                result['meta']['processes'] = int(next(f).split()[-1]) # "# #processes = 2"
                 next(f) # skip header
                 while True:
                     cols = next(f).split()
@@ -85,26 +83,25 @@ def read_imb_out(path):
                     else:
                         for label, opr, value in zip(header, col_types, cols):
                             result['data'][label].append(opr(value))
-    return results
+    return result
 
 @sn.sanity_function
-def reduce(path, benchmark, column, function):
+def reduce(path, column, function):
     """ Reduce results along a particular column.
 
         Args:
             path: str, path to results file
-            benchmark: str, name of benchmark - as passed as an IMB-MPI1 argument
             column: str, column of output to operate on, e.g. 'Mbytes/sec'
             function: function to apply to column values
         
         Example:
             reduce(self.stdout, 'pingpong', 'Mbytes/sec', max)
 
-        Caches the result of reading the reuslts file for efficency.
+        Caches the result of reading the results file for efficency.
     """
     cache = getattr(reduce, 'cache', {})
     results = cache.setdefault(path, read_imb_out(path))
-    values = results[benchmark]['data'][column]
+    values = results['data'][column]
     return function(values)
 
 class IMB_MPI1(rfm.RunOnlyRegressionTest):
@@ -123,7 +120,7 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
         """ e.g. add_metric('pingpong', max, 'Mbytes/sec', 'bandwidth') """
         benchmark = benchmark.lower()
         perf_label = '_'.join((benchmark, function.__name__, label))
-        self.perf_patterns[perf_label] = reduce(self.stdout, benchmark, column, function)
+        self.perf_patterns[perf_label] = reduce(self.stdout, column, function)
         self.reference[perf_label] = (0, None, None, column) # oddly we don't have to supply the "*" scope key??
         
     @rfm.run_before('run')
