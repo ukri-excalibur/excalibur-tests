@@ -16,7 +16,7 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 from reframe.utility.sanity import defer
 from pprint import pprint
-import sys
+import sys, os
 
 from reframe.core.logging import getlogger
 
@@ -33,6 +33,15 @@ from reframe.core.logging import getlogger
 #        #bytes #repetitions      t[usec]   Mbytes/sec
 #             0         1000         2.25         0.00
 
+
+def parse_path_metadata(path):
+    """ Return a dict of reframe info from a results path """
+    parts = path.split(os.path.sep)
+    #sysname, partition, environ, testname, filename = parts[-5:]
+    COMPONENTS = ('sysname', 'partition', 'environ', 'testname', 'filename')
+    info = dict(zip(COMPONENTS, parts[-5:]))
+    info['path'] = path
+    return info   
 
 def read_imb_out(path):
     """ Read stdout from an IMB-MPI1 run. Note this may only contain ONE benchmark.
@@ -55,11 +64,9 @@ def read_imb_out(path):
         'uniband':(int, int, float, int),
         'pingpong':(int, int, float, float),
     }
-        
+
     result = {
-        'meta': {
-            'path':path,
-        },
+        'meta': parse_path_metadata(path),
         'data': {},
         }
     with open(path) as f:
