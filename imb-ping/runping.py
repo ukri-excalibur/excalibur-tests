@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess, time
+import subprocess, time, os
 from pprint import pprint
 from collections import namedtuple
 
@@ -17,21 +17,35 @@ SBATCH_OPTS = {
 OMPI_OPENIB_ROCE_QUEUES="--mca btl_openib_receive_queues P,128,64,32,32,32:S,2048,1024,128,32:S,12288,1024,128,32:S,65536,1024,128,32"
 
 RUNS = {
-    'ohpc,openib,ib,mpirun': {
-        'module': ['gnu7', 'openmpi3', 'imb'],
-        'cmd': 'OMPI_MCA_btl=openib,self,vader OMPI_MCA_btl_openib_if_include=mlx5_0:1 mpirun IMB-MPI1 pingpong',
-    },
+    # installer, "fabric", network, launcher
+    # 'ohpc,openib,ib,mpirun': {
+    #     'module': ['gnu7', 'openmpi3', 'imb'],
+    #     'cmd': 'OMPI_MCA_btl=openib,self,vader OMPI_MCA_btl_openib_if_include=mlx5_0:1 mpirun IMB-MPI1 pingpong',
+    # },
+    # 'ohpc,openib,ib,srun': {
+    #     'module': ['gnu7', 'openmpi3', 'imb'],
+    #     'cmd': 'OMPI_MCA_btl=openib,self,vader OMPI_MCA_btl_openib_if_include=mlx5_0:1 srun --mpi=pmix_v2 IMB-MPI1 pingpong',
+    # },
     'ohpc,openib,roce,mpirun': {
         'module': ['gnu7', 'openmpi3', 'imb'],
         'cmd': 'OMPI_MCA_btl=openib,self,vader OMPI_MCA_btl_openib_if_include=mlx5_1:1 mpirun %s IMB-MPI1 pingpong' % OMPI_OPENIB_ROCE_QUEUES,
     },
-    'spack,ucx,ib,orterun':{
-        'spack': ['intel-mpi-benchmarks@2019.5'],
-        'cmd':'orterun IMB-MPI1 pingpong',
+    # 'spack,ucx,ib,orterun':{
+    #     'spack': ['intel-mpi-benchmarks@2019.5'],
+    #     'cmd':'orterun IMB-MPI1 pingpong',
+    # },
+    # 'spack,ucx,roce,orterun':{
+    #     'spack':['intel-mpi-benchmarks@2019.5'],
+    #     'cmd':'orterun --mca pml ucx -x UCX_NET_DEVICES=mlx5_1:1 IMB-MPI1 pingpong',
+    # },
+    'spack,ucx,ib,srun':{
+        'spack':['/q5ujyli'], # intel mpi benchmarks using openmpi 4.0.3 with scheduler=auto and ucx
+        #'cmd':'srun --mpi=pmix_v2 --mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 IMB-MPI1 pingpong',
+        'cmd':'srun --mpi=pmix_v2 IMB-MPI1 pingpong',
     },
-    'spack,ucx,roce,orterun':{
-        'spack':['intel-mpi-benchmarks@2019.5'],
-        'cmd':'orterun --mca pml ucx -x UCX_NET_DEVICES=mlx5_1:1 IMB-MPI1 pingpong',
+    'spack,ucx,roce,srun':{
+        'spack':['/q5ujyli'], # intel mpi benchmarks using openmpi 4.0.3 with scheduler=auto and ucx
+        'cmd':'UCX_NET_DEVICES=mlx5_1:1 srun --mpi=pmix_v2 IMB-MPI1 pingpong',
     },
 }
 
@@ -132,17 +146,21 @@ METRICS = [ # name, column, function, unit
     ('min latency', 't[usec]', min, 'us'),
 ]
 
-def where(dict, **kwargs):
+def where(mapping, **kwargs):
     output = {}
-    for k, v in dict.items():
-        matches = [True if u == getattr(k, p) else False for p, u in kwargs.items]
+    for k, v in mapping.items():
+        matches = [True if u == getattr(k, p) else False for p, u in kwargs.items()]
         if all(matches):
             output[k] = v
     return output
 
-
-        
-            
+def group(mapping, attr):
+    output = {}
+    for key, value in mapping.items():
+        partialkey = getattr(key, attr)
+        curr = output.setdefault(partialkey, {})
+        curr[key] = value
+    return output
 
 if __name__ == '__main__':
     scripts = write_script()
@@ -151,14 +169,21 @@ if __name__ == '__main__':
 
     results = {}
     for script in scripts:
-        output = read_imb_out('%s.out' % script)
-        for metric in METRICS:
-            metricname, col, func, unit = metric
-            value = func(output['data'][col])
-            installer, commframe, net, launcher = script.split('.')[0].split('-') # commframe = btl or pml
-            key = ResultsKey(metricname, installer, commframe, net, launcher)
-            results[key] = (value, unit)
-            
+        try:
+            outpath = '%s.out' % script
+            output = read_imb_out(outpath)
+            for metric in METRICS:
+                metricname, col, func, unit = metric
+                value = func(output['data'][col])
+                installer, commframe, net, launcher = script.split('.')[0].split('-') # commframe = btl or pml
+                key = ResultsKey(metricname, installer, commframe, net, launcher)
+                results[key] = (value, unit)
+        except Exception:
+            print('ERROR: while processing %s' % os.path.abspath(outpath))
+            raise
+
+    #results = group(results, 'metric')
+    pprint(results)
         
 
         
