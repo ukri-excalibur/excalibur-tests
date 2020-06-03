@@ -1,24 +1,21 @@
-Gromacs (Biomolecular Simulation):
+Gromacs Biomolecular Simulation:
 
 http://manual.gromacs.org
 
-assumes e.g.:
+This runs the "small" benchmark from the [Archer benchmarks](https://github.com/hpc-uk/archer-benchmarks/tree/master/apps/GROMACS).
+
+Note Gromacs 2016 is required due to the benchmark file.
+
+# Installation - OpenHPC
+
+NB: Gromacs docs recommend fftw which is available as the OpenHPC package `fftw-gnu8-openmpi3-ohpc`; however docs recommend letting Gromacs install its own.
+
+Assumes e.g.:
  - cmake
  - gnu8-compilers-ohpc
  - openmpi3-gnu8-ohpc
 
-# Install of 2016.4
 
-- Create necessary directory structure (see repo README.md)
-- Create appropriate `build.json` then pass that to `build.sh`, e.g.:
-
-```shell
-cd gromacs-2016.4
-./build.sh sausage-hotdog/gnu8-openmpi3/builds/initial/build.json
-```
-
-Old manual version:
-NB: Gromacs docs recommend fftw which is available as `fftw-gnu8-openmpi3-ohpc`; however docs recommend letting Gromacs install it's own.
 ```
 wget http://ftp.gromacs.org/pub/gromacs/gromacs-2016.4.tar.gz
 tar -xf gromacs-2016.4.tar.gz
@@ -32,8 +29,13 @@ make check
 make install # to DCMAKE_INSTALL_PREFIX above
 ```
 
-# Run small benchmark (1400k-atoms)
-Small case from the [Archer benchmarks](https://github.com/hpc-uk/archer-benchmarks/tree/master/apps/GROMACS#small-benchmark-1400k-atom-pair-of-hegfr-dimers-of-1ivo-and-1nql).
+# Installation - Spack
 
-TODO
+e.g.:
+
+    spack install gromacs@2016.4 ^openmpi@4: fabrics=ucx schedulers=auto
+
+Default variants should be appropriate.
+
+See note in `imb/README.md` re. why openmpi4.
 

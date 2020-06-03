@@ -100,16 +100,21 @@ site_configuration = {
         {
             'name':'ohpc-gnu7-openmpi3', # OHPC-provided packages
             'target_systems': ['alaska',],
-            'modules': ['gnu7', 'openmpi3',
-                            'imb',
-                            ],
+            'modules': [
+                'gnu7',
+                'openmpi3',
+                'imb',
+            ],
         },
         {
             'name':'spack-gnu7-openmpi4', # spack-provided packages
             'target_systems': ['alaska',],
-            'modules':['openmpi/4.0.3-ziwdzwh',
-                            'intel-mpi-benchmarks/2019.5-q5ujyli',
-                            ],
+            'modules': [
+                'openmpi/4.0.3-ziwdzwh',
+                'intel-mpi-benchmarks/2019.5-q5ujyli',
+                'gromacs/2016.4-xixmrii',
+                #'gromacs/2020.2-hl6a4qt',
+            ],
         }
     ],
     'logging': [

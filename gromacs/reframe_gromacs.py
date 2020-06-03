@@ -3,74 +3,67 @@
     Run using something like:
         
         conda activate hpc-tests
-        reframe/bin/reframe -c gromacs-2016.4/ --run # --performance-report
+        reframe/bin/reframe -C reframe-settings.py -c gromacs-2016.4/ --run # --performance-report
 
  TODO:
 '''
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-from reframe.utility.sanity import defer
-from pprint import pprint
-import sys, os, urllib, tarfile
-
+import os, sys, urllib
 sys.path.append('.')
-from reframe_extras import CachedCompileOnlyTest
+import reframe_extras
 
-# TODO: note this is mpi/openmp version
-# TODO: need to run make check (and possibly, make install, to avoid rebuilding again?)
+from reframe.core.logging import getlogger
 
 @rfm.simple_test
-class Gromacs_Build_Test(CachedCompileOnlyTest):
-
-    @rfm.run_before('compile') # TODO: test this works ok with CachedCompileOnlyTest (in progress)
-    def get_source(self):
-        tar_name = 'gromacs-%s.tar.gz' % self.gromacs_version
-        gromacs_url = 'http://ftp.gromacs.org/pub/gromacs/%s' % tar_name
-        test_dir = os.path.dirname(__file__)
-        tar_path = os.path.join(test_dir, 'downloads', tar_name)
-        if not os.path.exists(os.path.dirname(tar_path)):
-            os.mkdir(os.path.dirname(tar_path))
-        if not os.path.exists(tar_path):
-            urllib.request.urlretrieve(gromacs_url, tar_path)
-        with tarfile.open(tar_path, 'r:gz') as tar:
-            tar.extractall(os.path.join(test_dir, 'src'))
-        untar_dir = os.listdir(os.path.join(test_dir, 'src'))[0]
-        self.sourcesdir = os.path.join('src', untar_dir)
-        
-
+class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
     def __init__(self):
-        self.gromacs_version = '2016.4'
-        self.descr = 'Test Gromacs'
-        self.valid_systems = ['*:compute']
-        self.valid_prog_environs = ['*']
-        self.modules = []
+        """ Run Archer 'small' (single-node) Gromacs benchmark.
 
-        self.build_system = 'CMake'
-        self.build_system.cc = 'mpicc'
-        self.build_system.cxx = 'mpicxx'
-        self.build_system.ftn = 'mpifort'
-        self.build_system.config_opts = [
-            '-DGMX_MPI=ON',
-            '-DGMX_OPENMP=ON',
-            '-DGMX_GPU=OFF',
-            '-DGMX_X11=OFF',
-            '-DGMX_DOUBLE=OFF',
-            '-DGMX_BUILD_OWN_FFTW=ON',
-            '-DREGRESSIONTEST_DOWNLOAD=ON',
-        ]
-        self.executable = os.path.join('bin', 'gmx_mpi')
+            Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
 
-        self.sanity_patterns = sn.assert_found('[100%] Built target mdrun_test_objlib', self.stdout)
+            TODO:
+            - add perf and sanity patterns
+            - parameterise for different numbers of cores
+        """
+
+        self.valid_systems = ['*']
+        self.valid_prog_environs = ['spack-gnu7-openmpi4']
+
+        num_nodes = 1
+        cpu_factor = 0.5 # because SMT is on on alaska
+        max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
+        num_tasks = int(max_cpus * cpu_factor)
+        casename = 'benchmark'
+        resfile=casename
         
-        #self.reference = {}
-        #self.num_tasks = 0
-        #self.num_tasks_per_core = 1
+        self.sourcesdir = os.path.join(self.prefix, 'downloads') # i.e. downloads/ will be alongside this file
+        self.executable = 'gmx_mpi'
+        self.executable_opts = ['mdrun', '-s', '%s.tpr' % casename, '-g', resfile, '-noconfout']
+        self.num_tasks = num_tasks
+        self.num_tasks_per_node = int(num_tasks / num_nodes)
+        self.exclusive_access = True
 
-if __name__ == '__main__':
-    pass
-    # hacky test of extraction:
-    #from reframe.utility.sanity import evaluate
-    # with open(sys.argv[-1]) as f:
-    #     stdout = f.read()
-    # pprint(evaluate(imb_results(stdout, 'Uniband')))
+        self.keep_files = ['bencmark.log']
+        self.sanity_patterns = sn.assert_found(r'.*', self.stdout) # TODO: FIXME:
+        self.perf_patterns = None # TODO: FIXME:
+
+        # TODO:
+        # set norequeue?
+        # use openmp?
+    
+    @rfm.run_before('run')
+    def download_benchmark(self):
+        """ Download benchmark file from Archer benchmarks gitlab.
+        
+            NB: This saves it to a persistent location defined by `self.sourcesdir` - reframe will then copy it into the staging dir.
+        """
+
+        benchmark_url = 'https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/input/benchmark.tpr?raw=true'
+        if not os.path.exists(self.sourcesdir):
+            os.makedirs(self.sourcesdir, exist_ok=True)
+        dest = os.path.join(self.sourcesdir, 'benchmark.tpr')
+        if not os.path.exists(dest):
+            urllib.request.urlretrieve(benchmark_url, dest)
+        
