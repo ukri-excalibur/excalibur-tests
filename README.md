@@ -66,3 +66,8 @@ To start jupyter, with the conda environment active run:
     jupyter notebook
 
 Then browse to the given address using the password you specified above.
+
+
+TODO:
+- Add comments on using openhpc/spack
+- add comment re `spack install/load patch`

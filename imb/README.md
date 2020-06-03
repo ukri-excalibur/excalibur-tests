@@ -4,15 +4,17 @@ https://software.intel.com/en-us/imb-user-guide
 
 This runs PingPong (latency/bandwidth), Uniband and Biband (bandwidth) tests from the IMB-MPI1 suite.
 
-# Installation
+# Installation - OpenHPC
 
-If using OpenHPC install a `perf-tools` package e.g.:
+Install a `perf-tools` package e.g.:
 
     sudo yum install ohpc-gnu8-perf-tools
 
 This installs gnu8 and openmpi3 TODO: and mvapich2?.
 
-If using Spack e.g.:
+# Installation - Spack
+
+e.g.:
 
     spack install intel-mpi-benchmarks ^openmpi@4: fabrics=ucx schedulers=auto
 
