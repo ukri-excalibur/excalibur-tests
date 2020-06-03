@@ -21,15 +21,20 @@ site_configuration = {
             'modules_system':'lmod',
             'partitions':[
                 {
-                    'name':'compute-ib',
+                    'name':'compute-ib-openib',
                     'scheduler': 'slurm',
-                    'launcher':'mpirun', # TODO: try putting options in here too??
-                    'environs': ['gnu-openmpi',],
+                    'launcher':'srun',
+                    'environs': ['ohpc-gnu7-openmpi3'],
                     'variables':[
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
+                        # For openmpi btl
+                        # ---------------
                         ['OMPI_MCA_btl', 'openib,self,vader'],
                         ['OMPI_MCA_btl_openib_if_include', 'mlx5_0:1'],
                         # note that --bind-to core is actually the default for ompi 3.1. Tried setting it manually here using:
-                        ['OMPI_MCA_hwloc_base_binding_policy', 'core']
+                        ['OMPI_MCA_hwloc_base_binding_policy', 'core'],
                         # as JT was using this, but:
                         # - was higher latency for imb pingping (1.58us vs 1.32us without)
                         # - showed no difference in --report-bindings!
@@ -37,24 +42,50 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'compute-roce',
+                    'name':'compute-ib-ucx',
                     'scheduler': 'slurm',
-                    'launcher':'mpirun',
-                    'environs': ['gnu-openmpi',],
+                    'launcher':'srun',
+                    'environs': ['spack-gnu7-openmpi4'],
                     'variables':[
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
+                        # (no vars required for ucx on ib - fastest CA available)
+                    ]
+                },
+                {
+                    'name':'compute-roce-openib',
+                    'scheduler': 'slurm',
+                    'launcher':'srun',
+                    'environs': ['ohpc-gnu7-openmpi3'],
+                    'variables':[
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
                         ['OMPI_MCA_btl', 'openib,self,vader'],
                         ['OMPI_MCA_btl_openib_if_include', 'mlx5_1:1'],
                         # Set recieve queues. From https://community.mellanox.com/s/article/howto-configure-ib-routers:
                         # > In order for you to use rdmacm, you must set up a per-peer QP as the first QP (all QPs cannot be SRQ).
                         #   In some branches of ompi, the default is to use only SRQ. In this case, add -mca btl_openib_receive_queues P,65536,256,192,128 to the command line.
                         #   In the current v1.10 branch, the default configuration should work with IB routing without any changes.
-                        #
                         # Note that `receive_queues` is not specified for ConnectX4 in $MPI_DIR/share/openmpi/mca-btl-openib-device-params.ini, so we have to set it at runtime:
                         ['OMPI_MCA_btl_openib_receive_queues',
                             #'P,65536,256,192,128'], # From above mellanox link, minimal case
                             #'P,65536,256,192,128:S,128,256,192,128:S,2048,1024,1008,64:S,12288,1024,1008,64:S,65536,1024,1008,64' # From above mellanox link, described as optimal for osu_bw:
                             'P,128,64,32,32,32:S,2048,1024,128,32:S,12288,1024,128,32:S,65536,1024,128,32' # From John Taylor (source unknown) - this appears to be lower latency for pingpong
-                        ]
+                        ],
+                    ]
+                },
+                {
+                    'name':'compute-roce-ucx',
+                    'scheduler': 'slurm',
+                    'launcher':'srun',
+                    'environs': ['spack-gnu7-openmpi4'],
+                    'variables':[
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
+                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
                 }
             ]
@@ -64,14 +95,22 @@ site_configuration = {
         {
             'name':'gnu-openmpi',
             'target_systems': ['sausage-newslurm',],
-            'modules': ['gnu8', 'openmpi3'],
+            'modules': ['gnu8', 'openmpi3',],
         },
         {
-            'name':'gnu-openmpi',
+            'name':'ohpc-gnu7-openmpi3', # OHPC-provided packages
             'target_systems': ['alaska',],
-            'modules': ['gnu7', 'openmpi3'], # OHPC-provided
-            #'modules': ['gcc/8.3.0-znuxkla', 'openmpi/3.1.6-h4l75yo']
+            'modules': ['gnu7', 'openmpi3',
+                            'imb',
+                            ],
         },
+        {
+            'name':'spack-gnu7-openmpi4', # spack-provided packages
+            'target_systems': ['alaska',],
+            'modules':['openmpi/4.0.3-ziwdzwh',
+                            'intel-mpi-benchmarks/2019.5-q5ujyli',
+                            ],
+        }
     ],
     'logging': [
         {

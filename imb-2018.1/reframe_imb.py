@@ -65,6 +65,7 @@ def read_imb_out(path):
 
     COLTYPES = {
         'uniband':(int, int, float, int),
+        'biband':(int, int, float, int),
         'pingpong':(int, int, float, float),
     }
 
@@ -120,7 +121,6 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
     def __init__(self):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
-        self.modules = ['imb']
         self.executable = 'IMB-MPI1'
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
@@ -137,9 +137,9 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
             self.perf_patterns[perf_label] = reduce(self.stdout, metric.column, metric.function)
             self.reference[perf_label] = (0, None, None, metric.column) # oddly we don't have to supply the "*" scope key??
         
-    @rfm.run_before('run')
-    def add_launcher_options(self):
-        self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
+    # @rfm.run_before('run')
+    # def add_launcher_options(self):
+    #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
 
 
 @rfm.simple_test
@@ -167,7 +167,7 @@ class IMB_Uniband(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
         
-#@rfm.simple_test #this is failing for some reason
+@rfm.simple_test # note -ib fails with a timeout!
 class IMB_Biband(IMB_MPI1):
     METRICS = [
         Metric('biband', max, 'Mbytes/sec', 'bandwidth')
