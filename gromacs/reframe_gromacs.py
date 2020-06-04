@@ -17,9 +17,9 @@ import reframe_extras
 from reframe.core.logging import getlogger
 
 
-@rfm.simple_test
+@rfm.parameterized_test([1], [2])
 class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
-    def __init__(self):
+    def __init__(self, num_nodes):
         """ Run Archer 'small' (single-node) Gromacs benchmark.
 
             Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
@@ -32,10 +32,9 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['spack-gnu7-openmpi4']
 
-        num_nodes = 1
         cpu_factor = 0.5 # because SMT is on on alaska
         max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
-        num_tasks = int(max_cpus * cpu_factor)
+        num_tasks = num_nodes * int(max_cpus * cpu_factor)
         casename = 'benchmark'
         resfile=casename
         
