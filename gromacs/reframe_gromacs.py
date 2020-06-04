@@ -3,7 +3,7 @@
     Run using something like:
         
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe-settings.py -c gromacs-2016.4/ --run # --performance-report
+        reframe/bin/reframe -C reframe-settings.py -c gromacs/ --run # --performance-report
 
  TODO:
 '''
@@ -15,6 +15,7 @@ sys.path.append('.')
 import reframe_extras
 
 from reframe.core.logging import getlogger
+
 
 @rfm.simple_test
 class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
@@ -48,8 +49,29 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
 
         self.keep_files = ['benchmark.log']
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
-        self.perf_patterns = None # TODO: FIXME:
+        self.perf_patterns = {
+            'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', 'benchmark.log', 1, float),
+            'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', 'benchmark.log', 2, float),
+        }
+        self.reference = {
+            '*': {
+                'ns_per_day': (0, None, None, 'ns/day'),
+                'hour_per_ns': (0, None, None, 'hour/ns'),
+            }
+        }
 
+            
+        # example output from benchmark.log:
+        # <snip>
+        #                Core t (s)   Wall t (s)        (%)
+        #        Time:    73493.146     1148.330     6400.0
+        #                  (ns/day)    (hour/ns)
+        # Performance:        1.505       15.947
+        # Finished mdrun on rank 0 Wed Jun  3 17:18:58 2020
+        #
+        # <EOF>
+        
+        
         # TODO:
         # set norequeue?
         # use openmp?
@@ -68,27 +90,31 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         if not os.path.exists(dest):
             urllib.request.urlretrieve(benchmark_url, dest)
     
-    @rfm.run_before('run')
+    #@rfm.run_before('run')
     def no_run(self):
-        # fake the executable using bash's "noop" builtin - NB this needs to be in saved_output_dir too:
+        """ Turn the run phase into a no-op. """
+
+        with open(os.path.join(self.stagedir, 'noop.sh'), 'w') as noop:
+            noop.write('#!/bin/bash\necho "noop $@"\n')
         self.executable = "./noop.sh"
 
-    @rfm.run_after('run')
-    def debug_postpro(self):
-        """ Fakes a run to allow testing from after a run.
+    #@rfm.run_after('run')
+    def copy_saved_output(self):
+        """ Copy saved output files to stage dir.
 
-            Requires a saved run directory
+            Args:
+                saved_output_dir: str, path to saved output directory (either absolute, or relative to test definiion directory)
+        
+            Use with @rfm.run_after('run')
         """
 
-        saved_output_dir = 'Gromacs_SmallBM' # relative to this test directory
+        saved_output_dir = 'Gromacs_SmallBM/'
 
-        saved_output_path = os.path.join(self.prefix, saved_output_dir)
+        if not os.path.isabs(saved_output_dir):
+            saved_output_dir = os.path.join(self.prefix, saved_output_dir)
         
-        # check saved output path exists:
-        if not os.path.exists(saved_output_path) or not os.path.isdir(saved_output_path):
-            raise ValueError("saved output path %s does not exist or isn't a directory!" % os.path.abspath(saved_output_path))
-        
-        # copy files to stage dir:
+        if not os.path.exists(saved_output_dir) or not os.path.isdir(saved_output_dir):
+            raise ValueError("saved_output_dir %s does not exist or isn't a directory" % os.path.abspath(saved_output_dir))
+
         import distutils.dir_util
-        distutils.dir_util.copy_tree(saved_output_path, self.stagedir)
-                
+        distutils.dir_util.copy_tree(saved_output_dir, self.stagedir)
