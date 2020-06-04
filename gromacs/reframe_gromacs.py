@@ -44,9 +44,10 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         self.num_tasks = num_tasks
         self.num_tasks_per_node = int(num_tasks / num_nodes)
         self.exclusive_access = True
+        self.time_limit = None # TODO: set this to something reasonable??
 
-        self.keep_files = ['bencmark.log']
-        self.sanity_patterns = sn.assert_found(r'.*', self.stdout) # TODO: FIXME:
+        self.keep_files = ['benchmark.log']
+        self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
         self.perf_patterns = None # TODO: FIXME:
 
         # TODO:
@@ -66,4 +67,28 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         dest = os.path.join(self.sourcesdir, 'benchmark.tpr')
         if not os.path.exists(dest):
             urllib.request.urlretrieve(benchmark_url, dest)
+    
+    @rfm.run_before('run')
+    def no_run(self):
+        # fake the executable using bash's "noop" builtin - NB this needs to be in saved_output_dir too:
+        self.executable = "./noop.sh"
+
+    @rfm.run_after('run')
+    def debug_postpro(self):
+        """ Fakes a run to allow testing from after a run.
+
+            Requires a saved run directory
+        """
+
+        saved_output_dir = 'Gromacs_SmallBM' # relative to this test directory
+
+        saved_output_path = os.path.join(self.prefix, saved_output_dir)
         
+        # check saved output path exists:
+        if not os.path.exists(saved_output_path) or not os.path.isdir(saved_output_path):
+            raise ValueError("saved output path %s does not exist or isn't a directory!" % os.path.abspath(saved_output_path))
+        
+        # copy files to stage dir:
+        import distutils.dir_util
+        distutils.dir_util.copy_tree(saved_output_path, self.stagedir)
+                
