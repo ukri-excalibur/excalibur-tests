@@ -21,15 +21,16 @@ site_configuration = {
             'modules_system':'lmod',
             'partitions':[
                 {
-                    'name':'compute-ib-openib',
+                    'name':'ib-openmpi3-openib',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['ohpc-gnu7-openmpi3'],
+                    'environs': ['imb'],
+                    'modules':['gnu7','openmpi3'],
                     'variables':[
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
 
-                        # For openmpi btl
+                        # For openib btl
                         # ---------------
                         ['OMPI_MCA_btl', 'openib,self,vader'],
                         ['OMPI_MCA_btl_openib_if_include', 'mlx5_0:1'],
@@ -42,11 +43,12 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'compute-ib-ucx',
+                    'name':'ib-openmpi4-ucx',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['spack-gnu7-openmpi4'],
-                    'variables':[
+                    'environs': ['imb', 'gromacs'],
+                    'modules': ['openmpi/4.0.3-ziwdzwh'],
+                    'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
 
@@ -54,17 +56,18 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'compute-roce-openib',
+                    'name':'roce-openmpi3-openib',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['ohpc-gnu7-openmpi3'],
-                    'variables':[
+                    'environs': ['imb'],
+                    'modules': ['gnu7','openmpi3'],
+                    'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
 
                         ['OMPI_MCA_btl', 'openib,self,vader'],
                         ['OMPI_MCA_btl_openib_if_include', 'mlx5_1:1'],
-                        # Set recieve queues. From https://community.mellanox.com/s/article/howto-configure-ib-routers:
+                        # Set receive queues. From https://community.mellanox.com/s/article/howto-configure-ib-routers:
                         # > In order for you to use rdmacm, you must set up a per-peer QP as the first QP (all QPs cannot be SRQ).
                         #   In some branches of ompi, the default is to use only SRQ. In this case, add -mca btl_openib_receive_queues P,65536,256,192,128 to the command line.
                         #   In the current v1.10 branch, the default configuration should work with IB routing without any changes.
@@ -77,19 +80,20 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'compute-roce-ucx',
+                    'name':'roce-openmpi4-ucx',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['spack-gnu7-openmpi4'],
-                    'variables':[
+                    'environs': ['imb', 'gromacs'],
+                    'modules': ['openmpi/4.0.3-ziwdzwh'],
+                    'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
-
+                        # use roce:
                         ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
-                }
+                },
             ]
-        }
+        },
     ],
     'environments': [
         {
@@ -98,23 +102,26 @@ site_configuration = {
             'modules': ['gnu8', 'openmpi3',],
         },
         {
-            'name':'ohpc-gnu7-openmpi3', # OHPC-provided packages
-            'target_systems': ['alaska',],
-            'modules': [
-                'gnu7',
-                'openmpi3',
-                'imb',
-            ],
+            'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
         },
         {
-            'name':'spack-gnu7-openmpi4', # spack-provided packages
-            'target_systems': ['alaska',],
-            'modules': [
-                'openmpi/4.0.3-ziwdzwh',
-                'intel-mpi-benchmarks/2019.5-q5ujyli',
-                'gromacs/2016.4-xixmrii',
-            ],
-        }
+            'name': 'imb', # OHPC-provided packages
+            'target_systems': ['alaska:ib-openmpi3-openib', 'alaska:roce-openmpi3-openib'],
+            'modules': ['imb'],
+        },
+        {
+            'name': 'imb', # spack-provided packages
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:ib-openmpi4-ucx'],
+            'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
+        },
+        {
+            'name': 'gromacs',
+        },
+        {
+            'name': 'gromacs', # spack-provided packages
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'modules': ['gromacs/2016.4-xixmrii']
+        },
     ],
     'logging': [
         {

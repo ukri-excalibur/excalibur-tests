@@ -17,6 +17,7 @@ import reframe_extras
 from reframe.core.logging import getlogger
 
 
+# TODO: make this handle more nodes?
 @rfm.parameterized_test([1], [2])
 class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
     def __init__(self, num_nodes):
@@ -30,7 +31,7 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         """
 
         self.valid_systems = ['*']
-        self.valid_prog_environs = ['spack-gnu7-openmpi4']
+        self.valid_prog_environs = ['gromacs']
 
         cpu_factor = 0.5 # because SMT is on on alaska
         max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info

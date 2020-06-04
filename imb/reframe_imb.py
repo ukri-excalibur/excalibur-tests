@@ -4,7 +4,7 @@
         
         cd hpc-tests
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe-settings.py -c imb-2018.1/ --run --performance-report
+        reframe/bin/reframe -C reframe-settings.py -c imb --run --performance-report
 
     Runs:
     - 2 tasks on same node
@@ -120,7 +120,7 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
 
     def __init__(self):
         self.valid_systems = ['*']
-        self.valid_prog_environs = ['*']
+        self.valid_prog_environs = ['imb']
         self.executable = 'IMB-MPI1'
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
@@ -142,7 +142,7 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
     #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
 
 
-@rfm.simple_test
+#@rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
     METRICS = [
         Metric(benchmark='pingpong', function=max, column='Mbytes/sec', label='bandwidth'),
@@ -155,7 +155,7 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         
-@rfm.simple_test
+#@rfm.simple_test
 class IMB_Uniband(IMB_MPI1):
     METRICS = [
         Metric(benchmark='uniband', function=max, column='Mbytes/sec', label='bandwidth')
