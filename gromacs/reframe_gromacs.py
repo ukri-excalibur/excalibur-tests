@@ -19,7 +19,7 @@ from reframe.core.logging import getlogger
 
 # TODO: make this handle more nodes?
 @rfm.parameterized_test(*[[pow(2, i)] for i in range(4, -1, -1)]) # run 16 and down numbers of nodes
-class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
+class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
     def __init__(self, num_nodes):
         """ Run Archer 'small' (single-node) Gromacs benchmark.
 
@@ -60,6 +60,7 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
             }
         }
 
+        self.use_cache = True
             
         # example output from benchmark.log:
         # <snip>
@@ -90,31 +91,4 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest):
         if not os.path.exists(dest):
             urllib.request.urlretrieve(benchmark_url, dest)
     
-    @rfm.run_before('run')
-    def no_run(self):
-        """ Turn the run phase into a no-op. """
-
-        with open(os.path.join(self.stagedir, 'noop.sh'), 'w') as noop:
-            noop.write('#!/bin/bash\necho "noop $@"\n')
-        self.executable = "./noop.sh"
-
-    @rfm.run_after('run')
-    def copy_saved_output(self):
-        """ Copy saved output files to stage dir.
-
-            Assumes saved output files are in a directory `cache/` in same parent directory (and with same directory tree) as the `output/` and `stage/` directories.
-        
-            Use with @rfm.run_after('run')
-        """
-
-        # find the part of the path common to both output and staging:
-        rtc = rfm.core.runtime.runtime()
-        tree_path = os.path.relpath(self.outputdir, rtc.output_prefix)
-        
-        saved_output_dir = os.path.join('cache', tree_path)
-        
-        if not os.path.exists(saved_output_dir) or not os.path.isdir(saved_output_dir):
-            raise ValueError("saved_output_dir %s does not exist or isn't a directory" % os.path.abspath(saved_output_dir))
-
-        import distutils.dir_util
-        distutils.dir_util.copy_tree(saved_output_dir, self.stagedir)
+    

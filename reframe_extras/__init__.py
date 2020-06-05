@@ -11,6 +11,46 @@ from reframe.core.launchers import JobLauncher
 import os, shutil, subprocess, shlex
 from pprint import pprint
 
+class CachedRunTest(rfm.RegressionTest):
+    """ Mixin. TODO: document properly.
+
+        Classes using this can be derive from `rfm.RunOnlyRegressionTest`
+        Assumes saved output files are in a directory `cache/` in same parent directory (and with same directory tree) as the `output/` and `stage/` directories.
+
+        set self.use_cache to True or a path relative to cwd.
+    
+        NB Any class using this MUST NOT change self.executable in a method decorated with `@rfm.run_before('run')` as that will override functionality here.
+    """
+
+    @rfm.run_before('run')
+    def no_run(self):
+        """ Turn the run phase into a no-op. """
+
+        if self.use_cache:
+            with open(os.path.join(self.stagedir, 'noop.sh'), 'w') as noop:
+                noop.write('#!/bin/bash\necho "noop $@"\n')
+            self.executable = "./noop.sh"
+
+    @rfm.run_after('run')
+    def copy_saved_output(self):
+        """ Copy saved output files to stage dir. """
+
+        if self.use_cache:
+            # find the part of the path common to both output and staging:
+            rtc = rfm.core.runtime.runtime()
+            tree_path = os.path.relpath(self.outputdir, rtc.output_prefix)
+            
+            cache_root = 'cache' if self.use_cache == True else self.use_cache
+
+            saved_output_dir = os.path.join(cache_root, tree_path)
+            
+            if not os.path.exists(saved_output_dir) or not os.path.isdir(saved_output_dir):
+                raise ValueError("cached output directory %s does not exist or isn't a directory" % os.path.abspath(saved_output_dir))
+
+            import distutils.dir_util
+            distutils.dir_util.copy_tree(saved_output_dir, self.stagedir)
+
+
 class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
     """ A compile-only test with caching of binaries between `reframe` runs.
     
