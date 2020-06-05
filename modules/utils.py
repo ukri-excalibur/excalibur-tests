@@ -30,7 +30,7 @@ def find_run_outputs(root='.', test=None, ext='.out'):
     
         Args:
             root: path to start searching from
-            test: str, limit results to directories which contain this string (default: all)
+            test: str, limit results to test directories (i.e the last part before the filename) which contain this string (default: all)
             ext: str, limit results to files with this extension
         
         Returns a sequence of str paths.
