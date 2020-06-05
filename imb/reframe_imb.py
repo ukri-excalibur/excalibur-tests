@@ -20,6 +20,8 @@ import sys, os
 from collections import namedtuple
 from reframe.core.logging import getlogger
 
+sys.path.append('..')
+import modules
 # examples of output:
 # # Benchmarking Uniband 
 # # #processes = 2 
@@ -35,16 +37,6 @@ from reframe.core.logging import getlogger
 
 
 Metric = namedtuple('Metric', ['benchmark', 'function', 'column', 'label'])
-
-
-def parse_path_metadata(path):
-    """ Return a dict of reframe info from a results path """
-    parts = path.split(os.path.sep)
-    #sysname, partition, environ, testname, filename = parts[-5:]
-    COMPONENTS = ('sysname', 'partition', 'environ', 'testname', 'filename')
-    info = dict(zip(COMPONENTS, parts[-5:]))
-    info['path'] = path
-    return info
 
 def read_imb_out(path):
     """ Read stdout from an IMB-MPI1 run. Note this may only contain ONE benchmark.
@@ -70,7 +62,7 @@ def read_imb_out(path):
     }
 
     result = {
-        'meta': parse_path_metadata(path),
+        'meta': modules.utils.parse_path_metadata(path),
         'data': {},
         }
     with open(path) as f:
