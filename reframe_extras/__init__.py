@@ -146,6 +146,21 @@ def slurm_node_info():
 #         launcher_cmd = self._target_launcher.command(job) # a list
 #         return launcher_cmd[0] + self.launcher_options + launcher_cmd[1:]
 
+def nodeseq(last=1):
+    """ Return a sequence of node numbers.
+    
+        Starts at max nodes reported by slurm and then halves each time down to `last` (inclusive).
+    """
+    nums = []
+    n_nodes = len(slurm_node_info())
+    i = 0
+    while True:
+        n = int(n_nodes/pow(2,i))
+        nums.append(n)
+        if n <= last:
+            return nums
+        i += 1
+
 if __name__ == '__main__':
     # will need something like:
     # [hpc-tests]$ PYTHONPATH='reframe' python reframe_extras/__init__.py

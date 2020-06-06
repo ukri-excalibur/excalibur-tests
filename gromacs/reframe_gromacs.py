@@ -16,9 +16,8 @@ import reframe_extras
 
 from reframe.core.logging import getlogger
 
-
 # TODO: make this handle more nodes?
-@rfm.parameterized_test(*[[pow(2, i)] for i in range(4, -1, -1)]) # run 16 and down numbers of nodes
+@rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
 class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
     def __init__(self, num_nodes):
         """ Run Archer 'small' (single-node) Gromacs benchmark.
