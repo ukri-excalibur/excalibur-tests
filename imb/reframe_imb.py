@@ -10,6 +10,8 @@
     - 2 tasks on same node
     - 2 tasks on different nodes
     Both have exclusive node access.
+
+    TODO: make latency log scale in notebook plots
 """
 
 import reframe as rfm

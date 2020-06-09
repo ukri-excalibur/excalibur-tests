@@ -1,4 +1,6 @@
 import os, datetime
+import pandas as pd
+import matplotlib.pyplot as plt
 
 def parse_path_metadata(path):
     """ Return a dict of reframe info from a results path """
@@ -88,38 +90,59 @@ def diff_meta(results, ignore=['path']):
     return dict(common), differences
 
 def read_perflog(path):
-    """ TODO: explain """
+    """ Return a pandas dataframe from a ReFrame performance log.
+    
+        Args:
+            path: str, path to log file.
+        
+        NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
+
+        The returned dataframe will have columns for:
+            - qll keys returned by `parse_path_metadata()`
+            - all fields in a performance log record, noting that 'completion_time' is converted to a `datetime.datetime`
+            - 'perf_var' and 'perf_value', derived from 'perf_info' field
+    """
     
     # NB:
     # b/c perflog prefix is '%(check_system)s/%(check_partition)s/%(check_environ)s/%(check_name)s'
     # we know that this is unique for this combo - as it was for results
-    
-    perf_results = {'meta': parse_path_metadata(path)}
-    
+    records = []
+    meta = parse_path_metadata(path)
+
     with open(path) as f:
+
         for line in f:
+            
             # turn the line into a dict so we can access it:
             line = line.strip()
             # TODO: read this from reframe-settings handlers_perflog.filelog.format? (is adapted tho)
             LOG_FIELDS = 'completion_time,reframe,info,jobid,perf_data,perf_unit,perf_ref'.split(',')
-            record = dict(zip(LOG_FIELDS, line.split('|')))
+            record = meta.copy()
+            fields = dict(zip(LOG_FIELDS, line.split('|')))
+            record.update(fields) # allows this to override metadata
             
             # process values:
             perf_var, perf_value = record['perf_data'].split('=')
+            record['perf_var'] = perf_var
             record['perf_value'] = float(perf_value) # TODO: is this always right?
             record['completion_time'] = datetime.datetime.fromisoformat(record['completion_time'])
-            
-            # make sure we have a dict of lists for this perf_var:
-            # NB unit and ref shouldn't change but best place to store them
-            result_fields = ('completion_time', 'jobid', 'perf_value', 'perf_unit', 'perf_ref', 'reframe')
-            var_results = perf_results.setdefault(perf_var, {})
-            
-            # append fields from this record:
-            for k in result_fields:
-                var_results.setdefault(k, list()).append(record[k])
-    
-    return perf_results
 
+            records.append(record)
+            
+    return pd.DataFrame.from_records(records)
+
+def load_perf_logs(root='.', test=None, ext='.log'):
+    """ Convenience wrapper around read_perflog().
+    
+        Returns a single pandas.dataframe concatenated from all loaded logs.
+    """
+    perf_logs = find_run_outputs(root, test, ext)
+    perf_records = []
+    for path in perf_logs:
+        records = read_perflog(path)
+        perf_records.append(records)
+    perf_records = pd.concat(perf_records)
+    return perf_records
 
 def sizeof_fmt(num, suffix='B'):
     """ TODO: """
@@ -129,3 +152,18 @@ def sizeof_fmt(num, suffix='B'):
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
+
+def plot_perf_history(perf_df):
+    for test, data in perf_df.groupby('testname'):
+        for perf_var, data in data.groupby('perf_var'):
+            fig, ax = plt.subplots(nrows=1, ncols=1)
+            # TODO: have lost minimalist labels of prev version, need to do that at this level
+            # TODO: if multiple units (hope there won't be!) plot on 2ndary y-axes?
+            y_labels = ', '.join(data.groupby('perf_unit').groups.keys()) # hopefully only one unit!
+            for spe, data in data.groupby(['sysname', 'partition', 'environ']):
+                ax.plot_date('completion_time', 'perf_value', 'o-', label='-'.join(spe), data=data)
+            ax.set_title('%s: %s' % (test, perf_var))
+            ax.set_xlabel('completion time')
+            ax.set_ylabel(y_labels)
+            ax.legend()
+            ax.grid()
