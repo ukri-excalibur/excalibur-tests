@@ -16,23 +16,20 @@ import reframe_extras
 
 from reframe.core.logging import getlogger
 
-# TODO: make this handle more nodes?
 @rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
 class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
     def __init__(self, num_nodes):
-        """ Run Archer 'small' (single-node) Gromacs benchmark.
+        """ Run Archer 'small' Gromacs benchmark.
 
             Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
 
-            TODO:
-            - add perf and sanity patterns
-            - parameterise for different numbers of cores
+            This runs on 1 node up to as many nodes are available.
         """
 
         self.valid_systems = ['*']
         self.valid_prog_environs = ['gromacs']
 
-        cpu_factor = 0.5 # because SMT is on on alaska
+        cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
         max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
         num_tasks = num_nodes * int(max_cpus * cpu_factor)
         casename = 'benchmark'
@@ -59,7 +56,7 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
             }
         }
 
-        self.use_cache = True
+        self.use_cache = False # set to True to debug outputs using cached results
             
         # example output from benchmark.log:
         # <snip>
