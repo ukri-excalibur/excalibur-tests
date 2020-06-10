@@ -4,7 +4,7 @@
         
         cd hpc-tests
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe-settings.py -c imb --run --performance-report
+        reframe/bin/reframe -C reframe_config.py -c imb --run --performance-report
 
     Runs:
     - 2 tasks on same node

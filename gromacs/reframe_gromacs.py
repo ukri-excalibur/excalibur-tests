@@ -3,7 +3,7 @@
     Run using something like:
         
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe-settings.py -c gromacs/ --run --performance-report
+        reframe/bin/reframe -C reframe_config.py -c gromacs/ --run --performance-report
 
  TODO:
 '''
