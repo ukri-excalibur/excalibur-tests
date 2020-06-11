@@ -1,14 +1,9 @@
-""" Playground for seeing what reframe can do.
+""" Playground for testing ReFrame functionality.
 
     Run using something like:
         
         conda activate hpc-tests
-        reframe/bin/reframe -c helloworld/ --run
-
- TODO:
-
- - parameterise to different numbers of nodes/jobs-per-node
-
+        reframe/bin/reframe -C reframe_config.py helloworld/ --run
 """
 
 import reframe as rfm
@@ -17,7 +12,7 @@ from reframe.utility.sanity import defer
 from pprint import pprint
 import sys, os
 sys.path.append('.')
-import reframe_extras
+from modules import reframe_extras
 
 @sn.sanity_function
 def is_empty(path):

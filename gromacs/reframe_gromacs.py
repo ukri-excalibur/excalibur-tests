@@ -1,18 +1,17 @@
-''' Playground for seeing what reframe can do.
+""" Performance test using Gromacs molecular dynamics code: http://www.gromacs.org/
 
-    Run using something like:
+    Run using e.g.:
         
+        cd hpc-tests
         conda activate hpc-tests
         reframe/bin/reframe -C reframe_config.py -c gromacs/ --run --performance-report
-
- TODO:
-'''
+"""
 
 import reframe as rfm
 import reframe.utility.sanity as sn
 import os, sys, urllib
 sys.path.append('.')
-import reframe_extras
+from modules import reframe_extras
 
 from reframe.core.logging import getlogger
 

@@ -1,17 +1,13 @@
-""" Performance test using IMB's uniband and biband.
+""" Performance test using Intel MPI Benchmarks.
 
-    Run using something like:
+    Run using e.g.:
         
         cd hpc-tests
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe_config.py -c imb --run --performance-report
-
-    Runs:
-    - 2 tasks on same node
-    - 2 tasks on different nodes
-    Both have exclusive node access.
+        reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
 
     TODO: make latency log scale in notebook plots
+    TODO: change output read to pandas.dataframe
 """
 
 import reframe as rfm
@@ -22,7 +18,7 @@ import sys, os
 from collections import namedtuple
 from reframe.core.logging import getlogger
 
-sys.path.append('..')
+sys.path.append('.')
 import modules
 # examples of output:
 # # Benchmarking Uniband 
@@ -136,7 +132,7 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
     #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
 
 
-#@rfm.simple_test
+@rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
     METRICS = [
         Metric(benchmark='pingpong', function=max, column='Mbytes/sec', label='bandwidth'),
@@ -149,7 +145,7 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         
-#@rfm.simple_test
+@rfm.simple_test
 class IMB_Uniband(IMB_MPI1):
     METRICS = [
         Metric(benchmark='uniband', function=max, column='Mbytes/sec', label='bandwidth')
@@ -172,32 +168,3 @@ class IMB_Biband(IMB_MPI1):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
-        
-
-
-#@rfm.parameterized_test([1], [2])
-# class IMB_MPI1Test(IMB_MPI1):
-#     def __init__(self, num_nodes=2):
-#         self.name = self.name + "_Nodes" # default names for parameterised tests include argument(s)
-#         self.executable_opts = ['uniband', 'biband'] # TODO: use parameterised test instead??
-#         self.perf_patterns = {
-#             'uniband_max_bandwidth': max_bandwidth(self.stdout, 'Uniband'),
-#             'biband_max_bandwidth': max_bandwidth(self.stdout, 'Biband'),
-#         }
-#         self.reference = {
-#             '*': {
-#                 'uniband_max_bandwidth': (0, None, None, 'Mbytes/sec'),
-#                 'biband_max_bandwidth': (0, None, None, 'Mbytes/sec'),
-#             }
-#         }
-#         self.exclusive_access = True
-#         self.num_tasks = 2
-#         self.num_tasks_per_node = int(self.num_tasks / num_nodes)
-
-
-# if __name__ == '__main__':
-#     # hacky test of extraction:
-#     from reframe.utility.sanity import evaluate
-#     # with open(sys.argv[-1]) as f:
-#     #     stdout = f.read()
-#     # pprint(evaluate(imb_results(stdout, 'Uniband')))
