@@ -111,7 +111,7 @@ site_configuration = {
         },
         {
             'name': 'imb', # spack-provided packages
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:ib-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
         },
         {
