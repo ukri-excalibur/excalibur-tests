@@ -95,6 +95,8 @@ Document:
       # load a compiler - NB: not shown in ReFrame docs but essential!
       cd reframe
       ./test_reframe.py -v
+  
+  (This will skip tests but should not fail any.)
 
 - For a new system, add it to the reframe configuration file `reframe_config.py`.
 
