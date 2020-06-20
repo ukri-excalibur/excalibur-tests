@@ -46,7 +46,7 @@ site_configuration = {
                     'name':'ib-openmpi4-ucx',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['imb', 'gromacs'],
+                    'environs': ['imb', 'gromacs', 'omb'],
                     'modules': ['openmpi/4.0.3-ziwdzwh'],
                     'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
@@ -83,7 +83,7 @@ site_configuration = {
                     'name':'roce-openmpi4-ucx',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['imb', 'gromacs'],
+                    'environs': ['imb', 'gromacs', 'omb'],
                     'modules': ['openmpi/4.0.3-ziwdzwh'],
                     'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
@@ -122,6 +122,14 @@ site_configuration = {
             'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
             'modules': ['gromacs/2016.4-xixmrii']
         },
+        {
+            'name': 'omb',
+        },
+        {
+            'name': 'omb',
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'modules': ['osu-micro-benchmarks/5.6.2-el6z55i']
+        }
     ],
     'logging': [
         {

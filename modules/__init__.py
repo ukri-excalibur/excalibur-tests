@@ -1,1 +1,1 @@
-from . import utils, reframe_extras, plots
+from . import utils, reframe_extras, plots, omb
