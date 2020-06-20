@@ -216,3 +216,13 @@ Finally as ReFrame cannot use `spack load` directly we need to enable spack's su
         module avail  # should now show spack-installed applications depending on that mpi
 
     Add the `module use ...` command this to your `~/.bashrc`.
+
+
+# TODO:
+- add note:
+
+  > Note openmpi v4 is required to integrate properly with Slurm via pmix. UCX is recommended to make selection of IB/RoCE considerably simpler.
+
+  and remove from other readmes
+
+- add note re using `/hash` for openmpi version to avoid multiple builds.
