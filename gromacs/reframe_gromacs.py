@@ -36,27 +36,26 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest)
                 1400k-atoms  20k-atoms  3000k-atoms  465k-atoms  61k-atoms
             logfile: log file name (-g option for `gmx mdrun`)
     """
-    def __init__(self, casename, logfile):
+    def __init__(self, casename):
         
         self.casename = casename
-        self.logfile = logfile
+        self.logfile = casename + '.log'
         
         self.valid_systems = ['*']
         self.valid_prog_environs = ['gromacs']
-
-        self.benchmark_url = 'http://www.hecbiosim.ac.uk/gromacs-benchmarks/send/2-software/8-gromacs-bench'
-        self.download_dir = os.path.join(self.prefix, 'downloads') # i.e. downloads/ will be alongside this file
-        self.sourcesdir = os.path.join(self.download_dir, 'gromacs', casename)
+        
+        # created by download_benchmarks():
+        self.sourcesdir = os.path.join(self.prefix, 'downloads', 'gromacs', self.casename)
 
         self.executable = 'gmx_mpi'
         self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout']
         self.time_limit = None # TODO: set this to something reasonable??self.exclusive_access = True
         
-        self.keep_files = [logfile]
+        self.keep_files = [self.logfile]
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
         self.perf_patterns = {
-            'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', logfile, 1, float),
-            'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', logfile, 2, float),
+            'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 1, float),
+            'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 2, float),
         }
         # TODO: these are basically the same so just keep ns_per_day (higher = better)?
         self.reference = {
@@ -77,24 +76,41 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest)
         # <EOF>
         
     @rfm.run_before('run')
-    def download_benchmarks(self):
+    def download_benchmarks(self, ):
         """ Download & unpack HECBioSim Gromacs benchmarks
         
             NB: This saves and unpacks it to a persistent location defined by `self.sourcesdir`
                 - reframe will then copy it into the staging dir.
         """
+        
+        benchmark_url = 'http://www.hecbiosim.ac.uk/gromacs-benchmarks/send/2-software/8-gromacs-bench'
+        download_dir = os.path.join(self.prefix, 'downloads') # i.e. downloads/ will be alongside this file
+        download_dest = os.path.join(download_dir, 'hecbiosim-gromacs.tar.gz')
+        download(benchmark_url, download_dest, download_dir)
 
-        if not os.path.exists(self.download_dir):
-            os.makedirs(self.download_dir, exist_ok=True)
-        dest = os.path.join(self.download_dir, 'HECBioSim-gromacs.tar.gz')
-        if not os.path.exists(dest):
-            urllib.request.urlretrieve(self.benchmark_url, dest)
-        # unconditionally extract:
-        shutil.unpack_archive(dest, self.download_dir)
-        # produces gromacs/{1400k-atoms/,3000k-atoms/,61k-atoms/} each containing benchmark.tpr
+# TODO: move this into modules
+def download(url, download_dest, extract_dir=None):
+    """ Download resources with caching.
 
-        if not os.path.exists(self.sourcesdir):
-            raise ValueError('sourcesdir %s not present after benchmark download/unpack' % self.sourcesdir)
+        Args:
+            url: str, url to download from
+            download_dest: str, path to download resource at `url` to. This should include the filename
+            and also the extension if unpacking is required. If this path exists then `url` will not be downloaded.
+            extract_dir: str, path to directory to unpack to, or None if no unpacking is required.
+        Directories will be created if required.
+        Returns ???
+    """
+
+    if not os.path.exists(download_dest):
+        download_dir = os.path.dirname(download_dest)
+        if not os.path.exists(download_dir):
+            os.makedirs(download_dir, exist_ok=True)
+        urllib.request.urlretrieve(url, download_dest)
+    if extract_dir is not None:
+        if not os.path.exists(extract_dir):
+            os.makedirs(extract_dir, exist_ok=True)
+        shutil.unpack_archive(download_dest, extract_dir)
+    
 
 # TODO: make the parameterisation neater
 #@rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
@@ -111,7 +127,7 @@ class Gromacs_1400k(Gromacs_HECBioSim):
             TODO: use openmp?
         """
         
-        super().__init__('1400k-atoms', '1400k.log')
+        super().__init__('1400k-atoms')
 
         cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
         max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
