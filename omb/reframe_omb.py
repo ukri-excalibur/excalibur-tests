@@ -1,5 +1,11 @@
 """ Performance test using OSU's Micro Benchmarks (OMB).
 
+    This runs:
+        osu_bw: 2x nodes, 1x process per node
+        osu_latency: 2x nodes, 1x process per node
+        osu_bibw (Bidirectional Bandwidth Test): 2x nodes, 1x process per node
+        osu_mbw_mr (Multiple Bandwidth / Message Rate Test): 2x nodes, range of process numbers from 1 per CPU (x a "cpu_factor") down to 1 per node
+
     Run using e.g.:
         
         cd hpc-tests
@@ -17,6 +23,29 @@ sys.path.append('.')
 import modules
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
+
+def ntasks(cpu_factor=1):
+    """ Return a sequence of ints parameterising the numbers of tasks for 2 nodes.
+    
+        Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
+        Requires that all nodes have the same number of nodes.
+    """
+    nodeinfo = modules.reframe_extras.slurm_node_info()
+    n_cpus = [int(n['CPUS']) for n in nodeinfo]
+    if not len(set(n_cpus)) == 1:
+        raise ValueError('Number of CPUs differs between nodes, cannot parameterise tasks')
+    n_cpus = n_cpus[0]
+
+    result = [2 * n_cpus * cpu_factor]
+    while True:
+        v = int(result[-1] / 2)
+        if v < 2:
+            break
+        result.append(v)
+    if result[-1] != 2:
+        result.append(2)
+    return result
+
 
 class OSU_Micro_Benchmarks(rfm.RunOnlyRegressionTest):
 
@@ -76,19 +105,32 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
 
-@rfm.simple_test
+
+@rfm.parameterized_test(*[[n] for n in ntasks(cpu_factor=0.5)]) # because alaska has HT enabled TODO: add to config?
 class Osu_mbw_mr(OSU_Micro_Benchmarks):
-    # TODO: See https://downloads.openfabrics.org/Media/Sonoma2008/Sonoma_2008_Tues_QLogic-TomElken-MPIperformanceMeasurement.pdf
-    # TODO: add processes-per-node parameterisation
-    # TODO: make sure 1st 1/2 of processes are all on 1st node
+    """ Determine bandwidth and message rate between two nodes with different numbers of processes per node.
+        
+        See https://downloads.openfabrics.org/Media/Sonoma2008/Sonoma_2008_Tues_QLogic-TomElken-MPIperformanceMeasurement.pdf
+    """
+    
     METRICS = [
         Metric('MB/s', max, 'MB/s', "max_bandwidth"),
         Metric('Messages/s', max, 'Messages/s', "max_message_rate"),
     ]
 
-    def __init__(self):
+    def __init__(self, num_cpus):
         
         super().__init__()
         self.executable = 'osu_mbw_mr'
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
+        self.num_tasks = num_cpus
+        self.num_tasks_per_node = int(num_cpus / 2)
+    
+    @rfm.run_before('run')
+    def add_launcher_options(self):
+        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
+
+
+if __name__ == '__main__':
+    # e.g:
+    #(hpc-tests) [steveb@openhpc-login-0 hpc-tests]$ PYTHONPATH='reframe' python omb/reframe_omb.py
+    print(ntasks())

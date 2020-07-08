@@ -98,8 +98,19 @@ class NoBuild(BuildSystem):
 def slurm_node_info():
     """ Get information about slurm nodes.
     
-        Returns a sequence of dicts, one per node.
-        TODO: document keys - are as per `sinfo --Node --long`
+        Returns a sequence of dicts, one per node with keys/values all strs as follows:
+            "NODELIST": name of node
+            "NODES": number of nodes
+            "PARTITION": name of partition, * appended if default
+            "STATE": e.g. "idle"
+            "CPUS": str number of cpus
+            "S:C:T": Extended processor information: number of sockets, cores, threads in format "S:C:T"
+            "MEMORY": Size of memory in megabytes
+            "TMP_DISK": Size of temporary disk space in megabytes
+            "WEIGHT": Scheduling weight of the node
+            "AVAIL_FE": ?
+            "REASON": The reason a node is unavailable (down, drained, or draining states) or "none"
+        See `man sinfo` for `sinfo --Node --long` for full details.
 
         TODO: add partition selection? with None being current one (note system partition != slurm partition)
     """
