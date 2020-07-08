@@ -1,5 +1,11 @@
 """ Performance test using Gromacs molecular dynamics code: http://www.gromacs.org/
 
+    Runs benchmarks from HECBioSim: http://www.hecbiosim.ac.uk/benchmarks
+    - 61K atom system - 1WDN Glutamine-Binding Protein (TODO)
+    - 1.4M atom system - A Pair of hEGFR Dimers of 1IVO and 1NQL
+    - 3M atom system - A Pair of hEGFR tetramers of 1IVO and 1NQL (TODO)
+    
+
     Run using e.g.:
         
         cd hpc-tests
@@ -9,45 +15,50 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-import os, sys, urllib
+import os, sys, urllib, shutil
 sys.path.append('.')
 from modules import reframe_extras
 
 from reframe.core.logging import getlogger
 
-@rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
-class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
-    def __init__(self, num_nodes):
-        """ Run Archer 'small' Gromacs benchmark.
+class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
+    """ Base class for HECBioSim Gromacs benchmarks.
 
-            Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
+        Runs for environments named "gromacs" only.
 
-            This runs on 1 node up to as many nodes are available.
-        """
+        This sets parameters common to all benchmarks and handles download/unpacking benchmark files.
 
+        Set `self.use_cache=True` in derived instances to re-run results processing without actually running
+        gromacs again, e.g. during debugging. See `reframe_extras.CachedRunTest` for details.
+        
+        Args:
+            casename: directory name from the HECBioSim benchmark download, one of:
+                1400k-atoms  20k-atoms  3000k-atoms  465k-atoms  61k-atoms
+            logfile: log file name (-g option for `gmx mdrun`)
+    """
+    def __init__(self, casename, logfile):
+        
+        self.casename = casename
+        self.logfile = logfile
+        
         self.valid_systems = ['*']
         self.valid_prog_environs = ['gromacs']
 
-        cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
-        max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
-        num_tasks = num_nodes * int(max_cpus * cpu_factor)
-        casename = 'benchmark'
-        resfile=casename
-        
-        self.sourcesdir = os.path.join(self.prefix, 'downloads') # i.e. downloads/ will be alongside this file
-        self.executable = 'gmx_mpi'
-        self.executable_opts = ['mdrun', '-s', '%s.tpr' % casename, '-g', resfile, '-noconfout']
-        self.num_tasks = num_tasks
-        self.num_tasks_per_node = int(num_tasks / num_nodes)
-        self.exclusive_access = True
-        self.time_limit = None # TODO: set this to something reasonable??
+        self.benchmark_url = 'http://www.hecbiosim.ac.uk/gromacs-benchmarks/send/2-software/8-gromacs-bench'
+        self.download_dir = os.path.join(self.prefix, 'downloads') # i.e. downloads/ will be alongside this file
+        self.sourcesdir = os.path.join(self.download_dir, 'gromacs', casename)
 
-        self.keep_files = ['benchmark.log']
+        self.executable = 'gmx_mpi'
+        self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout']
+        self.time_limit = None # TODO: set this to something reasonable??self.exclusive_access = True
+        
+        self.keep_files = [logfile]
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
         self.perf_patterns = {
-            'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', 'benchmark.log', 1, float),
-            'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', 'benchmark.log', 2, float),
+            'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', logfile, 1, float),
+            'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', logfile, 2, float),
         }
+        # TODO: these are basically the same so just keep ns_per_day (higher = better)?
         self.reference = {
             '*': {
                 'ns_per_day': (0, None, None, 'ns/day'),
@@ -55,9 +66,7 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
             }
         }
 
-        self.use_cache = False # set to True to debug outputs using cached results
-            
-        # example output from benchmark.log:
+        # example output from logfile:
         # <snip>
         #                Core t (s)   Wall t (s)        (%)
         #        Time:    73493.146     1148.330     6400.0
@@ -67,23 +76,48 @@ class Gromacs_SmallBM(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest):
         #
         # <EOF>
         
-        
-        # TODO:
-        # set norequeue?
-        # use openmp?
-    
     @rfm.run_before('run')
-    def download_benchmark(self):
-        """ Download benchmark file from Archer benchmarks gitlab.
+    def download_benchmarks(self):
+        """ Download & unpack HECBioSim Gromacs benchmarks
         
-            NB: This saves it to a persistent location defined by `self.sourcesdir` - reframe will then copy it into the staging dir.
+            NB: This saves and unpacks it to a persistent location defined by `self.sourcesdir`
+                - reframe will then copy it into the staging dir.
         """
 
-        benchmark_url = 'https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/input/benchmark.tpr?raw=true'
-        if not os.path.exists(self.sourcesdir):
-            os.makedirs(self.sourcesdir, exist_ok=True)
-        dest = os.path.join(self.sourcesdir, 'benchmark.tpr')
+        if not os.path.exists(self.download_dir):
+            os.makedirs(self.download_dir, exist_ok=True)
+        dest = os.path.join(self.download_dir, 'HECBioSim-gromacs.tar.gz')
         if not os.path.exists(dest):
-            urllib.request.urlretrieve(benchmark_url, dest)
-    
-    
+            urllib.request.urlretrieve(self.benchmark_url, dest)
+        # unconditionally extract:
+        shutil.unpack_archive(dest, self.download_dir)
+        # produces gromacs/{1400k-atoms/,3000k-atoms/,61k-atoms/} each containing benchmark.tpr
+
+        if not os.path.exists(self.sourcesdir):
+            raise ValueError('sourcesdir %s not present after benchmark download/unpack' % self.sourcesdir)
+
+# TODO: make the parameterisation neater
+#@rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
+@rfm.parameterized_test(*[[n] for n in [1]])
+class Gromacs_1400k(Gromacs_HECBioSim):
+    def __init__(self, num_nodes):
+        """ HEC BioSim 1.4M atom Gromacs benchmark.
+
+            Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
+
+            This is parameterised to run on 1 node up to as many nodes are available.
+            For each run `n_cores * cpu_factor` x processes are used per node.
+
+            TODO: use openmp?
+        """
+        
+        super().__init__('1400k-atoms', '1400k.log')
+
+        cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
+        max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
+        
+        self.num_tasks = num_nodes * int(max_cpus * cpu_factor)
+        self.num_tasks_per_node = int(self.num_tasks / num_nodes)
+                
+        self.use_cache = False # set to True to debug outputs using cached results
+        
