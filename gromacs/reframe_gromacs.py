@@ -113,9 +113,25 @@ def download(url, download_dest, extract_dir=None):
         shutil.unpack_archive(download_dest, extract_dir)
     
 
-# TODO: make the parameterisation neater
-#@rfm.parameterized_test(*[[n] for n in reframe_extras.nodeseq()])
-@rfm.parameterized_test(*[[n] for n in [1]])
+def nnodes_param(last=1):
+    """ Parameterise the number of nodes for a task.
+    
+        Starts at max nodes reported by slurm and then halves down to `last` (inclusive).
+
+        Returns a sequence of ints.
+    """
+    
+    nums = []
+    n_nodes = len(reframe_extras.slurm_node_info())
+    i = 0
+    while True:
+        n = int(n_nodes/pow(2,i))
+        nums.append(n)
+        if n <= last:
+            return nums
+        i += 1
+
+@rfm.parameterized_test(*[[n] for n in nnodes_param()])
 class Gromacs_1400k(Gromacs_HECBioSim):
     def __init__(self, num_nodes):
         """ HEC BioSim 1.4M atom Gromacs benchmark.

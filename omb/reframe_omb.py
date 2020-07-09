@@ -24,11 +24,13 @@ import modules
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
-def ntasks(cpu_factor=1):
-    """ Return a sequence of ints parameterising the numbers of tasks for 2 nodes.
+def ntasks_param(cpu_factor=1):
+    """ Parameterise the numbers of tasks for 2 nodes.
     
         Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
-        Requires that all nodes have the same number of nodes.
+        Requires that all nodes have the same number of CPUs.
+
+        Returns a sequence of ints.
     """
     nodeinfo = modules.reframe_extras.slurm_node_info()
     n_cpus = [int(n['CPUS']) for n in nodeinfo]
@@ -106,7 +108,7 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks_per_node = 1
 
 
-@rfm.parameterized_test(*[[n] for n in ntasks(cpu_factor=0.5)]) # because alaska has HT enabled TODO: add to config?
+@rfm.parameterized_test(*[[n] for n in ntasks_param(cpu_factor=0.5)]) # because alaska has HT enabled TODO: add to config?
 class Osu_mbw_mr(OSU_Micro_Benchmarks):
     """ Determine bandwidth and message rate between two nodes with different numbers of processes per node.
         
@@ -133,4 +135,4 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
 if __name__ == '__main__':
     # e.g:
     #(hpc-tests) [steveb@openhpc-login-0 hpc-tests]$ PYTHONPATH='reframe' python omb/reframe_omb.py
-    print(ntasks())
+    print(ntasks_param())
