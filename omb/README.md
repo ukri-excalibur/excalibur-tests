@@ -1,9 +1,8 @@
-OSU Micro-Benchmarks:
+# OSU Micro-Benchmarks
 
 http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt
 
-This runs various bandwidth and latency tests TODO:
-TODO: describe number of nodes etc?
+This runs various bandwidth and latency tests. See `reframe_omb.py` for full details.
 
 # Installation - OpenHPC
 

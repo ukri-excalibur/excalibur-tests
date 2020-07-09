@@ -68,7 +68,26 @@ def find_run_outputs(root='.', test=None, ext='.out'):
                     results.append(path)
     return(results)
 
-def diff_meta(results, ignore=['path']):
+def diff_dicts(dicts, ignore=None):
+    """ Given a sequence of dicts, returns
+            
+            common, [difference1, difference2, ...]
+        
+        where `commmon` is a dict containing items in all dicts, and `differenceN` is a dict containing keys
+        unique to the corresponding dict in `dicts`, ignoring any keys in `ignore`.
+    """
+
+    dicts = [d.copy() for d in dicts]
+    ignore = [] if ignore is None else ignore
+    for key in ignore:
+        for d in dicts:
+            d.pop(key, None)
+    keyvals = [set(zip(d.keys(), d.values())) for d in dicts]
+    common = keyvals[0].intersection(*keyvals[1:])
+    differences = [dict(sorted(b.difference(common))) for b in keyvals]
+    return dict(common), differences
+
+def diff_meta(results, ignore=['path']): # TODO: depreciated, replace with diff_dict
     """ Given a sequence of results dicts, returns
             
             common, [difference1, difference2, ...]
