@@ -49,7 +49,8 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, reframe_extras.CachedRunTest)
 
         self.executable = 'gmx_mpi'
         self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout']
-        self.time_limit = None # TODO: set this to something reasonable??self.exclusive_access = True
+        self.exclusive_access = True
+        self.time_limit = None # TODO: set this to something reasonable??
         
         self.keep_files = [self.logfile]
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
