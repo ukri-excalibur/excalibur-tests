@@ -1,10 +1,9 @@
 """ Performance test using Gromacs molecular dynamics code: http://www.gromacs.org/
 
     Runs benchmarks from HECBioSim: http://www.hecbiosim.ac.uk/benchmarks
-    - 61K atom system - 1WDN Glutamine-Binding Protein (TODO)
+    - 61K atom system - 1WDN Glutamine-Binding Protein
     - 1.4M atom system - A Pair of hEGFR Dimers of 1IVO and 1NQL
-    - 3M atom system - A Pair of hEGFR tetramers of 1IVO and 1NQL (TODO)
-    
+    - 3M atom system - A Pair of hEGFR tetramers of 1IVO and 1NQL
 
     Run using e.g.:
         
