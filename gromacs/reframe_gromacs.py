@@ -153,4 +153,49 @@ class Gromacs_1400k(Gromacs_HECBioSim):
         self.num_tasks_per_node = int(self.num_tasks / num_nodes)
                 
         self.use_cache = False # set to True to debug outputs using cached results
+
+@rfm.parameterized_test(*[[n] for n in nnodes_param()])
+class Gromacs_61k(Gromacs_HECBioSim):
+    def __init__(self, num_nodes):
+        """ HEC BioSim 61k atom Gromacs benchmark.
+
+            Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
+
+            This is parameterised to run on 1 node up to as many nodes are available.
+            For each run `n_cores * cpu_factor` x processes are used per node.
+
+            TODO: use openmp?
+        """
         
+        super().__init__('61k-atoms')
+
+        cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
+        max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
+        
+        self.num_tasks = num_nodes * int(max_cpus * cpu_factor)
+        self.num_tasks_per_node = int(self.num_tasks / num_nodes)
+                
+        self.use_cache = False # set to True to debug outputs using cached results
+
+@rfm.parameterized_test(*[[n] for n in nnodes_param()])
+class Gromacs_3000k(Gromacs_HECBioSim):
+    def __init__(self, num_nodes):
+        """ HEC BioSim 3M atom Gromacs benchmark.
+
+            Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/apps/GROMACS/1400k-atoms/run/CSD3-Skylake/submit.slurm
+
+            This is parameterised to run on 1 node up to as many nodes are available.
+            For each run `n_cores * cpu_factor` x processes are used per node.
+
+            TODO: use openmp?
+        """
+        
+        super().__init__('3000k-atoms')
+
+        cpu_factor = 0.5 # define fraction of cores to use - 0.5 here because alaska has hyperthreading/SMT turned on
+        max_cpus = int(reframe_extras.slurm_node_info()[0]['CPUS']) # 0: arbitrarily use first nodes info
+        
+        self.num_tasks = num_nodes * int(max_cpus * cpu_factor)
+        self.num_tasks_per_node = int(self.num_tasks / num_nodes)
+                
+        self.use_cache = False # set to True to debug outputs using cached results
