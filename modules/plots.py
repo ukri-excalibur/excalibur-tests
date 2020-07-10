@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+
 def plot_perf_history(perf_df):
     """ TODO: docstring """
     for test, data in perf_df.groupby('testname'):
@@ -15,3 +16,31 @@ def plot_perf_history(perf_df):
             ax.legend()
             ax.grid()
             fig.autofmt_xdate()
+
+def tabulate_last_perf_vs(df, x_var, perf_var):
+    """ Tablulate `x_var` vs the last record for `perf_var` per system/partition/environment.
+    
+        Manipulates a dataframe from `modules.utils.load_perf_logs()` for easy plotting and tabulation.
+        
+        Args:
+            df: A 'tidy' dataframe as returned by `modules.utils.load_perf_logs()`, indexed by log sequence.
+            x_var: str, label of column with values for e.g. x-axis of plot, or LH column of table
+            perf_var: str, label of column with values for e.g. y-axis of plot, or values in table.
+    
+        Returns:
+            A 'wide' dataframe with a column `x_var and all other columns being "<sysname>-<partition>-<environ>"
+            for each combination. Values give the last `perf_var` found for each such combination.
+    """
+    
+    # filter to rows for correct perf_var:
+    df = df.loc[df['perf_var'] == perf_var]
+    
+    # keep only the LAST record in each system/partition/environment for each number of nodes
+    df = df.sort_index().groupby(['sysname', 'partition', 'environ', x_var]).tail(1)
+    
+    # Add "case" column from combined system/partition/environment names:
+    df['case'] = df[['sysname', 'partition', 'environ']].agg('-'.join, axis=1)
+    
+    # reshape to wide table:
+    df = df.pivot(index=x_var, columns='case', values='perf_value')
+    return df
