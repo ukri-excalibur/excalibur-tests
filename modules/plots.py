@@ -1,7 +1,16 @@
 import matplotlib.pyplot as plt
 
 def plot_perf_history(perf_df):
-    """ TODO: docstring """
+    """ Generate plots of performance history.
+        
+        Args:
+            perf_df: A 'tidy' dataframe as returned by `modules.utils.load_perf_logs()`, indexed by log sequence.
+        
+        This produces 1x plot for each combination of `testname` and `perf_var` in `perf_df`.
+        A series is generated for each "<sysname>-<partition>-<environ>" combination.
+
+        Returns None
+    """
     for test, data in perf_df.groupby('testname'):
         for perf_var, data in data.groupby('perf_var'):
             fig, ax = plt.subplots(nrows=1, ncols=1)
