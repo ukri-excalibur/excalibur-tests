@@ -7,6 +7,7 @@ import reframe as rfm
 from reframe.core.buildsystems import BuildSystem
 from reframe.core.logging import getlogger
 from reframe.core.launchers import JobLauncher
+import reframe.utility.sanity as sn
 
 import os, shutil, subprocess, shlex
 from pprint import pprint
@@ -127,6 +128,30 @@ def slurm_node_info():
         for ci, key in enumerate(header):
             nodes[-1][key] = line[ci]
     return nodes
+
+def ntasks_param(cpu_factor=1):
+    """ Parameterise the numbers of tasks for 2 nodes.
+    
+        Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
+        Requires that all nodes have the same number of CPUs.
+
+        Returns a sequence of ints.
+    """
+    nodeinfo = slurm_node_info()
+    n_cpus = [int(n['CPUS']) for n in nodeinfo]
+    if not len(set(n_cpus)) == 1:
+        raise ValueError('Number of CPUs differs between nodes, cannot parameterise tasks')
+    n_cpus = n_cpus[0]
+
+    result = [int(2 * n_cpus * cpu_factor)]
+    while True:
+        v = int(result[-1] / 2)
+        if v < 2:
+            break
+        result.append(v)
+    if result[-1] != 2:
+        result.append(2)
+    return result
 
 
 # you don't need this, you can just use e.g.:

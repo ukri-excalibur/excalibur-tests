@@ -20,90 +20,8 @@ from reframe.core.logging import getlogger
 
 sys.path.append('.')
 import modules
-# examples of output:
-# # Benchmarking Uniband 
-# # #processes = 2 
-# #---------------------------------------------------
-#        #bytes #repetitions   Mbytes/sec      Msg/sec
-#             0         1000         0.00      2189915
-#
-# # Benchmarking PingPong 
-# # #processes = 2 
-# #---------------------------------------------------
-#        #bytes #repetitions      t[usec]   Mbytes/sec
-#             0         1000         2.25         0.00
 
-
-Metric = namedtuple('Metric', ['benchmark', 'function', 'column', 'label'])
-
-def read_imb_out(path):
-    """ Read stdout from an IMB-MPI1 run. Note this may only contain ONE benchmark.
-        
-        Returns a dict with keys:
-            
-            'data': {
-                    <column_heading1>: [value0, value1, ...],
-                    ...,
-                }
-            'meta':
-                'processes':num processes as int
-                'benchmark': str, as above
-                'path': str
-    
-        TODO: use numpy instead?
-    """
-
-    COLTYPES = {
-        'uniband':(int, int, float, int),
-        'biband':(int, int, float, int),
-        'pingpong':(int, int, float, float),
-    }
-
-    result = {
-        'meta': modules.utils.parse_path_metadata(path),
-        'data': {},
-        }
-    with open(path) as f:
-        for line in f:
-            if line.startswith('# Benchmarking '):
-                benchmark = line.split()[-1].lower()
-                if 'benchmark' in result['meta']:
-                    raise ValueError('%s may only contain one benchmark, found both %r and %r' % (result['meta']['benchmark'], benchmark))
-                result['meta']['benchmark'] = benchmark
-                col_types = COLTYPES[benchmark]
-                result['meta']['processes'] = int(next(f).split()[-1]) # "# #processes = 2"
-                next(f) # skip header
-                while True:
-                    cols = next(f).split()
-                    if cols == []:
-                        break
-                    if cols[0].startswith('#'): # header row
-                        header = cols
-                        for label in header:
-                            result['data'][label] = []
-                    else:
-                        for label, opr, value in zip(header, col_types, cols):
-                            result['data'][label].append(opr(value))
-    return result
-
-@sn.sanity_function
-def reduce(path, column, function):
-    """ Reduce results along a particular column.
-
-        Args:
-            path: str, path to results file
-            column: str, column of output to operate on, e.g. 'Mbytes/sec'
-            function: function to apply to column values
-        
-        Example:
-            reduce(self.stdout, 'pingpong', 'Mbytes/sec', max)
-
-        Caches the result of reading the results file for efficency.
-    """
-    cache = getattr(reduce, 'cache', {})
-    results = cache.setdefault(path, read_imb_out(path))
-    values = results['data'][column]
-    return function(values)
+Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
 class IMB_MPI1(rfm.RunOnlyRegressionTest):
     METRICS = []
@@ -111,32 +29,34 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
     def __init__(self):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['imb']
-        self.executable = 'IMB-MPI1'
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
-        #self.reference['*'] = {} # don't do this ...
-        # self.reference = {'*':{}} # or this
+        self.perf_patterns = {} # something funny about reframe's attr lookup
+        self.executable = 'IMB-MPI1'
         self.add_metrics()
     
     def add_metrics(self):
-        """ TODO: """
+        """ Add all Metrics from self.METRICS to performance/reference patterns """
 
         for metric in self.METRICS:
-            benchmark = metric.benchmark.lower() # TODO: is this common across tests??
-            perf_label = '_'.join((benchmark, metric.function.__name__, metric.label))
-            self.perf_patterns[perf_label] = reduce(self.stdout, metric.column, metric.function)
-            self.reference[perf_label] = (0, None, None, metric.column) # oddly we don't have to supply the "*" scope key??
-        
+            self.perf_patterns[metric.label] = reduce(self.stdout, metric.column, metric.function)
+            self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
+
     # @rfm.run_before('run')
     # def add_launcher_options(self):
     #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
 
+@sn.sanity_function
+def reduce(path, column, function):
+    data = modules.imb.read_imb_out(path)
+    return function(data[column])
 
 @rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
     METRICS = [
-        Metric(benchmark='pingpong', function=max, column='Mbytes/sec', label='bandwidth'),
-        Metric(benchmark='pingpong', function=min, column='t[usec]', label='latency'),
+        # 'column' 'function', 'unit', 'label'
+        Metric('Mbytes/sec', max, 'Mbytes/sec', 'bandwidth'),
+        Metric('t[usec]', min, 't[usec]', 'latency'),
     ]
     def __init__(self):
         super().__init__()
@@ -145,26 +65,56 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         
-@rfm.simple_test
+
+def ntasks_param(cpu_factor=1):
+    """ Parameterise the numbers of tasks for 2 nodes.
+    
+        Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
+        Requires that all nodes have the same number of CPUs.
+
+        Returns a sequence of ints.
+    """
+    nodeinfo = modules.reframe_extras.slurm_node_info()
+    n_cpus = [int(n['CPUS']) for n in nodeinfo]
+    if not len(set(n_cpus)) == 1:
+        raise ValueError('Number of CPUs differs between nodes, cannot parameterise tasks')
+    n_cpus = n_cpus[0]
+
+    result = [int(2 * n_cpus * cpu_factor)]
+    while True:
+        v = int(result[-1] / 2)
+        if v < 2:
+            break
+        result.append(v)
+    if result[-1] != 2:
+        result.append(2)
+    return result
+
+
+n_tasks = modules.reframe_extras.ntasks_param(cpu_factor=0.5) # because alaska has HT enabled TODO: add to config?
+
+
+@rfm.parameterized_test(*[[n] for n in n_tasks]) 
 class IMB_Uniband(IMB_MPI1):
     METRICS = [
-        Metric(benchmark='uniband', function=max, column='Mbytes/sec', label='bandwidth')
+        Metric('Mbytes/sec', max, 'Mbytes/sec', 'bandwidth')
     ]
-    def __init__(self):
+    def __init__(self, num_cpus):
         super().__init__()
         self.executable_opts = ['uniband']
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
+        self.num_tasks = num_cpus
+        self.num_tasks_per_node = int(num_cpus / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
-        
-@rfm.simple_test # note -ib fails with a timeout!
-class IMB_Biband(IMB_MPI1):
+
+
+@rfm.parameterized_test(*[[n] for n in n_tasks]) 
+class IMB_Biband(IMB_MPI1):  # NB: on alaska -ib fails with a timeout!
     METRICS = [
-        Metric('biband', max, 'Mbytes/sec', 'bandwidth')
+        Metric('Mbytes/sec', max, 'Mbytes/sec', 'bandwidth')
     ]
-    def __init__(self):
+    def __init__(self, num_cpus):
         super().__init__()
         self.executable_opts = ['biband']
-        self.num_tasks = 2
-        self.num_tasks_per_node = 1
+        self.num_tasks = num_cpus
+        self.num_tasks_per_node = int(num_cpus / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
