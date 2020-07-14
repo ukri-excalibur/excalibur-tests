@@ -24,30 +24,10 @@ import modules
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
-def ntasks_param(cpu_factor=1):
-    """ Parameterise the numbers of tasks for 2 nodes.
-    
-        Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
-        Requires that all nodes have the same number of CPUs.
-
-        Returns a sequence of ints.
-    """
-    nodeinfo = modules.reframe_extras.slurm_node_info()
-    n_cpus = [int(n['CPUS']) for n in nodeinfo]
-    if not len(set(n_cpus)) == 1:
-        raise ValueError('Number of CPUs differs between nodes, cannot parameterise tasks')
-    n_cpus = n_cpus[0]
-
-    result = [2 * n_cpus * cpu_factor]
-    while True:
-        v = int(result[-1] / 2)
-        if v < 2:
-            break
-        result.append(v)
-    if result[-1] != 2:
-        result.append(2)
-    return result
-
+@sn.sanity_function
+def reduce(path, column, function):
+    data = modules.omb.read_omb_out(path)
+    return function(data[column])
 
 class OSU_Micro_Benchmarks(rfm.RunOnlyRegressionTest):
 
@@ -65,11 +45,6 @@ class OSU_Micro_Benchmarks(rfm.RunOnlyRegressionTest):
             self.sanity_patterns = sn.assert_found(re.escape(metric.column), self.stdout)
             self.perf_patterns[metric.label] = reduce(self.stdout, metric.column, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
-
-@sn.sanity_function
-def reduce(path, column, function):
-    data = modules.omb.read_omb_out(path)
-    return function(data[column])
 
 @rfm.simple_test
 class Osu_bw(OSU_Micro_Benchmarks):
@@ -107,8 +82,9 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
 
+n_tasks = modules.reframe_extras.ntasks_param(cpu_factor=0.5) # because alaska has HT enabled TODO: add to config?
 
-@rfm.parameterized_test(*[[n] for n in ntasks_param(cpu_factor=0.5)]) # because alaska has HT enabled TODO: add to config?
+@rfm.parameterized_test(*[[n] for n in n_tasks]) # because alaska has HT enabled TODO: add to config?
 class Osu_mbw_mr(OSU_Micro_Benchmarks):
     """ Determine bandwidth and message rate between two nodes with different numbers of processes per node.
         

@@ -1,6 +1,5 @@
 """ Extra functionality for reframe
 
-    TODO: refactor into modules
 """
 
 import reframe as rfm
