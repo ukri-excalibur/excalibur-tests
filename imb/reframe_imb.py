@@ -77,6 +77,10 @@ class IMB_Uniband(IMB_MPI1):
         self.num_tasks = num_cpus
         self.num_tasks_per_node = int(num_cpus / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
+    
+    @rfm.run_before('run')
+    def add_launcher_options(self):
+        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
 
 
 @rfm.parameterized_test(*[[n] for n in n_tasks]) 
@@ -90,3 +94,7 @@ class IMB_Biband(IMB_MPI1):  # NB: on alaska -ib fails with a timeout!
         self.num_tasks = num_cpus
         self.num_tasks_per_node = int(num_cpus / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
+
+    @rfm.run_before('run')
+    def add_launcher_options(self):
+        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
