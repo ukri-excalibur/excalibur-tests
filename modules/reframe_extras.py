@@ -181,8 +181,46 @@ def ntasks_param(cpu_factor=1):
 #         launcher_cmd = self._target_launcher.command(job) # a list
 #         return launcher_cmd[0] + self.launcher_options + launcher_cmd[1:]
 
+class Scheduler_Info(object):
+    def __init__(self):
+        """ Information from the scheduler.
+
+            Attributes:
+                num_nodes: number of nodes
+                pcores_per_node: number of physical cores per node
+                lcores_per_node: number of logical cores per node
+        """
+        # TODO: handle scheduler not being slurm!
+        nodeinfo = slurm_node_info()
+
+        self.num_nodes = len(nodeinfo)
+        cpus = [n['S:C:T'] for n in nodeinfo]
+        if not len(set(cpus)) == 1:
+            raise ValueError('CPU description differs between nodes, cannot define unique value')
+        sockets, cores, threads = [int(v) for v in cpus[0].split(':')] # nb each is 'per' the preceeding
+        self.pcores_per_node = sockets * cores
+        self.lcores_per_node = sockets * cores * threads
+
+    def __str__(self):
+        return 'Scheduler_Info(num_nodes=%i, pcores_per_node=%i, lcores_per_node=%i)' % (self.num_nodes, self.pcores_per_node, self.lcores_per_node)
+
+def sequence(start, end, factor):
+    """ Like `range()` but each term is `factor` * previous term.
+
+        `start` is inclusive, `end` is exclusive.
+
+        Returns a list.
+    """
+
+    values = []
+    v = start
+    while v < end:
+        values.append(v)
+        v *= factor
+    return values
 
 if __name__ == '__main__':
     # will need something like:
-    # [hpc-tests]$ PYTHONPATH='reframe' python reframe_extras/__init__.py
-    pprint(slurm_node_info())
+    # [hpc-tests]$ PYTHONPATH='reframe' python modules/reframe_extras.py
+    #print(Scheduler_Info())
+    
