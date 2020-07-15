@@ -222,5 +222,5 @@ def sequence(start, end, factor):
 if __name__ == '__main__':
     # will need something like:
     # [hpc-tests]$ PYTHONPATH='reframe' python modules/reframe_extras.py
-    #print(Scheduler_Info())
+    print(Scheduler_Info())
     

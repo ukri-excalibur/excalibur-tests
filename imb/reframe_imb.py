@@ -15,9 +15,9 @@ from pprint import pprint
 import sys, os
 from collections import namedtuple
 from reframe.core.logging import getlogger
-
 sys.path.append('.')
 import modules
+from modules.reframe_extras import sequence, Scheduler_Info
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
@@ -63,19 +63,18 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         
-n_tasks = modules.reframe_extras.ntasks_param(cpu_factor=0.5) # because alaska has HT enabled TODO: add to config?
+tasks_per_node = sequence(1, Scheduler_Info().pcores_per_node + 1, 2)
 
-
-@rfm.parameterized_test(*[[n] for n in n_tasks]) 
+@rfm.parameterized_test(*[[n] for n in tasks_per_node])
 class IMB_Uniband(IMB_MPI1):
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, num_cpus):
+    def __init__(self, tasks_per_node):
         super().__init__()
         self.executable_opts = ['uniband']
-        self.num_tasks = num_cpus
-        self.num_tasks_per_node = int(num_cpus / 2)
+        self.num_tasks = tasks_per_node * 2
+        self.num_tasks_per_node = tasks_per_node
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
     
     @rfm.run_before('run')
@@ -83,16 +82,16 @@ class IMB_Uniband(IMB_MPI1):
         self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
 
 
-@rfm.parameterized_test(*[[n] for n in n_tasks]) 
+@rfm.parameterized_test(*[[n] for n in tasks_per_node])
 class IMB_Biband(IMB_MPI1):  # NB: on alaska -ib fails with a timeout!
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, num_cpus):
+    def __init__(self, tasks_per_node):
         super().__init__()
         self.executable_opts = ['biband']
-        self.num_tasks = num_cpus
-        self.num_tasks_per_node = int(num_cpus / 2)
+        self.num_tasks = tasks_per_node * 2
+        self.num_tasks_per_node = tasks_per_node
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
 
     @rfm.run_before('run')
