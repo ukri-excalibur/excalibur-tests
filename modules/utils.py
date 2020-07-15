@@ -1,4 +1,4 @@
-import os, datetime
+import os, datetime, fnmatch
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -27,12 +27,12 @@ def group_by(seq, keyfunc):
         curr.append(item)
     return output
 
-def find_run_outputs(root='.', test=None, ext='.out'):
+def find_run_outputs(root='.', test='*', ext='.out'):
     """ Find test files within an output tree.
     
         Args:
-            root: path to start searching from
-            test: str, limit results to test directories (i.e the last part before the filename) which contain this string (default: all)
+            root: str, path to start searching from
+            test: str, limit results to last directory component matching this (can use shell-style wildcards), default any
             ext: str, limit results to files with this extension
         
         Returns a sequence of str paths.
@@ -64,7 +64,7 @@ def find_run_outputs(root='.', test=None, ext='.out'):
             if os.path.splitext(f)[-1] == ext:
                 path = os.path.join(dirpath, f)
                 testdir = os.path.basename(os.path.dirname(path))
-                if test is None or test in testdir:
+                if fnmatch.fnmatchcase(testdir, test):
                     results.append(path)
     return(results)
 
