@@ -29,10 +29,10 @@ def read_imb_out(path):
     dframes = {}
 
     COLTYPES = { # all benchmark names here should be lowercase
-        'uniband': (int, int, float, int),
+        'uniband': (int, int, float, int), # #bytes #repetitions Mbytes/sec Msg/sec
         'biband': (int, int, float, int),
-        'pingpong':(int, int, float, float),
-        'alltoall':(int, int, float, float, float) # #bytes #repetitions  t_min[usec]  t_max[usec]  t_avg[usec]
+        'pingpong':(int, int, float, float), # #bytes #repetitions t[usec] Mbytes/sec
+        'alltoall':(int, int, float, float, float) # #bytes #repetitions t_min[usec] t_max[usec] t_avg[usec]
     }
 
     with open(path) as f:
