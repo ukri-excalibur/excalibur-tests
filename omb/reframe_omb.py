@@ -4,7 +4,7 @@
         osu_bw: 2x nodes, 1x process per node
         osu_latency: 2x nodes, 1x process per node
         osu_bibw (Bidirectional Bandwidth Test): 2x nodes, 1x process per node
-        osu_mbw_mr (Multiple Bandwidth / Message Rate Test): 2x nodes, range of process numbers from 1 per CPU (x a "cpu_factor") down to 1 per node
+        osu_mbw_mr (Multiple Bandwidth / Message Rate Test): 2x nodes, range of process numbers from 1 per node up to as many as physical cores
 
     Run using e.g.:
         
@@ -21,6 +21,7 @@ import sys, re
 from collections import namedtuple
 sys.path.append('.')
 import modules
+from modules.reframe_extras import sequence, Scheduler_Info
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
@@ -82,9 +83,9 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
 
-n_tasks = modules.reframe_extras.ntasks_param(cpu_factor=0.5) # because alaska has HT enabled TODO: add to config?
+total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
 
-@rfm.parameterized_test(*[[n] for n in n_tasks]) # because alaska has HT enabled TODO: add to config?
+@rfm.parameterized_test(*[[np] for np in total_procs])
 class Osu_mbw_mr(OSU_Micro_Benchmarks):
     """ Determine bandwidth and message rate between two nodes with different numbers of processes per node.
         
@@ -96,16 +97,20 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
         Metric('Messages/s', max, 'Messages/s', "max_message_rate"),
     ]
 
-    def __init__(self, num_cpus):
+    def __init__(self, num_procs):
         
         super().__init__()
         self.executable = 'osu_mbw_mr'
-        self.num_tasks = num_cpus
-        self.num_tasks_per_node = int(num_cpus / 2)
-    
+        self.num_tasks = num_procs
+        self.num_tasks_per_node = int(num_procs / 2)
+        
     @rfm.run_before('run')
-    def add_launcher_options(self):
-        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
+    def set_block_distribution(self):
+        """ This should be the openmpi default anyway, but it's important to ensure so that 1st 1/2 of processes are on 1st node.
+        
+            TOOD: make conditional on using openmpi + srun
+        """
+        self.job.launcher.options = ['--distribution=block']
 
 
 if __name__ == '__main__':
