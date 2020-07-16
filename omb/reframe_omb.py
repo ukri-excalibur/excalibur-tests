@@ -116,4 +116,4 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
 if __name__ == '__main__':
     # e.g:
     #(hpc-tests) [steveb@openhpc-login-0 hpc-tests]$ PYTHONPATH='reframe' python omb/reframe_omb.py
-    print(ntasks_param())
+    pass

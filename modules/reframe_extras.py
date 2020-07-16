@@ -128,58 +128,6 @@ def slurm_node_info():
             nodes[-1][key] = line[ci]
     return nodes
 
-def ntasks_param(cpu_factor=1):
-    """ Parameterise the numbers of tasks for 2 nodes.
-    
-        Starts at 2 * (n_cpus per node) * cpu_factor then halves. Last value will always be 2.
-        Requires that all nodes have the same number of CPUs.
-
-        Returns a sequence of ints.
-    """
-    nodeinfo = slurm_node_info()
-    n_cpus = [int(n['CPUS']) for n in nodeinfo]
-    if not len(set(n_cpus)) == 1:
-        raise ValueError('Number of CPUs differs between nodes, cannot parameterise tasks')
-    n_cpus = n_cpus[0]
-
-    result = [int(2 * n_cpus * cpu_factor)]
-    while True:
-        v = int(result[-1] / 2)
-        if v < 2:
-            break
-        result.append(v)
-    if result[-1] != 2:
-        result.append(2)
-    return result
-
-
-# you don't need this, you can just use e.g.:
-# @rfm.run_before('run')
-#     def add_launcher_options(self):
-#         self.job.launcher.options = ['--map-by=xxx']
-
-# class LauncherWithOptions(JobLauncher):
-#     """ Wrap a job launcher to provide options.
-
-#         Use like:
-
-#         @rfm.run_after('setup')
-#         def modify_launcher(self):
-#             self.job.launcher = LauncherWithOptions(self.job.launcher, options=['--bind-to', 'core'])
-        
-#         TODO: change behaviour depending on launcher type?
-#     """
-#     def __init__(self, target_launcher, options=None):
-#         if options is None:
-#             options = []
-#         super().__init__()
-#         self.self.launcher_options = options
-#         self._target_launcher = target_launcher
-#         self._wrapper_command = [wrapper_command] + wrapper_options
-
-#     def command(self, job):
-#         launcher_cmd = self._target_launcher.command(job) # a list
-#         return launcher_cmd[0] + self.launcher_options + launcher_cmd[1:]
 
 class Scheduler_Info(object):
     def __init__(self):
