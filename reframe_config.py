@@ -22,6 +22,7 @@ site_configuration = {
             'partitions':[
                 {
                     'name':'ib-openmpi3-openib',
+                    'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'environs': ['imb'],
@@ -44,6 +45,7 @@ site_configuration = {
                 },
                 {
                     'name':'ib-openmpi4-ucx',
+                    'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'environs': ['imb', 'gromacs', 'omb'],
@@ -57,6 +59,7 @@ site_configuration = {
                 },
                 {
                     'name':'roce-openmpi3-openib',
+                    'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'environs': ['imb'],
@@ -81,6 +84,7 @@ site_configuration = {
                 },
                 {
                     'name':'roce-openmpi4-ucx',
+                    'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'environs': ['imb', 'gromacs', 'omb'],
