@@ -1,4 +1,4 @@
-""" Performance test using Intel MPI Benchmarks.
+""" Performance tests using Intel MPI Benchmarks.
 
     Run using e.g.:
         
@@ -6,6 +6,8 @@
         conda activate hpc-tests
         reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
 
+    For parallel-transfer tests (i.e. uniband and biband) which use multiple process pairs, the -npmin flag is passed so that only the specified number of processes is run on each test.
+    This is the easiest way of ensuring proper process placement on the two nodes.
 """
 
 import reframe as rfm
@@ -17,7 +19,6 @@ from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
 import modules
-from modules.reframe_extras import sequence, Scheduler_Info
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
@@ -31,13 +32,26 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
         self.perf_patterns = {} # must do this
         self.perf_patterns = {} # something funny about reframe's attr lookup
         self.executable = 'IMB-MPI1'
-        self.add_metrics()
     
-    def add_metrics(self):
-        """ Add all Metrics from self.METRICS to performance/reference patterns """
+    @rfm.run_before('run')
+    def set_block_distribution(self):
+        """ This should be the openmpi default anyway, but it's important to ensure so that 1st 1/2 of processes are on 1st node.
+        
+            TOOD: make conditional on using openmpi + srun
+        """
+        self.job.launcher.options = ['--distribution=block']
 
-        for metric in self.METRICS:
-            self.perf_patterns[metric.label] = reduce(self.stdout, metric.column, metric.function)
+    def add_metrics(self, metrics, n_procs):
+        """ Create `self.perf_patterns` and units only in `self.reference`.
+        
+            Args:
+                metrics: TODO
+                n_procs: TODO
+        """
+        
+        for metric in metrics:
+            #getlogger().info('creating metric %s', metric.label)
+            self.perf_patterns[metric.label] = reduce(self.stdout, n_procs, metric.column, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
 
     # @rfm.run_before('run')
@@ -45,12 +59,24 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
     #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
 
 @sn.sanity_function
-def reduce(path, column, function):
-    data = modules.imb.read_imb_out(path)
-    return function(data[column])
+def reduce(path, n_procs, column, function):
+    """ Calculate an aggregate value from IMB output.
 
+        Args:
+            path: str, path to file
+            n_procs: int, number of processes
+            column: str, column name
+            function: callable to apply to specified `column` of table for `n_procs` in `path`
+    """
+    tables = modules.imb.read_imb_out(path)
+    table = tables[n_procs] # separate lines here for more useful KeyError if missing:
+    col = table[column]
+    result = function(col) 
+    return result
+    
 @rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
+    """ Runs on 2x cores of 2x nodes """
     METRICS = [
         # 'column' 'function', 'unit', 'label'
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth'),
@@ -62,38 +88,54 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
-        
-tasks_per_node = sequence(1, Scheduler_Info().pcores_per_node + 1, 2)
+        self.add_metrics(self.METRICS, self.num_tasks)
 
-@rfm.parameterized_test(*[[n] for n in tasks_per_node])
+@rfm.simple_test
+class IMB_AlltoAll(IMB_MPI1):
+    """ Runs on all physical cores (only) of 2x nodes """
+    METRICS = [
+        # 'column' 'function', 'unit', 'label'
+        Metric('t_max[usec]', max, 'usec', 'max_latency'), # NB this is max across all-to-all, and also over all message sizes
+        #bytes #repetitions  t_min[usec]  t_max[usec]  t_avg[usec]
+    ]
+    def __init__(self):
+        super().__init__()
+        pcores = modules.reframe_extras.Scheduler_Info().pcores_per_node
+        self.num_tasks = pcores * 2
+        self.num_tasks_per_node = pcores
+        self.add_metrics(self.METRICS, self.num_tasks)
+        self.sanity_patterns = sn.assert_found('# Benchmarking Alltoall', self.stdout)
+        self.executable_opts = ['alltoall', '-npmin', str(self.num_tasks)]
+
+total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
+
+@rfm.parameterized_test(*[[np] for np in total_procs])
 class IMB_Uniband(IMB_MPI1):
+    """ Runs 2, 4, etc processes up to physical cores of 2x nodes """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, tasks_per_node):
+    def __init__(self, num_procs):
+        """ num_procs: *total* *maximum* number of tasks, i.e. across both nodes """
         super().__init__()
-        self.executable_opts = ['uniband']
-        self.num_tasks = tasks_per_node * 2
-        self.num_tasks_per_node = tasks_per_node
+        self.num_tasks = num_procs
+        self.num_tasks_per_node = int(num_procs / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
+        self.add_metrics(self.METRICS, self.num_tasks)
+        self.executable_opts = ['uniband', '-npmin', str(self.num_tasks)]
     
-    @rfm.run_before('run')
-    def add_launcher_options(self):
-        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
-
-
-@rfm.parameterized_test(*[[n] for n in tasks_per_node])
-class IMB_Biband(IMB_MPI1):  # NB: on alaska -ib fails with a timeout!
+@rfm.parameterized_test(*[[np] for np in total_procs])
+class IMB_Biband(IMB_MPI1):  # NB: on alaska ib- fails with a timeout!
+    """ Runs 2, 4, etc processes up to physical cores of 2x nodes """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, tasks_per_node):
+    def __init__(self, num_procs):
+        """ num_procs: *total* *maximum* number of tasks, i.e. across both nodes """
         super().__init__()
-        self.executable_opts = ['biband']
-        self.num_tasks = tasks_per_node * 2
-        self.num_tasks_per_node = tasks_per_node
+        self.num_tasks = num_procs
+        self.num_tasks_per_node = int(num_procs / 2)
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
-
-    @rfm.run_before('run')
-    def add_launcher_options(self):
-        self.job.launcher.options = ['--distribution=block'] # is default, but important here that 1st 1/2 of processes are on 1st node
+        self.add_metrics(self.METRICS, self.num_tasks)
+        self.executable_opts = ['biband', '-npmin', str(self.num_tasks)]
+        
