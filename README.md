@@ -16,11 +16,11 @@ The current application benchmarks are:
 
 For more information on the actual tests defined and how to run them see the README file in the relevant benchmark directory.
 
-The [ReFrame](https://reframe-hpc.readthedocs.io/en/latest/index.html) framework is used to define tests in a portable fashion in the `reframe_*.py` in each benchmark directory.
+The [ReFrame](https://reframe-hpc.readthedocs.io/en/latest/index.html) framework is used to define tests in a portable fashion in the `reframe_<benchmark>.py` file in each benchmark directory.
 
 Results are compared and plotted using [juypter notebooks](https://jupyter.readthedocs.io/en/latest/), with a `<benchmark>.ipynb` file in each benchmark directory.
 
-This package does not automate build/install of the benchmark packages for your system. This allows it to be used to assess performance of current system packages, custom builds, or for performance comparisons between different builds. However, for each benchmark installation instructions are provided using OpenHPC-provided packages (where relevant) and/or [Spack](https://spack.readthedocs.io/) (which does not require root).
+This package does not automate build/install of the benchmark applications themselves for your system. This allows it to be used to assess performance of current system application installs, custom builds, or for performance comparisons between different builds. However, for each benchmark installation instructions are provided using OpenHPC-provided packages (where relevant) and/or [Spack](https://spack.readthedocs.io/) (which does not require root).
 
 ## Repository Contents
 
