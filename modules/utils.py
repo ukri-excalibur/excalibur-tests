@@ -1,6 +1,18 @@
-import os, datetime, fnmatch
+import os, datetime, fnmatch, subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
+
+def git_describe():
+    """ Return a string describing the state of the git repo in which the working directory is.
+
+        See `git describe --dirty --always` for full details.
+    """
+    cmd = 'git describe --dirty --always'.split()
+    proc = subprocess.run(cmd, capture_output=True, universal_newlines=True)
+    proc.check_returncode()
+    if proc.stderr:
+        raise ValueError(proc.stderr)
+    return proc.stdout.strip()
 
 def parse_path_metadata(path):
     """ Return a dict of reframe info from a results path """
