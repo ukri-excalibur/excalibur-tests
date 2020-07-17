@@ -1,12 +1,16 @@
 """ High Performance Linpack.
 
-    Run on all physical cores of a) 1 and b) all nodes
+    Run on all physical cores of a) a single and b) all nodes
 
     Run using e.g.:
         
         cd hpc-tests
         conda activate hpc-tests
         reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report
+
+    to run only "single" node or "all" node tests add the appropriate tag, e.g.:
+
+        reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report --tag single
 
     Requires files HPL-{single, all}.dat in one of:
         - <repo_root>/systems/<sysname>/hpl/
@@ -30,6 +34,7 @@ class Hpl(rfm.RunOnlyRegressionTest, CachedRunTest):
         self.valid_prog_environs = ['hpl']
         
         self.size = size
+        self.tags = set([size])
         num_nodes = {'single':1, 'all':Scheduler_Info().num_nodes}[size]        
         self.num_tasks_per_node = Scheduler_Info().pcores_per_node
         self.num_tasks = num_nodes * self.num_tasks_per_node

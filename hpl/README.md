@@ -28,6 +28,18 @@ As an example, the configuration files for AlaSKA were generated as follows:
 - Use [this](https://www.advancedclustering.com/act_kb/tune-hpl-dat-file/) tool with the above info to get initial configuration files.
 - Place generated files in the above directories.
 
+# Running tests
+
+Run using e.g.:
+        
+    cd hpc-tests
+    conda activate hpc-tests
+    reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report
+
+Only "single" node or "all" node tests can be run by adding the appropriate tag, e.g.:
+
+    reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report --tag single
+
 
 # TODO:
 - Try different PxQ - from [here](https://community.brightcomputing.com/question/how-do-i-run-the-hpl-test-on-a-bright-cluster-5d6614ba08e8e81e885f19f3):
