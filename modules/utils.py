@@ -143,8 +143,12 @@ def read_perflog(path):
             # process values:
             perf_var, perf_value = record['perf_data'].split('=')
             record['perf_var'] = perf_var
-            record['perf_value'] = float(perf_value) # TODO: is this always right?
+            try:
+                record['perf_value'] = float(perf_value)
+            except ValueError:
+                record['perf_value'] = perf_value
             record['completion_time'] = datetime.datetime.fromisoformat(record['completion_time'])
+            record['jobid'] = record['jobid'].split('=')[-1] # original: "jobid=2378"
 
             records.append(record)
             
@@ -153,13 +157,15 @@ def read_perflog(path):
 def load_perf_logs(root='.', test=None, ext='.log'):
     """ Convenience wrapper around read_perflog().
     
-        Returns a single pandas.dataframe concatenated from all loaded logs.
+        Returns a single pandas.dataframe concatenated from all loaded logs, or None if no logs exist.
     """
     perf_logs = find_run_outputs(root, test, ext)
     perf_records = []
     for path in perf_logs:
         records = read_perflog(path)
         perf_records.append(records)
+    if len(perf_records) == 0:
+        return None
     perf_records = pd.concat(perf_records).reset_index(drop=True)
     return perf_records
 
