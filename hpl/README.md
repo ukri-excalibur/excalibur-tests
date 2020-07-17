@@ -24,7 +24,7 @@ As an example, the configuration files for AlaSKA were generated as follows:
     - The number of physical cores per node (32) from the "S:C:T" field (S * C).
 - Use Horizon to get memory per node (128GB)
 - Run `srun --pty bash -i` to get a shell on a compute node and run `/proc/cpuinfo` to get processor type and therefore microarchitecture (E5-2683 v4, i.e. Broadwell).
-- From [this](https://ulhpc-tutorials.readthedocs.io/en/latest/parallel/mpi/HPL/#hpl-main-parameters) tutorial, a block size "NB" of 192 is suggested for Broadwell processors.
+- From [Intel documentation](https://software.intel.com/content/www/us/en/develop/documentation/mkl-linux-developer-guide/top/intel-math-kernel-library-benchmarks/intel-distribution-for-linpack-benchmark/configuring-parameters.html), get recommended block sizes for that processor  (192).
 - Use [this](https://www.advancedclustering.com/act_kb/tune-hpl-dat-file/) tool with the above info to get initial configuration files.
 - Place generated files in the above directories.
 
@@ -39,6 +39,15 @@ Run using e.g.:
 Only "single" node or "all" node tests can be run by adding the appropriate tag, e.g.:
 
     reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report --tag single
+
+# Outputs
+
+The ReFrame performance variables are:
+
+- `Gflops`: The performance
+- `git_ref`: The output from `git describe` on the `hpc-tests` repo.
+
+This allows changes in performance to be linked to system configuration and HPL configuration (.dat file) changes.
 
 
 # TODO:

@@ -23,6 +23,7 @@ import sys, os, shutil
 sys.path.append('.')
 import modules
 from modules.reframe_extras import Scheduler_Info, CachedRunTest
+from reframe.core.logging import getlogger
 
 @rfm.parameterized_test(*[['single'], ['all']])
 class Hpl(rfm.RunOnlyRegressionTest, CachedRunTest):
@@ -41,9 +42,11 @@ class Hpl(rfm.RunOnlyRegressionTest, CachedRunTest):
         self.exclusive_access = True
         self.executable = 'xhpl'
         self.time_limit = None
+
+        self.git_ref = modules.utils.git_describe() # NB: load this during test instantiation, although we have to use a deferrable for perf variable
         
         self.use_cache = False # set to True to use cached results for debugging postprocessing of results
-        
+
         self.sanity_patterns = sn.all([
             sn.assert_found('End of Tests.', self.stdout),
             sn.assert_found('0 tests completed and failed residual checks', self.stdout),
@@ -56,10 +59,14 @@ class Hpl(rfm.RunOnlyRegressionTest, CachedRunTest):
             # WR11C2R4       46080   192    16    32              12.91             5.0523e+03
 
             # see hpl-2.3/testing/ptest/HPL_pdtest.c:{219,253-256} for pattern details
-            'Gflops': sn.extractsingle(r'^W[R|C]\S+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d[\d.]+\s+(\d[\d.eE+]+)', self.stdout, 1, float)
+            'Gflops': sn.extractsingle(r'^W[R|C]\S+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d[\d.]+\s+(\d[\d.eE+]+)', self.stdout, 1, float),
+            'git_ref': sn.defer(self.git_ref)
         }
         self.reference = {
-            '*': {'Gflops': (None, None, None, 'Gflops')}
+            '*': {
+                'Gflops': (None, None, None, 'Gflops'),
+                'git_ref': (None, None, None, 'n/a'),
+                }
         }
 
     @rfm.run_before('run')
