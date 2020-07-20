@@ -1,10 +1,6 @@
 """ Performance tests using Intel MPI Benchmarks.
 
-    Run using e.g.:
-        
-        cd hpc-tests
-        conda activate hpc-tests
-        reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
+    See README.md for details.
 
     For parallel-transfer tests (i.e. uniband and biband) which use multiple process pairs, the -npmin flag is passed so that only the specified number of processes is run on each test.
     This is the easiest way of ensuring proper process placement on the two nodes.
@@ -89,23 +85,6 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         self.add_metrics(self.METRICS, self.num_tasks)
-
-@rfm.simple_test
-class IMB_AlltoAll(IMB_MPI1):
-    """ Runs on all physical cores (only) of 2x nodes """
-    METRICS = [
-        # 'column' 'function', 'unit', 'label'
-        Metric('t_max[usec]', max, 'usec', 'max_latency'), # NB this is max across all-to-all, and also over all message sizes
-        #bytes #repetitions  t_min[usec]  t_max[usec]  t_avg[usec]
-    ]
-    def __init__(self):
-        super().__init__()
-        pcores = modules.reframe_extras.Scheduler_Info().pcores_per_node
-        self.num_tasks = pcores * 2
-        self.num_tasks_per_node = pcores
-        self.add_metrics(self.METRICS, self.num_tasks)
-        self.sanity_patterns = sn.assert_found('# Benchmarking Alltoall', self.stdout)
-        self.executable_opts = ['alltoall', '-npmin', str(self.num_tasks)]
 
 total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
 
