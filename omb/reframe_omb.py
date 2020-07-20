@@ -1,17 +1,6 @@
 """ Performance test using OSU's Micro Benchmarks (OMB).
-
-    This runs:
-        osu_bw: 2x nodes, 1x process per node
-        osu_latency: 2x nodes, 1x process per node
-        osu_bibw (Bidirectional Bandwidth Test): 2x nodes, 1x process per node
-        osu_mbw_mr (Multiple Bandwidth / Message Rate Test): 2x nodes, range of process numbers from 1 per node up to as many as physical cores
-
-    Run using e.g.:
-        
-        cd hpc-tests
-        conda activate hpc-tests
-        reframe/bin/reframe -C reframe_config.py -c omb/ --run --performance-report
-
+            
+    See README for details.
 """
 
 import reframe as rfm
@@ -46,6 +35,39 @@ class OSU_Micro_Benchmarks(rfm.RunOnlyRegressionTest):
             self.sanity_patterns = sn.assert_found(re.escape(metric.column), self.stdout)
             self.perf_patterns[metric.label] = reduce(self.stdout, metric.column, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
+
+@rfm.simple_test
+class Osu_alltoall(OSU_Micro_Benchmarks):
+    # 'column', 'function', 'unit', 'label'
+    METRICS = [Metric('Avg Latency(us)', min, 'us', "min_av_latency")]
+
+    def __init__(self):
+        super().__init__()
+        self.executable = 'osu_alltoall'
+        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
+        self.num_tasks = 2 * self.num_tasks_per_node
+
+@rfm.simple_test
+class Osu_allgather(OSU_Micro_Benchmarks):
+    METRICS = [Metric('Avg Latency(us)', min, 'us', "min_av_latency")]
+
+    def __init__(self):
+        super().__init__()
+        self.executable = 'osu_allgather'
+        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
+        self.num_tasks = 2 * self.num_tasks_per_node
+
+@rfm.simple_test
+class Osu_allreduce(OSU_Micro_Benchmarks):
+    
+    METRICS = [Metric('Avg Latency(us)', min, 'us', "min_av_latency")]
+
+    def __init__(self):
+        super().__init__()
+        self.executable = 'osu_allreduce '
+        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
+        self.num_tasks = 2 * self.num_tasks_per_node
+
 
 @rfm.simple_test
 class Osu_bw(OSU_Micro_Benchmarks):
@@ -103,6 +125,7 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
         self.executable = 'osu_mbw_mr'
         self.num_tasks = num_procs
         self.num_tasks_per_node = int(num_procs / 2)
+        self.time_limit = '15m'
         
     @rfm.run_before('run')
     def set_block_distribution(self):
