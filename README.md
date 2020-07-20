@@ -6,13 +6,22 @@ Performance testing-as-code for HPC systems.
 
 This package defines automated performance tests for HPC systems using both synthetic and MPI-based application benchmarks. It is designed to easily compare results from different systems, system configurations and/or environments (e.g. compilers & MPI libraries).
 
-The current sythetic benchmarks are:
-- Selected tests from Intel MPI Benchmarks (`imb/`)
-- Selected OSU Micro Benchmarks (`omb/`)
-- High Performance Linkpack (`hpl/`)
+The intended test matrix is shown below, marked with (A) where there is an implementation (possibly not finalised) for the `AlaSKA` system:
 
-The current application benchmarks are:
-- Gromacs: 3x HECBioSim benchmarks of varying sizes (`gromacs/`)
+| Application | Benchmark | MPI Library | Notes |
+| ---         | ---       | ---         | --  |
+| OSU Micro Benchmarks (OMB) | latency (A), bandwidth (A), alltoall (A), allgather (A), allreduce (A)          | IntelMPI, OpenMPI (A)           | - |
+| Intel MPI Benchmarks (IMB) | uniband (A), biband (A) | IntelMPI, OpenMPI (A)           | PingPong also added for AlaSKA for basic debugging |
+| High Performance Linpack (HPL)   | - | IntelMPI | Uses Intel-specific with MKL |
+| High Performance Conjugate Gradient (HPCG) | - | IntelMPI | Uses Intel-specific HPCG with MKL |
+| Castep | tbd  | tbd  |   |
+| OpenFOAM |   |   |   |
+| GROAMACS | HECBioSim benchmarks: 61k (A), 1.4M (A) and 3M atom cases (A)  | IntelMPI, OpenMPI (A)  |   |
+| NAMD | HECBioSim benchmarks: 61k, 1.4M and 3M atom cases  | IntelMPI, OpenMPI (A)  |   |
+| LS-Dyna | Neon, car2car, ODB-10M  | OpenMPI  |   |
+| StarCCM+ | LeMans_100M, TurboCharger, Civil 20M  | OpenMPI  |   |
+| WRF | CONUS 2.5km, CONUS 12.5kms, TBD  | IntelMPI, OpenMPI  |   |
+| TensorFlow | ResNet50  | tbd  |   |
 
 For more information on the actual tests defined and how to run them see the README file in the relevant benchmark directory.
 
