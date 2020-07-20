@@ -59,6 +59,22 @@ site_configuration = {
                     ]
                 },
                 {
+                    'name':'ib-gcc9-impi',
+                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.7.217',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
+                    'variables': [
+                        ['FI_PROVIDER', 'mlx']
+                        #['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
+                        # these were (failed) attempts to make `srun` work:
+                        #['I_MPI_PMI_LIBRARY', '/opt/ohpc/admin/pmix/lib/libpmi.so'], # see https://slurm.schedmd.com/mpi_guide.html#intel_mpi
+                        #['SLURM_MPI_TYPE', 'pmi2'],
+                    ],
+                },
+                {
                     'name':'roce-openmpi3-openib',
                     'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
                     'scheduler': 'slurm',
@@ -98,6 +114,19 @@ site_configuration = {
                         ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
                 },
+                {
+                    'name':'roce-gcc9-impi',
+                    'descr': '25Gb RoCE with gcc 9.3.0 and Intel MPI 2019.7.217',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
+                    'variables': [
+                        ['FI_VERBS_IFACE', 'p3p2'] # Network interface to use.
+                    ],
+                },
+                
             ]
         }, # end alaska
         # < insert new systems here >
@@ -120,6 +149,11 @@ site_configuration = {
             'name': 'imb', # spack-provided packages
             'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
+        },
+        {
+            'name': 'imb', # spack-provided packages
+            'target_systems': ['ib-gcc9-impi', 'roce-gcc9-impi'],
+            'modules': ['intel-mpi-benchmarks/2019.5-w54huiw'],
         },
         {
             'name': 'gromacs',
