@@ -1,8 +1,10 @@
-Intel MPI Benchmarks:
+# Intel MPI Benchmarks
 
 https://software.intel.com/en-us/imb-user-guide
 
-This runs PingPong (latency/bandwidth), Uniband and Biband (bandwidth) tests from the IMB-MPI1 suite.
+This runs the following MPI1 tests:
+- PingPong (latency/bandwidth) on 2x nodes using 1x process per node
+- Uniband and Biband (bandwidth) 2x nodes using a range of processes per node from 1 up to as many as there are physical cores.
 
 # Installation - OpenHPC
 
@@ -18,9 +20,16 @@ e.g.:
 
     spack install intel-mpi-benchmarks ^openmpi@4: fabrics=ucx schedulers=auto
 
-Note openmpi v4 is required to integrate properly with Slurm via pmix. UCX is recommended to make selection of IB/RoCE considerably simpler.
+See note in main README re. usage of spack with existing mpi library installations.
 
+# Configurating ReFrame
 
-# TODO
-- add hpc-tests git describe to performance history
-- add failures to performance history or current status
+See main README.
+
+# Running
+
+Run all tests e.g.:
+        
+    cd hpc-tests
+    conda activate hpc-tests
+    reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
