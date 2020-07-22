@@ -172,6 +172,11 @@ site_configuration = {
             'modules': ['osu-micro-benchmarks/5.6.2-el6z55i']
         },
         {
+            'name': 'omb',
+            'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
+            'modules': ['osu-micro-benchmarks/5.6.2-ppxiddg']
+        },
+        {
             'name': 'hpl',
         },
         {
