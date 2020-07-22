@@ -59,7 +59,7 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'ib-gcc9-impi',
+                    'name':'ib-gcc9-impi-verbs',
                     'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.7.217',
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
@@ -67,8 +67,8 @@ site_configuration = {
                     'environs': ['imb', 'gromacs', 'omb', 'hpl'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
                     'variables': [
-                        ['FI_PROVIDER', 'mlx']
-                        #['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
+                        #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
+                        ['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
                         # these were (failed) attempts to make `srun` work:
                         #['I_MPI_PMI_LIBRARY', '/opt/ohpc/admin/pmix/lib/libpmi.so'], # see https://slurm.schedmd.com/mpi_guide.html#intel_mpi
                         #['SLURM_MPI_TYPE', 'pmi2'],
@@ -115,8 +115,8 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'roce-gcc9-impi',
-                    'descr': '25Gb RoCE with gcc 9.3.0 and Intel MPI 2019.7.217',
+                    'name':'roce-gcc9-impi-verbs',
+                    'descr': '25Gb RoCE with gcc 9.3.0 and Intel MPI 2019.7.217 using verbs',
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
@@ -152,7 +152,7 @@ site_configuration = {
         },
         {
             'name': 'imb', # spack-provided packages
-            'target_systems': ['ib-gcc9-impi', 'roce-gcc9-impi'],
+            'target_systems': ['ib-gcc9-impi-verbs', 'roce-gcc9-impi-verbs'],
             'modules': ['intel-mpi-benchmarks/2019.5-w54huiw'],
         },
         {
@@ -178,6 +178,11 @@ site_configuration = {
             'name': 'hpl',
             'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
             'modules': ['hpl/2.3-tgk5uqq'],
+        },
+        {
+            'name': 'intel-hpl',
+            'target_systems': ['ib-gcc9-impi-verbs', 'roce-gcc9-impi-verbs'],
+            'modules': ['intel-mkl/2020.1.217-5tpgp7b'],
         }
 
     ],

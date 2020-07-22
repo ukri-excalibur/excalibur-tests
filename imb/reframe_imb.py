@@ -4,6 +4,10 @@
 
     For parallel-transfer tests (i.e. uniband and biband) which use multiple process pairs, the -npmin flag is passed so that only the specified number of processes is run on each test.
     This is the easiest way of ensuring proper process placement on the two nodes.
+
+    Run using e.g.:
+
+        reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
 """
 
 import reframe as rfm
@@ -29,13 +33,21 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
         self.perf_patterns = {} # something funny about reframe's attr lookup
         self.executable = 'IMB-MPI1'
     
-    @rfm.run_before('run')
+    # @rfm.run_before('run')
     def set_block_distribution(self):
-        """ This should be the openmpi default anyway, but it's important to ensure so that 1st 1/2 of processes are on 1st node.
+        """ Ensure first half of processes are on first node
         
             TOOD: make conditional on using openmpi + srun
         """
-        self.job.launcher.options = ['--distribution=block']
+
+        if any('openmpi' in m for m in self.current_partition.local_env.modules):
+            launcher = self.job.launcher.registered_name
+            if launcher == 'srun':
+                self.job.launcher.options = ['--distribution=block']
+            else:
+                raise NotImplementedError('do not know how to set block distribution for launcher %r' % launcher )
+        else:
+            raise NotImplementedError('do not know how to set block distribution for partition %r' % self.current_partition.name )
 
     def add_metrics(self, metrics, n_procs):
         """ Create `self.perf_patterns` and units only in `self.reference`.
