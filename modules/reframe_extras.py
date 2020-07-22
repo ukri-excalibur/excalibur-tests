@@ -146,11 +146,15 @@ class Scheduler_Info(object):
         if not len(set(cpus)) == 1:
             raise ValueError('CPU description differs between nodes, cannot define unique value')
         sockets, cores, threads = [int(v) for v in cpus[0].split(':')] # nb each is 'per' the preceeding
+        self.sockets_per_node = sockets
         self.pcores_per_node = sockets * cores
         self.lcores_per_node = sockets * cores * threads
 
     def __str__(self):
-        return 'Scheduler_Info(num_nodes=%i, pcores_per_node=%i, lcores_per_node=%i)' % (self.num_nodes, self.pcores_per_node, self.lcores_per_node)
+
+        descr = ['%s=%s' % (k, getattr(self, k)) for k in ['num_nodes', 'sockets_per_node', 'pcores_per_node', 'lcores_per_node']]
+
+        return 'Scheduler_Info(%s)' % (', '.join(descr))
 
 def sequence(start, end, factor):
     """ Like `range()` but each term is `factor` * previous term.
