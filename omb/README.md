@@ -30,7 +30,7 @@ This installs gnu8, openmpi3 (and mvapich2) as well as OMB.
 
 e.g.:
 
-    spack install intel-mpi-benchmarks ^openmpi@4: fabrics=ucx schedulers=auto
+    spack install osu-micro-benchmarks ^openmpi@4: fabrics=ucx schedulers=auto
 
 See note in main README re. usage of spack with existing mpi library installations.
 

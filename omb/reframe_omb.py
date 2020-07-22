@@ -127,14 +127,6 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
         self.num_tasks_per_node = int(num_procs / 2)
         self.time_limit = '15m'
         
-    @rfm.run_before('run')
-    def set_block_distribution(self):
-        """ This should be the openmpi default anyway, but it's important to ensure so that 1st 1/2 of processes are on 1st node.
-        
-            TOOD: make conditional on using openmpi + srun
-        """
-        self.job.launcher.options = ['--distribution=block']
-
 
 if __name__ == '__main__':
     # e.g:

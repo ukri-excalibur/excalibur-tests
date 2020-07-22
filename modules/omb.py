@@ -49,12 +49,36 @@ OSU_OUTPUT_COLS = {
     '# OSU MPI Allreduce Latency Test': ('Size', 'Avg Latency(us)'),
 }
 
+STRIP_LINES = [
+    'WARNING: release_mt library was used but no multi-ep feature was enabled. Please use release library instead.' # TODO: workaround for Intel MPI library misconfiguration?
+]
+
+def clean(path, prefixes):
+    """ Remove lines starting with any string in `prefixes` from a file.
+
+        Modifies `path`, returns None.
+    """
+    saved_lines = []
+    with open(path) as f:
+        for line in f:
+            if any([line.startswith(prefix) for prefix in prefixes]):
+                continue
+            else:
+                saved_lines.append(line)
+    with open(path, 'w') as f:
+        for line in saved_lines:
+            f.write(line)
+    
+
+
 def read_omb_out(path):
     """ Read stdout from a multi-column OMB output file.
         
         Returns a pandas dataframe.
     """
 
+    
+    clean(path, STRIP_LINES)
     # NB: Some output files contain blank lines before # header lines.
 
     # work out file type:
