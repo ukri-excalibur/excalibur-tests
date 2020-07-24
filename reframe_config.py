@@ -64,7 +64,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
                     'variables': [
                         #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
@@ -120,12 +120,24 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
                     'variables': [
                         ['FI_VERBS_IFACE', 'p3p2'] # Network interface to use.
                     ],
                 },
+                {
+                    'name':'ib-gcc9-openmpi4-ucx',
+                    'descr':'100Gb Infiniband with gcc 9.3.0 and openmpi 4.0.3 using UCX transport layer',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs':['openfoam'],
+                    'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
+                    'variables': [
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+                    ]
+                }
                 
             ]
         }, # end alaska
@@ -186,10 +198,36 @@ site_configuration = {
         },
         {
             'name': 'intel-hpl',
-            'target_systems': ['ib-gcc9-impi-verbs', 'roce-gcc9-impi-verbs'],
+        },
+        {
+            'name': 'intel-hpl',
+            'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
             'modules': ['intel-mkl/2020.1.217-5tpgp7b'],
-        }
-
+            'variables':[
+                ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
+            ],
+        },
+        {
+            'name': 'intel-hpcg',
+        },
+        {
+            'name': 'intel-hpcg',
+            'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
+            'modules': ['intel-mkl/2020.1.217-5tpgp7b'],
+            'variables':[
+                ['PATH', '$PATH:$MKLROOT/benchmarks/hpcg/bin/'], # MKLROOT provided by mkl module
+                ['XHPCG_BIN', 'xhpcg_avx2'],
+                ['SLURM_CPU_BIND', 'verbose'], # doesn't work as task/affinity plugin not enabled
+            ]
+        },
+        {
+            'name':'openfoam'
+        },
+        {
+            'name':'openfoam',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'],
+            'modules': ['openfoam-org/7-4zgjbg2']
+        },
     ],
     'logging': [
         {
