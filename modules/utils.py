@@ -23,22 +23,6 @@ def parse_path_metadata(path):
     info['path'] = path
     return info
 
-
-def group_by(seq, keyfunc):
-    """ group a sequence of nested dicts using a keyfunction
-    
-        returns a dict of lists
-        unlike itertools.groupby this returns a copy not an iterator
-    
-        TODO: explain properly
-    """
-    output = {}
-    for item in seq:
-        value = keyfunc(item)
-        curr = output.setdefault(value, [])
-        curr.append(item)
-    return output
-
 def find_run_outputs(root='.', test='*', ext='.out'):
     """ Find test files within an output tree.
     
@@ -95,27 +79,6 @@ def diff_dicts(dicts, ignore=None):
         for d in dicts:
             d.pop(key, None)
     keyvals = [set(zip(d.keys(), d.values())) for d in dicts]
-    common = keyvals[0].intersection(*keyvals[1:])
-    differences = [dict(sorted(b.difference(common))) for b in keyvals]
-    return dict(common), differences
-
-def diff_meta(results, ignore=['path']): # TODO: depreciated, replace with diff_dict
-    """ Given a sequence of results dicts, returns
-            
-            common, [difference1, difference2, ...]
-        
-        where each of these are dicts based on the ['meta'] properties of each result dict,
-        ignoring given keys
-        
-        TODO: describe this properly
-    """
-    
-    meta = [r['meta'].copy() for r in results]
-    
-    for key in ignore:
-        for m in meta:
-            m.pop(key, None)
-    keyvals = [set(zip(m.keys(), m.values())) for m in meta]
     common = keyvals[0].intersection(*keyvals[1:])
     differences = [dict(sorted(b.difference(common))) for b in keyvals]
     return dict(common), differences
