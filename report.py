@@ -37,7 +37,11 @@ if __name__ == '__main__':
     df = df.loc[df['perf_var'] == perf_var]
 
     # add a system:partition column:
-    df['sys:part'] = df[['sysname', 'partition']].agg(':'.join, axis=1)
+    environs = df['environ'].unique()
+    if len(environs) > 1:
+        df['sys:part'] = df['sysname'] + ':' + df['partition'] + '/' + df['environ']
+    else:
+        df['sys:part'] = df['sysname'] + ':' + df['partition']
         
     # pivot to give a row per testname, column per system:partition, with values being selected perf_var
     df = df.pivot(index='testname', columns='sys:part', values='perf_value')
