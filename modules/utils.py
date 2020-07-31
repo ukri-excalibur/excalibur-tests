@@ -92,7 +92,7 @@ def read_perflog(path):
         NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
 
         The returned dataframe will have columns for:
-            - qll keys returned by `parse_path_metadata()`
+            - all keys returned by `parse_path_metadata()`
             - all fields in a performance log record, noting that 'completion_time' is converted to a `datetime.datetime`
             - 'perf_var' and 'perf_value', derived from 'perf_info' field
     """
@@ -129,9 +129,15 @@ def read_perflog(path):
             
     return pd.DataFrame.from_records(records)
 
-def load_perf_logs(root='.', test=None, ext='.log'):
+def load_perf_logs(root='.', test=None, ext='.log', last=False):
     """ Convenience wrapper around read_perflog().
-    
+
+        Args:
+            root: str, path to root of tree containing perf logs
+            test: str, shell-style glob pattern matched against last directory component to restrict loaded logs, or None to load all in tree
+            ext: str, only load logs from files with this extension
+            last: bool, True to only return the most-recent record for each system/partition/enviroment/testname/perf_var combination.
+
         Returns a single pandas.dataframe concatenated from all loaded logs, or None if no logs exist.
     """
     perf_logs = find_run_outputs(root, test, ext)
@@ -142,6 +148,10 @@ def load_perf_logs(root='.', test=None, ext='.log'):
     if len(perf_records) == 0:
         return None
     perf_records = pd.concat(perf_records).reset_index(drop=True)
+
+    if last:
+        perf_records = perf_records.sort_index().groupby(['sysname', 'partition', 'environ', 'testname', 'perf_var']).tail(1)
+    
     return perf_records
 
 def sizeof_fmt(num, suffix='B'):
