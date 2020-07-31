@@ -2,8 +2,6 @@ Gromacs Biomolecular Simulation:
 
 http://manual.gromacs.org
 
-This runs the "small" benchmark from the [Archer benchmarks](https://github.com/hpc-uk/archer-benchmarks/tree/master/apps/GROMACS).
-
 Note Gromacs 2016 is required due to the benchmark file.
 
 # Installation - OpenHPC

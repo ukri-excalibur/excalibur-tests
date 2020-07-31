@@ -10,12 +10,13 @@ The intended test matrix is shown below, marked with (A) where there is an imple
 
 | Application | Benchmark | MPI Library | Notes |
 | ---         | ---       | ---         | --  |
-| OSU Micro Benchmarks (OMB)       | latency (A), bandwidth (A), alltoall (A), allgather (A), allreduce (A)          | IntelMPI (A), OpenMPI (A)       | - |
+| OSU Micro Benchmarks (OMB)       | latency (A), bandwidth (A), alltoall (A), allgather (A), allreduce (A)          | IntelMPI (A), OpenMPI (A)       | mbw_mr also added for AlaSKA for range of node numbers |
 | Intel MPI Benchmarks (IMB)       | uniband (A), biband (A)                                                         | IntelMPI (A), OpenMPI (A)       | PingPong also added for AlaSKA for basic debugging |
 | High Performance Linpack (HPL)   | -                                                                               | IntelMPI | Uses Intel-optimised version with MKL |
 | High Performance Conjugate Gradient (HPCG) | -                                                                     | IntelMPI (A) | Uses Intel-optimised version with MKL |
 | Castep                           | tbd                                                                             | tbd  |   |
-| OpenFOAM                         | tbd                                                                             | tbd  |   |
+| CP2K                             | H20-256                                                                         | IntelMPI, OpenMPI (A)  |   |
+| OpenFOAM                         | Motorbike                                                                       | tbd  |   |
 | GROMACS                          | HECBioSim benchmarks: 61k (A), 1.4M (A) and 3M atom cases (A)                   | IntelMPI, OpenMPI (A)  |   |
 | LS-Dyna                          | Neon, car2car, ODB-10M                                                          | OpenMPI  |   |
 | StarCCM+                         | LeMans_100M, TurboCharger, Civil 20M                                            | OpenMPI  |   |
@@ -252,6 +253,10 @@ Finally as ReFrame cannot use `spack load` directly we need to enable spack's su
 
 - Add the `module use ...` command this to your `~/.bashrc`.
 
+# Adding a test
+
+Some things which might help:
+- `report.py` is a CLI tool to interrogate performance logs.
 
 # TODO:
 
