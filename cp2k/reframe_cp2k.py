@@ -16,6 +16,7 @@
     TODO: DELETE THIS:
     NOTES:
     - want cp2k.popt (for MPI only ) or .psmp (for MPI + OpenMP)
+    - ONLY POPT IMPLEMENTED HERE
 
 """
 
@@ -28,21 +29,28 @@ from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
 from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+# want to use a module supplied as part of the reframe git repo:
+RFM_CP2K_PATH = os.path.join('reframe', 'cscs-checks', 'apps', 'cp2k')
+sys.path.append(RFM_CP2K_PATH)
+from cp2k_check import Cp2kCheck as Rfm_Cp2kCheck
 
 node_seq = sequence(1, Scheduler_Info().num_nodes + 1, 2)
 
 @rfm.parameterized_test(*[[n_nodes] for n_nodes in node_seq])
-class Cp2k(rfm.RunOnlyRegressionTest):
+class Cp2k_H2O_256(Rfm_Cp2kCheck):
 
     def __init__(self, num_nodes):
         
-
-        self.project = 'H2O-128' # TODO: could extract this in child class
-        self.inp = '%s.inp' % self.project
-
+        super().__init__()
+        
+        # override not appropriate values in superclass:
         self.valid_systems = ['*']
         self.valid_prog_environs = ['cp2k']
-        
+        self.modules = []
+        self.extra_resources = {}
+        self.executable = 'cp2k.popt'
+        self.sourcesdir = os.path.join(os.path.abspath(RFM_CP2K_PATH), 'src')
+
         self.num_nodes = num_nodes
         self.tags = set([str(num_nodes)])
 
@@ -52,45 +60,5 @@ class Cp2k(rfm.RunOnlyRegressionTest):
         
         self.exclusive_access = True
         self.time_limit = None
-
-        self.pre_run = [
-            # get benchmark files:
-            'wget https://raw.githubusercontent.com/misteliy/cp2k/master/tests/QS/benchmark/%s' % self.inp, # TODO: this is master, is this what we want??
-            'wget https://raw.githubusercontent.com/misteliy/cp2k/master/tests/QS/GTH_BASIS_SETS',
-            'wget https://raw.githubusercontent.com/misteliy/cp2k/master/tests/QS/POTENTIAL',
-            # modify input deck to account for flat staging directory:
-            'sed -i -- "s/    BASIS_SET_FILE_NAME ..\/GTH_BASIS_SETS/    BASIS_SET_FILE_NAME GTH_BASIS_SETS/g" %s' % self.inp,
-            'sed -i -- "s/    POTENTIAL_FILE_NAME ..\/POTENTIAL/    POTENTIAL_FILE_NAME POTENTIAL/g" %s' % self.inp,
-        ]
         
-        self.executable = 'cp2k.popt'
-        self.executable_opts = [self.inp]
-        
-        #self.keep_files = []  # TODO
-
-        # TODO:
-        result = sn.extractall(
-            r'time step continuity errors : '
-            r'\S+\s\S+ = \S+\sglobal = (?P<res>-?\S+),',
-            self.stdout, 'res', float)
-        # NB: `time` outputs to stderr so can't assume that should be empty
-        self.sanity_patterns = sn.all([
-            # ensure simpleFoam finished:
-            sn.assert_found('Finalising parallel run', 'log.simpleFoam'),
-            sn.assert_not_found('FOAM FATAL ERROR', 'log.simpleFoam'),
-            # ensure continuity errors small enough - copied from
-            # https://github.com/eth-cscs/reframe/blob/0a4dc5207b35c737861db346bd483fd4ac202846/cscs-checks/apps/openfoam/check_openfoam_extend.py#L56
-            sn.all(
-                sn.map(lambda x: sn.assert_lt(abs(x), 5.e-04), result)
-            ),
-        ])
-
-        # TODO:
-        # self.perf_patterns = {
-        #     'Allrun_realtime': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time),
-        # }
-        # self.reference = {
-        #     '*': {
-        #         'Allrun_realtime': (0, None, None, 's'),
-        #     }
-        # }
+        # all sanity/performance patterns defined in superclass
