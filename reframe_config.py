@@ -49,7 +49,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'environs': ['imb', 'gromacs', 'omb', 'hpl', 'openfoam', 'cp2k'],
                     'modules': ['openmpi/4.0.3-ziwdzwh'],
                     'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
@@ -105,7 +105,7 @@ site_configuration = {
                     'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
-                    'environs': ['imb', 'gromacs', 'omb', 'hpl'],
+                    'environs': ['imb', 'gromacs', 'omb', 'hpl', 'openfoam', 'cp2k'],
                     'modules': ['openmpi/4.0.3-ziwdzwh'],
                     'variables': [
                         # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
@@ -225,9 +225,22 @@ site_configuration = {
         },
         {
             'name':'openfoam',
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'modules': ['openfoam-org/7-2ceqb4l']
+        },
+        {
+            'name':'openfoam',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'],
             'modules': ['openfoam-org/7-4zgjbg2']
         },
+        {
+            'name':'cp2k'
+        },
+        {
+            'name':'cp2k',
+            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'modules': ['cp2k/7.1-spcqy4k']
+        }
     ],
     'logging': [
         {
