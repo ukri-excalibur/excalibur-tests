@@ -16,7 +16,7 @@ The intended test matrix is shown below, marked with (A) where there is an imple
 | High Performance Conjugate Gradient (HPCG) | -                                                                     | IntelMPI (A) | Uses Intel-optimised version with MKL |
 | Castep                           | tbd                                                                             | tbd  |   |
 | CP2K                             | H20-256                                                                         | IntelMPI, OpenMPI (A)  |   |
-| OpenFOAM                         | Motorbike                                                                       | tbd  |   |
+| OpenFOAM                         | Motorbike                                                                       | IntelMPI, OpenMPI (A)  |   |
 | GROMACS                          | HECBioSim benchmarks: 61k (A), 1.4M (A) and 3M atom cases (A)                   | IntelMPI, OpenMPI (A)  |   |
 | LS-Dyna                          | Neon, car2car, ODB-10M                                                          | OpenMPI  |   |
 | StarCCM+                         | LeMans_100M, TurboCharger, Civil 20M                                            | OpenMPI  |   |

@@ -1,4 +1,4 @@
-Gromacs Biomolecular Simulation:
+# Gromacs Biomolecular Simulation
 
 http://manual.gromacs.org
 
