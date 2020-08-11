@@ -17,7 +17,6 @@ import sys
 sys.path.append('reframe')
 import modules
 
-
 if __name__ == '__main__':
     testname = sys.argv[-1]
 
@@ -46,5 +45,15 @@ if __name__ == '__main__':
     # pivot to give a row per testname, column per system:partition, with values being selected perf_var
     df = df.pivot(index='testname', columns='sys:part', values='perf_value')
 
-    print('perf_var:', perf_var)
+    # if last part of '_'-delimited testname is numeric, then use it for sorting:
+    # don't have key parameter for df.sort_index() in this version so have to create a new column
+    testparts = [t.split('_') for t in df.index]
+    if all(t[-1].isnumeric for t in testparts):
+        print('Have numeric testname suffix, sorting by that')
+        df['_n'] = [int(v.rsplit('_', 1)[-1]) for v in df.index]    
+        df = df.sort_values(by='_n')
+        df.drop('_n', axis=1)
+
+    if len(perf_vars) > 1:
+        print('perf_var:', perf_var)
     print(df)
