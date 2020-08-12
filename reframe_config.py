@@ -130,7 +130,7 @@ site_configuration = {
                     'name':'ib-gcc9-openmpi4-ucx',
                     'descr':'100Gb Infiniband with gcc 9.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
-                    'launcher':'mpirun',
+                    'launcher':'srun',
                     'max_jobs':8,
                     'environs':['openfoam'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
