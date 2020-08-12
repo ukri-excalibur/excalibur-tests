@@ -9,7 +9,10 @@
         
         cd hpc-tests
         conda activate hpc-tests
-        reframe/bin/reframe -C reframe_config.py -c gromacs/ --run --performance-report
+        reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report
+    
+    Or to run only the 61k atom case for 1 node only a single partition:
+        reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-openmpi4-ucx -n 'Gromacs_61k_1$'
 """
 
 import reframe as rfm
@@ -17,6 +20,7 @@ import reframe.utility.sanity as sn
 import os, sys, urllib, shutil, itertools
 sys.path.append('.')
 from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+from modules.utils import parse_time_cmd
 from reframe.core.logging import getlogger
 
 # parameterisation:
@@ -44,12 +48,12 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
     """
     def __init__(self, casename, num_nodes):
         
-
         self.name = 'Gromacs_%s_%i' % (casename.split('-')[0], num_nodes) # e.g. Gromacs_1400k_2
         self.use_cache = False # set to True to debug outputs using cached results
 
         self.casename = casename
         self.num_nodes = num_nodes
+        self.tags = set([str(num_nodes), casename])
 
         # these are the ones reframe uses:
         self.num_tasks_per_node = Scheduler_Info().pcores_per_node
@@ -63,6 +67,7 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
         # created by download_benchmarks():
         self.sourcesdir = os.path.join(self.prefix, 'downloads', 'gromacs', self.casename)
 
+        self.pre_run = ['time \\']
         self.executable = 'gmx_mpi'
         self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout']
         self.exclusive_access = True
@@ -71,14 +76,25 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
         self.keep_files = [self.logfile]
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
         self.perf_patterns = {
+            # from gromacs output:
             'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 1, float),
             'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 2, float),
+            'core_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 1, float),
+            'wall_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 2, float),
+            # from `time`:
+            'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            'runtime_user': sn.extractsingle(r'^user\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            'runtime_sys': sn.extractsingle(r'^sys\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
-        # TODO: these are basically the same so just keep ns_per_day (higher = better)?
         self.reference = {
             '*': {
                 'ns_per_day': (0, None, None, 'ns/day'),
                 'hour_per_ns': (0, None, None, 'hour/ns'),
+                'core_t': (0, None, None, 's'),
+                'wall_t': (0, None, None, 's'),
+                'runtime_real': (0, None, None, 's'),
+                'runtime_user': (0, None, None, 's'),
+                'runtime_sys': (0, None, None, 's'),
             }
         }
 
