@@ -36,20 +36,21 @@ This package does not automate build/install of the benchmark applications thems
 Key repository contents are as follows:
 
 ```
-<application>/
-  reframe_<application>.py      - the ReFrame tests for <application>
-  <application>.ipynb           - jupyter notebook plotting results for <application>
-modules/                        - python modules for functionality common to multiple tests
-reframe/                        - the ReFrame installation
-reframe_config.py               - the description of each system for ReFrame
-output/                         - ReFrame test output - see above
-perflogs/                       - ReFrame performance logs - see above
+apps/
+    <application>/
+        reframe_<application>.py    - the ReFrame tests for <application>
+        <application>.ipynb         - jupyter notebook plotting results for <application>
+modules/                            - python modules for functionality common to multiple tests
+reframe/                            - the ReFrame installation
+reframe_config.py                   - the description of each system for ReFrame
+output/                             - ReFrame test output - see Reframe Concepts below
+perflogs/                           - ReFrame performance logs - see Reframe Concepts below
 ```
 
 ## Installation
 
 Ensure you have an HPC system with:
-- `slurm` (`reframe` itself can use other schedulers some extensions provided here are are currently slurm-specific)
+- `slurm` (while `ReFrame` itself can use other schedulers some extensions provided here are are currently slurm-specific)
 - a module system
 - `git`
 
@@ -68,7 +69,7 @@ Some way of compiling applications is required  - instructions here use `spack` 
       
    Follow prompts to initialise, then close/reopen shell.
 
-1. Create and activate conda environment:
+1. Create and activate the `hpc-tests` conda environment:
     
         conda create -f environment.yml
         conda activate hpc-tests
@@ -80,18 +81,18 @@ Some way of compiling applications is required  - instructions here use `spack` 
 
 1. Run ReFrame's own test suite:
 
-        # load a compiler module - NB: not shown in ReFrame docs but essential!
+        # ensure a compiler is available e.g. by loading a compiler module - NB: this is not shown in the ReFrame docs but is essential!
         cd reframe/
         ./test_reframe.py -v
   
-    (This will skip some tests but should not fail any.)
+    This will skip some tests but should not fail any.
 
 1. Set up a public Jupyter notebook server:
 
         cd hpc-tests/setup
-        ./jupyter-server.sh <<< <PASSWORD>
+        ./jupyter-server.sh <<< PASSWORD
       
-    Replacing `<PASSWORD>` with a password for Jupyter. This only needs to be done once and sets up a self-signed SSL certificate - NB your browser will complain when connecting to the notebook.
+    Replacing `PASSWORD` with a password for Jupyter. This only needs to be done once and sets up a self-signed SSL certificate - note your browser will complain when connecting to the notebook.
 
 1. If using `spack` to compile applications, install and set it up - see separate section below.
 
@@ -103,12 +104,17 @@ Some way of compiling applications is required  - instructions here use `spack` 
 
 To configure these tests for a new system some understanding of ReFrame is necessary, so key aspects are defined here.
 
-Tests in ReFrame are defined by Python scripts - here, the `<benchmark>/reframe_<benchmark>.py` files. These define a generic test, independent of system details like scheduler, MPI libraries, launcher etc. These aspects are defined for the system(s) under test in the reframe configuration file `reframe_config.py`. A system definition contains one or more **partitions** which are not necessarily actual scheduler partitions, but simply logical separations within the system. Partitions then support one or more **environments** which describe the modules to be loaded, enviroment variables, options etc. Environments are defined separately from partitions so they may be specific to a system + partition, common to multiple systems or partitions, or a default environment may be overridden for specific systems and/or partitions. Tests themselves may also define modules to load etc. as well as which environments, partitions and systems they are valid for. ReFrame then runs tests on combinations of valid partitions + environments.
+Tests in ReFrame are defined by Python scripts - here, the `apps/<application>/reframe_<application>.py` files. These define a generic test, independent of system details like scheduler, MPI libraries, launcher etc. These aspects are defined for the system(s) under test in the reframe configuration file `reframe_config.py`. A system definition contains one or more **partitions** which are not necessarily actual scheduler partitions, but simply logical separations within the system. Partitions then support one or more **environments** which describe the modules to be loaded, enviroment variables, options etc. Environments are defined separately from partitions so they may be specific to a system + partition, common to multiple systems or partitions, or a default environment may be overridden for specific systems and/or partitions. Tests themselves may also define modules to load etc. as well as which environments, partitions and systems they are valid for. ReFrame then runs tests on combinations of valid partitions + environments.
 
 Despite this flexibility, in practice the features ReFrame exposes at each level affect how the system configuration should be defined. Using the setup for AlaSKA given in `reframe_config.py` as an example:
-- We want to run tests using both the HDR 100 InfiniBand and 25G Ethernet (RoCE) networks, and with OpenMPI using both 'openib' and 'ucx' to select between networks which requires two different builds of OpenMPI (which happen to be different versions here as well). This also needs to be expandable to multiple compiler + MPI library chains.
-- Because of the two OpenMPI builds, the actual modules required for the benchmark applications have different names in each partition - this is likely to generally be the case without special attention to the module tree. Therefore the benchmark module cannot be defined at test level.
-- We therefore define partitions which encapsulate *combinations* of the network (`ib-` or `roce-`), MPI library (`-openmpi3-` or `-openmpi4-`) and communication layer (`-openib` or `-ucx`). The partition also defines the scheduler to use (`slurm`), launcher (`srun`) and process management library (`pmix_v2`) and associated options. If using multiple compilers, the compiler definition would have to be incorporated into the partition name too.
+- We want to run tests using:
+  - Both the HDR 100 InfiniBand and 25G Ethernet (RoCE) networks
+  - With various MPI libraries:
+     - OpenMPI using either 'openib' and 'ucx' to select between networks (needing two separate builds of OpenMPI - which happen to be different versions here as well).
+     - Intel MPI
+  - With various compilers.
+- Each application must be built using each compiler + MPI chain. In general, this means that each build of the application module will have a different name. Therefore the application module to load cannot be defined at test level.
+- We therefore define partitions which encapsulate *combinations* of the network (`ib-` or `roce-`), compiler, MPI library (`-openmpi3-` or `-openmpi4-`) and communication layer (`-openib` or `-ucx`). The partition also defines the scheduler to use (`slurm`), launcher (`srun`) and process management library (`pmix_v2`) and associated options.
 - We then define an environment name per application, e.g. `imb`, and mark each test as valid only for that environment. We then provide separate *definitions* of these environments as required for individual partitions.
 
 ReFrame captures two outputs from tests:
