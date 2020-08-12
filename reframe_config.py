@@ -1,25 +1,12 @@
 site_configuration = {
     'systems': [
         {
-            'name':'sausage-newslurm',
-            'descr': "sausagecloud newslurm cluster",
-            'hostnames': ['steveb-newslurm-control-0', 'steveb-newslurm-compute'],
-            'modules_system': 'lmod',
-            'partitions': [
-                {
-                    'name':'compute',
-                    'scheduler': 'slurm',
-                    'launcher':'mpirun',
-                    'environs': ['gnu-openmpi',],
-                }
-            ]
-        }, # end sausage-newslurm
-        {
             'name':'alaska',
             'descr':'Default AlaSKA OpenHPC p3-appliances slurm cluster',
             'hostnames': ['openhpc-login-0', 'openhpc-compute'],
             'modules_system':'lmod',
             'partitions':[
+                # system compiler+mpi:
                 {
                     'name':'ib-openmpi3-openib',
                     'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
@@ -42,37 +29,6 @@ site_configuration = {
                         # - showed no difference in --report-bindings!
                         # can also use "hwthread" but this is slower still.
                     ]
-                },
-                {
-                    'name':'ib-openmpi4-ucx',
-                    'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
-                    'scheduler': 'slurm',
-                    'launcher':'srun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'hpl', 'openfoam', 'cp2k'],
-                    'modules': ['openmpi/4.0.3-ziwdzwh'],
-                    'variables': [
-                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
-                        ['SLURM_MPI_TYPE', 'pmix_v2'],
-
-                        # (no vars required for ucx on ib - fastest CA available)
-                    ]
-                },
-                {
-                    'name':'ib-gcc9-impi-verbs',
-                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.7.217',
-                    'scheduler': 'slurm',
-                    'launcher':'mpirun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
-                    'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
-                    'variables': [
-                        #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
-                        ['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
-                        # these were (failed) attempts to make `srun` work:
-                        #['I_MPI_PMI_LIBRARY', '/opt/ohpc/admin/pmix/lib/libpmi.so'], # see https://slurm.schedmd.com/mpi_guide.html#intel_mpi
-                        #['SLURM_MPI_TYPE', 'pmi2'],
-                    ],
                 },
                 {
                     'name':'roce-openmpi3-openib',
@@ -100,6 +56,22 @@ site_configuration = {
                         ],
                     ]
                 },
+                # system compiler, spack mpi:
+                {
+                    'name':'ib-openmpi4-ucx',
+                    'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
+                    'scheduler': 'slurm',
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'hpl', 'openfoam', 'cp2k'],
+                    'modules': ['openmpi/4.0.3-ziwdzwh'],
+                    'variables': [
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
+                        # (no vars required for ucx on ib - fastest CA available)
+                    ]
+                },
                 {
                     'name':'roce-openmpi4-ucx',
                     'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
@@ -113,6 +85,23 @@ site_configuration = {
                         # use roce:
                         ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
+                },
+
+                {
+                    'name':'ib-gcc9-impi-verbs',
+                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.7.217',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
+                    'variables': [
+                        #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
+                        ['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
+                        # these were (failed) attempts to make `srun` work:
+                        #['I_MPI_PMI_LIBRARY', '/opt/ohpc/admin/pmix/lib/libpmi.so'], # see https://slurm.schedmd.com/mpi_guide.html#intel_mpi
+                        #['SLURM_MPI_TYPE', 'pmi2'],
+                    ],
                 },
                 {
                     'name':'roce-gcc9-impi-verbs',
@@ -137,8 +126,7 @@ site_configuration = {
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
                     ]
-                }
-                
+                }   
             ]
         }, # end alaska
         # < insert new systems here >
