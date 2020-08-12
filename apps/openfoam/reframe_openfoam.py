@@ -2,15 +2,7 @@
 
     See README.md for details.
 
-    Run using e.g.:
-
-        reframe/bin/reframe -C reframe_config.py -c openfoam/ --run --performance-report
-    
-    Run on a specific number of nodes by appending:
-
-        --tag 'N$'
-    
-    where N must be one of 1, 2, 4, ..., etc.
+    Note that the provided benchmark run script is not used and instead its functionality has been implemented using ReFrame.
 """
 
 import reframe as rfm
@@ -105,15 +97,11 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
             'ClockTime': sn.extractall(r'ExecutionTime = ([\d.]+) s  ClockTime = ([\d.]+) s', self.stdout, 2, float)[-1],
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_user': sn.extractsingle(r'^user\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_sys': sn.extractsingle(r'^sys\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
         self.reference = {
             '*': {
                 'ExecutionTime': (0, None, None, 's'),
                 'ClockTime': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
-                'runtime_user': (0, None, None, 's'),
-                'runtime_sys': (0, None, None, 's'),
             }
         }

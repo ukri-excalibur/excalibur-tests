@@ -1,10 +1,12 @@
 # CP2K
 
-Quantum chemistry and solid state physics software package for atomistic simulations.
+Performance tests of the CP2K quantum chemistry and solid state physics simluation package https://www.cp2k.org/ using the H20-256 benchmark distributed with the CP2K source code.
 
-https://www.cp2k.org/
+The benchmark is run on a range of number of nodes, from 1 up to all available. Each run uses as many processes per node as there are physical cores.
 
-Runs the H20-256 benchmark distributed with the CP2K source code.
+The following performance variables are captured:
+- 'cp2k_time' (s): The "total maximum time" for the CP2K subroutine as reported in CP2K output. This is assumed to be processor time, not wallclock time.
+- 'runtime_real' (s): Wallclock time reported by `time` for entire MPI program start to finish.
 
 # Installation - Spack
 

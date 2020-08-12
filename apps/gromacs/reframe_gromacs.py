@@ -1,18 +1,6 @@
 """ Performance test using Gromacs molecular dynamics code: http://www.gromacs.org/
 
-    Runs benchmarks from HECBioSim: http://www.hecbiosim.ac.uk/benchmarks
-    - 61K atom system - 1WDN Glutamine-Binding Protein
-    - 1.4M atom system - A Pair of hEGFR Dimers of 1IVO and 1NQL
-    - 3M atom system - A Pair of hEGFR tetramers of 1IVO and 1NQL
-
-    Run using e.g.:
-        
-        cd hpc-tests
-        conda activate hpc-tests
-        reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report
-    
-    Or to run only the 61k atom case for 1 node only a single partition:
-        reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-openmpi4-ucx -n 'Gromacs_61k_1$'
+    See README.md for details.
 """
 
 import reframe as rfm
@@ -79,12 +67,10 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
             # from gromacs output:
             'ns_per_day': sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 1, float),
             'hour_per_ns':  sn.extractsingle(r'Performance:\s+(\S+)\s+(\S+)', self.logfile, 2, float),
-            'core_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 1, float),
-            'wall_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 2, float),
+            'core_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 1, float), # "Core t (s)"
+            'wall_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 2, float), # "Wall t (s)"
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_user': sn.extractsingle(r'^user\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_sys': sn.extractsingle(r'^sys\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
         self.reference = {
             '*': {
@@ -93,8 +79,6 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
                 'core_t': (0, None, None, 's'),
                 'wall_t': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
-                'runtime_user': (0, None, None, 's'),
-                'runtime_sys': (0, None, None, 's'),
             }
         }
 

@@ -1,23 +1,10 @@
-""" TODO:
+""" Performance test using CP2K quantum chemistry and solid state physics software package for atomistic simulations.
 
     See README.md for details.
 
-    Run using e.g.:
-
-        reframe/bin/reframe -C reframe_config.py -c cp2k/ --run --performance-report
-    
-    Run on a specific number of nodes by appending:
-
-        --tag 'N$'
-    
-    where N must be one of 1, 2, 4, ..., etc.
-
-
-    TODO: DELETE THIS:
-    NOTES:
-    - want cp2k.popt (for MPI only ) or .psmp (for MPI + OpenMP)
-    - ONLY POPT IMPLEMENTED HERE
-
+    NB:
+    - The executable is either cp2k.popt (for MPI only) or cp2k.psmp (for MPI + OpenMP).
+    - Only the former is currently implemented here.
 """
 
 import reframe as rfm
@@ -71,8 +58,6 @@ class Cp2k_H2O_256(Rfm_Cp2kCheck):
                                      self.stdout, 1, float), # "Total Max" time for CP2K subroutine
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_user': sn.extractsingle(r'^user\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'runtime_sys': sn.extractsingle(r'^sys\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
         self.reference = {
             '*': {
