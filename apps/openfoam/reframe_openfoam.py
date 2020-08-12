@@ -22,6 +22,7 @@ from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
 from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+from modules.utils import parse_time_cmd
 
 node_seq = sequence(1, Scheduler_Info().num_nodes + 1, 2)
 
@@ -60,7 +61,9 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
             # fix location of mesh quality defaults (needed for v6+?)
             "sed -i -- 's|caseDicts|caseDicts/mesh/generation|' system/meshQualityDict",
 
-            'time ./Allmesh',
+            './Allmesh', # do meshing
+
+            'time \\', # want to run mpi task under time
         ]
         # could also check:
         #$ ompi_info -c | grep -oE "MPI_THREAD_MULTIPLE[^,]*"
@@ -97,10 +100,20 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
         ])
 
         self.perf_patterns = {
-            'Allrun_realtime': sn.extractall(r'ExecutionTime = ([\d.]+) s', self.stdout, 1, float)[-1],
+            # from openfoam output:
+            'ExecutionTime': sn.extractall(r'ExecutionTime = ([\d.]+) s  ClockTime = ([\d.]+) s', self.stdout, 1, float)[-1],
+            'ClockTime': sn.extractall(r'ExecutionTime = ([\d.]+) s  ClockTime = ([\d.]+) s', self.stdout, 2, float)[-1],
+            # from `time`:
+            'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            'runtime_user': sn.extractsingle(r'^user\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            'runtime_sys': sn.extractsingle(r'^sys\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
         self.reference = {
             '*': {
-                'Allrun_realtime': (0, None, None, 's'),
+                'ExecutionTime': (0, None, None, 's'),
+                'ClockTime': (0, None, None, 's'),
+                'runtime_real': (0, None, None, 's'),
+                'runtime_user': (0, None, None, 's'),
+                'runtime_sys': (0, None, None, 's'),
             }
         }
