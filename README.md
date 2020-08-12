@@ -68,12 +68,10 @@ Some way of compiling applications is required  - instructions here use `spack` 
       
    Follow prompts to initialise, then close/reopen shell.
 
-1. Create conda environment:
+1. Create and activate conda environment:
     
-        conda create --name hpc-tests python=3.7 pytest jsonschema jupyter matplotlib pandas
+        conda create -f environment.yml
         conda activate hpc-tests
-
-    TODO: sort .env file
 
 1. Install ReFrame:
 
