@@ -137,20 +137,21 @@ Assuming you have read the above section on ReFrame concepts, you will have to m
     - "modules" to specify the module(s) needed to run the appropriate benchmark within the specified partition.
   Note that depending on how benchmark modules are named, you may need to specify multiple environments with different partitions in "target_systems".
 
-# Usage
+## Usage
 
 - All the below assumes the conda enviroment is activated:
 
       conda activate hpc-tests
 
-- Install the required application/benchmark - see the appropriate README for help.
+- Install the required application - see the appropriate `apps/<application>/README.md` for help.
 
-- Run tests using something like:
+- Run all tests for this applicatino using something like:
 
       cd hpc-tests
       reframe/bin/reframe -C reframe_config.py -c <application>/ --run --performance-report
 
-  See appropriate README for application-specific instructions.
+  Tests can be run for specfic systems/partitions by appending e.g.: `--system alaska:ib-gcc9-openmpi4-ucx`.
+  Some tests also have tags which can be used to filter tests further - see the appropriate README.
 
 - To start jupyter, with the conda environment active run:
 
@@ -162,6 +163,8 @@ Assuming you have read the above section on ReFrame concepts, you will have to m
 # Spack
 
 Spack setup is non-trivial and the docs/tutorials are somewhat out-of-date / missing info in places (details in [this bug](https://github.com/spack/spack/issues/16730)). This section will therefore try to describe how to get a working spack setup from scrach on an OpenHPC system using `tmod` for modules. However you should probably read the ["basic use"](https://spack.readthedocs.io/en/latest/basic_usage.html) section for concepts. The quick version is that spack installs packages as described by a "spec" which (as well as the version) can optionally describe the compiler and any dependencies (such as MPI libraries). Multiple specs of the same package may be installed at once.
+
+## Setup
 
 First, install:
 
@@ -179,7 +182,7 @@ Run:
 
     spack compiler list
 
-and check a useful compiler is shown. If not, load the appropriate module, run
+and check a useful compiler is shown. If not, load the appropriate module, run:
 
     spack compiler find
 
@@ -193,34 +196,9 @@ Then load it - you will have to do this every time before running `spack install
 
     spack load patch
 
-If you want to use a non-default compiler also load that either via spack (e.g. `spack load gcc@7.0.4`) or your module system.
+At this point you could install other compilers using Spack if required - not shown here but essentially the same as the package install instructions below, plus the `spack compiler ...` commmands shown above.
 
-(At this point you could install other compilers using Spack if required - not shown here but essentially the same as MPI library instructions below + `spack compiler ...` commmands shown above.)
-
-We can now install MPI libraries, for example for openmpi use:
-
-    spack install openmpi@4.0.3 fabrics=ucx schedulers=auto
-
-This should integrate with the system slurm - confirm this using:
-
-    spack load openmpi@4.0.3 # assuming this is the only spack-provided openmpi4 build
-    ompi_info | grep slurm # should show various MCA components for slurm
-
-Note this integration (via pmix) appears to need openmpi v4 or greater - see this [PR etc.](https://github.com/spack/spack/pull/10492) for details.
-
-Now find the hash of this openmpi installation:
-
-    spack find -l openmpi@4:
-
-Make a note of the hash shown, e.g. `ziwdzwh`.
-
-Next we install a package using this MPI library, e.g.::
-
-    spack install gromacs@2016.4 ^/ziwdzwh
-
-The `^` tells spack another spec follows for a dependency of the package - normally this can just be another spack spec e.g. `openmpi@4:` but here we use `/<hash>` ensure spack reuses the library we previously built, rather than building another openmpi package. This shouldn't be necessary but appears to be some issue with spack's dependency handling.
-
-Finally as ReFrame cannot use `spack load` directly we need to enable spack's support for `lmod`:
+Finally, as ReFrame cannot use `spack load` directly we need to enable spack's support for `lmod`:
 
 - Firstly, modify `~/.spack/modules.yaml` to e.g.:
 
@@ -239,7 +217,7 @@ Finally as ReFrame cannot use `spack load` directly we need to enable spack's su
     - Lists the compiler(s) to use as the entry point to the module tree.
     - Tells spack to base the tree on the mpi library dependency for packages.
 
-- Rebuild the modules:
+- Rebuild any existing modules:
 
       spack module lmod refresh --delete-tree -y
   
@@ -249,19 +227,54 @@ Finally as ReFrame cannot use `spack load` directly we need to enable spack's su
 
       module use $SPACK_ROOT/share/spack/lmod/linux-centos7-x86_64/Core/
   
-  Check this is correct using:
-  
-      module avail  # should show your spack-installed mpi
-      module load <mpi_library>
-      module avail  # should now show spack-installed applications depending on that mpi
+- Add the `module use ...` command to your `~/.bashrc`.
 
-- Add the `module use ...` command this to your `~/.bashrc`.
+
+## Installing Packages
+
+Spack installs packages using a spec, for example to install openmpi integrated with the system slurm and using the ucx transport layer:
+
+    spack install openmpi@4.0.3 fabrics=ucx schedulers=auto
+
+Note that slurm integration - via pmix - appears to need openmpi v4 or greater. See [this PR](https://github.com/spack/spack/pull/10492) for details.)
+
+Confirm the slurm integration using:
+
+    spack load openmpi@4.0.3 # assuming this is the only spack-provided openmpi4 build
+    ompi_info | grep slurm # should show various MCA components for slurm
+
+For full details of spack spec formats see the documentation but in brief:
+
+- The "@" suffix gives a version, and can be e.g. "@4" for latest v4, "@4:" for latest after v4 (e.g. possibly v5).
+- The "a=b" portions are called "variants" - `spack list <package>` will show what defaults are.
+- A compilier can optionally be specified too as e.g. "%gcc@9.0.3".
+
+We can now install packages depending on this openmpi installation.
+
+First, find the hash of the relevant openmpi installation, e.g. for the above:
+
+    spack find -l openmpi@4.0.3
+
+will return something like `ziwdzwh`.
+
+Install a package using this MPI library, e.g.::
+
+    spack spec -I gromacs@2016.4 ^openmpi/ziwdzwh
+
+The `^` provides a spec for a dependency - normally this can just be another spack spec e.g. `openmpi@4:` but here we use `/<hash>` to ensure spack reuses the library we previously built, rather than building another openmpi package. This shouldn't generally be necessary but appears to be in this case due to some subtleties in how Spack handles dependencies with non-default options.
+
+Note that before actually installing a package, you can use `spack spec -I` to process dependencies and see what is already installed, e.g.:
+
+    spack spec -I gromacs@2016.4 %gcc@9: ^openmpi/qpsxmnc
+
+
+
 
 # Adding a test
 
 Some things which might help:
 - `report.py` is a CLI tool to interrogate performance logs.
 
-# TODO:
-
-- update application readmes to reference these spack hints
+Conventions:
+- All application benchmarks should run under `time`, and tests should extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
+- Benchmarks running on varying numbers of nodes should append "_N" to the test name, where `N` is the number of nodes. OR - should this be cores??
