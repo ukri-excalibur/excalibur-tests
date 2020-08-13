@@ -71,6 +71,9 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
             'wall_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 2, float), # "Wall t (s)"
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            # run data:
+            'num_procs': sn.defer(self.num_tasks),
+            'num_nodes': sn.defer(self.num_nodes),
         }
         self.reference = {
             '*': {
@@ -79,6 +82,8 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
                 'core_t': (0, None, None, 's'),
                 'wall_t': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
+                'num_procs': (0, None, None, 'n/a'),
+                'num_nodes': (0, None, None, 'n/a'),
             }
         }
 

@@ -58,6 +58,9 @@ class Cp2k_H2O_256(Rfm_Cp2kCheck):
                                      self.stdout, 1, float), # "Total Max" time for CP2K subroutine
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
+            # run data:
+            'num_procs': sn.defer(self.num_tasks),
+            'num_nodes': sn.defer(self.num_nodes),
         }
         self.reference = {
             '*': {
@@ -65,5 +68,7 @@ class Cp2k_H2O_256(Rfm_Cp2kCheck):
                 'runtime_real': (0, None, None, 's'),
                 'runtime_user': (0, None, None, 's'),
                 'runtime_sys': (0, None, None, 's'),
+                'num_procs': (0, None, None, 'n/a'),
+                'num_nodes': (0, None, None, 'n/a'),
             }
         }
