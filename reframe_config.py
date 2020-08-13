@@ -8,7 +8,7 @@ site_configuration = {
             'partitions':[
                 # system compiler+mpi:
                 {
-                    'name':'ib-openmpi3-openib',
+                    'name':'ib-gcc7-openmpi3-openib',
                     'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
@@ -31,7 +31,7 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'roce-openmpi3-openib',
+                    'name':'roce-gcc7-openmpi3-openib',
                     'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 3.1.0 using openib transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
@@ -58,7 +58,7 @@ site_configuration = {
                 },
                 # system compiler, spack mpi:
                 {
-                    'name':'ib-openmpi4-ucx',
+                    'name':'ib-gcc7-openmpi4-ucx',
                     'descr': '100Gb Infiniband with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
@@ -73,7 +73,7 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'roce-openmpi4-ucx',
+                    'name':'roce-gcc7-openmpi4-ucx',
                     'descr': '25Gb RoCE with gcc 7.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
@@ -86,14 +86,14 @@ site_configuration = {
                         ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
                 },
-
+                # intel mpi:
                 {
                     'name':'ib-gcc9-impi-verbs',
                     'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.7.217',
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'environs': ['imb', 'omb', 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
                     'variables': [
                         #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
@@ -109,46 +109,61 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'environs': ['imb', 'omb', 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'intel-mpi/2019.7.217-bzs5ocr'],
                     'variables': [
                         ['FI_VERBS_IFACE', 'p3p2'] # Network interface to use.
                     ],
                 },
+                # latest working gcc:
                 {
                     'name':'ib-gcc9-openmpi4-ucx',
                     'descr':'100Gb Infiniband with gcc 9.3.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['openfoam'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
                     ]
-                }   
+                },
+                {
+                    'name':'roce-gcc9-openmpi4-ucx',
+                    'descr':'25Gb RoCE with gcc 9.3.0 and openmpi 4.0.3 using UCX transport layer',
+                    'scheduler': 'slurm',
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k'],
+                    'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
+                    'variables': [
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+                        # use roce:
+                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
+                    ]
+                },
             ]
         }, # end alaska
         # < insert new systems here >
     ],
     'environments': [
         {
-            'name':'gnu-openmpi',
-            'target_systems': ['sausage-newslurm',],
-            'modules': ['gnu8', 'openmpi3',],
-        },
-        {
             'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
         },
         {
             'name': 'imb', # OHPC-provided packages
-            'target_systems': ['alaska:ib-openmpi3-openib', 'alaska:roce-openmpi3-openib', 'p4:ib-openmpi3-openib', 'p4:roce-openmpi3-openib'],
+            'target_systems': ['alaska:ib-gcc7-openmpi3-openib', 'alaska:roce-gcc7-openmpi3-openib'],
             'modules': ['imb'],
         },
         {
             'name': 'imb', # spack-provided packages
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
+        },
+        {
+            'name': 'imb', # spack-provided packages
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
+            'modules': ['intel-mpi-benchmarks/2019.5-dwg5q6j'],
         },
         {
             'name': 'imb', # spack-provided packages
@@ -159,17 +174,27 @@ site_configuration = {
             'name': 'gromacs',
         },
         {
-            'name': 'gromacs', # spack-provided packages
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'name': 'gromacs',
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['gromacs/2016.4-xixmrii']
         },
         {
+            'name': 'gromacs',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
+            'modules': ['gromacs/2016.4-y5sjbs4']
+        },
+        {
             'name': 'omb',
         },
         {
             'name': 'omb',
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['osu-micro-benchmarks/5.6.2-el6z55i']
+        },
+        {
+            'name': 'omb',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
+            'modules': ['osu-micro-benchmarks/5.6.2-vx3wtzo']
         },
         {
             'name': 'omb',
@@ -181,7 +206,7 @@ site_configuration = {
         },
         {
             'name': 'hpl',
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['hpl/2.3-tgk5uqq'],
         },
         {
@@ -213,21 +238,26 @@ site_configuration = {
         },
         {
             'name':'openfoam',
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['openfoam-org/7-2ceqb4l']
         },
         {
             'name':'openfoam',
-            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['openfoam-org/7-4zgjbg2']
         },
         {
-            'name':'cp2k'
+            'name':'cp2k',
         },
         {
             'name':'cp2k',
-            'target_systems': ['alaska:ib-openmpi4-ucx', 'alaska:roce-openmpi4-ucx'],
+            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['cp2k/7.1-spcqy4k']
+        },
+        {
+            'name':'cp2k',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
+            'modules': ['cp2k/7.1-akb54dx']
         }
     ],
     'logging': [
