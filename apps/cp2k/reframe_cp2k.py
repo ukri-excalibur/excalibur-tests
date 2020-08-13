@@ -41,11 +41,11 @@ class Cp2k_H2O_256(Rfm_Cp2kCheck):
         self.sourcesdir = os.path.join(os.path.abspath(RFM_CP2K_PATH), 'src')
 
         self.num_nodes = num_nodes
-        self.tags = set([str(num_nodes)])
-
+        
         # these are the ones reframe uses:
         self.num_tasks_per_node = Scheduler_Info().pcores_per_node
         self.num_tasks = self.num_nodes * self.num_tasks_per_node
+        self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
         
         self.exclusive_access = True
         self.time_limit = None
@@ -58,17 +58,10 @@ class Cp2k_H2O_256(Rfm_Cp2kCheck):
                                      self.stdout, 1, float), # "Total Max" time for CP2K subroutine
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            # run data:
-            'num_procs': sn.defer(self.num_tasks),
-            'num_nodes': sn.defer(self.num_nodes),
         }
         self.reference = {
             '*': {
                 'cp2k_time': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
-                'runtime_user': (0, None, None, 's'),
-                'runtime_sys': (0, None, None, 's'),
-                'num_procs': (0, None, None, 'n/a'),
-                'num_nodes': (0, None, None, 'n/a'),
             }
         }

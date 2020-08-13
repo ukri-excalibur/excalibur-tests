@@ -27,11 +27,11 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
         self.valid_prog_environs = ['openfoam']
         
         self.num_nodes = num_nodes
-        self.tags = set([str(num_nodes)])
 
         # these are the ones reframe uses:
         self.num_tasks_per_node = Scheduler_Info().pcores_per_node
         self.num_tasks = self.num_nodes * self.num_tasks_per_node
+        self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
         
         self.sourcesdir = 'downloads'
         self.exclusive_access = True
@@ -97,16 +97,11 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
             'ClockTime': sn.extractall(r'ExecutionTime = ([\d.]+) s  ClockTime = ([\d.]+) s', self.stdout, 2, float)[-1],
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            # run data:
-            'num_procs': sn.defer(self.num_tasks),
-            'num_nodes': sn.defer(self.num_nodes),
         }
         self.reference = {
             '*': {
                 'ExecutionTime': (0, None, None, 's'),
                 'ClockTime': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
-                'num_procs': (0, None, None, 'n/a'),
-                'num_nodes': (0, None, None, 'n/a'),
             }
         }

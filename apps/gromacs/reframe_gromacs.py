@@ -41,11 +41,11 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
 
         self.casename = casename
         self.num_nodes = num_nodes
-        self.tags = set([str(num_nodes), casename])
 
         # these are the ones reframe uses:
         self.num_tasks_per_node = Scheduler_Info().pcores_per_node
         self.num_tasks = self.num_nodes * self.num_tasks_per_node
+        self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, casename}
 
         self.logfile = casename + '.log'
         
@@ -71,9 +71,6 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
             'wall_t': sn.extractsingle(r'\s+Time:\s+([\d.]+)\s+([\d.]+)\s+[\d.]+', self.logfile, 2, float), # "Wall t (s)"
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            # run data:
-            'num_procs': sn.defer(self.num_tasks),
-            'num_nodes': sn.defer(self.num_nodes),
         }
         self.reference = {
             '*': {
@@ -82,8 +79,6 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
                 'core_t': (0, None, None, 's'),
                 'wall_t': (0, None, None, 's'),
                 'runtime_real': (0, None, None, 's'),
-                'num_procs': (0, None, None, 'n/a'),
-                'num_nodes': (0, None, None, 'n/a'),
             }
         }
 

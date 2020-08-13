@@ -44,9 +44,9 @@ make install # to DCMAKE_INSTALL_PREFIX above
 
 e.g.:
 
-    spack install gromacs@2016.4 ^openmpi@4: fabrics=ucx schedulers=auto
+    spack install gromacs@2016.4 %gcc@9: ^openmpi/qpsxmnc
 
-Default variants should be appropriate.
+Default variants of gromacs should be appropriate.
 
 See note in main README re. mpi libraries.
 
@@ -60,4 +60,5 @@ Run using e.g.:
     
 Or for example, to run only the 61k atom case for 1 node only a single partition:
     
-    reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-openmpi4-ucx -n 'Gromacs_61k_1$'
+    reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-openmpi4-ucx --tag 'num_nodes=N$'
+    

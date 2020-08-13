@@ -107,6 +107,7 @@ def read_perflog(path):
             - all keys returned by `parse_path_metadata()`
             - all fields in a performance log record, noting that 'completion_time' is converted to a `datetime.datetime`
             - 'perf_var' and 'perf_value', derived from 'perf_info' field
+            - <key> for any tags of the format "<key>=<value>", with values converted to int or float if possible
     """
     
     # NB:
@@ -122,7 +123,7 @@ def read_perflog(path):
             # turn the line into a dict so we can access it:
             line = line.strip()
             # TODO: read this from reframe-settings handlers_perflog.filelog.format? (is adapted tho)
-            LOG_FIELDS = 'completion_time,reframe,info,jobid,perf_data,perf_unit,perf_ref'.split(',')
+            LOG_FIELDS = 'completion_time,reframe,info,jobid,perf_data,perf_unit,perf_ref,tags'.split(',')
             record = meta.copy()
             fields = dict(zip(LOG_FIELDS, line.split('|')))
             record.update(fields) # allows this to override metadata
@@ -136,7 +137,18 @@ def read_perflog(path):
                 record['perf_value'] = perf_value
             record['completion_time'] = datetime.datetime.fromisoformat(record['completion_time'])
             record['jobid'] = record['jobid'].split('=')[-1] # original: "jobid=2378"
-
+            non_kv_tags = []
+            for tag in record['tags'].split(','):
+                if '=' in tag:
+                    k, v = tag.split('=')
+                    for conv in (int, float):
+                        try:
+                            v = conv(v)
+                        except TypeError:
+                            pass
+                        else:
+                            break
+                    record[k] = v                
             records.append(record)
             
     return pd.DataFrame.from_records(records)
@@ -165,6 +177,25 @@ def load_perf_logs(root='.', test=None, ext='.log', last=False):
         perf_records = perf_records.sort_index().groupby(['sysname', 'partition', 'environ', 'testname', 'perf_var']).tail(1)
     
     return perf_records
+
+def tabulate_last_perf(test, x_var, perf_var, root='../../perflogs'):
+    """ TODO: """
+    
+    df = load_perf_logs(root=root, test=test, ext='.log', last=True)
+    
+    # filter to rows for correct perf_var:
+    df = df.loc[df['perf_var'] == perf_var]
+    
+    # keep only the LAST record in each system/partition/environment/xvar
+    df = df.sort_index().groupby(['sysname', 'partition', 'environ', x_var]).tail(1)
+    
+    # Add "case" column from combined system/partition:
+    df['case'] = df[['sysname', 'partition']].agg(':'.join, axis=1)
+    
+    # reshape to wide table:
+    df = df.pivot(index=x_var, columns='case', values='perf_value')
+    
+    return df
 
 def sizeof_fmt(num, suffix='B'):
     """ TODO: """

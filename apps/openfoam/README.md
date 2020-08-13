@@ -27,6 +27,6 @@ Run using e.g.:
 
 Run on a specific number of nodes by appending:
 
-    --tag 'N$'
+    --tag 'num_nodes=N$'
 
 where N must be one of 1, 2, 4, ..., etc.

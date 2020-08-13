@@ -20,7 +20,7 @@ This proved somewhat difficult due to spack issues. A working install required:
 spack install cp2k%gcc@7.3.0 ^openmpi@4.0.3 ~atomics~cuda~cxx~cxx_exceptions+gpfs~java~legacylaunchers~memchecker~pmi+runpath~sqlite3+static~thread_multiple+vt fabrics=ucx schedulers=auto
 ```
 
-Note that this is an MPI-only version - `cp2k+openmp` installs for MPI+OpenMP did not work (under investigation.)
+Note that this is an MPI-only version - `cp2k+openmp` installs for MPI+OpenMP did not work (under investigation). Apart from this the spack variant defaults are appropriate.
 
 # Usage
 
@@ -30,6 +30,6 @@ Run using e.g.:
 
 Run on a specific number of nodes by appending:
 
-    --tag 'N$'
+    --tag 'num_nodes=N$'
 
 where N must be one of 1, 2, 4, ..., etc.
