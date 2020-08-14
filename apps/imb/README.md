@@ -32,4 +32,8 @@ Run all tests e.g.:
         
     cd hpc-tests
     conda activate hpc-tests
-    reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
+    reframe/bin/reframe -C reframe_config.py -c apps/imb/ --run --performance-report
+
+The following tags are defined:
+    - Test name, one of "pingpong", "biband", "uniband".
+    - For uniband and biiband tests only: "procs_per_node=N" where N is 2, 4, ..., etc.

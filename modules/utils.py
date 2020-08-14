@@ -1,7 +1,59 @@
-import os, datetime, fnmatch, subprocess
+import os, datetime, fnmatch, subprocess, json, sys, pprint, fnmatch
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+SYSFILE = 'systems/sysinfo.json' # interpreted relative to jupyter root
+
+def get_jupyter_root():
+    """ Return the path (str) to the root of the jupyter notebook environment, or None """
+    jpid = os.getenv('JPY_PARENT_PID')
+    if jpid is None:
+        return None
+    return os.readlink('/proc/%s/cwd' % jpid)
+
+def read_cjson(path):
+    """ Read a json file with #-comment lines """
+    with open(path) as f:
+        lines = [line for line in f if not line.strip().startswith('#')]
+    data = json.loads('\n'.join(lines))
+    return data
+
+def get_sys_param(param):
+    """ Get values of a given parameter from SYSFILE for all systems+partitions.
+
+        Args:
+            param: str, parameter within system definition(s) in SYSFILE
+        
+        Returns a dict where keys are from SYSFILE, i.e. system:partition patterns and values are the given parameter value.
+    """
+    results = {}
+    jroot = get_jupyter_root() or ''
+    syspath = os.path.join(jroot, SYSFILE)
+    sysdata = read_cjson(syspath)
+    for syspart, params in sysdata.items():
+        if param in params:
+            results[syspart] = params[param]
+    return results
+
+
+def get_sysinfo(sys_part):
+    """ Get system data from SYSFILE for a given system+partition.
+
+        Args:
+            sys_part: A full 'system:partion' string
+        
+        Returns a dict.
+    """
+    results = {}
+    jroot = get_jupyter_root() or ''
+    syspath = os.path.join(jroot, SYSFILE)
+    sysdata = read_cjson(syspath)
+    for k, v in sysdata.items():
+        if fnmatch.fnmatch(sys_part, k):
+            results.update(sysdata[k])
+    return results
+    
 def parse_time_cmd(s):	
     """ Convert timing info from `time` into float seconds.	
        E.g. parse_time('0m0.000s') -> 0.0	
@@ -179,7 +231,11 @@ def load_perf_logs(root='.', test=None, ext='.log', last=False):
     return perf_records
 
 def tabulate_last_perf(test, x_var, perf_var, root='../../perflogs'):
-    """ TODO: """
+    """ TODO:
+    
+        columns:
+            case
+    """
     
     df = load_perf_logs(root=root, test=test, ext='.log', last=True)
     
@@ -205,3 +261,10 @@ def sizeof_fmt(num, suffix='B'):
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
+
+if __name__ == '__main__':
+    
+    #v = get_sysinfo(sys.argv[-1])
+    v = get_sys_param(sys.argv[-1])
+    pprint.pprint(v)
+    

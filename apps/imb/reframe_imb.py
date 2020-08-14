@@ -97,6 +97,7 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         self.add_metrics(self.METRICS, self.num_tasks)
+        self.tags = {'pingpong'}
 
 total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
 
@@ -114,6 +115,7 @@ class IMB_Uniband(IMB_MPI1):
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
         self.add_metrics(self.METRICS, self.num_tasks)
         self.executable_opts = ['uniband', '-npmin', str(self.num_tasks)]
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'uniband'}
     
 @rfm.parameterized_test(*[[np] for np in total_procs])
 class IMB_Biband(IMB_MPI1):  # NB: on alaska ib- fails with a timeout!
@@ -129,4 +131,5 @@ class IMB_Biband(IMB_MPI1):  # NB: on alaska ib- fails with a timeout!
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
         self.add_metrics(self.METRICS, self.num_tasks)
         self.executable_opts = ['biband', '-npmin', str(self.num_tasks)]
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'biband'}
         
