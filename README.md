@@ -137,6 +137,10 @@ Assuming you have read the above section on ReFrame concepts, you will have to m
     - "modules" to specify the module(s) needed to run the appropriate benchmark within the specified partition.
   Note that depending on how benchmark modules are named, you may need to specify multiple environments with different partitions in "target_systems".
 
+You also need to update various files in 'systems':
+- `sysinfo.json` defines some properties for tested systems
+- Other application/benchmark-specific files should be placed in a system-named directory - see the relevant README.
+
 ## Usage
 
 - All the below assumes the conda enviroment is activated:
