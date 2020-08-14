@@ -57,7 +57,7 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
 
         self.pre_run = ['time \\']
         self.executable = 'gmx_mpi'
-        self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout']
+        self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout'] #, '-ntomp', '1'] add this to turn off threading
         self.exclusive_access = True
         self.time_limit = None # TODO: set this to something reasonable??
         

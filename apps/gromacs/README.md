@@ -7,7 +7,7 @@ Performance tests of the Gromacs molecular dynamics code http://www.gromacs.org/
 
 Note Gromacs 2016 is required due to the benchmark file used.
 
-Each benchmark is run on a range of number of nodes, from 1 up to all available. Each run uses as many processes per node as there are physical cores.
+Each benchmark is run on a range of number of nodes, from 1 up to all available. Each run uses as many mpi tasks (processes) per node as there are physical cores, and the default Gromacs `-ntomp` OpenMP setting, which appears to add threads to use all cores (physical or logical). For further information on Gromacs parallelisation schemes see [here](http://www.gromacs.org/Documentation/Acceleration_and_parallelization) and [here](http://manual.gromacs.org/documentation/current/onlinehelp/gmx-mdrun.html#gmx-mdrun).
 
 The following performance variables are captured:
 - 'ns_per_day': Nano-seconds of simulation completed per day
@@ -58,7 +58,7 @@ Run using e.g.:
     conda activate hpc-tests
     reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report
     
-Or for example, to run only the 61k atom case for 1 node only a single partition:
+Or for example, to run only the 3000k atom case on 1 node only for a single partition:
     
-    reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-openmpi4-ucx --tag 'num_nodes=N$'
+    reframe/bin/reframe -C reframe_config.py -c apps/gromacs/ --run --performance-report --system alaska:ib-gcc9-openmpi4-ucx --tag 'num_nodes=1$' --tag '3000k-atoms'
     
