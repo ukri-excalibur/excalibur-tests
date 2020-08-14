@@ -25,11 +25,11 @@ The intended test matrix is shown below, marked with (A) where there is an imple
 
 For more information on the actual tests defined and how to run them see the README file in the relevant benchmark directory.
 
-The [ReFrame](https://reframe-hpc.readthedocs.io/en/latest/index.html) framework is used to define tests in a portable fashion in the `reframe_<benchmark>.py` file in each benchmark directory.
+The [ReFrame](https://reframe-hpc.readthedocs.io/en/latest/index.html) framework is used to define tests in a portable fashion in the `reframe_<application>.py` file in each application directory.
 
-Results are compared and plotted using [juypter notebooks](https://jupyter.readthedocs.io/en/latest/), with a `<benchmark>.ipynb` file in each benchmark directory.
+Results are compared and plotted using [juypter notebooks](https://jupyter.readthedocs.io/en/latest/), with a `<application>.ipynb` file in each application directory.
 
-This package does not automate build/install of the benchmark applications themselves for your system. This allows it to be used to assess performance of current system application installs, custom builds, or for performance comparisons between different builds. However, for each benchmark installation instructions are provided using OpenHPC-provided packages (where relevant) and/or [Spack](https://spack.readthedocs.io/) (which does not require root).
+This package does not automate build/install of the benchmarked applications themselves for your system. This allows it to be used to assess performance of current system application installs, custom builds, or for performance comparisons between different builds. However, for each benchmark installation instructions are provided using OpenHPC-provided packages (where relevant) and/or [Spack](https://spack.readthedocs.io/) (which does not require root).
 
 ## Repository Contents
 
@@ -145,7 +145,7 @@ Assuming you have read the above section on ReFrame concepts, you will have to m
 
 - Install the required application - see the appropriate `apps/<application>/README.md` for help.
 
-- Run all tests for this applicatino using something like:
+- Run all tests for this applicatinon using something like:
 
       cd hpc-tests
       reframe/bin/reframe -C reframe_config.py -c <application>/ --run --performance-report
@@ -275,6 +275,7 @@ Note that before actually installing a package, you can use `spack spec -I` to p
 Some things which might help:
 - `report.py` is a CLI tool to interrogate performance logs.
 
-Conventions:
-- All application benchmarks should run under `time`, and tests should extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
-- Benchmarks running on varying numbers of nodes should append "_N" to the test name, where `N` is the number of nodes. OR - should this be cores??
+Synthetic benchmarks will all be different, but application benchmarks should follow these conventions:
+- Run under `time` and extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
+- Run on 1, 2, 4, etc up to maximum number of nodes.
+- Add tags 'num_procs=%i' and 'num_nodes=%i'.
