@@ -48,7 +48,7 @@ if __name__ == '__main__':
     # if last part of '_'-delimited testname is numeric, then use it for sorting:
     # don't have key parameter for df.sort_index() in this version so have to create a new column
     testparts = [t.split('_') for t in df.index]
-    if all(t[-1].isnumeric for t in testparts):
+    if all(t[-1].isnumeric() for t in testparts):
         print('Have numeric testname suffix, sorting by that')
         df['_n'] = [int(v.rsplit('_', 1)[-1]) for v in df.index]    
         df = df.sort_values(by='_n')
