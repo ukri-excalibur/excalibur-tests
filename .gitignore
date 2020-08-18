@@ -12,6 +12,9 @@ perflogs/*
 # other
 setup/.sslconfig
 Miniconda*.sh
+working/*
+outdated/*
+apps/*/downloads/*
 
 # jupyter checkpoints:
 *-checkpoint.ipynb
