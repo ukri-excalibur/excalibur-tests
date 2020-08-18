@@ -157,7 +157,9 @@ def read_perflog(path):
 
         The returned dataframe will have columns for:
             - all keys returned by `parse_path_metadata()`
-            - all fields in a performance log record, noting that 'completion_time' is converted to a `datetime.datetime`
+            - all fields in a performance log record, noting that:
+              - 'completion_time' is converted to a `datetime.datetime`
+              - 'tags' is split on commas into a list of strs
             - 'perf_var' and 'perf_value', derived from 'perf_info' field
             - <key> for any tags of the format "<key>=<value>", with values converted to int or float if possible
     """
@@ -190,17 +192,19 @@ def read_perflog(path):
             record['completion_time'] = datetime.datetime.fromisoformat(record['completion_time'])
             record['jobid'] = record['jobid'].split('=')[-1] # original: "jobid=2378"
             non_kv_tags = []
-            for tag in record['tags'].split(','):
+            tags = record['tags'].split(',')
+            for tag in tags:
                 if '=' in tag:
                     k, v = tag.split('=')
                     for conv in (int, float):
                         try:
                             v = conv(v)
-                        except TypeError:
+                        except ValueError:
                             pass
                         else:
                             break
-                    record[k] = v                
+                    record[k] = v
+            record['tags'] = tags
             records.append(record)
             
     return pd.DataFrame.from_records(records)
