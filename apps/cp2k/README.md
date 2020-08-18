@@ -26,7 +26,7 @@ Note that this is an MPI-only version - `cp2k+openmp` installs for MPI+OpenMP di
 
 Run using e.g.:
 
-    reframe/bin/reframe -C reframe_config.py -c cp2k/ --run --performance-report
+    reframe/bin/reframe -C reframe_config.py -c apps/cp2k/ --run --performance-report
 
 Run on a specific number of nodes by appending:
 
