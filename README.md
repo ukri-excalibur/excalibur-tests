@@ -277,7 +277,7 @@ Note that before actually installing a package, you can use `spack spec -I` to p
 # Adding a test
 
 Some things which might help:
-- `report.py` is a CLI tool to interrogate performance logs.
+- `tools/report.py` is a CLI tool to interrogate performance logs.
 
 Synthetic benchmarks will all be different, but application benchmarks should follow these conventions:
 - Run under `time` and extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
