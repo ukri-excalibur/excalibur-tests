@@ -122,7 +122,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -134,7 +134,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -208,6 +208,11 @@ site_configuration = {
             'name': 'hpl',
             'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
             'modules': ['hpl/2.3-tgk5uqq'],
+        },
+        {
+            'name': 'hpl',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
+            'modules': ['hpl/2.3-iyor3px'],
         },
         {
             'name': 'intel-hpl',

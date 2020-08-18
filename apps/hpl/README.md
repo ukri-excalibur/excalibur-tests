@@ -2,7 +2,25 @@
 
 Run HPL tests on one and all nodes.
 
-# Installation using Spack
+# Installation of Intel-HPL using Spack
+
+From the [Intel HPL documentation](https://software.intel.com/content/www/us/en/develop/documentation/mkl-windows-developer-guide/top/intel-math-kernel-library-benchmarks/intel-distribution-for-linpack-benchmark/overview-of-the-intel-distribution-for-linpack-benchmark.html), this uses pre-build binaries distributed with Intel's MKL libraries to provide optimised results. It also supports heterogeneous clusters, unlike standard HPL. Intel MPI is required.
+
+
+E.g.:
+
+    spack load patch
+    spack load gcc@9
+    spack install intel-mpi %gcc@9: # DONE
+    spack install intel-mkl %gcc@9: # NB this doesn't have threads enabled here/by default
+
+Note that the executables are e.g.:
+
+    $HOME/spack/opt/spack/linux-centos7-broadwell/gcc-9.3.0/intel-mkl-2020.1.217-5tpgp7bze633d4bybvvumfp2nhyg64xf/compilers_and_libraries_2020.1.217/linux/mkl/benchmarks/mp_linpack/xhpl_intel64_{static,dynamic}
+
+There are `runme_*` scripts in the same directory which may provide useful environment variables.
+
+# Installation of standard HPL using Spack
 
 E.g.:
 
