@@ -14,7 +14,7 @@
 """
 
 import sys
-sys.path.append('reframe')
+sys.path.extend(('reframe', '.'))
 import modules
 
 if __name__ == '__main__':
