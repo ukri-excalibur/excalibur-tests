@@ -5,7 +5,7 @@ Performance tests of the Gromacs molecular dynamics code http://www.gromacs.org/
     - 1.4M atom system - A Pair of hEGFR Dimers of 1IVO and 1NQL
     - 3M atom system - A Pair of hEGFR tetramers of 1IVO and 1NQL
 
-Note Gromacs 2016 is required due to the benchmark file used.
+**NB**: Gromacs 2016 is required due to the benchmark file used.
 
 Each benchmark is run on a range of number of nodes, from 1 up to all available. Each run uses as many mpi tasks (processes) per node as there are physical cores, and the default Gromacs `-ntomp` OpenMP setting, which appears to add threads to use all cores (physical or logical). For further information on Gromacs parallelisation schemes see [here](http://www.gromacs.org/Documentation/Acceleration_and_parallelization) and [here](http://manual.gromacs.org/documentation/current/onlinehelp/gmx-mdrun.html#gmx-mdrun).
 
@@ -42,13 +42,9 @@ make install # to DCMAKE_INSTALL_PREFIX above
 
 # Installation - Spack
 
-e.g.:
+Install `gromacs@2016` with default variants.
 
-    spack install gromacs@2016.4 %gcc@9: ^openmpi/qpsxmnc
-
-Default variants of gromacs should be appropriate.
-
-See note in main README re. mpi libraries.
+See note in main README re. usage of spack with existing mpi library installations.
 
 # Usage
 

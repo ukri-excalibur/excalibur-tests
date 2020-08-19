@@ -13,11 +13,9 @@ All these timings are for the solver run only, ignoring meshing etc.
 
 # Installing using spack
 
-E.g.:
+Install package `openfoam-org` with default variants.
 
-    spack install openfoam-org %gcc@7.3.0 ^/ziwdzwh
-
-See main README for comments on MPI libraries.
+See note in main README re. usage of spack with existing mpi library installations.
 
 # Usage
 

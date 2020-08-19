@@ -28,9 +28,7 @@ This installs gnu8, openmpi3 (and mvapich2) as well as OMB.
 
 # Installation - Spack
 
-e.g.:
-
-    spack install osu-micro-benchmarks ^openmpi@4: fabrics=ucx schedulers=auto
+Install package `osu-micro-benchmarks` with default variants.
 
 See note in main README re. usage of spack with existing mpi library installations.
 
