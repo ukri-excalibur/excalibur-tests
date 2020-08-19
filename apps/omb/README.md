@@ -17,6 +17,9 @@ On 2x nodes using as many processes per node as there are physical cores:
 On 2x nodes using a range of processes per node from 1 up to as many as there are physical cores:
 - osu_mbw_mr - bandwidth and message rate (max value over all pairs and message sizes)
 
+The following tags are defined:
+    - Test name, as given above without the leading "osu_"
+    - "procs_per_node=N" where N is as described above for the relevant test
 
 # Installation - OpenHPC
 
@@ -43,4 +46,4 @@ Run all tests using e.g.:
         
     cd hpc-tests
     conda activate hpc-tests
-    reframe/bin/reframe -C reframe_config.py -c omb/ --run --performance-report
+    reframe/bin/reframe -C reframe_config.py -c apps/omb/ --run --performance-report

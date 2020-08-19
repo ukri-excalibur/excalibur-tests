@@ -46,6 +46,7 @@ class Osu_alltoall(OSU_Micro_Benchmarks):
         self.executable = 'osu_alltoall'
         self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
         self.num_tasks = 2 * self.num_tasks_per_node
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'alltoall'}
 
 @rfm.simple_test
 class Osu_allgather(OSU_Micro_Benchmarks):
@@ -56,6 +57,7 @@ class Osu_allgather(OSU_Micro_Benchmarks):
         self.executable = 'osu_allgather'
         self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
         self.num_tasks = 2 * self.num_tasks_per_node
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'allgather'}
 
 @rfm.simple_test
 class Osu_allreduce(OSU_Micro_Benchmarks):
@@ -67,6 +69,7 @@ class Osu_allreduce(OSU_Micro_Benchmarks):
         self.executable = 'osu_allreduce '
         self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
         self.num_tasks = 2 * self.num_tasks_per_node
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'allreduce'}
 
 
 @rfm.simple_test
@@ -80,6 +83,7 @@ class Osu_bw(OSU_Micro_Benchmarks):
         self.executable = 'osu_bw'
         self.num_tasks = 2
         self.num_tasks_per_node = 1
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'bw'}
 
 @rfm.simple_test
 class Osu_latency(OSU_Micro_Benchmarks):
@@ -92,6 +96,7 @@ class Osu_latency(OSU_Micro_Benchmarks):
         self.executable = 'osu_latency'
         self.num_tasks = 2
         self.num_tasks_per_node = 1
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'latency'}
 
 @rfm.simple_test
 class Osu_bibw(OSU_Micro_Benchmarks):
@@ -104,6 +109,7 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.executable = 'osu_bibw'
         self.num_tasks = 2
         self.num_tasks_per_node = 1
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'bibw'}
 
 total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
 
@@ -126,6 +132,7 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
         self.num_tasks = num_procs
         self.num_tasks_per_node = int(num_procs / 2)
         self.time_limit = '15m'
+        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'mbw_mr'}
         
 
 if __name__ == '__main__':
