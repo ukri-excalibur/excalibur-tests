@@ -71,12 +71,12 @@ Some way of compiling applications is required  - instructions here use `spack` 
 
 1. Create and activate the `hpc-tests` conda environment:
     
-        conda create -f environment.yml
+        cd hpc-tests
+        conda env create -f environment.yml
         conda activate hpc-tests
 
 1. Install ReFrame:
 
-        cd hpc-tests
         git clone https://github.com/eth-cscs/reframe.git
 
 1. Run ReFrame's own test suite:
@@ -200,37 +200,43 @@ Then load it - you will have to do this every time before running `spack install
 
     spack load patch
 
+Check if `bzip2` is installed. If not you will need to install this via the normal package manager (not spack).
+
 At this point you could install other compilers using Spack if required - not shown here but essentially the same as the package install instructions below, plus the `spack compiler ...` commmands shown above.
 
 Finally, as ReFrame cannot use `spack load` directly we need to enable spack's support for `lmod`:
 
-- Firstly, modify `~/.spack/modules.yaml` to e.g.:
+- Firstly, create `~/.spack/modules.yaml` containing:
 
       modules:
         enable::
           - lmod
-        <snip>
         lmod:
           core_compilers:
             - gcc@7.3.0
           hierarchy:
             - mpi
+ 
+  (if it already exists, leave unchanged any bits not mentioned above.)
 
   This:
     - Tells spack to use `lmod` as the module system (the "::" means only use this)
     - Lists the compiler(s) to use as the entry point to the module tree.
     - Tells spack to base the tree on the mpi library dependency for packages.
 
-- Rebuild any existing modules:
+- If you already installed anything using spack, rebuild any existing modules:
 
       spack module lmod refresh --delete-tree -y
   
   This only needs to be done once after modifying `modules.yaml`, all subsequent package installations will use these settings.
 
+
 - Tell `lmod` where to find the module tree root, e.g.:
 
       module use $SPACK_ROOT/share/spack/lmod/linux-centos7-x86_64/Core/
   
+  TODO: this is hard to figure out without installing anything!
+
 - Add the `module use ...` command to your `~/.bashrc`.
 
 
@@ -277,7 +283,7 @@ Note that before actually installing a package, you can use `spack spec -I` to p
 # Adding a test
 
 Some things which might help:
-- `tools/report.py` is a CLI tool to interrogate performance logs.
+- `tools/perf.py` is a CLI tool to interrogate performance logs.
 
 Synthetic benchmarks will all be different, but application benchmarks should follow these conventions:
 - Run under `time` and extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
