@@ -1,6 +1,50 @@
 site_configuration = {
     'systems': [
         {
+            'name': 'arcus',
+            'descr': 'Initial OpenHPC slurm cluster on Arcus',
+            'hostnames': ['eb-login-0'],
+            'modules_system': 'lmod',
+            'partitions':[
+                {
+                    'name':'ib-gcc9-openmpi4-ucx',
+                    'descr': '100Gb Infiniband with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
+                    'scheduler': 'slurm',
+                    'access': [
+                        '--partition=test',
+                        ],
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
+                    'modules': ['gcc/9.2.0-3j3swca', 'openmpi/4.0.3-dxa6sov'],
+                    'variables': [
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+
+                        # (no vars required for ucx on ib - fastest CA available)
+                    ]
+                },
+                {
+                    'name':'roce-gcc9-openmpi4-ucx',
+                    'descr': '50Gb RoCE with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
+                    'scheduler': 'slurm',
+                    'access': [
+                        '--partition=test',
+                        ],
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
+                    'modules': ['gcc/9.2.0-3j3swca', 'openmpi/4.0.3-dxa6sov'],
+                    'variables': [
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+                        # use roce:
+                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
+                    ]
+                },
+            ]
+        },
+        {
             'name':'alaska',
             'descr':'Default AlaSKA OpenHPC p3-appliances slurm cluster',
             'hostnames': ['openhpc-login-0', 'openhpc-compute'],
@@ -167,8 +211,13 @@ site_configuration = {
         },
         {
             'name': 'imb', # spack-provided packages
-            'target_systems': ['ib-gcc9-impi-verbs', 'roce-gcc9-impi-verbs'],
+            'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
             'modules': ['intel-mpi-benchmarks/2019.5-w54huiw'],
+        },
+        {
+            'name': 'imb',
+            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
+            'modules': ['intel-mpi-benchmarks/2019.6-42qobhq'],
         },
         {
             'name': 'gromacs',
@@ -182,6 +231,11 @@ site_configuration = {
             'name': 'gromacs',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['gromacs/2016.4-y5sjbs4']
+        },
+        {
+            'name': 'gromacs',
+            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
+            'modules': ['gromacs/2016.6-5ltvgvk']
         },
         {
             'name': 'omb',
@@ -200,6 +254,11 @@ site_configuration = {
             'name': 'omb',
             'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
             'modules': ['osu-micro-benchmarks/5.6.2-ppxiddg']
+        },
+        {
+            'name': 'omb',
+            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
+            'modules': ['osu-micro-benchmarks/5.6.3-4h4z5xr']
         },
         {
             'name': 'hpl',
@@ -250,6 +309,11 @@ site_configuration = {
             'name':'openfoam',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['openfoam-org/7-4zgjbg2']
+        },
+        {
+            'name':'openfoam',
+            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
+            'modules': ['openfoam-org/7-npsnfqa']
         },
         {
             'name':'cp2k',
