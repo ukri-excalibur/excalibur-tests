@@ -1,0 +1,24 @@
+# Define system information.
+# This is json except any lines where first non-whitespace is a '#' are ignored.
+# System:partition names are defined using a glob-style pattern. Later redefinitions for a key will override earlier definitions.
+# Currently only the interconnect_Gb parameter is used.
+#
+{
+    "alaska:*": {
+        "cpu": "TODO"
+    },
+    "alaska:ib-*": {
+        "interconnect_Gb" : 100
+    },
+    "alaska:roce-*": {
+        "interconnect_Gb": 25
+    },
+    "arcus:ib-*": {
+        "interconnect_Gb" : 100
+    },
+    "arcus:roce-*": {
+        "interconnect_Gb": 50
+    }
+    
+
+}
