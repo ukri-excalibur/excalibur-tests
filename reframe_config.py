@@ -42,6 +42,19 @@ site_configuration = {
                         ['UCX_NET_DEVICES', 'mlx5_1:1'],
                     ]
                 },
+                {
+                    'name':'ib-gcc9-impi2019-verbs',
+                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.8.254',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs': ['imb'], # 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
+                    'variables': [
+                        #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
+                        ['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
+                    ],
+                },
             ]
         },
         {
@@ -113,16 +126,6 @@ site_configuration = {
             'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
         },
         {
-            'name': 'imb', # OHPC-provided packages
-            'target_systems': ['alaska:ib-gcc7-openmpi3-openib', 'alaska:roce-gcc7-openmpi3-openib'],
-            'modules': ['imb'],
-        },
-        {
-            'name': 'imb', # spack-provided packages
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
-        },
-        {
             'name': 'imb', # spack-provided packages
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.5-dwg5q6j'],
@@ -136,6 +139,11 @@ site_configuration = {
             'name': 'imb',
             'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.6-42qobhq'],
+        },
+        {
+            'name': 'imb',
+            'target_systems': ['arcus:ib-gcc9-impi2019-verbs'], # TODO: add roce config
+            'modules': ['intel-mpi-benchmarks/2019.6-sl772ml'],
         },
         {
             'name': 'gromacs',
