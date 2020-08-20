@@ -43,16 +43,29 @@ site_configuration = {
                     ]
                 },
                 {
-                    'name':'ib-gcc9-impi2019-verbs',
-                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.8.254',
+                    'name':'ib-gcc9-impi2019-mlx',
+                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
                     'scheduler': 'slurm',
                     'launcher':'mpirun',
                     'max_jobs':8,
                     'environs': ['imb'], # 'omb', 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
                     'variables': [
-                        #['FI_PROVIDER', 'mlx'] # doesn't work, needs ucx
-                        ['FI_VERBS_IFACE', 'ib'] # # Network interface to use - this is actually default
+                        ['FI_PROVIDER', 'mlx'],
+                        # don't need to specify device - IB is fastest available
+                    ],
+                },
+                {
+                    'name':'roce-gcc9-impi2019-mlx',
+                    'descr': '50Gb RoCE with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
+                    'scheduler': 'slurm',
+                    'launcher':'mpirun',
+                    'max_jobs':8,
+                    'environs': ['imb'], # 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
+                    'variables': [
+                        ['FI_PROVIDER', 'mlx'],
+                        ['UCX_NET_DEVICES', 'mlx5_1:1'], # weirdly this ['FI_VERBS_IFACE', 'eth0'] goes over IB
                     ],
                 },
             ]
@@ -142,7 +155,7 @@ site_configuration = {
         },
         {
             'name': 'imb',
-            'target_systems': ['arcus:ib-gcc9-impi2019-verbs'], # TODO: add roce config
+            'target_systems': ['arcus:ib-gcc9-impi2019-verbs', 'arcus:roce-gcc9-impi2019-verbs'],
             'modules': ['intel-mpi-benchmarks/2019.6-sl772ml'],
         },
         {
