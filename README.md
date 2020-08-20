@@ -162,7 +162,7 @@ You also need to update various files in 'systems':
       cd hpc-tests
       jupyter notebook
 
-  Then browse to the given address using the password you specified above.
+  Then browse to `https://<login-node-ip>:<port>` where port is given in the output from above, and login using the password you specified above.
 
 # Spack
 
