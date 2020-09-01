@@ -69,22 +69,12 @@ site_configuration = {
             'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
         },
         {
-            'name': 'imb', # OHPC-provided packages
-            'target_systems': ['alaska:ib-gcc7-openmpi3-openib', 'alaska:roce-gcc7-openmpi3-openib'],
-            'modules': ['imb'],
-        },
-        {
-            'name': 'imb', # spack-provided packages
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['intel-mpi-benchmarks/2019.5-q5ujyli'],
-        },
-        {
-            'name': 'imb', # spack-provided packages
+            'name': 'imb',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['intel-mpi-benchmarks/2019.5-dwg5q6j'],
         },
         {
-            'name': 'imb', # spack-provided packages
+            'name': 'imb',
             'target_systems': ['ib-gcc9-impi-verbs', 'roce-gcc9-impi-verbs'],
             'modules': ['intel-mpi-benchmarks/2019.5-w54huiw'],
         },
@@ -93,21 +83,11 @@ site_configuration = {
         },
         {
             'name': 'gromacs',
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['gromacs/2016.4-xixmrii']
-        },
-        {
-            'name': 'gromacs',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['gromacs/2016.4-y5sjbs4']
         },
         {
             'name': 'omb',
-        },
-        {
-            'name': 'omb',
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['osu-micro-benchmarks/5.6.2-el6z55i']
         },
         {
             'name': 'omb',
@@ -121,11 +101,6 @@ site_configuration = {
         },
         {
             'name': 'hpl',
-        },
-        {
-            'name': 'hpl',
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['hpl/2.3-tgk5uqq'],
         },
         {
             'name': 'hpl',
