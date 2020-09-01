@@ -14,7 +14,7 @@ This proved somewhat difficult due to spack issues. A working install required:
 
 - Commenting out all `provides()` lines in the packages `intel-mkl`, `intel-parallel-studio`, and `cray-libsci` using `spack edit <package>`.
 - Using `spack find -v <mpi-package>` to get the full description of the (openmpi) package, including variants. Unusually, using the hash ('/<hash>') did not work. This is being investigated by the spack maintainers.
-- Running `spack install` for `cp2k` with this full specification:
+- Running `spack install` for `cp2k` with this full specification, e.g.:
 
 ```shell
 spack install cp2k%gcc@7.3.0 ^openmpi@4.0.3 ~atomics~cuda~cxx~cxx_exceptions+gpfs~java~legacylaunchers~memchecker~pmi+runpath~sqlite3+static~thread_multiple+vt fabrics=ucx schedulers=auto

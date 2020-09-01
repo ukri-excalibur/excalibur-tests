@@ -12,5 +12,13 @@
     },
     "alaska:roce-*": {
         "interconnect_Gb": 25
+    },
+    "arcus:ib-*": {
+        "interconnect_Gb" : 100
+    },
+    "arcus:roce-*": {
+        "interconnect_Gb": 50
     }
+    
+
 }

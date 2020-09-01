@@ -16,9 +16,7 @@ This installs gnu8, openmpi3 and mvapich2.
 
 # Installation - Spack
 
-e.g.:
-
-    spack install intel-mpi-benchmarks ^/<mpi_library_hash>
+Install package `intel-mpi-benchmarks` with default variants.
 
 See note in main README re. usage of spack with existing mpi library installations.
 

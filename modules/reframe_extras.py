@@ -130,8 +130,11 @@ def slurm_node_info():
 
 
 class Scheduler_Info(object):
-    def __init__(self):
+    def __init__(self, partition=None):
         """ Information from the scheduler.
+
+            Args:
+                partition: str, name of partition or None for default partition
 
             Attributes:
                 num_nodes: number of nodes
@@ -140,6 +143,10 @@ class Scheduler_Info(object):
         """
         # TODO: handle scheduler not being slurm!
         nodeinfo = slurm_node_info()
+        if partition is None:
+            nodeinfo = [n for n in nodeinfo if n['PARTITION'].endswith('*')]
+        else:
+            nodeinfo = [n for n in nodeinfo if n['PARTITION'] == partition]
 
         self.num_nodes = len(nodeinfo)
         cpus = [n['S:C:T'] for n in nodeinfo]
@@ -172,7 +179,11 @@ def sequence(start, end, factor):
     return values
 
 if __name__ == '__main__':
+    import sys
     # will need something like:
     # [hpc-tests]$ PYTHONPATH='reframe' python modules/reframe_extras.py
-    print(Scheduler_Info())
+    if len(sys.argv) == 1:
+        print(Scheduler_Info())
+    else:
+        print(Scheduler_Info(sys.argv[1]))
     
