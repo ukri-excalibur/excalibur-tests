@@ -10,9 +10,7 @@ site_configuration = {
                     'name':'ib-gcc9-openmpi4-ucx',
                     'descr': '100Gb Infiniband with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
-                    'access': [
-                        '--partition=test',
-                        ],
+                    'access': [ '--partition=test'],
                     'launcher':'srun',
                     'max_jobs':8,
                     'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
@@ -28,9 +26,7 @@ site_configuration = {
                     'name':'roce-gcc9-openmpi4-ucx',
                     'descr': '50Gb RoCE with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
-                    'access': [
-                        '--partition=test',
-                        ],
+                    'access': [ '--partition=test'],
                     'launcher':'srun',
                     'max_jobs':8,
                     'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
@@ -46,9 +42,10 @@ site_configuration = {
                     'name':'ib-gcc9-impi2019-mlx',
                     'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
                     'scheduler': 'slurm',
+                    'access': [ '--partition=test'],
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb'], # 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'environs': ['imb', 'omb'],# 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
                     'variables': [
                         ['FI_PROVIDER', 'mlx'],
@@ -59,9 +56,10 @@ site_configuration = {
                     'name':'roce-gcc9-impi2019-mlx',
                     'descr': '50Gb RoCE with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
                     'scheduler': 'slurm',
+                    'access': [ '--partition=test'],
                     'launcher':'mpirun',
                     'max_jobs':8,
-                    'environs': ['imb'], # 'omb', 'intel-hpl', 'intel-hpcg'],
+                    'environs': ['imb', 'omb'], # 'intel-hpl', 'intel-hpcg'],
                     'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
                     'variables': [
                         ['FI_PROVIDER', 'mlx'],
@@ -155,7 +153,7 @@ site_configuration = {
         },
         {
             'name': 'imb',
-            'target_systems': ['arcus:ib-gcc9-impi2019-verbs', 'arcus:roce-gcc9-impi2019-verbs'],
+            'target_systems': ['arcus:ib-gcc9-impi2019-mlx', 'arcus:roce-gcc9-impi2019-mlx'],
             'modules': ['intel-mpi-benchmarks/2019.6-sl772ml'],
         },
         {
@@ -198,6 +196,11 @@ site_configuration = {
             'name': 'omb',
             'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
             'modules': ['osu-micro-benchmarks/5.6.3-4h4z5xr']
+        },
+        {
+            'name': 'omb',
+            'target_systems': ['arcus:ib-gcc9-impi2019-mlx', 'arcus:roce-gcc9-impi2019-mlx'],
+            'modules': ['osu-micro-benchmarks/5.6.3-jqovbxi']
         },
         {
             'name': 'hpl',
