@@ -52,7 +52,7 @@ Run using e.g.:
         
     cd hpc-tests
     conda activate hpc-tests
-    reframe/bin/reframe -C reframe_config.py -c hpl/ --run --performance-report
+    reframe/bin/reframe -C reframe_config.py -c apps/hpl/ --run --performance-report
 
 Only "single" node or "all" node tests can be run by adding the appropriate tag, e.g.:
 
