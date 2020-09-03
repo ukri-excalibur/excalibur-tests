@@ -229,11 +229,6 @@ site_configuration = {
         },
         {
             'name':'openfoam',
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['openfoam-org/7-2ceqb4l']
-        },
-        {
-            'name':'openfoam',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['openfoam-org/7-4zgjbg2']
         },
@@ -244,11 +239,6 @@ site_configuration = {
         },
         {
             'name':'cp2k',
-        },
-        {
-            'name':'cp2k',
-            'target_systems': ['alaska:ib-gcc7-openmpi4-ucx', 'alaska:roce-gcc7-openmpi4-ucx'],
-            'modules': ['cp2k/7.1-spcqy4k']
         },
         {
             'name':'cp2k',
