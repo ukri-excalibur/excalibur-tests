@@ -7,6 +7,36 @@ site_configuration = {
             'modules_system': 'lmod',
             'partitions':[
                 {
+                    'name':'ib-foss-2019a',
+                    'descr': '100Gb Infiniband using EasyBuild foss-2019a toolchain (gcc 8.2.0 openmpi 3.1.3)',
+                    'scheduler': 'slurm',
+                    'access': [ '--partition=test'],
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs':['imb', 'cp2k'],
+                    # no modules required
+                    'variables': [
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+                    ],
+                },
+                {
+                    'name':'roce-foss-2019a',
+                    'descr': '50Gb RoCE using EasyBuild foss-2019a toolchain (gcc 8.2.0 openmpi 3.1.3)',
+                    'scheduler': 'slurm',
+                    'access': [ '--partition=test'],
+                    'launcher':'srun',
+                    'max_jobs':8,
+                    'environs':['imb', 'cp2k'],
+                    # no modules required
+                    'variables': [
+                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
+                        ['SLURM_MPI_TYPE', 'pmix_v2'],
+                        # use roce:
+                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
+                    ]
+                },
+                {
                     'name':'ib-gcc9-openmpi4-ucx',
                     'descr': '100Gb Infiniband with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
                     'scheduler': 'slurm',
@@ -157,6 +187,11 @@ site_configuration = {
             'modules': ['intel-mpi-benchmarks/2019.6-sl772ml'],
         },
         {
+            'name': 'imb',
+            'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
+            'modules': ['IMB/2019.3-gompi-2019a'] # NB gompi-2019a is subset of foss-2019a
+        },
+        {
             'name': 'gromacs',
         },
         {
@@ -244,6 +279,11 @@ site_configuration = {
             'name':'cp2k',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['cp2k/7.1-akb54dx']
+        },
+        {
+            'name':'cp2k',
+            'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
+            'modules': ['CP2K/6.1-foss-2019a']
         }
     ],
     'logging': [
