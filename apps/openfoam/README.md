@@ -21,7 +21,7 @@ See note in main README re. usage of spack with existing mpi library installatio
 
 Run using e.g.:
 
-    reframe/bin/reframe -C reframe_config.py -c openfoam/ --run --performance-report
+    reframe/bin/reframe -C reframe_config.py -c apps/openfoam/ --run --performance-report
 
 Run on a specific number of nodes by appending:
 
