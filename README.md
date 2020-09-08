@@ -14,12 +14,10 @@ The intended test matrix is shown below, marked with (A) where there is an imple
 | Intel MPI Benchmarks (IMB)       | uniband (A), biband (A)                                                         | IntelMPI (A), OpenMPI (A)       | PingPong also added for AlaSKA for basic debugging |
 | High Performance Linpack (HPL)   | -                                                                               | IntelMPI | Uses Intel-optimised version with MKL |
 | High Performance Conjugate Gradient (HPCG) | -                                                                     | IntelMPI (A) | Uses Intel-optimised version with MKL |
-| Castep                           | tbd                                                                             | tbd  |   |
+| Castep                           | tbd                                                                             | tbd  | Requires licence  |
 | CP2K                             | H20-256                                                                         | IntelMPI, OpenMPI (A)  |   |
 | OpenFOAM                         | Motorbike                                                                       | IntelMPI, OpenMPI (A)  |   |
 | GROMACS                          | HECBioSim benchmarks: 61k (A), 1.4M (A) and 3M atom cases (A)                   | IntelMPI, OpenMPI (A)  |   |
-| LS-Dyna                          | Neon, car2car, ODB-10M                                                          | OpenMPI  |   |
-| StarCCM+                         | LeMans_100M, TurboCharger, Civil 20M                                            | OpenMPI  |   |
 | WRF                              | CONUS 2.5km, CONUS 12.5kms, TBD                                                 | IntelMPI, OpenMPI  |   |
 | TensorFlow                       | ResNet50                                                                        | tbd  |   |
 
@@ -94,8 +92,7 @@ Some way of compiling applications is required  - instructions here use `spack` 
       
     Replacing `PASSWORD` with a password for Jupyter. This only needs to be done once and sets up a self-signed SSL certificate - note your browser will complain when connecting to the notebook.
 
-1. If using `spack` to compile applications, install and set it up - see separate section below.
-
+1. If using `spack` to compile applications, install and set it up - see sections below.
 
 1. For a new system, add it to the reframe configuration file `reframe_config.py` - see separate section below.
 
@@ -104,32 +101,23 @@ Some way of compiling applications is required  - instructions here use `spack` 
 
 To configure these tests for a new system some understanding of ReFrame is necessary, so key aspects are defined here.
 
-Tests in ReFrame are defined by Python scripts - here, the `apps/<application>/reframe_<application>.py` files. These define a generic test, independent of system details like scheduler, MPI libraries, launcher etc. These aspects are defined for the system(s) under test in the reframe configuration file `reframe_config.py`. A system definition contains one or more **partitions** which are not necessarily actual scheduler partitions, but simply logical separations within the system. Partitions then support one or more **environments** which describe the modules to be loaded, enviroment variables, options etc. Environments are defined separately from partitions so they may be specific to a system + partition, common to multiple systems or partitions, or a default environment may be overridden for specific systems and/or partitions. Tests themselves may also define modules to load etc. as well as which environments, partitions and systems they are valid for. ReFrame then runs tests on combinations of valid partitions + environments.
+Tests in ReFrame are defined by Python scripts - here, the `apps/<application>/reframe_<application>.py` files. These define a generic test, independent of system details like scheduler, MPI libraries, launcher etc. These aspects are defined for the system(s) under test in the reframe configuration file `reframe_config.py`. A system definition contains one or more **partitions** which are not necessarily actual scheduler partitions, but simply logical separations within the system. Partitions then support one or more **environments** which describe the modules to be loaded, enviroment variables, options etc. Environments are defined separately from partitions so they may be specific to a system + partition, common to multiple systems or partitions, or a default environment may be overridden for specific systems and/or partitions. The third level is the **tests** themselves, which may also define modules to load etc. as well as which environments, partitions and systems they are valid for. ReFrame then runs tests on combinations of valid partitions + environments.
 
-Despite this flexibility, in practice the features ReFrame exposes at each level affect how the system configuration should be defined. Using the setup for AlaSKA given in `reframe_config.py` as an example:
-- We want to run tests using:
-  - Both the HDR 100 InfiniBand and 25G Ethernet (RoCE) networks
-  - With various MPI libraries:
-     - OpenMPI using either 'openib' and 'ucx' to select between networks (needing two separate builds of OpenMPI - which happen to be different versions here as well).
-     - Intel MPI
-  - With various compilers.
-- Each application must be built using each compiler + MPI chain. In general, this means that each build of the application module will have a different name. Therefore the application module to load cannot be defined at test level.
-- We therefore define partitions which encapsulate *combinations* of the network (`ib-` or `roce-`), compiler, MPI library (`-openmpi3-` or `-openmpi4-`) and communication layer (`-openib` or `-ucx`). The partition also defines the scheduler to use (`slurm`), launcher (`srun`) and process management library (`pmix_v2`) and associated options.
-- We then define an environment name per application, e.g. `imb`, and mark each test as valid only for that environment. We then provide separate *definitions* of these environments as required for individual partitions.
+Despite this flexibility, in practice the features ReFrame exposes at each level affect how the system configuration should be defined. As an example, the setup for AlaSKA given in `reframe_config.py` covers:
+  - Both HDR 100 InfiniBand and 25G Ethernet (RoCE) networks
+  - Various MPI libraries and fabric libraries etc
+  - Various compilers.
 
-ReFrame captures two outputs from tests:
-- Test outputs, including stdout, stderr and any results files which should be retained. These are copied to the `output/` directory tree, and overwritten each time a test is re-run.
-- "Performance variables", i.e. metrics extracted or computed from test outputs. These are defined in the tests themselves, and saved by ReFrame into a "performance log" in the `perflog/` directory tree. A performance log is a record-structured file with each line containing data for one performance variable from a run.
-
-Both of these use the same directory structure:
-
-    <system>/<partition>/<environment>/test_directory/test/
+Note that:
+- The environment variables used to select a network varies, depending on the MPI+fabric libraries. Therefore the compiler, MPI library + fabric variant and network selection environment variables must defined together in a **partition**.
+- Because we use `spack` and/or `easybuild` to install packages, and the generated module names encode the compiler + MPI library chain, the application module names must be defined in the **environment**.
+- The **tests** themselves can then be fully generic, without having to include logic for specific systems/partitions/environments.
 
 ## Adding a new system
-Assuming you have read the above section on ReFrame concepts, you will have to modify the following aspects of `reframe_config.py`, using the config for "alaska" as an example:
+
+Modify the following aspects of `reframe_config.py` - use the config for "alaska" as an example and follow ReFrame's [configuration documentation](https://reframe-hpc.readthedocs.io/en/stable/configure.html):
 - Add a new system into the `"systems"` key.
-- Add partitions to this system as required to cover your test matrix.
-- Within each partition:
+- Add partitions to this system as required to cover your test matrix. Within each partition:
   - The "modules" defined here should be sufficent to load an MPI library (whether a compiler module must be specified to do that depends on how your module hierarchy is configured).
   - Define any environment variables required to get the scheduler and MPI library combination to function properly. The program and slurm sbatch scripts provided in `helloworld/` may be helpful in testing this.
 - In the "environments" section, for each test you want to run on this system copy an existing test environment definition and change:
@@ -143,13 +131,15 @@ You also need to update various files in 'systems':
 
 ## Usage
 
-- All the below assumes the conda enviroment is activated:
+All the below assumes the conda environment has been activated:
 
       conda activate hpc-tests
 
-- Install the required application - see the appropriate `apps/<application>/README.md` for help.
+Firstly, run tests for one or more applications:
 
-- Run all tests for this applicatinon using something like:
+- If necessary, install the required application - see the appropriate `apps/<application>/README.md` for help.
+
+- Run all tests for this application using something like:
 
       cd hpc-tests
       reframe/bin/reframe -C reframe_config.py -c <application>/ --run --performance-report
@@ -157,12 +147,28 @@ You also need to update various files in 'systems':
   Tests can be run for specfic systems/partitions by appending e.g.: `--system alaska:ib-gcc9-openmpi4-ucx`.
   Some tests also have tags which can be used to filter tests further - see the appropriate README.
 
-- To start jupyter, with the conda environment active run:
+- ReFrame will generate two types of output for each test:
+    - Test outputs, including stdout, stderr and any results files which should be retained. These are copied to the `output/` directory tree, and overwritten each time a test is re-run.
+    - "Performance variables", i.e. metrics extracted or computed from test outputs. These are defined in the tests themselves, and saved by ReFrame into a "performance log" in the `perflog/` directory tree. A performance log is a record-structured file with each line containing data for one performance variable from a run.
+
+  Both of these use the same directory structure:
+
+        <system>/<partition>/<environment>/test_directory/test/
+
+Secondly, create/update plots for this system:
+
+- Start the jupyter server:
 
       cd hpc-tests
       jupyter notebook
 
-  Then browse to `https://<login-node-ip>:<port>` where port is given in the output from above, and login using the password you specified above.
+- Then browse to `https://<login-node-ip>:<port>` where port is given in the output from above, and login using the password you specified above.
+
+- You will now see a file browser. Navigate to `apps/<application>/<application>.ipynb`.
+
+- Step through the notebook using the play buttons.
+
+- Once happy with results, commit to a branch.
 
 # Spack
 
