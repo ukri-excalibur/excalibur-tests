@@ -19,7 +19,7 @@ def get_info():
     # os:
     uname = subprocess.run(['uname', '-r'], capture_output=True, text=True)
     with open('/etc/os-release') as f:
-        release = dict(line.split('=') for line in f.read().splitlines() if line)
+        release = dict(line.replace('"', '').split('=') for line in f.read().splitlines() if line)
     info['os'] = {
         'release': release,
         'kernel': uname.stdout.strip()
