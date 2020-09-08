@@ -138,7 +138,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl', 'sysinfo'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -284,6 +284,13 @@ site_configuration = {
             'name':'cp2k',
             'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
             'modules': ['CP2K/6.1-foss-2019a']
+        },
+        {
+            'name': 'sysinfo',
+        },
+        {
+            'name': 'sysinfo',
+            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'] #, 'alaska:roce-gcc9-openmpi4-ucx'],
         }
     ],
     'logging': [
