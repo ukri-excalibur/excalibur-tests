@@ -18,6 +18,7 @@ def merge(dicts, path=None):
         path = []
     result = {}
     for key in dicts[0]:
+        print('key', key)
         vals = [d[key] for d in dicts]
         #print('vals:', vals)
         if len(vals) != (len(dicts)):
@@ -26,13 +27,10 @@ def merge(dicts, path=None):
             raise ValueError('More than one type of value for key at %s' % '.'.join(path + [str(key)]))
         elif isinstance(vals[0], dict):
             result[key] = merge(vals, path + [str(key)])
-        elif isinstance(vals[0], list):
-            vals = [tuple(v) for v in vals]
         else:
-            try:
-                unique_vals = set(vals)
-            except Exception:
-                raise
+            if isinstance(vals[0], list):
+                vals = [tuple(v) for v in vals]
+            unique_vals = set(vals)
             if len(unique_vals) == 1:
                 result[key] = vals[0]
             else:
@@ -46,5 +44,6 @@ if __name__ == '__main__':
             info = json.load(f)
             infos.append(info)
     q = merge(infos)
+    pprint.pprint(q)
     with open('sysinfo.json', 'w') as f:
         json.dump(q, f)
