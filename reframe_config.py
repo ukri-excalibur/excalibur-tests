@@ -142,6 +142,8 @@ site_configuration = {
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
+                        # force IB:
+                        ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ]
                 },
                 {
