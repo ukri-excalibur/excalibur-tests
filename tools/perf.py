@@ -24,16 +24,22 @@ if __name__ == '__main__':
 
     # have to filter to a single perf_var before reshaping:
     perf_vars = df['perf_var'].unique()
-    if len(perf_vars) > 1:
-        print('Loaded %i records. Perf_vars are:' % len(df.index))
-        for ix, pv in enumerate(perf_vars):
+    print('Loaded %i records. Select data to tabulate:' % len(df.index))
+    for ix, pv in enumerate(perf_vars):
+        print('  %i: %s' % (ix, pv))
+    print('  %i: other (non-performance) variable' % (ix +1))
+    var_idx = int(input('Enter a number (default 0):') or '0')
+    if var_idx > ix:
+        perf_var = None
+        df = df.loc[df['perf_var'] == perf_vars[0]]
+        for ix, pv in enumerate(df.columns):
             print('  %i: %s' % (ix, pv))
-        perf_var_idx = input('Enter index of perf_var to display (default 0):') or '0'
-        perf_var = perf_vars[int(perf_var_idx)]
+        var_idx = int(input('Enter a number (default 0):') or '0')
+        pivot_vals = df.columns[var_idx]
     else:
-        perf_var = perf_vars[0]
-        print("Loaded %i records, only perf_vars is '%s'" % (len(df.index), perf_var))
-    df = df.loc[df['perf_var'] == perf_var]
+        perf_var = perf_vars[var_idx]
+        df = df.loc[df['perf_var'] == perf_var]
+        pivot_vals = 'perf_value'
 
     # add a system:partition column:
     environs = df['environ'].unique()
@@ -42,9 +48,9 @@ if __name__ == '__main__':
     else:
         df['sys:part'] = df['sysname'] + ':' + df['partition']
         
-    # pivot to give a row per testname, column per system:partition, with values being selected perf_var
-    df = df.pivot(index='testname', columns='sys:part', values='perf_value')
-
+    # pivot to give a row per testname, column per system:partition, with values being selected item
+    df = df.pivot(index='testname', columns='sys:part', values=pivot_vals)
+    
     # if last part of '_'-delimited testname is numeric, then use it for sorting:
     # don't have key parameter for df.sort_index() in this version so have to create a new column
     testparts = [t.split('_') for t in df.index]
@@ -55,5 +61,5 @@ if __name__ == '__main__':
         df.drop('_n', axis=1)
 
     if len(perf_vars) > 1:
-        print('perf_var:', perf_var)
+        print('Showing', perf_var or pivot_vals)
     print(df)
