@@ -1,16 +1,23 @@
-""" WiP: Get information about host hardware.
+""" Get performance-related information about host hardware.
 
-    Requires following commands to be available:
-        lscpu
-        lspci
-        free
+    It requires the following shell commands to be available:
+    - lscpu
+    - lspci
+    - free
     
     Root should not be required.
 
-    Creates a file `$HOSTNAME.sysinfo.json`.
+    TODO: Creates a file `$HOSTNAME.sysinfo.json`.
 """
 
 import subprocess, pprint, collections, os, glob, socket, json
+
+def read_file(path, default=''):
+    if not os.path.exists(path):
+        return default
+    with open(path) as f:
+        content = f.read().strip()
+    return content
 
 def get_info():
 
@@ -59,6 +66,16 @@ def get_info():
             if descr.split()[0] in pci_id: # descr[0] e.g. '82:00.1'
                 netinfo[dev]['descr'] = descr
                 break
+        
+        # mellanox-specific:
+        mlx_port_path = [os.path.join(p) for p in glob.glob(os.path.join(NETROOT, dev, 'device', 'infiniband', 'mlx*', 'ports', '*'))]
+        if mlx_port_path:
+            if len(mlx_port_path) > 1:
+                print('WARNING: skipping Mellanox info - cannot handle multiple ports: %r' % mlx_port)
+            mlx_port_path = mlx_port_path[0]
+            netinfo[dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
+            netinfo[dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
+
     info['net'] = netinfo
         
     # memory info:
@@ -80,4 +97,4 @@ def get_info():
 if __name__ == '__main__':
     info = get_info()
     with open('%s.sysinfo.json' % info['hostname'], 'w') as f:
-        json.dump(info, f)
+        json.dump(info, f, indent=2)
