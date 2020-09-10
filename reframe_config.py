@@ -100,6 +100,8 @@ site_configuration = {
         },
         {
             'name':'alaska',
+            # Changelist for non-reframe changes:
+            # - 10-09-20: C-states disabled
             'descr':'Default AlaSKA OpenHPC p3-appliances slurm cluster',
             'hostnames': ['openhpc-login-0', 'openhpc-compute'],
             'modules_system':'lmod',
