@@ -7,7 +7,7 @@
     
     Root should not be required.
 
-    TODO: Creates a file `$HOSTNAME.sysinfo.json`.
+    Creates a file `$HOSTNAME.sysinfo.json`.
 """
 
 import subprocess, pprint, collections, os, glob, socket, json
@@ -49,21 +49,22 @@ def get_info():
     info['cpu'] = cpuinfo
 
     # network (adaptor) info:
+    info['net'] = {}
     NETROOT = '/sys/class/net'
     devnames = [dev for dev in os.listdir(NETROOT) if os.path.exists(os.path.join(NETROOT, dev, 'device'))]
-    netinfo = {}
     for dev in devnames:
         speed = read_file(os.path.join(NETROOT, dev, 'speed'))
         if not speed or int(speed) < 1:
             continue
-        netinfo[dev] = {'speed': '%s Mbits/s' % speed } # Mbits/sec as per https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net
+        info['net'][dev] = {}
+        info['net'][dev]['speed'] = '%s Mbits/s' % speed # Mbits/sec as per https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net
         vendor_id = read_file(os.path.join(NETROOT, dev, 'device/vendor'))
         device_id = read_file(os.path.join(NETROOT, dev, 'device/device'))
         pci_id = os.path.basename(os.path.realpath(os.path.join(NETROOT, dev, 'device')))  # e.g. '0000:82:00.1'
         lspci = subprocess.run(['lspci', '-d', '%s:%s' % (vendor_id, device_id), '-nn'], capture_output=True, text=True)
         for descr in lspci.stdout.splitlines():
             if descr.split()[0] in pci_id: # descr[0] e.g. '82:00.1'
-                netinfo[dev]['descr'] = descr
+                info['net'][dev]['descr'] = descr
                 break
         
         # mellanox-specific:
@@ -72,10 +73,8 @@ def get_info():
             if len(mlx_port_path) > 1:
                 print('WARNING: skipping Mellanox info - cannot handle multiple ports: %r' % mlx_port)
             mlx_port_path = mlx_port_path[0]
-            netinfo[dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
-            netinfo[dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
-
-    info['net'] = netinfo
+            info['net'][dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
+            info['net'][dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
         
     # memory info:
     # size:
