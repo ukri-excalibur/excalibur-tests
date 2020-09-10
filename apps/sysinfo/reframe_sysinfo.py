@@ -22,27 +22,26 @@ class Sysinfo(rfm.RunOnlyRegressionTest):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['sysinfo']
         
-        self.num_nodes = Scheduler_Info().num_nodes
+        self.num_nodes = 2 # TODO: DEBUG: Scheduler_Info().num_nodes
 
         # these are the ones reframe uses:
         self.num_tasks_per_node = 1
         self.num_tasks = self.num_nodes * self.num_tasks_per_node
-        #self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
         
         self.sourcesdir = '../../modules/sysinfo'
         self.exclusive_access = False
 
         #self.pre_run = []
         
-        self.executable = 'python' # Duh this runs srun time - 
+        self.executable = 'python'
         self.executable_opts = ['sysinfo.py']
         
         self.post_run = [
-            'cat *.sysinfo.json > all.info.json',
-            'python summarise.py',
+            'cat *.sysinfo.json > all.info.json', # just for debugging
+            'python sysinfo.py %s *.sysinfo.json' % self.current_system.name, # produces SYSNAME.sysinfo.json
             'echo Done',
             ]
 
-        self.keep_files = ['sysinfo.json']
+        self.keep_files = ['%s.sysinfo.json' % self.current_system.name]
 
-        self.sanity_patterns = sn.assert_found('Done', self.stdout)
+        self.sanity_patterns = sn.assert_found('Done', self.stdout) # TODO: assert stderr is empty

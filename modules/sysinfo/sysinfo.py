@@ -1,4 +1,12 @@
+#!/usr/bin/env python
 """ Get performance-related information about host hardware.
+
+    Usage:
+        sysinfo.py
+        sysinfo.py sysname file0 ... fileN
+    
+    The first form retrieves information about the current host and saves it in a file `$HOSTNAME.sysinfo.json`.
+    The second form collates information from multiple host data files and saves it in a file SYSNAME.sysinfo.json.
 
     It requires the following shell commands to be available:
     - lscpu
@@ -10,7 +18,36 @@
     Creates a file `$HOSTNAME.sysinfo.json`.
 """
 
-import subprocess, pprint, collections, os, glob, socket, json
+import subprocess, pprint, collections, os, glob, socket, json, sys
+
+def merge(dicts, path=None):
+    """ Merge a sequence of nested dicts into a single nested dict.
+
+        Input dicts must contain the same keys and the same type of values at each level.
+
+        For each (nested) key, if all input dicts have the same value, the output dict will have a single value.
+        If not, the output dict will have a list of values, in the same order as the input dicts.
+    """
+    if path is None:
+        path = []
+    result = {}
+    for key in dicts[0]:
+        vals = [d[key] for d in dicts]
+        if len(vals) != (len(dicts)):
+            raise ValueError('At least one dict is missing key at %s' % '.'.join(path + [str(key)]))
+        elif len(set(type(v) for v in vals)) > 1:
+            raise ValueError('More than one type of value for key at %s' % '.'.join(path + [str(key)]))
+        elif isinstance(vals[0], dict):
+            result[key] = merge(vals, path + [str(key)])
+        else:
+            if isinstance(vals[0], list):
+                vals = [tuple(v) for v in vals]
+            unique_vals = set(vals)
+            if len(unique_vals) == 1:
+                result[key] = vals[0]
+            else:
+                result[key] = vals
+    return result
 
 def read_file(path, default=''):
     if not os.path.exists(path):
@@ -71,7 +108,7 @@ def get_info():
         mlx_port_path = [os.path.join(p) for p in glob.glob(os.path.join(NETROOT, dev, 'device', 'infiniband', 'mlx*', 'ports', '*'))]
         if mlx_port_path:
             if len(mlx_port_path) > 1:
-                print('WARNING: skipping Mellanox info - cannot handle multiple ports: %r' % mlx_port)
+                print('WARNING: skipping Mellanox info - cannot handle multiple ports: %r' % mlx_port, file=sys.stderr)
             mlx_port_path = mlx_port_path[0]
             info['net'][dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
             info['net'][dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
@@ -94,6 +131,19 @@ def get_info():
     return info
 
 if __name__ == '__main__':
-    info = get_info()
-    with open('%s.sysinfo.json' % info['hostname'], 'w') as f:
-        json.dump(info, f, indent=2)
+    if len(sys.argv) == 1:
+        info = get_info()
+        with open('%s.sysinfo.json' % info['hostname'], 'w') as f:
+            json.dump(info, f, indent=2)
+    elif len(sys.argv) > 2:
+        sysname = sys.argv[1]
+        infos = []
+        for path in sys.argv[2:]:
+            with open(path) as f:
+                info = json.load(f)
+                infos.append(info)
+        allinfo = merge(infos)
+        with open('%s.sysinfo.json' % sysname, 'w') as f:
+            json.dump(allinfo, f, indent=2)
+    else:
+        exit('Invalid command line %r, see docstring for usage.' % ' '.join(sys.argv))
