@@ -34,12 +34,11 @@ def get_info():
     
     # chassis:
     DMI_ROOT = '/sys/devices/virtual/dmi/id/'
-    chassis_info = {
-        'product_name': open(os.path.join(DMI_ROOT, 'product_name')).read().strip(),
-        'sys_vendor': open(os.path.join(DMI_ROOT, 'sys_vendor')).read().strip(),
+    info['chassis'] = {
+        'product_name': read_file(os.path.join(DMI_ROOT, 'product_name')),
+        'sys_vendor': read_file(os.path.join(DMI_ROOT, 'sys_vendor')),
     }
-    info['chassis'] = chassis_info
-
+    
     # cpu info:
     cpuinfo = {} # key->str, value->str
     lscpu = subprocess.run(['lscpu'], capture_output=True, text=True)
@@ -54,12 +53,12 @@ def get_info():
     devnames = [dev for dev in os.listdir(NETROOT) if os.path.exists(os.path.join(NETROOT, dev, 'device'))]
     netinfo = {}
     for dev in devnames:
-        speed = open(os.path.join(NETROOT, dev, 'speed')).read().strip()
+        speed = read_file(os.path.join(NETROOT, dev, 'speed'))
         if not speed or int(speed) < 1:
             continue
         netinfo[dev] = {'speed': '%s Mbits/s' % speed } # Mbits/sec as per https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net
-        vendor_id = open(os.path.join(NETROOT, dev, 'device/vendor')).read().strip()
-        device_id = open(os.path.join(NETROOT, dev, 'device/device')).read().strip()
+        vendor_id = read_file(os.path.join(NETROOT, dev, 'device/vendor'))
+        device_id = read_file(os.path.join(NETROOT, dev, 'device/device'))
         pci_id = os.path.basename(os.path.realpath(os.path.join(NETROOT, dev, 'device')))  # e.g. '0000:82:00.1'
         lspci = subprocess.run(['lspci', '-d', '%s:%s' % (vendor_id, device_id), '-nn'], capture_output=True, text=True)
         for descr in lspci.stdout.splitlines():
@@ -85,9 +84,10 @@ def get_info():
     if lines[0][0] != 'total' or lines[1][0] != 'Mem:':
         raise ValueError('unexpected result from free:\n%s' % free.stdout)
     meminfo = {'total': lines[1][1]}
+    # types:
     mem_types = []
     for dimm in glob.glob('/sys/devices/system/edac/mc/mc*/dimm*'):
-        mem_type = open(os.path.join(dimm, 'dimm_mem_type')).read().strip()
+        mem_type = read_file(os.path.join(dimm, 'dimm_mem_type'))
         mem_types.append(mem_type)
     meminfo['types'] = mem_types[0] if len(set(mem_types)) == 1 else mem_types
     info['memory'] = meminfo
