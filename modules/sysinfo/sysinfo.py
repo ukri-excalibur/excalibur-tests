@@ -81,6 +81,44 @@ def get_info():
             info['net'][dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
             info['net'][dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
         
+        # pause options:
+        ethtool_pause = subprocess.run(['ethtool', '--show-pause', dev], capture_output=True, text=True)
+        pause_info = []
+        for line in ethtool_pause.stdout.splitlines()[1:]:
+            if not line:
+                continue
+            pause_info.append('%s=%s' % tuple(v.strip() for v in line.split(':')))
+        #info['net'][dev]['pause_opts'] = ','.join(pause_info)
+        info['net'][dev]['pause_opts'] = pause_info
+
+        #  RX/TX ring parameters
+        ethtool_ring = subprocess.run(['ethtool', '--show-ring', dev], capture_output=True, text=True)
+        ring_info_max = []
+        ring_info_curr = []
+        for line in ethtool_ring.stdout.splitlines()[1:]:
+            if not line:
+                continue
+            if 'Pre-set maximums' in line:
+                ring_info = ring_info_max
+            elif 'Current hardware settings' in line:
+                ring_info = ring_info_curr
+            else:
+                ring_info.append('%s=%s' % tuple(v.strip() for v in line.split(':')))
+        # info['net'][dev]['ring_max'] = ','.join(ring_info_max)
+        # info['net'][dev]['ring_curr'] = ','.join(ring_info_curr)
+        info['net'][dev]['ring_max'] = ring_info_max
+        info['net'][dev]['ring_curr'] = ring_info_curr
+    
+        # features:
+        ethtool_features = subprocess.run(['ethtool', '--show-features', dev], capture_output=True, text=True)
+        feature_info = []
+        for line in ethtool_features.stdout.splitlines()[1:]:
+            if not line:
+                continue
+            feature_info.append('%s=%s' % tuple(v.strip() for v in line.split(':')))
+        # info['net'][dev]['features'] = ','.join(feature_info)
+        info['net'][dev]['features'] = feature_info
+
     # memory info:
     # size:
     free = subprocess.run(['free', '-h', '--si'], capture_output=True, text=True)
