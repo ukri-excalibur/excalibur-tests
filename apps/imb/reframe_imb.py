@@ -7,7 +7,7 @@
 
     Run using e.g.:
 
-        reframe/bin/reframe -C reframe_config.py -c imb/ --run --performance-report
+        reframe/bin/reframe -C reframe_config.py -c apps/imb/ --run --performance-report
 """
 
 import reframe as rfm
