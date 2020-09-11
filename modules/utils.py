@@ -280,6 +280,57 @@ def sizeof_fmt(num, suffix='B'):
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
 
+# TODO: put tests in docstrings
+# TESTD = {
+#     'numbers': {'zero':0, 'one':1},
+#     'letters':{'a':'alpha', 'b':'bravo'},
+# }
+
+def get_nested(dct, key_pattern):
+    """ Get value(s) from a nested dict
+    
+        Args:
+            dct: dict having str keys and values which may be other `dct`s
+            key_pattern: str giving dotted key
+        
+        Returns the value. Note that if key_pattern does not go to full depth then a dict is returned.
+    """
+    d = dct
+    patt_parts = key_pattern.split('.')
+    for kp in patt_parts:       
+        if kp in d:
+            d = d[kp]
+        else:
+            raise KeyError("No such key '%s'" % key_pattern)
+    return d
+
+# x = get_nested(TESTD, 'letters')
+# print(x)
+
+def split_numeric(s):
+    """ Split a string into numeric and non-numeric parts """
+    num, alpha = [], []
+    for c in s:
+        if c.isdigit():
+            num.append(c)
+        else:
+            alpha.append(c)
+    return ''.join(num), ''.join(alpha)
+
+def singleval(seq, sep=', '):
+    """ Convert an object to a single value.
+    
+        If the object has no length it is returned as-is.
+        If the object is a sequence or set of length 1 the first value is returned.
+        If the object is a sequence or set of length > 1 a string concatenation using `sep` is returned.
+    """
+    if not hasattr(seq, '__len__'):
+        return seq
+    if len(seq) == 1:
+        return list(seq)[0]
+    return sep.join(str(v) for v in seq)
+
+
 if __name__ == '__main__':
     
     #v = get_sysinfo(sys.argv[-1])
