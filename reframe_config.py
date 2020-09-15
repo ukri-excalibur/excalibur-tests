@@ -245,7 +245,7 @@ site_configuration = {
         {
             'name': 'intel-hpl',
             'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
-            'modules': ['intel-mkl/2020.1.217-5tpgp7b'],
+            'modules': ['intel-mkl/2020.1.217-5tpgp7b'], # now installed
             'variables':[
                 ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
             ],
