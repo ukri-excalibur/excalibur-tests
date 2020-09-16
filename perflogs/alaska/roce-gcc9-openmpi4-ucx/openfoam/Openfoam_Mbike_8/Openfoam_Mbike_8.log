@@ -1,0 +1,6 @@
+2020-08-19T22:30:33+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=5075|ExecutionTime=12.59|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8
+2020-08-19T22:30:33+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=5075|ClockTime=13.0|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8
+2020-08-19T22:30:33+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=5075|runtime_real=19.711|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8
+2020-09-11T10:33:05+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=6494|ExecutionTime=12.03|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8
+2020-09-11T10:33:05+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=6494|ClockTime=12.0|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8
+2020-09-11T10:33:05+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_8 on alaska:roce-gcc9-openmpi4-ucx using openfoam|jobid=6494|runtime_real=19.191|s|ref=0 (l=None, u=None)|num_procs=256,num_nodes=8

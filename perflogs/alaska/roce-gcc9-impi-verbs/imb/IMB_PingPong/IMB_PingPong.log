@@ -1,0 +1,6 @@
+2020-08-19T16:20:18+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=4923|max_bandwidth=2491.38|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-08-19T16:20:18+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=4923|min_latency=2.33|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:13+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=5242|max_bandwidth=2517.69|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:13+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=5242|min_latency=2.31|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:24+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=6574|max_bandwidth=2502.87|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:24+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-impi-verbs using imb|jobid=6574|min_latency=2.33|t[usec]|ref=0 (l=None, u=None)|pingpong

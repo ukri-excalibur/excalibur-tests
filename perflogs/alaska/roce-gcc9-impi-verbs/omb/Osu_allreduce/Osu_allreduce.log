@@ -1,0 +1,2 @@
+2020-08-19T16:34:55+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_allreduce on alaska:roce-gcc9-impi-verbs using omb|jobid=4983|min_av_latency=4.45|us|ref=0 (l=None, u=None)|allreduce,procs_per_node=32
+2020-09-11T15:55:46+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_allreduce on alaska:roce-gcc9-impi-verbs using omb|jobid=6634|min_av_latency=4.32|us|ref=0 (l=None, u=None)|allreduce,procs_per_node=32

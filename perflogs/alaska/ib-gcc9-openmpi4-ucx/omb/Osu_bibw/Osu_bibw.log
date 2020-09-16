@@ -1,0 +1,2 @@
+2020-08-19T16:35:05+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_bibw on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=4996|max_bandwidth=20957.57|MB/s|ref=0 (l=None, u=None)|procs_per_node=1,bibw
+2020-09-11T15:56:03+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_bibw on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=6647|max_bandwidth=20930.11|MB/s|ref=0 (l=None, u=None)|procs_per_node=1,bibw

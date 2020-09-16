@@ -1,0 +1,6 @@
+2020-08-20T09:03:29+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=5078|cp2k_time=817.659|s|ref=0 (l=None, u=None)|num_procs=32,num_nodes=1
+2020-08-20T09:03:29+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=5078|runtime_real=824.448|s|ref=0 (l=None, u=None)|num_procs=32,num_nodes=1
+2020-09-10T09:18:04+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=5284|cp2k_time=710.412|s|ref=0 (l=None, u=None)|num_nodes=1,num_procs=32
+2020-09-10T09:18:04+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=5284|runtime_real=716.972|s|ref=0 (l=None, u=None)|num_nodes=1,num_procs=32
+2020-09-10T20:03:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=6428|cp2k_time=666.497|s|ref=0 (l=None, u=None)|num_nodes=1,num_procs=32
+2020-09-10T20:03:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_1 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=6428|runtime_real=673.09|s|ref=0 (l=None, u=None)|num_nodes=1,num_procs=32

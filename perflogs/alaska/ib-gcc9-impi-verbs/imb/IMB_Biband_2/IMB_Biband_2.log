@@ -1,0 +1,2 @@
+2020-08-19T16:23:28+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_Biband_2 on alaska:ib-gcc9-impi-verbs using imb|jobid=4950|max_bandwidth=12662.12|Mbytes/sec|ref=0 (l=None, u=None)|biband,procs_per_node=1
+2020-09-11T15:06:44+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_Biband_2 on alaska:ib-gcc9-impi-verbs using imb|jobid=6601|max_bandwidth=9079.64|Mbytes/sec|ref=0 (l=None, u=None)|biband,procs_per_node=1

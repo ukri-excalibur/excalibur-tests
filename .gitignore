@@ -7,7 +7,6 @@ reframe.log
 reframe.out
 stage/*
 output/*
-perflogs/*
 
 # other
 setup/.sslconfig

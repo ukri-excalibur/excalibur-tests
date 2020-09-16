@@ -1,0 +1,6 @@
+2020-08-19T16:20:17+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=4922|max_bandwidth=6412.42|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-08-19T16:20:17+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=4922|min_latency=1.28|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:10+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=5241|max_bandwidth=6331.37|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:10+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=5241|min_latency=1.11|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:21+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=6573|max_bandwidth=6241.24|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:21+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-impi-verbs using imb|jobid=6573|min_latency=1.12|t[usec]|ref=0 (l=None, u=None)|pingpong

@@ -1,0 +1,6 @@
+2020-08-19T16:20:20+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=4924|max_bandwidth=11934.55|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-08-19T16:20:20+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=4924|min_latency=1.04|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:12+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=5243|max_bandwidth=11873.84|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-09T10:30:12+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=5243|min_latency=1.03|t[usec]|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=6575|max_bandwidth=11892.6|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
+2020-09-11T15:04:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:ib-gcc9-openmpi4-ucx using imb|jobid=6575|min_latency=1.03|t[usec]|ref=0 (l=None, u=None)|pingpong

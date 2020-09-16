@@ -1,0 +1,4 @@
+2020-08-19T16:36:04+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_4 on alaska:roce-gcc9-openmpi4-ucx using omb|jobid=5005|max_bandwidth=3063.33|MB/s|ref=0 (l=None, u=None)|procs_per_node=2,mbw_mr
+2020-08-19T16:36:04+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_4 on alaska:roce-gcc9-openmpi4-ucx using omb|jobid=5005|max_message_rate=10470921.51|Messages/s|ref=0 (l=None, u=None)|procs_per_node=2,mbw_mr
+2020-09-11T15:56:52+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_4 on alaska:roce-gcc9-openmpi4-ucx using omb|jobid=6656|max_bandwidth=3063.59|MB/s|ref=0 (l=None, u=None)|mbw_mr,procs_per_node=2
+2020-09-11T15:56:52+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_4 on alaska:roce-gcc9-openmpi4-ucx using omb|jobid=6656|max_message_rate=10425396.92|Messages/s|ref=0 (l=None, u=None)|mbw_mr,procs_per_node=2

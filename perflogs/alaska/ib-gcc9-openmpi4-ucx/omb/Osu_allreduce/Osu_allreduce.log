@@ -1,0 +1,2 @@
+2020-08-19T16:34:57+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_allreduce on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=4984|min_av_latency=5.31|us|ref=0 (l=None, u=None)|allreduce,procs_per_node=32
+2020-09-11T15:55:49+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_allreduce on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=6635|min_av_latency=5.31|us|ref=0 (l=None, u=None)|allreduce,procs_per_node=32
