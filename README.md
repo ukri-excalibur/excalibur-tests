@@ -69,12 +69,12 @@ Some way of compiling applications is required  - instructions here use `spack` 
 
 1. Create and activate the `hpc-tests` conda environment:
     
-        conda create -f environment.yml
+        cd hpc-tests
+        conda env create -f environment.yml
         conda activate hpc-tests
 
-1. Install ReFrame:
+1. Install ReFrame inside `hpc-tests/`:
 
-        cd hpc-tests
         git clone https://github.com/eth-cscs/reframe.git
 
 1. Run ReFrame's own test suite:
