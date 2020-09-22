@@ -1,4 +1,4 @@
-""" Gather system information from all nodes in a (ReFrame) partition
+""" Gather system information from all idle nodes in a (ReFrame) partition.
 
     reframe/bin/reframe -C reframe_config.py -c apps/sysinfo/ --run
 """
@@ -22,12 +22,8 @@ class Sysinfo(rfm.RunOnlyRegressionTest):
         
         self.valid_systems = ['*']
         self.valid_prog_environs = ['sysinfo']
-        
-        self.num_nodes = Scheduler_Info().num_nodes
 
-        # these are the ones reframe uses:
         self.num_tasks_per_node = 1
-        self.num_tasks = self.num_nodes * self.num_tasks_per_node
         
         self.sourcesdir = '../../modules/sysinfo'
         self.exclusive_access = False
@@ -37,7 +33,7 @@ class Sysinfo(rfm.RunOnlyRegressionTest):
         self.executable = 'python'
         self.executable_opts = ['sysinfo.py']
         
-        self.post_run = [
+        self.post_run = [ # TODO: ReframeDeprecationWarning: 'post_run' is deprecated; please use 'postrun_cmds' instead
             #'cat *.sysinfo.json > all.info.json', # just for debugging
             'echo Done',
             ]
@@ -45,6 +41,13 @@ class Sysinfo(rfm.RunOnlyRegressionTest):
         self.keep_files = ['sysinfo.json'] # see self.collate()
 
         self.sanity_patterns = sn.assert_found('Done', self.stdout) # TODO: assert stderr is empty
+
+    @rfm.run_before('run')
+    def set_nodes(self):
+        self.num_nodes = Scheduler_Info(self.current_partition, only_states='idle').num_nodes
+
+        # these are the ones reframe uses:
+        self.num_tasks = self.num_nodes * self.num_tasks_per_node
 
     @rfm.run_after('run')
     def collate(self):
