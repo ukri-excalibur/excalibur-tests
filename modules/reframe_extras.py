@@ -8,7 +8,7 @@ from reframe.core.logging import getlogger
 from reframe.core.launchers import JobLauncher
 import reframe.utility.sanity as sn
 
-import os, shutil, subprocess, shlex
+import os, shutil, subprocess, shlex, subprocess
 from pprint import pprint
 
 class CachedRunTest(rfm.RegressionTest):
@@ -95,9 +95,12 @@ class NoBuild(BuildSystem):
     def emit_build_commands(self, environ):
         return []
 
-def slurm_node_info():
+def slurm_node_info(partition=None):
     """ Get information about slurm nodes.
-    
+
+        Args:
+            partition: str, name of slurm partition to query, else information for all partitions is returned.
+
         Returns a sequence of dicts, one per node with keys/values all strs as follows:
             "NODELIST": name of node
             "NODES": number of nodes
@@ -114,7 +117,10 @@ def slurm_node_info():
 
         TODO: add partition selection? with None being current one (note system partition != slurm partition)
     """
-    nodeinfo = subprocess.run(['sinfo', '--Node', '--long'], capture_output=True).stdout.decode('utf-8') # encoding?
+    sinfo_cmd = ['sinfo', '--Node', '--long']
+    if partition:
+        sinfo_cmd.append('--partition=%s' % partition)
+    nodeinfo = subprocess.run(sinfo_cmd, capture_output=True).stdout.decode('utf-8') # encoding?
 
     nodes = []
     lines = nodeinfo.split('\n')
@@ -129,29 +135,63 @@ def slurm_node_info():
     return nodes
 
 
+def hostlist_to_hostnames(s):
+    """ Convert a Slurm 'hostlist expression' to a list of individual node names.
+    
+        Uses `scontrol` command.
+    """
+    hostnames = subprocess.run(['scontrol', 'show', 'hostnames', s], capture_output=True, text=True).stdout.split()
+    return hostnames
+
 class Scheduler_Info(object):
-    def __init__(self, partition=None):
+    def __init__(self, rfm_partition=None, exclude_states=None, only_states=None):
         """ Information from the scheduler.
 
             Args:
-                partition: str, name of partition or None for default partition
-
-            Attributes:
-                num_nodes: number of nodes
-                pcores_per_node: number of physical cores per node
-                lcores_per_node: number of logical cores per node
+                rfm_partition: reframe.core.systems.SystemPartition or None
+                exclude_states: sequence of str, exclude nodes in these Slurm node states
+                only_states: sequence of str, only include nodes in these Slurm node states
+            
+            The returned object has attributes:
+                - `num_nodes`: number of nodes
+                - `pcores_per_node`: number of physical cores per node
+                - `lcores_per_node`: number of logical cores per node
+            
+            If `rfm_partition` is None the above attributes describe the **default** scheduler partition. Otherwise the following `sbatch` directives
+            in the `access` property of the ReFrame partition will affect the information returned:
+                - `--partition`
+                - `--exclude`
         """
         # TODO: handle scheduler not being slurm!
-        nodeinfo = slurm_node_info()
-        if partition is None:
-            nodeinfo = [n for n in nodeinfo if n['PARTITION'].endswith('*')]
-        else:
-            nodeinfo = [n for n in nodeinfo if n['PARTITION'] == partition]
-
+        slurm_partition_name = None
+        slurm_excluded_nodes = []
+        exclude_states = [] if exclude_states is None else exclude_states
+        only_states = [] if only_states is None else only_states
+        if rfm_partition is not None:
+            for option in rfm_partition.access:
+                if '--partition=' in option:
+                    _, slurm_partition_name = option.split('=')
+                if '--exclude' in option:
+                    _, exclude_hostlist = option.split('=')
+                    slurm_excluded_nodes = hostlist_to_hostnames(exclude_hostlist)
+        
+        # filter out nodes we don't want:
+        nodeinfo = []
+        for node in slurm_node_info(slurm_partition_name):
+            if slurm_partition_name is None and not node['PARTITION'].endswith('*'): # filter to default partition
+                continue
+            if node['NODELIST'] in slurm_excluded_nodes:
+                continue
+            if node['STATE'].strip('*') in exclude_states:
+                continue
+            if only_states and node['STATE'] not in only_states:
+                continue
+            nodeinfo.append(node)
+            
         self.num_nodes = len(nodeinfo)
         cpus = [n['S:C:T'] for n in nodeinfo]
         if not len(set(cpus)) == 1:
-            raise ValueError('CPU description differs between nodes, cannot define unique value')
+            raise ValueError('Cannot summarise CPUs - description differs between nodes:\n%r' % cpus)
         sockets, cores, threads = [int(v) for v in cpus[0].split(':')] # nb each is 'per' the preceeding
         self.sockets_per_node = sockets
         self.pcores_per_node = sockets * cores
