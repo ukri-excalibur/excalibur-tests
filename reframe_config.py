@@ -1,6 +1,49 @@
 site_configuration = {
     'systems': [
         {
+            'name':'csd3',
+            'descr': 'Cambridge Service for Data Driven Discovery: https://docs.hpc.cam.ac.uk/hpc/index.html',
+            'hostnames': ['login-e-16'],
+            'modules_system': 'tmod32',
+            'partitions': [
+                {
+                    'name': 'cclake-ib-icc19-impi19-ucx',
+                    'descr': '100Gb Infiniband using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
+                    'scheduler': 'slurm',
+                    'access': [
+                        '--partition=cclake',
+                        '--account=support-cpu',
+                        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
+                    ],
+                    'launcher': 'srun',
+                    'max_jobs': 1000,
+                    'environs': ['sysinfo', 'imb'],
+                    'variables': [
+                        ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
+                        ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
+                    ],
+                    'modules': ['rhel7/default-ccl'],
+                },
+                {
+                    'name': 'cclake-ib-gcc9-ompi3-ucx',
+                    'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
+                    'scheduler': 'slurm',
+                    'access': [
+                        '--partition=cclake',
+                        '--account=support-cpu',
+                        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
+                    ],
+                    'launcher': 'srun',
+                    'max_jobs': 1000,
+                    'environs': ['sysinfo'],
+                    'variables': [
+                        ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
+                        ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
+                    ],
+                }
+            ]
+        },
+        {
             'name': 'arcus',
             'descr': 'Initial OpenHPC slurm cluster on Arcus',
             'hostnames': ['eb-login-0'],
@@ -169,6 +212,7 @@ site_configuration = {
     'environments': [
         {
             'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
+                                # will also work for csd3:cclake-ib-icc19-impi19-ucx as the partition module makes this available
         },
         {
             'name': 'imb',
@@ -292,10 +336,10 @@ site_configuration = {
         {
             'name': 'sysinfo',
         },
-        {
-            'name': 'sysinfo',
-            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'] #, 'alaska:roce-gcc9-openmpi4-ucx'],
-        }
+        # {
+        #     'name': 'sysinfo',
+        #     'target_systems': ['alaska:ib-gcc9-openmpi4-ucx'] #, 'alaska:roce-gcc9-openmpi4-ucx'],
+        # }
     ],
     'logging': [
         {
