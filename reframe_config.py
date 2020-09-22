@@ -16,7 +16,7 @@ site_configuration = {
                         '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
                     ],
                     'launcher': 'srun',
-                    'max_jobs': 1000,
+                    'max_jobs': 20,
                     'environs': ['sysinfo', 'imb'],
                     'variables': [
                         ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -33,8 +33,8 @@ site_configuration = {
                         '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
                     ],
                     'launcher': 'srun',
-                    'max_jobs': 1000,
-                    'environs': ['sysinfo'],
+                    'max_jobs': 20,
+                    'environs': ['sysinfo', 'imb'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                         ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -237,6 +237,11 @@ site_configuration = {
             'name': 'imb',
             'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
             'modules': ['IMB/2019.3-gompi-2019a'] # NB gompi-2019a is subset of foss-2019a
+        },
+        {
+            'name': 'imb',
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx'],
+            'modules': ['intel-mpi-benchmarks-2019.6-gcc-9.1.0-5tbknir']
         },
         {
             'name': 'gromacs',
