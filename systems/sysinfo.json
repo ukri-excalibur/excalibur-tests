@@ -13,12 +13,10 @@
     "alaska:roce-*": {
         "interconnect_Gb": 25
     },
-    "arcus:ib-*": {
-        "interconnect_Gb" : 100
+    "csd3:cclake-ib-*": {
+        "interconnect_Gb": 100
     },
-    "arcus:roce-*": {
+    "csd3:cclake-roce-*": {
         "interconnect_Gb": 50
     }
-    
-
 }
