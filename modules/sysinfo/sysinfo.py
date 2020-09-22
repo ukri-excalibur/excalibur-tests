@@ -73,14 +73,16 @@ def get_info():
                 break
         
         # mellanox-specific:
-        mlx_port_path = [os.path.join(p) for p in glob.glob(os.path.join(NETROOT, dev, 'device', 'infiniband', 'mlx*', 'ports', '*'))]
-        if mlx_port_path:
-            if len(mlx_port_path) > 1:
-                print('WARNING: skipping Mellanox info - cannot handle multiple ports: %r' % mlx_port, file=sys.stderr)
-            mlx_port_path = mlx_port_path[0]
-            info['net'][dev]['rate'] = read_file(os.path.join(mlx_port_path, 'rate')) # e.g. "100 Gb/sec (4X EDR)"
-            info['net'][dev]['link_layer'] = read_file(os.path.join(mlx_port_path, 'link_layer')) # e.g. "InfiniBand"
-        
+        card = glob.glob(os.path.join(NETROOT, dev, 'device/infiniband/*'))
+        if card:
+            info['net'][dev]['card'] = os.path.basename(card[0]) # e.g. 'mlx5_0'
+        port_paths = glob.glob(os.path.join(NETROOT, dev, 'device', 'infiniband', 'mlx*', 'ports', '*'))
+        if port_paths:
+            assert len(port_paths) == 1
+            info['net'][dev]['port'] = os.path.basename(port_paths[0]) # e.g. '1'
+            info['net'][dev]['rate'] = read_file(os.path.join(port_paths[0], 'rate')) # e.g. "100 Gb/sec (4X EDR)"
+            info['net'][dev]['link_layer'] = read_file(os.path.join(port_paths[0], 'link_layer')) # e.g. "InfiniBand"
+            
         # pause options:
         ethtool_pause = subprocess.run(['ethtool', '--show-pause', dev], capture_output=True, text=True)
         pause_info = []
