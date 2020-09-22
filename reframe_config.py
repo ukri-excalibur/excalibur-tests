@@ -1,143 +1,72 @@
+# define csd3:cclake parameters common across reframe partitions:
+csd3_cclake_common = {
+    'scheduler': 'slurm',
+    'launcher': 'srun',
+    'access': [
+        '--partition=cclake',
+        '--account=support-cpu',
+        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
+        ],
+    'max_jobs': 20,
+}
+
 site_configuration = {
     'systems': [
         {
             'name':'csd3',
             'descr': 'Cambridge Service for Data Driven Discovery: https://docs.hpc.cam.ac.uk/hpc/index.html',
-            'hostnames': ['login-e-16'],
+            'hostnames': ['login-e-*'],
             'modules_system': 'tmod32',
             'partitions': [
                 {
-                    'name': 'cclake-ib-icc19-impi19-ucx',
-                    'descr': '100Gb Infiniband using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                    'scheduler': 'slurm',
-                    'access': [
-                        '--partition=cclake',
-                        '--account=support-cpu',
-                        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
-                    ],
-                    'launcher': 'srun',
-                    'max_jobs': 20,
-                    'environs': ['sysinfo', 'imb'],
-                    'variables': [
-                        ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
-                    ],
-                    'modules': ['rhel7/default-ccl'],
+                    **csd3_cclake_common,
+                    **{
+                        'name': 'cclake-ib-icc19-impi19-ucx',
+                        'descr': '100Gb Infiniband using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
+                        'environs': ['sysinfo', 'imb'],
+                        'variables': [
+                            ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
+                        ],
+                        'modules': ['rhel7/default-ccl'],
+                    },
                 },
                 {
-                    'name': 'cclake-ib-gcc9-ompi3-ucx',
-                    'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                    'scheduler': 'slurm',
-                    'access': [
-                        '--partition=cclake',
-                        '--account=support-cpu',
-                        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
-                    ],
-                    'launcher': 'srun',
-                    'max_jobs': 20,
-                    'environs': ['sysinfo', 'imb'],
-                    'variables': [
-                        ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
-                        ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
-                    ],
-                }
-            ]
-        },
-        {
-            'name': 'arcus',
-            'descr': 'Initial OpenHPC slurm cluster on Arcus',
-            'hostnames': ['eb-login-0'],
-            'modules_system': 'lmod',
-            'partitions':[
-                {
-                    'name':'ib-foss-2019a',
-                    'descr': '100Gb Infiniband using EasyBuild foss-2019a toolchain (gcc 8.2.0 openmpi 3.1.3)',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'srun',
-                    'max_jobs':8,
-                    'environs':['imb', 'cp2k'],
-                    # no modules required
-                    'variables': [
-                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
-                        ['SLURM_MPI_TYPE', 'pmix_v2'],
-                    ],
+                    **csd3_cclake_common,
+                    **{
+                        'name': 'cclake-roce-icc19-impi19-ucx',
+                        'descr': '50Gb RoCE using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
+                        'environs': ['sysinfo', 'imb'],
+                        'variables': [
+                            ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
+                        ],
+                        'modules': ['rhel7/default-ccl'],
+                    },
                 },
                 {
-                    'name':'roce-foss-2019a',
-                    'descr': '50Gb RoCE using EasyBuild foss-2019a toolchain (gcc 8.2.0 openmpi 3.1.3)',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'srun',
-                    'max_jobs':8,
-                    'environs':['imb', 'cp2k'],
-                    # no modules required
-                    'variables': [
-                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
-                        ['SLURM_MPI_TYPE', 'pmix_v2'],
-                        # use roce:
-                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
-                    ]
+                    **csd3_cclake_common,
+                    **{
+                        'name': 'cclake-ib-gcc9-ompi3-ucx',
+                        'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
+                        'environs': ['sysinfo', 'imb'],
+                        'variables': [
+                            ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
+                            ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
+                        ],
+                    }
                 },
                 {
-                    'name':'ib-gcc9-openmpi4-ucx',
-                    'descr': '100Gb Infiniband with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'srun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
-                    'modules': ['gcc/9.2.0-3j3swca', 'openmpi/4.0.3-dxa6sov'],
-                    'variables': [
-                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
-                        ['SLURM_MPI_TYPE', 'pmix_v2'],
-
-                        # (no vars required for ucx on ib - fastest CA available)
-                    ]
+                    **csd3_cclake_common,
+                    **{
+                        'name': 'cclake-roce-gcc9-ompi3-ucx',
+                        'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
+                        'environs': ['sysinfo', 'imb'],
+                        'variables': [
+                            ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
+                            ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
+                        ],
+                    }
                 },
-                {
-                    'name':'roce-gcc9-openmpi4-ucx',
-                    'descr': '50Gb RoCE with gcc 9.2.0 and openmpi 4.0.3 using UCX transport layer',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'srun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'gromacs', 'omb', 'openfoam'],# 'hpl', 'cp2k'],
-                    'modules': ['gcc/9.2.0-3j3swca', 'openmpi/4.0.3-dxa6sov'],
-                    'variables': [
-                        # Use pmix to launch parallel applications - equivalent to `srun --mpi=pmix_v2`
-                        ['SLURM_MPI_TYPE', 'pmix_v2'],
-                        # use roce:
-                        ['UCX_NET_DEVICES', 'mlx5_1:1'],
-                    ]
-                },
-                {
-                    'name':'ib-gcc9-impi2019-mlx',
-                    'descr': '100Gb Infiniband with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'mpirun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'omb'],# 'intel-hpl', 'intel-hpcg'],
-                    'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
-                    'variables': [
-                        ['FI_PROVIDER', 'mlx'],
-                        # don't need to specify device - IB is fastest available
-                    ],
-                },
-                {
-                    'name':'roce-gcc9-impi2019-mlx',
-                    'descr': '50Gb RoCE with gcc 9.3.0 and Intel MPI 2019.8.254 using mlx transport',
-                    'scheduler': 'slurm',
-                    'access': [ '--partition=test'],
-                    'launcher':'mpirun',
-                    'max_jobs':8,
-                    'environs': ['imb', 'omb'], # 'intel-hpl', 'intel-hpcg'],
-                    'modules': ['gcc/9.2.0-3j3swca', 'intel-mpi/2019.8.254-5qpjevf'],
-                    'variables': [
-                        ['FI_PROVIDER', 'mlx'],
-                        ['UCX_NET_DEVICES', 'mlx5_1:1'], # weirdly this ['FI_VERBS_IFACE', 'eth0'] goes over IB
-                    ],
-                },
+                
             ]
         },
         {
