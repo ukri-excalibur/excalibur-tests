@@ -19,7 +19,6 @@ site_configuration = {
                     'max_jobs': 1000,
                     'environs': ['sysinfo', 'imb'],
                     'variables': [
-                        ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                         ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
                     ],
                     'modules': ['rhel7/default-ccl'],
