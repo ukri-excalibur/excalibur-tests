@@ -5,7 +5,8 @@ csd3_cclake_common = {
     'access': [
         '--partition=cclake',
         '--account=support-cpu',
-        '--exclude=cpu-p-[57-672]', # only use one rack's-worth of nodes at present
+        '--exclude=cpu-p-[1-56,113-672]', # only use one rack's-worth of nodes at present: use rack 2=57-112 as this is all ok
+        '--time=1:00:00',
         ],
     'max_jobs': 20,
 }
@@ -47,7 +48,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['sysinfo', 'imb'],
+                        'environs': ['sysinfo', 'imb', 'gromacs'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -59,7 +60,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['sysinfo', 'imb'],
+                        'environs': ['sysinfo', 'imb', 'gromacs'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
@@ -140,7 +141,7 @@ site_configuration = {
     'environments': [
         {
             'name': 'imb',      # a non-targeted environment seems to be necessary for reframe to load the config
-                                # will also work for csd3:cclake-ib-icc19-impi19-ucx as the partition module makes this available
+                                # will also work for csd3:cclake-{ib,roce}-icc19-impi19-ucx as the partition's module makes this available
         },
         {
             'name': 'imb',
@@ -169,7 +170,7 @@ site_configuration = {
         },
         {
             'name': 'imb',
-            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx'],
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
             'modules': ['intel-mpi-benchmarks-2019.6-gcc-9.1.0-5tbknir']
         },
         {
@@ -182,8 +183,8 @@ site_configuration = {
         },
         {
             'name': 'gromacs',
-            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
-            'modules': ['gromacs/2016.6-5ltvgvk']
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
+            'modules': ['gromacs-2016.6-gcc-9.1.0-kgomb67']
         },
         {
             'name': 'omb',

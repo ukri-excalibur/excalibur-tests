@@ -7,16 +7,16 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import os, sys, urllib, shutil, itertools
 sys.path.append('.')
-from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+from modules.reframe_extras import sequence, Scheduler_Info, ScalingTest
 from modules.utils import parse_time_cmd
 from reframe.core.logging import getlogger
 
 # parameterisation:
-node_seq = sequence(1, Scheduler_Info().num_nodes + 1, 2)
-benchmarks = ['1400k-atoms', '61k-atoms', '3000k-atoms']
+TEST_SIZES = [-1, -2, 0.25, 0.5, 1.0] # -ve numbers are absolute numbers of nodes, +ve are fraction of total partition nodes
+CASES = ['1400k-atoms', '61k-atoms', '3000k-atoms']
 
-@rfm.parameterized_test(*list(itertools.product(benchmarks, node_seq)))
-class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
+@rfm.parameterized_test(*list(itertools.product(CASES, TEST_SIZES)))
+class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, ScalingTest):
     """ Run HECBioSim Gromacs benchmarks.
 
         Runs for environments named "gromacs" only.
@@ -26,26 +26,19 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
 
         Also handles download/unpacking benchmark files.
 
-        Set `self.use_cache=True` to re-run results processing without actually running
-        gromacs again, e.g. during debugging. See `reframe_extras.CachedRunTest` for details.
-        
         Args:
             casename: str, directory name from the HECBioSim benchmark download, one of:
                 1400k-atoms  20k-atoms  3000k-atoms  465k-atoms  61k-atoms
-            num_nodes: int, number of nodes to run on
+            test_size: Number of nodes to use, possibly as fraction of partition size. See `modules.reframe_extras.ScalingTest.partition_fraction`.
     """
-    def __init__(self, casename, num_nodes):
+    def __init__(self, casename, test_size):
         
-        self.name = 'Gromacs_%s_%i' % (casename.split('-')[0], num_nodes) # e.g. Gromacs_1400k_2
-        self.use_cache = False # set to True to debug outputs using cached results
+        self.name = 'Gromacs_%s_%s' % (casename.split('-')[0], test_size) # e.g. Gromacs_1400k_-2
 
         self.casename = casename
-        self.num_nodes = num_nodes
-
-        # these are the ones reframe uses:
-        self.num_tasks_per_node = Scheduler_Info().pcores_per_node
-        self.num_tasks = self.num_nodes * self.num_tasks_per_node
-        self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, casename}
+        self.partition_fraction = test_size
+        self.node_fraction = 1.0 # use all physical cores
+        self.tags = {'test_size=%s' % test_size, casename}
 
         self.logfile = casename + '.log'
         
@@ -55,7 +48,7 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
         # created by download_benchmarks():
         self.sourcesdir = os.path.join(self.prefix, 'downloads', 'gromacs', self.casename)
 
-        self.pre_run = ['time \\']
+        self.prerun_cmds = ['time \\']
         self.executable = 'gmx_mpi'
         self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout'] #, '-ntomp', '1'] add this to turn off threading
         self.exclusive_access = True
@@ -91,7 +84,7 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, CachedRunTest):
         # Finished mdrun on rank 0 Wed Jun  3 17:18:58 2020
         #
         # <EOF>
-        
+    
     @rfm.run_before('run')
     def download_benchmarks(self, ):
         """ Download & unpack HECBioSim Gromacs benchmarks

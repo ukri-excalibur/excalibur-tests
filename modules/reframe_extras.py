@@ -11,6 +11,60 @@ import reframe.utility.sanity as sn
 import os, shutil, subprocess, shlex, subprocess
 from pprint import pprint
 
+class ScalingTest(rfm.RegressionTest):
+    """ Mixin to specify the number of nodes and processes-per-node to use relative to current partition resources.
+
+        Classes deriving from this must set the following to a number:
+
+        - `self.partition_fraction`
+        - `self.node_fraction`
+
+        If +ve, these give a factor which defines respectively:
+        - The number of nodes to use, as the number of nodes in the current scheduler partition * this factor
+        - The number of processes to use per node, as the number of physical cores * this factor
+        
+        If -ve, they must be an integer in which case they define the absolute number of nodes or processes to use respectively.
+        
+        Note that the current scheduler partition is affected by the (reframe) partition's `access` property. The following `sbatch` directives are
+        taken into account:
+        - `--partition`: use a non-default Slurm partition.
+        - `--exclude`: exclude specific nodes from consideration, i.e. a `partition_fraction` of 1.0 will not use these nodes.
+
+        The following tags are set:
+        - `num_nodes`: the actual number of nodes used.
+        - `num_procs`: the actual number of MPI tasks used.
+    """
+
+    @rfm.run_before('run')
+    def set_nodes(self):
+        
+        scheduler_partition = Scheduler_Info(self.current_partition)
+
+        # calculate number of nodes to use:
+        if not hasattr(self, 'partition_fraction'):
+            raise NameError('test classes derived from %r must define self.partition_fraction' % type(self))
+        if self.partition_fraction < 0:
+            if not isinstance(self.partition_fraction, int):
+                raise TypeError('invalid self.partition_fraction of %r : -ve values should specify an integer number of nodes' % self.test_size)
+            self.num_nodes = -1 * self.partition_fraction
+        else:
+            self.num_nodes = int(scheduler_partition.num_nodes * self.partition_fraction)
+        
+        # calculate number of tasks per node:
+        if not hasattr(self, 'node_fraction'):
+            raise NameError('test classes derived from %r must define self.node_fraction' % type(self))
+        if self.node_fraction < 0:
+            if not isinstance(self.node_fraction, int):
+                raise TypeError('invalid self.node_fraction of %r : -ve values should specify an integer number of cores' % self.test_size)
+            self.num_tasks_per_node = -1 * self.node_fraction # reframe parameter
+        else:
+            self.num_tasks_per_node = int(scheduler_partition.pcores_per_node * self.node_fraction) # reframe parameter
+        
+        self.num_tasks = self.num_nodes * self.num_tasks_per_node # reframe parameter
+
+        # set tags:
+        self.tags |= {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
+
 class CachedRunTest(rfm.RegressionTest):
     """ Mixin. TODO: document properly.
 
@@ -162,6 +216,7 @@ class Scheduler_Info(object):
                 - `--partition`
                 - `--exclude`
         """
+
         # TODO: handle scheduler not being slurm!
         slurm_partition_name = None
         slurm_excluded_nodes = []
