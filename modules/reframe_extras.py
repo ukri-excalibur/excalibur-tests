@@ -35,7 +35,7 @@ class ScalingTest(rfm.RegressionTest):
         - `num_procs`: the actual number of MPI tasks used.
     """
 
-    @rfm.run_before('run')
+    @rfm.run_after('setup')
     def set_nodes(self):
         
         scheduler_partition = Scheduler_Info(self.current_partition)

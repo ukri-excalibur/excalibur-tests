@@ -19,6 +19,7 @@ from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
 import modules
+from modules.reframe_extras import ScalingTest
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
@@ -49,17 +50,20 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
         else:
             raise NotImplementedError('do not know how to set block distribution for partition %r' % self.current_partition.name )
 
-    def add_metrics(self, metrics, n_procs):
+    @rfm.run_before('run')
+    def add_metrics(self):
         """ Create `self.perf_patterns` and units only in `self.reference`.
         
             Args:
                 metrics: TODO
                 n_procs: TODO
+            
+            TODO: Requires self.METRICS
         """
         
-        for metric in metrics:
+        for metric in self.METRICS:
             #getlogger().info('creating metric %s', metric.label)
-            self.perf_patterns[metric.label] = reduce(self.stdout, n_procs, metric.column, metric.function)
+            self.perf_patterns[metric.label] = reduce(self.stdout, self.num_tasks, metric.column, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
 
     # @rfm.run_before('run')
@@ -96,40 +100,44 @@ class IMB_PingPong(IMB_MPI1):
         self.num_tasks = 2
         self.num_tasks_per_node = 1
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
-        self.add_metrics(self.METRICS, self.num_tasks)
         self.tags = {'pingpong'}
 
-total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
+PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0]
 
-@rfm.parameterized_test(*[[np] for np in total_procs])
-class IMB_Uniband(IMB_MPI1):
-    """ Runs 2, 4, etc processes up to physical cores of 2x nodes """
+@rfm.parameterized_test(*[[np] for np in PROC_STEPS])
+class IMB_Uniband(IMB_MPI1, ScalingTest):
+    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, num_procs):
-        """ num_procs: *total* *maximum* number of tasks, i.e. across both nodes """
+    def __init__(self, proc_step):
+        """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
+        """
         super().__init__()
-        self.num_tasks = num_procs
-        self.num_tasks_per_node = int(num_procs / 2)
+        
+        self.partition_fraction = -2 # 2x nodes only
+        self.node_fraction = proc_step
+
         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
-        self.add_metrics(self.METRICS, self.num_tasks)
         self.executable_opts = ['uniband', '-npmin', str(self.num_tasks)]
-        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'uniband'}
+        self.tags = {'uniband'}
     
-@rfm.parameterized_test(*[[np] for np in total_procs])
-class IMB_Biband(IMB_MPI1):  # NB: on alaska ib- fails with a timeout!
-    """ Runs 2, 4, etc processes up to physical cores of 2x nodes """
+@rfm.parameterized_test(*[[np] for np in PROC_STEPS])
+class IMB_Biband(IMB_MPI1, ScalingTest):  # NB: on alaska ib- fails with a timeout!
+    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
-    def __init__(self, num_procs):
-        """ num_procs: *total* *maximum* number of tasks, i.e. across both nodes """
+    def __init__(self, proc_step):
+        """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
+        """
+        
         super().__init__()
-        self.num_tasks = num_procs
-        self.num_tasks_per_node = int(num_procs / 2)
+        
+        self.partition_fraction = -2 # 2x nodes only
+        self.node_fraction = proc_step
+        
         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
-        self.add_metrics(self.METRICS, self.num_tasks)
         self.executable_opts = ['biband', '-npmin', str(self.num_tasks)]
-        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'biband'}
+        self.tags = {'biband'}
         
