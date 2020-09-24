@@ -31,8 +31,9 @@ class ScalingTest(rfm.RegressionTest):
         - `--exclude`: exclude specific nodes from consideration, i.e. a `partition_fraction` of 1.0 will not use these nodes.
 
         The following tags are set:
-        - `num_nodes`: the actual number of nodes used.
-        - `num_procs`: the actual number of MPI tasks used.
+        - `num_nodes`: the number of nodes used.
+        - `num_procs`: the total number of MPI tasks used.
+        - `procs_per_node`: the number of MPI tasks/processes per node
     """
 
     @rfm.run_after('setup')
@@ -63,7 +64,7 @@ class ScalingTest(rfm.RegressionTest):
         self.num_tasks = self.num_nodes * self.num_tasks_per_node # reframe parameter
 
         # set tags:
-        self.tags |= {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
+        self.tags |= {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, 'procs_per_node=%i' % self.num_tasks_per_node}
 
 class CachedRunTest(rfm.RegressionTest):
     """ Mixin. TODO: document properly.
