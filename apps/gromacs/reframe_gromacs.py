@@ -7,7 +7,7 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import os, sys, urllib, shutil, itertools
 sys.path.append('.')
-from modules.reframe_extras import sequence, Scheduler_Info, ScalingTest
+from modules.reframe_extras import ScalingTest
 from modules.utils import parse_time_cmd
 from reframe.core.logging import getlogger
 
