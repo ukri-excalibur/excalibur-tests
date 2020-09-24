@@ -102,11 +102,14 @@ class IMB_PingPong(IMB_MPI1):
         self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         self.tags = {'pingpong'}
 
-PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0]
+PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
 
 @rfm.parameterized_test(*[[np] for np in PROC_STEPS])
 class IMB_Uniband(IMB_MPI1, ScalingTest):
-    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes """
+    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
+    
+        NB: name encodes number/proportion of processes PER NODE, not total.
+    """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
@@ -124,7 +127,10 @@ class IMB_Uniband(IMB_MPI1, ScalingTest):
     
 @rfm.parameterized_test(*[[np] for np in PROC_STEPS])
 class IMB_Biband(IMB_MPI1, ScalingTest):  # NB: on alaska ib- fails with a timeout!
-    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes """
+    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
+
+        NB: name encodes number/proportion of processes PER NODE, not total.
+    """
     METRICS = [
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
