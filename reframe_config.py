@@ -48,7 +48,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'openfoam'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -60,7 +60,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'openfoam'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
@@ -201,13 +201,8 @@ site_configuration = {
         },
         {
             'name': 'omb',
-            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
-            'modules': ['osu-micro-benchmarks/5.6.3-4h4z5xr']
-        },
-        {
-            'name': 'omb',
-            'target_systems': ['arcus:ib-gcc9-impi2019-mlx', 'arcus:roce-gcc9-impi2019-mlx'],
-            'modules': ['osu-micro-benchmarks/5.6.3-jqovbxi']
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
+            'modules': ['osu-micro-benchmarks-5.6.3-gcc-9.1.0-nsxydkj']
         },
         {
             'name': 'hpl',
@@ -251,8 +246,8 @@ site_configuration = {
         },
         {
             'name':'openfoam',
-            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
-            'modules': ['openfoam-org/7-npsnfqa']
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
+            'modules': ['openfoam-org-7-gcc-9.1.0-dahapws']
         },
         {
             'name':'cp2k',

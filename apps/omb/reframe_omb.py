@@ -10,7 +10,7 @@ import sys, re
 from collections import namedtuple
 sys.path.append('.')
 import modules
-from modules.reframe_extras import sequence, Scheduler_Info
+from modules.reframe_extras import ScalingTest
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
@@ -111,10 +111,10 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks_per_node = 1
         self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'bibw'}
 
-total_procs = modules.reframe_extras.sequence(2, 2 * modules.reframe_extras.Scheduler_Info().pcores_per_node + 2, 2)
+PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
 
-@rfm.parameterized_test(*[[np] for np in total_procs])
-class Osu_mbw_mr(OSU_Micro_Benchmarks):
+@rfm.parameterized_test(*[[np] for np in PROC_STEPS])
+class Osu_mbw_mr(OSU_Micro_Benchmarks, ScalingTest):
     """ Determine bandwidth and message rate between two nodes with different numbers of processes per node.
         
         See https://downloads.openfabrics.org/Media/Sonoma2008/Sonoma_2008_Tues_QLogic-TomElken-MPIperformanceMeasurement.pdf
@@ -129,10 +129,10 @@ class Osu_mbw_mr(OSU_Micro_Benchmarks):
         
         super().__init__()
         self.executable = 'osu_mbw_mr'
-        self.num_tasks = num_procs
-        self.num_tasks_per_node = int(num_procs / 2)
+        self.partition_fraction = -2 # 2x nodes only
+        self.node_fraction = num_procs
         self.time_limit = '15m'
-        self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'mbw_mr'}
+        self.tags = {'mbw_mr'}
         
 
 if __name__ == '__main__':
