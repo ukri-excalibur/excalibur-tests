@@ -5,7 +5,7 @@ csd3_cclake_common = {
     'access': [
         '--partition=cclake',
         '--account=support-cpu',
-        '--exclude=cpu-p-[1-56,113-672]', # only use one rack's-worth of nodes at present: use rack 2=57-112 as this is all ok
+        '--exclude=cpu-p-[1-168,225-672]', # only use one rack's-worth of nodes at present: use rack 4 (cpu-p-[169-224]) as this is all ok
         '--time=1:00:00',
         ],
     'max_jobs': 20,
@@ -48,7 +48,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['sysinfo', 'imb', 'gromacs'],
+                        'environs': ['sysinfo', 'imb', 'gromacs', 'openfoam'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -60,7 +60,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['sysinfo', 'imb', 'gromacs'],
+                        'environs': ['sysinfo', 'imb', 'gromacs', 'openfoam'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
