@@ -11,29 +11,28 @@ import sys, os, glob, json
 from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
-from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+from modules.reframe_extras import ScalingTest
 from modules.utils import parse_time_cmd
 from modules.sysinfo import sysinfo
 
 @rfm.simple_test
-class Sysinfo(rfm.RunOnlyRegressionTest):
+class Sysinfo(rfm.RunOnlyRegressionTest, ScalingTest):
 
     def __init__(self):
         
         self.valid_systems = ['*']
         self.valid_prog_environs = ['sysinfo']
 
-        self.num_tasks_per_node = 1
+        self.partition_fraction = 1.0 # all nodes
+        self.node_fraction = -1 # single process per node
         
         self.sourcesdir = '../../modules/sysinfo'
         self.exclusive_access = False
-
-        #self.pre_run = []
         
         self.executable = 'python'
         self.executable_opts = ['sysinfo.py']
         
-        self.post_run = [ # TODO: ReframeDeprecationWarning: 'post_run' is deprecated; please use 'postrun_cmds' instead
+        self.postrun_cmds = [
             #'cat *.sysinfo.json > all.info.json', # just for debugging
             'echo Done',
             ]
@@ -41,13 +40,6 @@ class Sysinfo(rfm.RunOnlyRegressionTest):
         self.keep_files = ['sysinfo.json'] # see self.collate()
 
         self.sanity_patterns = sn.assert_found('Done', self.stdout) # TODO: assert stderr is empty
-
-    @rfm.run_before('run')
-    def set_nodes(self):
-        self.num_nodes = Scheduler_Info(self.current_partition, only_states='idle').num_nodes
-
-        # these are the ones reframe uses:
-        self.num_tasks = self.num_nodes * self.num_tasks_per_node
 
     @rfm.run_after('run')
     def collate(self):
