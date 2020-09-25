@@ -23,7 +23,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-icc19-impi19-ucx',
                         'descr': '100Gb Infiniband using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                        'environs': ['sysinfo', 'imb'],
+                        'environs': ['sysinfo', 'imb', 'nxnlatbw', 'castep'],
                         'variables': [
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
                         ],
@@ -35,7 +35,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-icc19-impi19-ucx',
                         'descr': '50Gb RoCE using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                        'environs': ['imb'],
+                        'environs': ['imb', 'castep'],
                         'variables': [
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
                         ],
@@ -47,7 +47,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'cp2k'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -59,7 +59,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'cp2k'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
@@ -258,11 +258,22 @@ site_configuration = {
         },
         {
             'name':'cp2k',
-            'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
-            'modules': ['CP2K/6.1-foss-2019a']
+            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
+            'modules': ['cp2k-7.1-gcc-9.1.0-lbhtghz']
         },
         {
             'name': 'sysinfo',
+        },
+        {
+            'name': 'nxnlatbw',
+        },
+        {
+            'name': 'castep',
+        },
+        {
+            'name': 'castep',
+            'target_systems': ['csd3:cclake-ib-icc19-impi19-ucx', 'csd3:cclake-roce-icc19-impi19-ucx'],
+            'modules': ['castep'] # castep 17.2.1 with Intel MPI but I don't know which!
         },
         # {
         #     'name': 'sysinfo',
