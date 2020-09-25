@@ -6,7 +6,6 @@ csd3_cclake_common = {
         '--partition=cclake',
         '--account=support-cpu',
         '--exclude=cpu-p-[1-168,225-672]', # only use one rack's-worth of nodes at present: use rack 4 (cpu-p-[169-224]) as this is all ok
-        '--time=1:00:00',
         ],
     'max_jobs': 20,
 }
