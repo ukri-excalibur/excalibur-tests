@@ -170,6 +170,8 @@ Secondly, create/update plots for this system:
 
 - Once happy with results, commit to a branch.
 
+- **NB:** Notebooks in the `master` branch should not contain outputs, only plotting code. This makes merging between branches easier. The script `tools/plots.py` script may be useful to clear or refresh notebook outputs.
+
 # Spack
 
 Spack setup is non-trivial and the docs/tutorials are somewhat out-of-date / missing info in places (details in [this bug](https://github.com/spack/spack/issues/16730)). This section will therefore try to describe how to get a working spack setup from scrach on an OpenHPC system using `tmod` for modules. However you should probably read the ["basic use"](https://spack.readthedocs.io/en/latest/basic_usage.html) section for concepts. The quick version is that spack installs packages as described by a "spec" which (as well as the version) can optionally describe the compiler and any dependencies (such as MPI libraries). Multiple specs of the same package may be installed at once.
