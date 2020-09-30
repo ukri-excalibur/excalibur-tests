@@ -288,6 +288,6 @@ Some things which might help:
 - `tools/report.py` is a CLI tool to interrogate performance logs.
 
 Synthetic benchmarks will all be different, but application benchmarks should follow these conventions:
-- Run under `time` and extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
-- Run on 1, 2, 4, etc up to maximum number of nodes.
-- Add tags 'num_procs=%i' and 'num_nodes=%i'.
+- Run under `time` and extract a performance variable 'runtime_real' giving the end-to-end wallclock time (see e.g. `reframe_gromacs.py`).
+- Scale the test across numbers of nodes - this can be done using `modules.reframe_extras.scaling_config()`, see `apps/castep/reframe_castep.py` for an example.
+- Add tags 'num_procs=%i' and 'num_nodes=%i'. This allows `modules.utils.tabulate_last_perf()` to automatically generate scaling plots (e.g. see gromacs or castep examples).
