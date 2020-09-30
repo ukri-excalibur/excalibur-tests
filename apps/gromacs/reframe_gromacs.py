@@ -7,16 +7,17 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import os, sys, urllib, shutil, itertools
 sys.path.append('.')
-from modules.reframe_extras import ScalingTest
+from modules.reframe_extras import scaling_config
 from modules.utils import parse_time_cmd
 from reframe.core.logging import getlogger
 
-# parameterisation:
-TEST_SIZES = [-1, -2, 0.25, 0.5, 1.0] # -ve numbers are absolute numbers of nodes, +ve are fraction of total partition nodes
+# define parameterisation for all possible partitions as combination of benchmark cases and run sizes:
 CASES = ['1400k-atoms', '61k-atoms', '3000k-atoms']
+sizes = scaling_config()
+params = [[case] + list(size) for case, size in itertools.product(CASES, sizes)] # flatten to a single list per element
 
-@rfm.parameterized_test(*list(itertools.product(CASES, TEST_SIZES)))
-class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, ScalingTest):
+@rfm.parameterized_test(*params)
+class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest):
     """ Run HECBioSim Gromacs benchmarks.
 
         Runs for environments named "gromacs" only.
@@ -31,18 +32,20 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, ScalingTest):
                 1400k-atoms  20k-atoms  3000k-atoms  465k-atoms  61k-atoms
             test_size: Number of nodes to use, possibly as fraction of partition size. See `modules.reframe_extras.ScalingTest.partition_fraction`.
     """
-    def __init__(self, casename, test_size):
+    def __init__(self, casename, part, num_tasks, num_tasks_per_node):
         
-        self.name = 'Gromacs_%s_%s' % (casename.split('-')[0], test_size) # e.g. Gromacs_1400k_-2
+        #self.name = 'Gromacs_%s_%s' % (casename.split('-')[0], test_size) # e.g. Gromacs_1400k_-2
 
         self.casename = casename
-        self.partition_fraction = test_size
-        self.node_fraction = 1.0 # use all physical cores
-        self.tags = {'test_size=%s' % test_size, casename}
+        self.num_tasks = num_tasks
+        self.num_tasks_per_node = num_tasks_per_node
+        self.num_nodes = int(num_tasks / num_tasks_per_node)
+        
+        self.tags |= {casename, 'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
 
         self.logfile = casename + '.log'
         
-        self.valid_systems = ['*']
+        self.valid_systems = [part]
         self.valid_prog_environs = ['gromacs']
         
         # created by download_benchmarks():
@@ -52,7 +55,7 @@ class Gromacs_HECBioSim(rfm.RunOnlyRegressionTest, ScalingTest):
         self.executable = 'gmx_mpi'
         self.executable_opts = ['mdrun', '-s', 'benchmark.tpr', '-g', self.logfile, '-noconfout'] #, '-ntomp', '1'] add this to turn off threading
         self.exclusive_access = True
-        self.time_limit = None # TODO: set this to something reasonable??
+        self.time_limit = '1h'
         
         self.keep_files = [self.logfile]
         self.sanity_patterns = sn.assert_found(r'Performance:', self.stderr)
