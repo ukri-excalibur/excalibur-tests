@@ -6,10 +6,60 @@ import reframe as rfm
 from reframe.core.buildsystems import BuildSystem
 from reframe.core.logging import getlogger
 from reframe.core.launchers import JobLauncher
+from reframe.core.runtime import runtime
 import reframe.utility.sanity as sn
 
 import os, shutil, subprocess, shlex, subprocess
 from pprint import pprint
+
+def scaling_config(min_nodes=1, max_node_factor=1.0, core_factor=1.0):
+    """ Parameterise a test using Slurm over a varying number of nodes.
+
+        Intended to be used as an input to an `@rfm.parameterized_test` e.g. as follows:
+
+            @rfm.parameterized_test(*scaling_config())
+            def mytest(rfm.RunOnlyRegressionTest):
+                def __init__(self, part, n_tasks, n_tasks_per_node):
+                    self.num_tasks = num_tasks
+                    self.num_tasks_per_node = num_tasks_per_node
+                    self.valid_systems = [part]
+        
+        Tests will be generated for 1, 2, 4, 8, ..., nodes up to the maximum number of nodes in the appropriate Slurm partition.
+        This maximum number is included whether or not it is a power of 2. Any `--partition` or `--exclude` directives in the ReFrame
+        partition's `access` property are taken into account.
+
+        For ReFrame partitions which do not use slurm, no test is generated.
+        
+        Args:
+            `min_nodes`: number of nodes to start at (default: 1)
+            `max_node_factor`: factor on number of nodes in slurm partition* to use for largest test (default: 1.0)
+            `core_factor`: factor on number of physical cores in each node to use for each test (default: 1.0)
+
+        *: or part of it defined by `access` parameters.
+
+        Yields a sequence of (rfm_part_name, n_tasks, n_tasks_per_node) tuples which should be passed to the test's constructor and set as test
+        properties as shown in the example above.
+
+        **NB:** It is important that the test using this sets `self.valid_systems` as shown above, else tests may be defined for incorrect partitions.
+    """
+
+    curr_sys = runtime().system
+    for part in curr_sys.partitions:
+        if part.scheduler.registered_name not in ['slurm', 'squeue']:
+            continue # ignore non Slurm schedulers
+
+        sched_partition = Scheduler_Info(part)
+        n_tasks_per_node = int(sched_partition.pcores_per_node * core_factor)
+        
+        n = 1
+        while n < int(sched_partition.num_nodes * max_node_factor):
+            n_tasks = n_tasks_per_node * n
+            yield (part.fullname, n_tasks, n_tasks_per_node)
+            n *= 2
+        # create largest test:
+        n_tasks = n_tasks_per_node * int(sched_partition.num_nodes * max_node_factor)
+        yield (part.fullname, n_tasks, n_tasks_per_node)
+        
 
 class ScalingTest(rfm.RegressionTest):
     """ Mixin to specify the number of nodes and processes-per-node to use relative to current partition resources.
