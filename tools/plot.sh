@@ -22,7 +22,7 @@ fi
 if [ "$cmd" == "refresh" ]; then
     cmd="jupyter nbconvert --to notebook --execute --inplace"
 elif [ "$cmd" == "clear" ]; then
-    cmd="jupyter nbconvert --clear-output --inplace"
+    cmd="jupyter nbconvert --clear-output --inplace --ClearOutputPreprocessor.enabled=True"
 else
     cmd="echo"
 fi
