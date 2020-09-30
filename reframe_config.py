@@ -47,7 +47,8 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'cp2k'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam',],
+                        'modules': ['openmpi-3.1.6-gcc-9.1.0-omffmfv'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
@@ -59,7 +60,8 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'cp2k'],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam',],
+                        'modules': ['openmpi-3.1.6-gcc-9.1.0-omffmfv'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
@@ -255,11 +257,6 @@ site_configuration = {
             'name':'cp2k',
             'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
             'modules': ['cp2k/7.1-akb54dx']
-        },
-        {
-            'name':'cp2k',
-            'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
-            'modules': ['cp2k-7.1-gcc-9.1.0-lbhtghz']
         },
         {
             'name': 'sysinfo',

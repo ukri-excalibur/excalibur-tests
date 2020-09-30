@@ -170,6 +170,8 @@ Secondly, create/update plots for this system:
 
 - Once happy with results, commit to a branch.
 
+- **NB:** Notebooks in the `master` branch should not contain outputs, only plotting code. This makes merging between branches easier. The script `tools/plots.py` script may be useful to clear or refresh notebook outputs.
+
 # Spack
 
 Spack setup is non-trivial and the docs/tutorials are somewhat out-of-date / missing info in places (details in [this bug](https://github.com/spack/spack/issues/16730)). This section will therefore try to describe how to get a working spack setup from scrach on an OpenHPC system using `tmod` for modules. However you should probably read the ["basic use"](https://spack.readthedocs.io/en/latest/basic_usage.html) section for concepts. The quick version is that spack installs packages as described by a "spec" which (as well as the version) can optionally describe the compiler and any dependencies (such as MPI libraries). Multiple specs of the same package may be installed at once.
@@ -286,6 +288,6 @@ Some things which might help:
 - `tools/report.py` is a CLI tool to interrogate performance logs.
 
 Synthetic benchmarks will all be different, but application benchmarks should follow these conventions:
-- Run under `time` and extract a performance variable 'runtime_real' (see e.g. `reframe_gromacs.py`).
-- Run on 1, 2, 4, etc up to maximum number of nodes.
-- Add tags 'num_procs=%i' and 'num_nodes=%i'.
+- Run under `time` and extract a performance variable 'runtime_real' giving the end-to-end wallclock time (see e.g. `reframe_gromacs.py`).
+- Scale the test across numbers of nodes - this can be done using `modules.reframe_extras.scaling_config()`, see `apps/castep/reframe_castep.py` for an example.
+- Add tags 'num_procs=%i' and 'num_nodes=%i'. This allows `modules.utils.tabulate_last_perf()` to automatically generate scaling plots (e.g. see gromacs or castep examples).

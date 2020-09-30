@@ -89,7 +89,7 @@ class Castep_Al3x3(Castep_Base, ScalingTest):
         self.benchmark = 'Al3x3'
         self.partition_fraction = num_nodes
         self.node_fraction = 1 # use all cores
-        self.time_limit = '1h' # TODO: is this enough?
+        self.time_limit = '2h' # TODO: is this enough?
         super().__init__()
 
 
@@ -106,4 +106,14 @@ class Castep_TiN(Castep_Base, ScalingTest):
         self.partition_fraction = -1 # node
         self.node_fraction = -8 # 8 processes, apparently the max this really scales to
         self.time_limit = '1h'
+        super().__init__()
+
+@rfm.parameterized_test(*[[n] for n in NODE_STEPS])
+class Castep_DNA(Castep_Base, ScalingTest):
+    """ TODO: """
+    def __init__(self, num_nodes):
+        self.benchmark = 'DNA'
+        self.partition_fraction = num_nodes
+        self.node_fraction = 1 # use all cores
+        self.time_limit = '1d' # TODO: adjust?
         super().__init__()
