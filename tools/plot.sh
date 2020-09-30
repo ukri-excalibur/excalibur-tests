@@ -1,19 +1,32 @@
 #!/usr/bin/bash
-# Clear or refresh all jupyter notebooks found in apps/
+# Clear or refresh jupyter notebooks found in apps/
 # Usage:
-#    plot.sh [refresh | clear]
 #
-# Without any argyments it will list notebooks found.
+# List all notebooks:
+#   plot.sh
+# Refresh or clear all or specified notebooks:
+#   plot.sh [refresh | clear] [notebookpath ...]
 
-notebooks=$(find apps/ -name *.ipynb '!' -name *checkpoint*)
+if [ "$#" -gt 1 ]; then
+    cmd=$1
+    shift
+    notebooks=$@
+elif [ "$#" -eq 1 ]; then
+    cmd=$1
+    notebooks=$(find apps/ -name *.ipynb '!' -name *checkpoint*)
+elif [ "$#" -eq 0 ]; then
+    cmd=echo
+    notebooks=$(find apps/ -name *.ipynb '!' -name *checkpoint*)
+fi
+
+if [ "$cmd" == "refresh" ]; then
+    cmd="jupyter nbconvert --to notebook --execute --inplace"
+elif [ "$cmd" == "clear" ]; then
+    cmd="jupyter nbconvert --clear-output --inplace"
+else
+    cmd="echo"
+fi
+
 for nb in $notebooks; do
-    if [ "$1" == "" ]; then
-        echo $nb
-    elif [ "$1" == "refresh" ]; then
-        jupyter nbconvert --to notebook --execute --inplace $nb
-    elif [ "$1" == "clear" ]; then
-        jupyter nbconvert --clear-output --inplace $nb
-    fi
+    $cmd $nb
 done
-
-#
