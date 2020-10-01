@@ -2,11 +2,10 @@
 __pycache__
 
 # reframe
-reframe/*
+reframe/
 reframe.log
 reframe.out
 stage/*
-output/*
 apps/castep/downloads/*
 
 # other
