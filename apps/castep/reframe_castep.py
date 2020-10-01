@@ -2,10 +2,8 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import sys, os, urllib
 sys.path.append('.')
-from modules.reframe_extras import ScalingTest 
+from modules.reframe_extras import scaling_config 
 from modules.utils import parse_time_cmd
-
-NODE_STEPS = [-1, -2, 0.25, 0.5, 1.0] # -ve numbers are absolute numbers of nodes, +ve are fraction of total partition nodes
 
 BENCHMARKS = {
     'Al3x3': {
@@ -33,9 +31,14 @@ class Castep_Base(rfm.RunOnlyRegressionTest):
         - `self.benchmark': key from BENCHMARKS
     """
     # TODO: calculate scf cycles/hour or /sec
-    def __init__(self):
+    def __init__(self, benchmark, part, num_tasks, num_tasks_per_node):
 
-        self.valid_systems = ['*']
+        self.benchmark = benchmark
+        self.num_tasks = num_tasks
+        self.num_tasks_per_node = num_tasks_per_node
+        self.num_nodes = int(self.num_tasks / self.num_tasks_per_node)
+
+        self.valid_systems = [part]
         self.valid_prog_environs = ['castep']
 
         self.sourcesdir = 'downloads' # will actually copy all benchmark .tgz files to stage dir
@@ -49,8 +52,7 @@ class Castep_Base(rfm.RunOnlyRegressionTest):
         
         self.exclusive_access = True
         
-        self.tags = {self.benchmark}
-
+        self.tags |= {self.benchmark, 'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
         self.logfile = '%s.castep' % self.seedname
         self.keep_files = [self.logfile]
         
@@ -61,7 +63,7 @@ class Castep_Base(rfm.RunOnlyRegressionTest):
             # from castep output:
             'total_time': sn.extractsingle(r'Total time\s+=\s+([\d.]+) s', self.logfile, 1, float),
             'peak_mem': sn.extractsingle(r'Peak Memory Use\s+=\s+([\d.]+) kB', self.logfile, 1, float),
-            'parallel_efficienty': sn.extractsingle(r'Overall parallel efficiency rating: \S+ \((\d+)%\)', self.logfile, 1, float),
+            'parallel_efficiency': sn.extractsingle(r'Overall parallel efficiency rating: \S+ \((\d+)%\)', self.logfile, 1, float),
             # from `time`:
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
         }
@@ -69,7 +71,7 @@ class Castep_Base(rfm.RunOnlyRegressionTest):
             '*': {
                 'total_time': (0, None, None, 's'),
                 'peak_mem': (0, None, None, 'kB'),
-                'parallel_efficienty': (0, None, None, '%'),
+                'parallel_efficiency': (0, None, None, '%'),
                 'runtime_real': (0, None, None, 's'),
             }
         }
@@ -82,38 +84,31 @@ class Castep_Base(rfm.RunOnlyRegressionTest):
             urllib.request.urlretrieve(BENCHMARKS[self.benchmark]['url'], download_path)
 
 
-@rfm.parameterized_test(*[[n] for n in NODE_STEPS])
-class Castep_Al3x3(Castep_Base, ScalingTest):
-    """ TODO: """
-    def __init__(self, num_nodes):
-        self.benchmark = 'Al3x3'
-        self.partition_fraction = num_nodes
-        self.node_fraction = 1 # use all cores
-        self.time_limit = '2h' # TODO: is this enough?
-        super().__init__()
-
+@rfm.parameterized_test(*scaling_config())
+class Castep_Al3x3(Castep_Base):
+    """ Medium benchmark Al3x3: http://www.castep.org/CASTEP/Al3x3 """
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        
+        super().__init__('Al3x3', part, num_tasks, num_tasks_per_node)
+        self.time_limit = '2h'
 
 @rfm.simple_test
-class Castep_TiN(Castep_Base, ScalingTest):
-    """ Small TiN test, essentially to check castep works.
+class Castep_TiN(Castep_Base):
+    """ Small benchmark TiN: http://www.castep.org/CASTEP/TiN
     
-        See http://www.castep.org/CASTEP/TiN
+        Not expected to scale well past 8x processes.
     """
     
     def __init__(self):
 
-        self.benchmark = 'TiN'
-        self.partition_fraction = -1 # node
-        self.node_fraction = -8 # 8 processes, apparently the max this really scales to
+        super().__init__('TiN', '*', 8, 8)
         self.time_limit = '1h'
-        super().__init__()
 
-@rfm.parameterized_test(*[[n] for n in NODE_STEPS])
-class Castep_DNA(Castep_Base, ScalingTest):
-    """ TODO: """
-    def __init__(self, num_nodes):
-        self.benchmark = 'DNA'
-        self.partition_fraction = num_nodes
-        self.node_fraction = 1 # use all cores
+
+@rfm.parameterized_test(*scaling_config())
+class Castep_DNA(Castep_Base):
+    """ Large benchmark DNA: http://www.castep.org/CASTEP/DNA """
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        
+        super().__init__('DNA', part, num_tasks, num_tasks_per_node)
         self.time_limit = '1d' # TODO: adjust?
-        super().__init__()
