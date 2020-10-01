@@ -1,0 +1,1 @@
+2020-10-01T16:26:25+01:00|reframe 3.2-dev1 (rev: 774134ee)|IMB_Uniband_1_0 on csd3:cclake-roce-gcc9-ompi3-ucx using imb|jobid=29537179|max_bandwidth=5683.44|Mbytes/sec|ref=0 (l=None, u=None)|num_procs=112,uniband,num_nodes=2,procs_per_node=56

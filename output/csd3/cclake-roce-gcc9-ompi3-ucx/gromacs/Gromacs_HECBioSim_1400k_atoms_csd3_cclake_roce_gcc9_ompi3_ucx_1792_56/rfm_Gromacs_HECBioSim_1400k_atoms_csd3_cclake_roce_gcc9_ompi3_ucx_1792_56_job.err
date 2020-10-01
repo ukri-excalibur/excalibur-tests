@@ -1,0 +1,83 @@
+                      :-) GROMACS - gmx mdrun, 2016.6 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov  Herman J.C. Berendsen    Par Bjelkmar   
+ Aldert van Buuren   Rudi van Drunen     Anton Feenstra    Gerrit Groenhof  
+ Christoph Junghans   Anca Hamuraru    Vincent Hindriksen Dimitrios Karkoulis
+    Peter Kasson        Jiri Kraus      Carsten Kutzner      Per Larsson    
+  Justin A. Lemkul   Magnus Lundborg   Pieter Meulenhoff    Erik Marklund   
+   Teemu Murtola       Szilard Pall       Sander Pronk      Roland Schulz   
+  Alexey Shvetsov     Michael Shirts     Alfons Sijbers     Peter Tieleman  
+  Teemu Virolainen  Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx mdrun, version 2016.6
+Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
+Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
+Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_1792_56
+Command line:
+  gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
+
+
+Running on 32 nodes with total 32 cores, 32 logical cores
+  Cores per node:            1 - 56
+  Logical cores per node:    1 - 56
+Hardware detected on host cpu-p-176 (the node of MPI rank 0):
+  CPU info:
+    Vendor: Intel
+    Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
+    SIMD instructions most likely to fit this hardware: AVX_512
+    SIMD instructions selected at GROMACS compile time: AVX_512
+
+  Hardware topology: Full, with devices
+
+Reading file benchmark.tpr, VERSION 5.1.4 (single precision)
+Note: file tpx version 103, software tpx version 110
+Changing nstlist from 10 to 25, rlist from 1.2 to 1.23
+
+The number of OpenMP threads was set by environment variable OMP_NUM_THREADS to 1
+
+Will use 1344 particle-particle and 448 PME only ranks
+This is a guess, check the performance at the end of the log file
+Using 1792 MPI processes
+Using 1 OpenMP thread per MPI process
+
+
+Non-default thread affinity set probably by the OpenMP library,
+disabling internal thread affinity
+starting mdrun 'Her1-Her1'
+10000 steps,     20.0 ps.
+
+ Average load imbalance: 57.7 %
+ Part of the total run time spent waiting due to load imbalance: 2.8 %
+ Average PME mesh/force load: 1.182
+ Part of the total run time spent waiting due to PP/PME imbalance: 1.2 %
+
+
+NOTE: 5 % of the run time was spent communicating energies,
+      you might want to use the -gcom option of mdrun
+
+
+               Core t (s)   Wall t (s)        (%)
+       Time:    92021.184       51.351   179200.0
+                 (ns/day)    (hour/ns)
+Performance:       33.654        0.713
+
+GROMACS reminds you: "Just Give Me a Blip" (F. Black)
+
+
+real	1m13.375s
+user	0m0.052s
+sys	0m0.038s
