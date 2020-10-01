@@ -1,0 +1,2 @@
+2020-10-01T17:10:38+01:00|reframe 3.2-dev1 (rev: 774134ee)|Osu_mbw_mr__4 on csd3:cclake-roce-gcc9-ompi3-ucx using omb|jobid=29538330|max_bandwidth=5786.15|MB/s|ref=0 (l=None, u=None)|num_nodes=2,mbw_mr,num_procs=8,procs_per_node=4
+2020-10-01T17:10:38+01:00|reframe 3.2-dev1 (rev: 774134ee)|Osu_mbw_mr__4 on csd3:cclake-roce-gcc9-ompi3-ucx using omb|jobid=29538330|max_message_rate=23436039.32|Messages/s|ref=0 (l=None, u=None)|num_nodes=2,mbw_mr,num_procs=8,procs_per_node=4
