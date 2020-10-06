@@ -1,0 +1,64 @@
+[0] MPI startup(): I_MPI_OFA_TRANSLATION_CACHE variable has been removed from the product, its value is ignored
+
+#------------------------------------------------------------
+#    Intel(R) MPI Benchmarks 2019 Update 6, MPI-1 part    
+#------------------------------------------------------------
+# Date                  : Thu Oct  1 16:20:23 2020
+# Machine               : x86_64
+# System                : Linux
+# Release               : 3.10.0-1127.19.1.el7.x86_64
+# Version               : #1 SMP Tue Aug 25 17:23:54 UTC 2020
+# MPI Version           : 3.1
+# MPI Thread Environment: 
+
+
+# Calling sequence was: 
+
+# /usr/local/Cluster-Apps/intel/2020.2/compilers_and_libraries_2020.2.254/linux/mpi/intel64/bin/IMB-MPI1 uniband -npmin 1 
+
+# Minimum message length in bytes:   0
+# Maximum message length in bytes:   4194304
+#
+# MPI_Datatype                   :   MPI_BYTE 
+# MPI_Datatype for reductions    :   MPI_FLOAT 
+# MPI_Op                         :   MPI_SUM  
+# 
+# 
+
+# List of Benchmarks to run:
+
+# Uniband
+
+#---------------------------------------------------
+# Benchmarking Uniband 
+# #processes = 2 
+#---------------------------------------------------
+       #bytes #repetitions   Mbytes/sec      Msg/sec
+            0         1000         0.00      6134731
+            1         1000         6.15      6154500
+            2         1000        12.30      6150656
+            4         1000        24.64      6158829
+            8         1000        48.65      6081469
+           16         1000        97.95      6121629
+           32         1000       196.38      6136804
+           64         1000       364.73      5698949
+          128         1000       716.21      5595371
+          256         1000      1340.95      5238086
+          512         1000      2477.29      4838465
+         1024         1000      3820.88      3731333
+         2048         1000      4593.15      2242750
+         4096         1000      5112.38      1248140
+         8192         1000      5445.58       664743
+        16384         1000      5583.99       340820
+        32768         1000      5642.30       172189
+        65536          640      5696.42        86920
+       131072          320      5739.72        43791
+       262144          160      5756.82        21961
+       524288           80      5769.50        11004
+      1048576           40      5779.37         5512
+      2097152           20      5783.46         2758
+      4194304           10      5785.37         1379
+
+
+# All processes entering MPI_Finalize
+

@@ -111,7 +111,7 @@ class Osu_bibw(OSU_Micro_Benchmarks):
         self.num_tasks_per_node = 1
         self.tags = {'procs_per_node=%i' % self.num_tasks_per_node, 'bibw'}
 
-PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
+PROC_STEPS = [-1, -2, -4, -8, -16, -32, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
 
 @rfm.parameterized_test(*[[np] for np in PROC_STEPS])
 class Osu_mbw_mr(OSU_Micro_Benchmarks, ScalingTest):
