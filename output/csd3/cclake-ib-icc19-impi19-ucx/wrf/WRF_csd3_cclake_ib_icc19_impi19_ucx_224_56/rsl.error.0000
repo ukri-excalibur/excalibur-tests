@@ -1,0 +1,193 @@
+taskid: 0 hostname: cpu-p-313
+ module_io_quilt_old.F        2931 F
+Quilting with   1 groups of   0 I/O tasks.
+ Ntasks in X           14 , ntasks in Y           16
+--- WARNING: traj_opt is zero, but num_traj is not zero; setting num_traj to zero.
+--- NOTE: sst_update is 0, setting io_form_auxinput4 = 0 and auxinput4_interval = 0 for all domains
+--- NOTE: grid_fdda is 0 for domain      1, setting gfdda interval and ending time to 0 for that domain.
+--- NOTE: both grid_sfdda and pxlsm_soil_nudge are 0 for domain      1, setting sgfdda interval and ending time to 0 for that domain.
+--- NOTE: obs_nudge_opt is 0 for domain      1, setting obs nudging interval and ending time to 0 for that domain.
+--- NOTE: bl_pbl_physics /= 4, implies mfshconv must be 0, resetting
+Need MYNN PBL for icloud_bl = 1, resetting to 0
+--- NOTE: RRTMG radiation is not used, setting:  o3input=0 to avoid data pre-processing
+--- NOTE: num_soil_layers has been set to      5
+WRF V3.8.1 MODEL
+ *************************************
+ Parent domain
+ ids,ide,jds,jde            1         425           1         300
+ ims,ime,jms,jme           -4          38          -4          26
+ ips,ipe,jps,jpe            1          31           1          19
+ *************************************
+DYNAMICS OPTION: Eulerian Mass Coordinate
+ alloc_space_field: domain            1 ,               27433344  bytes allocated
+ RESTART run: opening wrfrst_d01_2001-10-25_00_00_00 for reading
+Timing for processing restart file for domain        1:    6.08782 elapsed seconds
+Max map factor in domain 1 =  1.05. Scale the dt in the model accordingly.
+WRF restart, LBC starts at 2001-10-24_00:00:00 and restart starts at 2001-10-25_00:00:00
+ LBC for restart: Starting valid date = 2001-10-24_00:00:00, Ending valid date = 2001-10-24_06:00:00
+ LBC for restart: Restart time            = 2001-10-25_00:00:00
+ LBC for restart: Looking for a bounding time
+ LBC for restart: Starting valid date = 2001-10-24_06:00:00, Ending valid date = 2001-10-24_12:00:00
+ LBC for restart: Starting valid date = 2001-10-24_12:00:00, Ending valid date = 2001-10-24_18:00:00
+ LBC for restart: Starting valid date = 2001-10-24_18:00:00, Ending valid date = 2001-10-25_00:00:00
+ LBC for restart: Starting valid date = 2001-10-25_00:00:00, Ending valid date = 2001-10-25_06:00:00
+ LBC for restart: Found the correct bounding LBC time periods for restart time = 2001-10-25_00:00:00
+Timing for processing lateral boundary for domain        1:    0.17067 elapsed seconds
+WRF NUMBER OF TILES FROM OMP_GET_MAX_THREADS =   1
+ Tile Strategy is not specified. Assuming 1D-Y
+WRF TILE   1 IS      1 IE     31 JS      1 JE     19
+WRF NUMBER OF TILES =   1
+Timing for main: time 2001-10-25_00:01:12 on domain   1:    0.28439 elapsed seconds
+Timing for main: time 2001-10-25_00:02:24 on domain   1:    0.07252 elapsed seconds
+Timing for main: time 2001-10-25_00:03:36 on domain   1:    0.07349 elapsed seconds
+Timing for main: time 2001-10-25_00:04:48 on domain   1:    0.07454 elapsed seconds
+Timing for main: time 2001-10-25_00:06:00 on domain   1:    0.07087 elapsed seconds
+Timing for main: time 2001-10-25_00:07:12 on domain   1:    0.07092 elapsed seconds
+Timing for main: time 2001-10-25_00:08:24 on domain   1:    0.07070 elapsed seconds
+Timing for main: time 2001-10-25_00:09:36 on domain   1:    0.07405 elapsed seconds
+Timing for main: time 2001-10-25_00:10:48 on domain   1:    0.07165 elapsed seconds
+Timing for main: time 2001-10-25_00:12:00 on domain   1:    0.07299 elapsed seconds
+Timing for main: time 2001-10-25_00:13:12 on domain   1:    0.07181 elapsed seconds
+Timing for main: time 2001-10-25_00:14:24 on domain   1:    0.07525 elapsed seconds
+Timing for main: time 2001-10-25_00:15:36 on domain   1:    0.07108 elapsed seconds
+Timing for main: time 2001-10-25_00:16:48 on domain   1:    0.07145 elapsed seconds
+Timing for main: time 2001-10-25_00:18:00 on domain   1:    0.07277 elapsed seconds
+Timing for main: time 2001-10-25_00:19:12 on domain   1:    0.07542 elapsed seconds
+Timing for main: time 2001-10-25_00:20:24 on domain   1:    0.07219 elapsed seconds
+Timing for main: time 2001-10-25_00:21:36 on domain   1:    0.07152 elapsed seconds
+Timing for main: time 2001-10-25_00:22:48 on domain   1:    0.07162 elapsed seconds
+Timing for main: time 2001-10-25_00:24:00 on domain   1:    0.07631 elapsed seconds
+Timing for main: time 2001-10-25_00:25:12 on domain   1:    0.07195 elapsed seconds
+Timing for main: time 2001-10-25_00:26:24 on domain   1:    0.07152 elapsed seconds
+Timing for main: time 2001-10-25_00:27:36 on domain   1:    0.07136 elapsed seconds
+Timing for main: time 2001-10-25_00:28:48 on domain   1:    0.07572 elapsed seconds
+Timing for main: time 2001-10-25_00:30:00 on domain   1:    0.07384 elapsed seconds
+Timing for main: time 2001-10-25_00:31:12 on domain   1:    0.11516 elapsed seconds
+Timing for main: time 2001-10-25_00:32:24 on domain   1:    0.07513 elapsed seconds
+Timing for main: time 2001-10-25_00:33:36 on domain   1:    0.07544 elapsed seconds
+Timing for main: time 2001-10-25_00:34:48 on domain   1:    0.07237 elapsed seconds
+Timing for main: time 2001-10-25_00:36:00 on domain   1:    0.07213 elapsed seconds
+Timing for main: time 2001-10-25_00:37:12 on domain   1:    0.07430 elapsed seconds
+Timing for main: time 2001-10-25_00:38:24 on domain   1:    0.08179 elapsed seconds
+Timing for main: time 2001-10-25_00:39:36 on domain   1:    0.07320 elapsed seconds
+Timing for main: time 2001-10-25_00:40:48 on domain   1:    0.07896 elapsed seconds
+Timing for main: time 2001-10-25_00:42:00 on domain   1:    0.07673 elapsed seconds
+Timing for main: time 2001-10-25_00:43:12 on domain   1:    0.07885 elapsed seconds
+Timing for main: time 2001-10-25_00:44:24 on domain   1:    0.07452 elapsed seconds
+Timing for main: time 2001-10-25_00:45:36 on domain   1:    0.07545 elapsed seconds
+Timing for main: time 2001-10-25_00:46:48 on domain   1:    0.07151 elapsed seconds
+Timing for main: time 2001-10-25_00:48:00 on domain   1:    0.07971 elapsed seconds
+Timing for main: time 2001-10-25_00:49:12 on domain   1:    0.07419 elapsed seconds
+Timing for main: time 2001-10-25_00:50:24 on domain   1:    0.08182 elapsed seconds
+Timing for main: time 2001-10-25_00:51:36 on domain   1:    0.07258 elapsed seconds
+Timing for main: time 2001-10-25_00:52:48 on domain   1:    0.07764 elapsed seconds
+Timing for main: time 2001-10-25_00:54:00 on domain   1:    0.07337 elapsed seconds
+Timing for main: time 2001-10-25_00:55:12 on domain   1:    0.07232 elapsed seconds
+Timing for main: time 2001-10-25_00:56:24 on domain   1:    0.07332 elapsed seconds
+Timing for main: time 2001-10-25_00:57:36 on domain   1:    0.07399 elapsed seconds
+Timing for main: time 2001-10-25_00:58:48 on domain   1:    0.07338 elapsed seconds
+Timing for main: time 2001-10-25_01:00:00 on domain   1:    0.07107 elapsed seconds
+Timing for main: time 2001-10-25_01:01:12 on domain   1:    0.11158 elapsed seconds
+Timing for main: time 2001-10-25_01:02:24 on domain   1:    0.07585 elapsed seconds
+Timing for main: time 2001-10-25_01:03:36 on domain   1:    0.07182 elapsed seconds
+Timing for main: time 2001-10-25_01:04:48 on domain   1:    0.07156 elapsed seconds
+Timing for main: time 2001-10-25_01:06:00 on domain   1:    0.07190 elapsed seconds
+Timing for main: time 2001-10-25_01:07:12 on domain   1:    0.07553 elapsed seconds
+Timing for main: time 2001-10-25_01:08:24 on domain   1:    0.07152 elapsed seconds
+Timing for main: time 2001-10-25_01:09:36 on domain   1:    0.07144 elapsed seconds
+Timing for main: time 2001-10-25_01:10:48 on domain   1:    0.07143 elapsed seconds
+Timing for main: time 2001-10-25_01:12:00 on domain   1:    0.07552 elapsed seconds
+Timing for main: time 2001-10-25_01:13:12 on domain   1:    0.07205 elapsed seconds
+Timing for main: time 2001-10-25_01:14:24 on domain   1:    0.07425 elapsed seconds
+Timing for main: time 2001-10-25_01:15:36 on domain   1:    0.07543 elapsed seconds
+Timing for main: time 2001-10-25_01:16:48 on domain   1:    0.07855 elapsed seconds
+Timing for main: time 2001-10-25_01:18:00 on domain   1:    0.07493 elapsed seconds
+Timing for main: time 2001-10-25_01:19:12 on domain   1:    0.07869 elapsed seconds
+Timing for main: time 2001-10-25_01:20:24 on domain   1:    0.07727 elapsed seconds
+Timing for main: time 2001-10-25_01:21:36 on domain   1:    0.07684 elapsed seconds
+Timing for main: time 2001-10-25_01:22:48 on domain   1:    0.07160 elapsed seconds
+Timing for main: time 2001-10-25_01:24:00 on domain   1:    0.07174 elapsed seconds
+Timing for main: time 2001-10-25_01:25:12 on domain   1:    0.07170 elapsed seconds
+Timing for main: time 2001-10-25_01:26:24 on domain   1:    0.07535 elapsed seconds
+Timing for main: time 2001-10-25_01:27:36 on domain   1:    0.07117 elapsed seconds
+Timing for main: time 2001-10-25_01:28:48 on domain   1:    0.07151 elapsed seconds
+Timing for main: time 2001-10-25_01:30:00 on domain   1:    0.07143 elapsed seconds
+Timing for main: time 2001-10-25_01:31:12 on domain   1:    0.11493 elapsed seconds
+Timing for main: time 2001-10-25_01:32:24 on domain   1:    0.07139 elapsed seconds
+Timing for main: time 2001-10-25_01:33:36 on domain   1:    0.07141 elapsed seconds
+Timing for main: time 2001-10-25_01:34:48 on domain   1:    0.07240 elapsed seconds
+Timing for main: time 2001-10-25_01:36:00 on domain   1:    0.07543 elapsed seconds
+Timing for main: time 2001-10-25_01:37:12 on domain   1:    0.07156 elapsed seconds
+Timing for main: time 2001-10-25_01:38:24 on domain   1:    0.07144 elapsed seconds
+Timing for main: time 2001-10-25_01:39:36 on domain   1:    0.07144 elapsed seconds
+Timing for main: time 2001-10-25_01:40:48 on domain   1:    0.07588 elapsed seconds
+Timing for main: time 2001-10-25_01:42:00 on domain   1:    0.07136 elapsed seconds
+Timing for main: time 2001-10-25_01:43:12 on domain   1:    0.07148 elapsed seconds
+Timing for main: time 2001-10-25_01:44:24 on domain   1:    0.07151 elapsed seconds
+Timing for main: time 2001-10-25_01:45:36 on domain   1:    0.07554 elapsed seconds
+Timing for main: time 2001-10-25_01:46:48 on domain   1:    0.07216 elapsed seconds
+Timing for main: time 2001-10-25_01:48:00 on domain   1:    0.07119 elapsed seconds
+Timing for main: time 2001-10-25_01:49:12 on domain   1:    0.07169 elapsed seconds
+Timing for main: time 2001-10-25_01:50:24 on domain   1:    0.07561 elapsed seconds
+Timing for main: time 2001-10-25_01:51:36 on domain   1:    0.07118 elapsed seconds
+Timing for main: time 2001-10-25_01:52:48 on domain   1:    0.07168 elapsed seconds
+Timing for main: time 2001-10-25_01:54:00 on domain   1:    0.07154 elapsed seconds
+Timing for main: time 2001-10-25_01:55:12 on domain   1:    0.07551 elapsed seconds
+Timing for main: time 2001-10-25_01:56:24 on domain   1:    0.07202 elapsed seconds
+Timing for main: time 2001-10-25_01:57:36 on domain   1:    0.07160 elapsed seconds
+Timing for main: time 2001-10-25_01:58:48 on domain   1:    0.07173 elapsed seconds
+Timing for main: time 2001-10-25_02:00:00 on domain   1:    0.07523 elapsed seconds
+Timing for main: time 2001-10-25_02:01:12 on domain   1:    0.10837 elapsed seconds
+Timing for main: time 2001-10-25_02:02:24 on domain   1:    0.07202 elapsed seconds
+Timing for main: time 2001-10-25_02:03:36 on domain   1:    0.07154 elapsed seconds
+Timing for main: time 2001-10-25_02:04:48 on domain   1:    0.07570 elapsed seconds
+Timing for main: time 2001-10-25_02:06:00 on domain   1:    0.07160 elapsed seconds
+Timing for main: time 2001-10-25_02:07:12 on domain   1:    0.07179 elapsed seconds
+Timing for main: time 2001-10-25_02:08:24 on domain   1:    0.07142 elapsed seconds
+Timing for main: time 2001-10-25_02:09:36 on domain   1:    0.07618 elapsed seconds
+Timing for main: time 2001-10-25_02:10:48 on domain   1:    0.07179 elapsed seconds
+Timing for main: time 2001-10-25_02:12:00 on domain   1:    0.07128 elapsed seconds
+Timing for main: time 2001-10-25_02:13:12 on domain   1:    0.07188 elapsed seconds
+Timing for main: time 2001-10-25_02:14:24 on domain   1:    0.07505 elapsed seconds
+Timing for main: time 2001-10-25_02:15:36 on domain   1:    0.07245 elapsed seconds
+Timing for main: time 2001-10-25_02:16:48 on domain   1:    0.07192 elapsed seconds
+Timing for main: time 2001-10-25_02:18:00 on domain   1:    0.07092 elapsed seconds
+Timing for main: time 2001-10-25_02:19:12 on domain   1:    0.07717 elapsed seconds
+Timing for main: time 2001-10-25_02:20:24 on domain   1:    0.07143 elapsed seconds
+Timing for main: time 2001-10-25_02:21:36 on domain   1:    0.07150 elapsed seconds
+Timing for main: time 2001-10-25_02:22:48 on domain   1:    0.07152 elapsed seconds
+Timing for main: time 2001-10-25_02:24:00 on domain   1:    0.07703 elapsed seconds
+Timing for main: time 2001-10-25_02:25:12 on domain   1:    0.07119 elapsed seconds
+Timing for main: time 2001-10-25_02:26:24 on domain   1:    0.07138 elapsed seconds
+Timing for main: time 2001-10-25_02:27:36 on domain   1:    0.07123 elapsed seconds
+Timing for main: time 2001-10-25_02:28:48 on domain   1:    0.07609 elapsed seconds
+Timing for main: time 2001-10-25_02:30:00 on domain   1:    0.07196 elapsed seconds
+Timing for main: time 2001-10-25_02:31:12 on domain   1:    0.10965 elapsed seconds
+Timing for main: time 2001-10-25_02:32:24 on domain   1:    0.07106 elapsed seconds
+Timing for main: time 2001-10-25_02:33:36 on domain   1:    0.07570 elapsed seconds
+Timing for main: time 2001-10-25_02:34:48 on domain   1:    0.07364 elapsed seconds
+Timing for main: time 2001-10-25_02:36:00 on domain   1:    0.07260 elapsed seconds
+Timing for main: time 2001-10-25_02:37:12 on domain   1:    0.07139 elapsed seconds
+Timing for main: time 2001-10-25_02:38:24 on domain   1:    0.07555 elapsed seconds
+Timing for main: time 2001-10-25_02:39:36 on domain   1:    0.07233 elapsed seconds
+Timing for main: time 2001-10-25_02:40:48 on domain   1:    0.07194 elapsed seconds
+Timing for main: time 2001-10-25_02:42:00 on domain   1:    0.07371 elapsed seconds
+Timing for main: time 2001-10-25_02:43:12 on domain   1:    0.07456 elapsed seconds
+Timing for main: time 2001-10-25_02:44:24 on domain   1:    0.07160 elapsed seconds
+Timing for main: time 2001-10-25_02:45:36 on domain   1:    0.07425 elapsed seconds
+Timing for main: time 2001-10-25_02:46:48 on domain   1:    0.07234 elapsed seconds
+Timing for main: time 2001-10-25_02:48:00 on domain   1:    0.07651 elapsed seconds
+Timing for main: time 2001-10-25_02:49:12 on domain   1:    0.07601 elapsed seconds
+Timing for main: time 2001-10-25_02:50:24 on domain   1:    0.07036 elapsed seconds
+Timing for main: time 2001-10-25_02:51:36 on domain   1:    0.07197 elapsed seconds
+Timing for main: time 2001-10-25_02:52:48 on domain   1:    0.07614 elapsed seconds
+Timing for main: time 2001-10-25_02:54:00 on domain   1:    0.07178 elapsed seconds
+Timing for main: time 2001-10-25_02:55:12 on domain   1:    0.07304 elapsed seconds
+Timing for main: time 2001-10-25_02:56:24 on domain   1:    0.07237 elapsed seconds
+Timing for main: time 2001-10-25_02:57:36 on domain   1:    0.07523 elapsed seconds
+Timing for main: time 2001-10-25_02:58:48 on domain   1:    0.07163 elapsed seconds
+Timing for main: time 2001-10-25_03:00:00 on domain   1:    0.07311 elapsed seconds
+ mediation_integrate.b        1724 DATASET=HISTORY
+ mediation_integrate.b        1725  grid%id            1  grid%oid            2
+Timing for Writing wrfout_d01_2001-10-25_03_00_00 for domain        1:    3.24381 elapsed seconds
+wrf: SUCCESS COMPLETE WRF
