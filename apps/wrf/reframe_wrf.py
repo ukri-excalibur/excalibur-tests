@@ -1,7 +1,7 @@
 # TODO: Add docs
 # TODO: Currently must set WRF_DIR in environment's variables - would be better to use a module?
 
-import sys, os, urllib
+import sys, os, urllib, string
 import reframe as rfm
 import reframe.utility.sanity as sn
 sys.path.append('.')
@@ -11,13 +11,29 @@ from modules.utils import parse_time_cmd
 from reframe.core.runtime import runtime
 
 BENCHMARKS = {
-    '12km': {
-        'url': 'http://www2.mmm.ucar.edu/WG2bench/conus12km_data_v3',
-        'files': ['namelist.input', 'wrfbdy_d01', 'wrfrst_d01_2001-10-25_00_00_00'],
-    },
+    '12km': [
+        {
+            'url': 'http://www2.mmm.ucar.edu/WG2bench/conus12km_data_v3',
+            'files': ['namelist.input', 'wrfbdy_d01', 'wrfrst_d01_2001-10-25_00_00_00'],
+        },
+    ],
+    '2.5km': [
+        {
+            'url': 'http://www2.mmm.ucar.edu/WG2bench/conus_2.5_v3/1-RST/RST/',
+            'files': ['rst_6hraa%s' % x for x in string.ascii_lowercase] \
+                + ['rst_6hrab%s' % x for x in string.ascii_lowercase[0:7]]
+        },
+        {
+            'url': 'http://www2.mmm.ucar.edu/WG2bench/conus_2.5_v3/2-9HR/',
+            'files': ['namelist.input']
+        },
+        {
+            'url': 'http://www2.mmm.ucar.edu/WG2bench/conus_2.5_v3/',
+            'files': ['wrfbdy_d01.gz']
+        },
+    ],    
 }
 
-@rfm.simple_test
 class WRF_download(rfm.RunOnlyRegressionTest):
     """ Download WRF benchmark files.
     
@@ -26,9 +42,9 @@ class WRF_download(rfm.RunOnlyRegressionTest):
         TODO: FIXME somehow.
     """
     
-    def __init__(self):
+    def __init__(self, benchmark):
         
-        self.benchmark = '12km'
+        self.benchmark = benchmark
 
         self.valid_systems = ['*']
         self.valid_prog_environs = ['wrf']
@@ -49,36 +65,43 @@ class WRF_download(rfm.RunOnlyRegressionTest):
         benchdir = os.path.join(self.prefix, 'downloads', self.benchmark)
         if not os.path.exists(benchdir):
             os.makedirs(benchdir)
-        for bench_file in BENCHMARKS[self.benchmark]['files']:
-            dst = os.path.join(benchdir, bench_file)
-            src = BENCHMARKS[self.benchmark]['url'] + '/' + bench_file
-            if not os.path.exists(dst):
-                urllib.request.urlretrieve(src, dst)
+        for fileset in BENCHMARKS[self.benchmark]:
+            for bench_file in fileset['files']:
+                dst = os.path.join(benchdir, bench_file)
+                src = fileset['url'] + '/' + bench_file
+                if not os.path.exists(dst):
+                    try:
+                        urllib.request.urlretrieve(src, dst)
+                    except:
+                        print('ERROR retrieving %s' % src)
+                        raise
 
-@rfm.parameterized_test(*scaling_config())
-class WRF(rfm.RunOnlyRegressionTest):
-    def __init__(self, part, num_tasks, num_tasks_per_node):
-        """ Run the 12km CONUS benchmark """
+@rfm.simple_test
+class WRF_12km_download(WRF_download):
+    def __init__(self):
+        super().__init__('12km')
+
+@rfm.simple_test
+class WRF_2_5km_download(WRF_download):
+    def __init__(self):
+        super().__init__('2.5km')
+
+
+class WRF_run(rfm.RunOnlyRegressionTest):
+    def __init__(self, benchmark, part, num_tasks, num_tasks_per_node):
+        """ Run a WRF benchmark using pre-downloaded files """
+        
+        self.benchmark = benchmark
         self.num_tasks = num_tasks
         self.num_tasks_per_node = num_tasks_per_node
         self.num_nodes = int(self.num_tasks / self.num_tasks_per_node)
-        self.time_limit = '3h'
-        self.benchmark = '12km'
+        self.time_limit = '3h' # TODO: change in child classes?
         self.benchdir = os.path.join(self.prefix, 'downloads', self.benchmark)
         # NB we do NOT set sourcesdir or readonly_files as we want to symlink in files ourselves
         
-        self.depends_on('WRF_download')
         self.valid_systems = [part]
         self.valid_prog_environs = ['wrf']
 
-        self.prerun_cmds = [
-            'ln -sf $WRF_DIR/WRFV3.8.1/run/* .', # TODO: use a module here instead of WRF_DIR
-            'ln -sf {benchmark_dir}/* .'.format(benchmark_dir=self.benchdir),  # must be second to overwrite namelist.input from run/
-            "sed '/&dynamics/a \ use_baseparam_fr_nml = .t.' -i namelist.input", # NB this changes namelist.input into NOT a symlink!
-            # not using pnetcdf so io_form_* being 2 already is correct
-            'time \\',
-        ]
-        
         self.executable = 'wrf.exe'
         self.executable_opts = []
         self.keep_files = ['rsl.error.0000']
@@ -98,4 +121,20 @@ class WRF(rfm.RunOnlyRegressionTest):
             }
         }
     
-        self.tags |= {'12km', 'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, 'run'}
+        self.tags |= {self.benchmark, 'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, 'run'}
+
+@rfm.parameterized_test(*scaling_config())
+class WRF_12km_run(WRF_run):
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        """ Run the 12km CONUS benchmark """
+        
+        super().__init__('12km', part, num_tasks, num_tasks_per_node)
+        self.depends_on('WRF_12km_download')
+        
+        self.prerun_cmds = [
+            'ln -sf $WRF_DIR/WRFV3.8.1/run/* .', # TODO: use a module here instead of WRF_DIR
+            'ln -sf {benchmark_dir}/* .'.format(benchmark_dir=self.benchdir),  # must be second to overwrite namelist.input from run/
+            "sed '/&dynamics/a \ use_baseparam_fr_nml = .t.' -i namelist.input", # NB this changes namelist.input into NOT a symlink!
+            # not using pnetcdf so io_form_* being 2 already is correct
+            'time \\',
+        ]
