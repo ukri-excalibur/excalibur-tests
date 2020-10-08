@@ -1,5 +1,5 @@
 # TODO: Add docs
-# TODO: Currently must set WRF_DIR in environment's variables - would be better to use a module?
+# TODO: Currently must set WRF_DIR in environment's variables (to parent of /RUN directory) - would be better to use a module?
 
 import sys, os, urllib, string
 import reframe as rfm
@@ -89,7 +89,16 @@ class WRF_2_5km_download(WRF_download):
 
 class WRF_run(rfm.RunOnlyRegressionTest):
     def __init__(self, benchmark, part, num_tasks, num_tasks_per_node):
-        """ Run a WRF benchmark using pre-downloaded files """
+        """ Run a WRF benchmark using pre-downloaded files.
+        
+            Should be subclassed by a test decorated with
+        
+                @rfm.parameterized_test(*scaling_config())
+            
+            Args:
+                benchmark: str, key in BENCHMARKS
+                others: see `modules.reframe_extras.scaling_config()`
+        """
         
         self.benchmark = benchmark
         self.num_tasks = num_tasks
@@ -132,9 +141,28 @@ class WRF_12km_run(WRF_run):
         self.depends_on('WRF_12km_download')
         
         self.prerun_cmds = [
-            'ln -sf $WRF_DIR/WRFV3.8.1/run/* .', # TODO: use a module here instead of WRF_DIR
+            'ln -sf $WRF_DIR//run/* .', # TODO: use a module here instead of WRF_DIR
             'ln -sf {benchmark_dir}/* .'.format(benchmark_dir=self.benchdir),  # must be second to overwrite namelist.input from run/
             "sed '/&dynamics/a \ use_baseparam_fr_nml = .t.' -i namelist.input", # NB this changes namelist.input into NOT a symlink!
             # not using pnetcdf so io_form_* being 2 already is correct
             'time \\',
         ]
+
+@rfm.parameterized_test(*scaling_config())
+class WRF_2_5km_run(WRF_run):
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        """ Run the 2.5km CONUS benchmark """
+        
+        super().__init__('2.5km', part, num_tasks, num_tasks_per_node)
+        #self.depends_on('WRF_2_5km_download') # TODO: DEBUG: FIXME:
+        
+        self.prerun_cmds = [ # from http://www2.mmm.ucar.edu/WG2bench/conus_2.5_v3/READ-ME.txt
+            'ln -sf $WRF_DIR/run/* .', # TODO: use a module here instead of WRF_DIR
+            'ln -sf {benchmark_dir}/* .'.format(benchmark_dir=self.benchdir),  # must be second to overwrite namelist.input from run/
+            'cat rst_6hr* | gunzip -c > wrfrst_d01_2005-06-04_06_00_00',
+            'gunzip --force wrfbdy_d01.gz', # --force reqd. as symlink
+            r"sed -i '/&dynamics/a \ use_baseparam_fr_nml = .t.' namelist.input", # NB this changes namelist.input into NOT a symlink!
+            r"sed -E -i 's/( io_form_[[:alpha:]]+ += )11,/\12,/' namelist.input", # replace all " io_form_* = 11," lines with with = 2
+            'time \\',
+        ]
+        
