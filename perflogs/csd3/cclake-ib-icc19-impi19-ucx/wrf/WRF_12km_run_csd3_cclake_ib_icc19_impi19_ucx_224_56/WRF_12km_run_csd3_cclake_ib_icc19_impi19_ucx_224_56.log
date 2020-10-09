@@ -1,0 +1,2 @@
+2020-10-07T19:22:12+01:00|reframe 3.2-dev2 (rev: 84ce07dc)|WRF_12km_run_csd3_cclake_ib_icc19_impi19_ucx_224_56 on csd3:cclake-ib-icc19-impi19-ucx using wrf|jobid=29733105|runtime_real=28.497|s|ref=0 (l=None, u=None)|run,num_procs=224,12km,num_nodes=4
+2020-10-07T19:22:12+01:00|reframe 3.2-dev2 (rev: 84ce07dc)|WRF_12km_run_csd3_cclake_ib_icc19_impi19_ucx_224_56 on csd3:cclake-ib-icc19-impi19-ucx using wrf|jobid=29733105|gflops=391.1985525029635|/s|ref=0 (l=None, u=None)|run,num_procs=224,12km,num_nodes=4
