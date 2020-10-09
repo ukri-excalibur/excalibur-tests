@@ -17,6 +17,7 @@ site_configuration = {
             'descr': 'Cambridge Service for Data Driven Discovery: https://docs.hpc.cam.ac.uk/hpc/index.html',
             'hostnames': ['login-e-*'],
             'modules_system': 'tmod32',
+            'stagedir': '/rds/user/hpcbras1/hpc-work',
             'partitions': [
                 {
                     **csd3_cclake_common,
@@ -283,7 +284,7 @@ site_configuration = {
             'name': 'wrf',
             'target_systems': ['csd3:cclake-ib-icc19-impi19-ucx', 'csd3:cclake-roce-icc19-impi19-ucx'],
             'modules': [], # intel module already loaded in partition, wrf not defined as module (yet)
-            'variables': [['WRF_DIR', "$HOME/wrf-build-icc19-impi19-hsw"]] # TODO: use a module instead
+            'variables': [['WRF_DIR', "$HOME/wrf-build-icc19-impi19-hsw/WRFV3.8.1"]] # TODO: use a module instead
         },
     ],
     'logging': [
