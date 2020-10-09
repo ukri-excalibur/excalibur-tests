@@ -34,6 +34,18 @@ BENCHMARKS = {
     ],    
 }
 
+# For performance calculations - see https://www2.mmm.ucar.edu/wrf/WG2/benchv3/
+TIMING_CONSTANTS = {
+    '12km': {
+        'model_timestep': 72,
+        'gflops_factor': 0.418,
+    },
+    '2.5km': {
+        'model_timestep': 15,
+        'gflops_factor': 27.45,
+    }
+}
+
 class WRF_download(rfm.RunOnlyRegressionTest):
     """ Download WRF benchmark files.
     
@@ -52,7 +64,7 @@ class WRF_download(rfm.RunOnlyRegressionTest):
 
         self.time_limit = '1h'
         
-        #self.local = True # see https://github.com/eth-cscs/reframe/issues/1511
+        self.local = True
         self.executable = 'echo'
         self.executable_opts = ['Done.']
         self.sanity_patterns = sn.all([
@@ -118,10 +130,13 @@ class WRF_run(rfm.RunOnlyRegressionTest):
         self.sanity_patterns = sn.all([
             sn.assert_found(r'wrf: SUCCESS COMPLETE WRF', 'rsl.error.0000'),
         ])
+
+        self.model_timestep = TIMING_CONSTANTS[self.benchmark]['model_timestep']
+        self.gflops_factor = TIMING_CONSTANTS[self.benchmark]['gflops_factor']
         
         self.perf_patterns = {
             'runtime_real': sn.extractsingle(r'^real\s+(\d+m[\d.]+s)$', self.stderr, 1, parse_time_cmd),
-            'gflops': (72.0 / sn.avg(sn.sanity_function(extract_timings)('rsl.error.0000'))) * 0.418
+            'gflops': (self.model_timestep / sn.avg(sn.sanity_function(extract_timings)('rsl.error.0000'))) * self.gflops_factor
         }
         self.reference = {
             '*': {
@@ -165,4 +180,3 @@ class WRF_2_5km_run(WRF_run):
             r"sed -E -i 's/( io_form_[[:alpha:]]+ += )11,/\12,/' namelist.input", # replace all " io_form_* = 11," lines with with = 2
             'time \\',
         ]
-        

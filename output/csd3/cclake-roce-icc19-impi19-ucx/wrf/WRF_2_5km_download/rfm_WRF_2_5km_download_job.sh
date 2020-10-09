@@ -1,13 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="rfm_WRF_2_5km_download_job"
-#SBATCH --ntasks=1
-#SBATCH --output=rfm_WRF_2_5km_download_job.out
-#SBATCH --error=rfm_WRF_2_5km_download_job.err
-#SBATCH --time=1:0:0
-#SBATCH --partition=cclake
-#SBATCH --account=support-cpu
-#SBATCH --exclude=cpu-p-[1-280,337-672]
 module load rhel7/default-ccl
 export UCX_NET_DEVICES=mlx5_1:1
 export WRF_DIR=$HOME/wrf-build-icc19-impi19-hsw/WRFV3.8.1
-srun echo Done.
+ echo Done.
