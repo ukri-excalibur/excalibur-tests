@@ -36,7 +36,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-icc19-impi19-ucx',
                         'descr': '50Gb RoCE using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                        'environs': ['imb', 'castep', 'wrf'],
+                        'environs': ['imb', 'castep', 'wrf', 'nxnlatbw'],
                         'variables': [
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
                         ],
