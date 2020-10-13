@@ -114,7 +114,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl', 'sysinfo'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl', 'sysinfo', 'nxnlatbw'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -128,7 +128,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl',  'nxnlatbw'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
