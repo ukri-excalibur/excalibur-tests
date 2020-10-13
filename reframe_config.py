@@ -264,6 +264,7 @@ site_configuration = {
         },
         {
             'name': 'nxnlatbw',
+            'cc': 'mpicc',
         },
         {
             'name': 'castep',
