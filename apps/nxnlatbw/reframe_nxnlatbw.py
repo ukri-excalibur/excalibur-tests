@@ -4,7 +4,7 @@
     
         reframe/bin/reframe -C reframe_config.py -c apps/nxnlatbw/ --run
    
-   NB: This is not a performance test in ReFrame sense!
+   NB: This is not a performance test in the ReFrame sense!
 """
 
 import reframe as rfm

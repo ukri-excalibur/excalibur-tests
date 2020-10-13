@@ -48,7 +48,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-gcc9-ompi3-ucx',
                         'descr': '100Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam',],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'nxnlatbw'],
                         'modules': ['openmpi-3.1.6-gcc-9.1.0-omffmfv'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
@@ -61,7 +61,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-gcc9-ompi3-ucx',
                         'descr': '50Gb Infiniband using gcc 9.1.0 and openmpi 3.1.6 with UCX',
-                        'environs': ['imb', 'gromacs', 'omb', 'openfoam',],
+                        'environs': ['imb', 'gromacs', 'omb', 'openfoam', 'nxnlatbw'],
                         'modules': ['openmpi-3.1.6-gcc-9.1.0-omffmfv'],
                         'variables': [
                             ['SLURM_MPI_TYPE', 'pmix_v3'], # available for ompi3+
