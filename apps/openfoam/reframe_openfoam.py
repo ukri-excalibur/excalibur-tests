@@ -3,6 +3,8 @@
     See README.md for details.
 
     Note that the provided benchmark run script is not used and instead its functionality has been implemented using ReFrame.
+
+    TODO: Move to use newer scaling_config().
 """
 
 import reframe as rfm
@@ -37,7 +39,7 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
         self.exclusive_access = True
         self.time_limit = None
 
-        self.pre_run = [
+        self.prerun_cmds = [
             'tar --strip-components 2 -xf Motorbike_bench_template.tar.gz bench_template/basecase',
             './Allclean', # removes logs, old timehistories etc just in case 
             
@@ -61,10 +63,8 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
         #$ ompi_info -c | grep -oE "MPI_THREAD_MULTIPLE[^,]*"
         # MPI_THREAD_MULTIPLE: yes
 
-        self.executable = 'simpleFoam' # Duh this runs srun time - 
+        self.executable = 'simpleFoam'
         self.executable_opts = ['-parallel']
-        
-        self.post_run = []
 
         self.keep_files = ['log.snappyHexMesh', 'log.blockMesh', 'log.decomposePar']
 
