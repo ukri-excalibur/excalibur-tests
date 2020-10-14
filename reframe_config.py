@@ -24,7 +24,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-ib-icc19-impi19-ucx',
                         'descr': '100Gb Infiniband using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                        'environs': ['sysinfo', 'imb', 'nxnlatbw', 'castep', 'wrf'],
+                        'environs': ['sysinfo', 'imb', 'nxnlatbw', 'castep', 'wrf', 'intel-hpl'],
                         'variables': [
                             ['UCX_NET_DEVICES', 'mlx5_0:1'], # only use IB
                         ],
@@ -36,7 +36,7 @@ site_configuration = {
                     **{
                         'name': 'cclake-roce-icc19-impi19-ucx',
                         'descr': '50Gb RoCE using icc 19.1.2.254 and impi 2019 Update 8 with UCX',
-                        'environs': ['imb', 'castep', 'wrf', 'nxnlatbw'],
+                        'environs': ['imb', 'castep', 'wrf', 'nxnlatbw', 'intel-hpl'],
                         'variables': [
                             ['UCX_NET_DEVICES', 'mlx5_1:1'], # only use RoCE
                         ],
@@ -221,6 +221,14 @@ site_configuration = {
             'name': 'intel-hpl',
             'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
             'modules': ['intel-mkl/2020.1.217-5tpgp7b'], # now installed
+            'variables':[
+                ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
+            ],
+        },
+        {
+            'name': 'intel-hpl',
+            'target_systems': ['csd3:cclake-ib-icc19-impi19-ucx', 'csd3:cclake-roce-icc19-impi19-ucx'],
+            'modules': [], # MKL provided as part of partition's modules
             'variables':[
                 ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
             ],

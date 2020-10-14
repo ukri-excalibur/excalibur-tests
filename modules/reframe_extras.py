@@ -259,6 +259,7 @@ class Scheduler_Info(object):
             
             The returned object has attributes:
                 - `num_nodes`: number of nodes
+                - `sockets_per_node`: number of sockets per node
                 - `pcores_per_node`: number of physical cores per node
                 - `lcores_per_node`: number of logical cores per node
             
