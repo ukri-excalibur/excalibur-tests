@@ -1,5 +1,19 @@
 import matplotlib.pyplot as plt
 
+def add_roce_ib_factor(data, round=2):
+    """ Add columns with roce / ib values to a dataframe produced by tabulate_last_perf() """
+    # pair-up roce/ib columns:
+    pairs = {} # tuple of system/partition parts with roce/ib replaced with '*' -> list of actual system:partition names
+    for syspart in data.columns:
+        sys, part = syspart.split(':')
+        generic = [sys] + [('[roce/ib]' if p in ('ib', 'roce') else p) for p in part.split('-')]
+        pairs.setdefault(tuple(generic), []).append(syspart)
+    # now add columns:
+    for generic, (c1, c2) in pairs.items():
+        c_ib, c_roce = sorted([c1, c2]) # get IB first
+        newcol = generic[0] + ':' + '-'.join(generic[1:])
+        data[newcol] = (data[c_roce] / data[c_ib]).round(round)
+
 def plot_perf_history(perf_df):
     """ Generate plots of performance history.
         
