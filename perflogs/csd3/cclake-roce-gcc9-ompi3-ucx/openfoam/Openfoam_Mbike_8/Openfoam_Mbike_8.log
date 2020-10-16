@@ -1,3 +1,0 @@
-2020-10-14T12:04:19+01:00|reframe 3.3-dev0 (rev: 3b375092)|Openfoam_Mbike_8 on csd3:cclake-roce-gcc9-ompi3-ucx using openfoam|jobid=30017196|ExecutionTime=8.38|s|ref=0 (l=None, u=None)|num_nodes=8,num_procs=256
-2020-10-14T12:04:19+01:00|reframe 3.3-dev0 (rev: 3b375092)|Openfoam_Mbike_8 on csd3:cclake-roce-gcc9-ompi3-ucx using openfoam|jobid=30017196|ClockTime=9.0|s|ref=0 (l=None, u=None)|num_nodes=8,num_procs=256
-2020-10-14T12:04:19+01:00|reframe 3.3-dev0 (rev: 3b375092)|Openfoam_Mbike_8 on csd3:cclake-roce-gcc9-ompi3-ucx using openfoam|jobid=30017196|runtime_real=14.224|s|ref=0 (l=None, u=None)|num_nodes=8,num_procs=256
