@@ -15,29 +15,26 @@ import sys, os
 from collections import namedtuple
 from reframe.core.logging import getlogger
 sys.path.append('.')
-from modules.reframe_extras import sequence, Scheduler_Info, CachedRunTest
+from modules.reframe_extras import scaling_config
 from modules.utils import parse_time_cmd
 
-node_seq = sequence(1, Scheduler_Info().num_nodes + 1, 2)
 
-@rfm.parameterized_test(*[[n_nodes] for n_nodes in node_seq])
+@rfm.parameterized_test(*scaling_config())
 class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
 
-    def __init__(self, num_nodes):
+    def __init__(self, part, n_tasks, n_tasks_per_node):
         
-        self.valid_systems = ['*']
+        self.valid_systems = [part]
         self.valid_prog_environs = ['openfoam']
         
-        self.num_nodes = num_nodes
-
-        # these are the ones reframe uses:
-        self.num_tasks_per_node = Scheduler_Info().pcores_per_node
-        self.num_tasks = self.num_nodes * self.num_tasks_per_node
+        self.num_tasks_per_node = n_tasks_per_node
+        self.num_tasks = n_tasks
+        self.num_nodes = int(n_tasks / n_tasks_per_node)
         self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
         
         self.sourcesdir = 'downloads'
         self.exclusive_access = True
-        self.time_limit = None
+        self.time_limit = '1h'
 
         self.prerun_cmds = [
             'tar --strip-components 2 -xf Motorbike_bench_template.tar.gz bench_template/basecase',
