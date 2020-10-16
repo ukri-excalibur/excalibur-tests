@@ -8,7 +8,7 @@
 #SBATCH --exclusive
 #SBATCH --partition=cclake
 #SBATCH --account=support-cpu
-#SBATCH --exclude=cpu-p-[1-168,225-672]
+#SBATCH --exclude=cpu-p-[1-280,337-672]
 module load rhel7/default-ccl
 export UCX_NET_DEVICES=mlx5_1:1
 module load castep

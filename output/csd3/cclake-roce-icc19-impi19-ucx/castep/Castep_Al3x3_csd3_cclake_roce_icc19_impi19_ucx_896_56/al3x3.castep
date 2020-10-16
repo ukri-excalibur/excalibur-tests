@@ -58,7 +58,7 @@
  FFT Lib : mkl
  Fundamental constants values: CODATA 2010
  
- Run started: Wed, 30 Sep 2020 17:17:10 +0100
+ Run started: Thu, 15 Oct 2020 09:25:30 +0100
  
  Pseudo atomic calculation performed for O 2s2 2p4
  
@@ -523,13 +523,13 @@
   
 +---------------- MEMORY AND SCRATCH DISK ESTIMATES PER PROCESS --------------+
 |                                                     Memory          Disk    |
-| Baseline code, static data and system overhead     7252.0 MB         0.0 MB |
+| Baseline code, static data and system overhead     7256.0 MB         0.0 MB |
 | BLAS internal memory storage                          0.0 MB         0.0 MB |
 | Model and support data                               33.0 MB         0.0 MB |
 | Electronic energy minimisation requirements          19.5 MB         0.0 MB |
 | Force calculation requirements                        0.5 MB         0.0 MB |
 |                                               ----------------------------- |
-| Approx. total storage required per process         7304.5 MB         0.0 MB |
+| Approx. total storage required per process         7308.5 MB         0.0 MB |
 |                                                                             |
 | Requirements will fluctuate during execution and may exceed these estimates |
 +-----------------------------------------------------------------------------+
@@ -538,18 +538,18 @@ Calculating total energy with cut-off of  400.000 eV.
 SCF loop      Energy           Fermi           Energy gain       Timer   <-- SCF
                                energy          per atom          (sec)   <-- SCF
 ------------------------------------------------------------------------ <-- SCF
-Initial  -5.94021373E+004  0.00000000E+000                         2.25  <-- SCF
-      1  -7.23886559E+004  4.09859983E+000   4.80982172E+001      38.55  <-- SCF
-      2  -7.78240533E+004  1.94837503E+000   2.01311014E+001      61.77  <-- SCF
-      3  -7.79864481E+004  1.80829795E+000   6.01462166E-001      85.19  <-- SCF
-      4  -7.78412471E+004  1.95941681E+000  -5.37781498E-001     117.37  <-- SCF
-      5  -7.77211089E+004  1.34872741E+000  -4.44956413E-001     149.26  <-- SCF
-      6  -7.77152125E+004  1.12195240E+000  -2.18383011E-002     183.57  <-- SCF
-      7  -7.77129445E+004  1.05280868E+000  -8.40002259E-003     215.36  <-- SCF
-      8  -7.77104436E+004  1.02761343E+000  -9.26260421E-003     246.97  <-- SCF
-      9  -7.77084256E+004  9.96393588E-001  -7.47420379E-003     278.05  <-- SCF
-     10  -7.77059745E+004  1.11098602E+000  -9.07811311E-003     309.46  <-- SCF
-     11  -7.77052079E+004  1.16249165E+000  -2.83906286E-003     340.27  <-- SCF
+Initial  -5.94021373E+004  0.00000000E+000                         1.34  <-- SCF
+      1  -7.23886559E+004  4.09859983E+000   4.80982172E+001      37.12  <-- SCF
+      2  -7.78240533E+004  1.94837503E+000   2.01311014E+001      60.14  <-- SCF
+      3  -7.79864481E+004  1.80829795E+000   6.01462166E-001      83.25  <-- SCF
+      4  -7.78412471E+004  1.95941681E+000  -5.37781498E-001     115.36  <-- SCF
+      5  -7.77211089E+004  1.34872741E+000  -4.44956413E-001     146.90  <-- SCF
+      6  -7.77152125E+004  1.12195240E+000  -2.18383011E-002     180.70  <-- SCF
+      7  -7.77129445E+004  1.05280868E+000  -8.40002259E-003     212.32  <-- SCF
+      8  -7.77104436E+004  1.02761343E+000  -9.26260421E-003     243.58  <-- SCF
+      9  -7.77084256E+004  9.96393588E-001  -7.47420379E-003     274.72  <-- SCF
+     10  -7.77059745E+004  1.11098602E+000  -9.07811311E-003     306.07  <-- SCF
+     11  -7.77052079E+004  1.16249165E+000  -2.83906286E-003     336.51  <-- SCF
 ------------------------------------------------------------------------ <-- SCF
  
 Final energy, E             =  -77705.20793393     eV
@@ -1128,17 +1128,17 @@ Writing model to al3x3.check
  A BibTeX formatted list of references used in this run has been written to 
  al3x3.bib
  
-Initialisation time =      1.62 s
-Calculation time    =    354.31 s
-Finalisation time   =      8.45 s
-Total time          =    364.38 s
-Peak Memory Use     = 7629244 kB
+Initialisation time =      0.91 s
+Calculation time    =    345.49 s
+Finalisation time   =      4.17 s
+Total time          =    350.56 s
+Peak Memory Use     = 7633344 kB
   
-Overall parallel efficiency rating: Terrible (15%)                              
+Overall parallel efficiency rating: Terrible (14%)                              
   
 Data was distributed by:-
-G-vector (448-way); efficiency rating: Terrible (16%)                           
-k-point (2-way); efficiency rating: Excellent (97%)                             
+G-vector (448-way); efficiency rating: Terrible (14%)                           
+k-point (2-way); efficiency rating: Excellent (94%)                             
   
 Parallel notes:
-1) Calculation only took 356.1 s, so efficiency estimates may be inaccurate.    
+1) Calculation only took 346.4 s, so efficiency estimates may be inaccurate.    
