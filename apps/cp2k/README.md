@@ -5,7 +5,7 @@ Performance tests of the CP2K quantum chemistry and solid state physics simluati
 The benchmark is run on a range of number of nodes, from 1 up to all available. Each run uses as many processes per node as there are physical cores.
 
 The following performance variables are captured:
-- 'cp2k_time' (s): The "total maximum time" for the CP2K subroutine as reported in CP2K output. This is assumed to be processor time, not wallclock time.
+- 'cp2k_time' (s): The "total maximum time" for the CP2K subroutine as reported in CP2K output.
 - 'runtime_real' (s): Wallclock time reported by `time` for entire MPI program start to finish.
 
 # Installation - Spack
