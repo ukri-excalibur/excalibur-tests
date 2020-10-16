@@ -157,21 +157,6 @@ site_configuration = {
         },
         {
             'name': 'imb',
-            'target_systems': ['arcus:ib-gcc9-openmpi4-ucx', 'arcus:roce-gcc9-openmpi4-ucx'],
-            'modules': ['intel-mpi-benchmarks/2019.6-42qobhq'],
-        },
-        {
-            'name': 'imb',
-            'target_systems': ['arcus:ib-gcc9-impi2019-mlx', 'arcus:roce-gcc9-impi2019-mlx'],
-            'modules': ['intel-mpi-benchmarks/2019.6-sl772ml'],
-        },
-        {
-            'name': 'imb',
-            'target_systems': ['arcus:ib-foss-2019a', 'arcus:roce-foss-2019a'],
-            'modules': ['IMB/2019.3-gompi-2019a'] # NB gompi-2019a is subset of foss-2019a
-        },
-        {
-            'name': 'imb',
             'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
             'modules': ['intel-mpi-benchmarks-2019.6-gcc-9.1.0-5tbknir']
         },
