@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_448_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_448_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 8 nodes with total 8 cores, 8 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-176 (the node of MPI rank 0):
+Hardware detected on host cpu-p-288 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,29 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Protein'
 50000 steps,    100.0 ps.
 
-step 17500 Turning on dynamic load balancing, because the performance loss due to load imbalance is 4.5 %.
+ Average load imbalance: 81.1 %
+ Part of the total run time spent waiting due to load imbalance: 9.2 %
+ Average PME mesh/force load: 1.201
+ Part of the total run time spent waiting due to PP/PME imbalance: 3.5 %
 
-
- Average load imbalance: 11.0 %
- Part of the total run time spent waiting due to load imbalance: 4.4 %
- Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 1 % Z 2 %
- Average PME mesh/force load: 1.448
- Part of the total run time spent waiting due to PP/PME imbalance: 18.8 %
-
-NOTE: 18.8 % performance was lost because the PME ranks
-      had more work to do than the PP ranks.
-      You might want to increase the number of PME ranks
-      or increase the cut-off and the grid spacing.
+NOTE: 9.2 % of the available CPU time was lost due to load imbalance
+      in the domain decomposition.
+      You might want to use dynamic load balancing (option -dlb.)
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    18245.343       40.726    44800.0
+       Time:    18999.103       42.409    44800.0
                  (ns/day)    (hour/ns)
-Performance:      212.153        0.113
+Performance:      203.736        0.118
 
-GROMACS reminds you: "Let Me Do This" (Urban Dance Squad)
+GROMACS reminds you: "A curious aspect of the theory of evolution is that everybody thinks he understands it." (Jacques Monod)
 
 
-real	0m56.719s
-user	0m0.021s
+real	0m56.829s
+user	0m0.026s
 sys	0m0.014s

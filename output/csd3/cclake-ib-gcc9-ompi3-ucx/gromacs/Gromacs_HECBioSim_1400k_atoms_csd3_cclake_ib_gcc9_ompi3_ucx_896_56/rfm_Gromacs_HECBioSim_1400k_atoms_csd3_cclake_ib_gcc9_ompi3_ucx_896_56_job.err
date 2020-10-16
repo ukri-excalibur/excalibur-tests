@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 16 nodes with total 16 cores, 16 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-184 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,16 +60,16 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 14.9 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 15.5 %.
 
 
 step 500 Turning off dynamic load balancing, because it is degrading performance.
 
 
- Average load imbalance: 21.2 %
- Part of the total run time spent waiting due to load imbalance: 1.7 %
- Average PME mesh/force load: 0.945
- Part of the total run time spent waiting due to PP/PME imbalance: 0.5 %
+ Average load imbalance: 20.9 %
+ Part of the total run time spent waiting due to load imbalance: 1.9 %
+ Average PME mesh/force load: 0.880
+ Part of the total run time spent waiting due to PP/PME imbalance: 0.9 %
 
 
 NOTE: 12 % of the run time was spent in domain decomposition,
@@ -78,13 +78,13 @@ NOTE: 12 % of the run time was spent in domain decomposition,
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    61440.576       68.572    89600.0
+       Time:    66755.076       74.503    89600.0
                  (ns/day)    (hour/ns)
-Performance:       25.202        0.952
+Performance:       23.196        1.035
 
-GROMACS reminds you: "You're About to Hurt Somebody" (Jazzy Jeff)
+GROMACS reminds you: "Does college pay? They do if you are a good open-field runner." (Will Rogers)
 
 
-real	1m28.625s
-user	0m0.031s
-sys	0m0.033s
+real	1m37.550s
+user	0m0.033s
+sys	0m0.031s

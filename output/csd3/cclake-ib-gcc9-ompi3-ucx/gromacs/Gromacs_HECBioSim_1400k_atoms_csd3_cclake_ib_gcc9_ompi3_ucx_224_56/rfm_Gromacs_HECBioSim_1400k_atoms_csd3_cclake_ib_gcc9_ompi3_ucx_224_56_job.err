@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_224_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_224_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 4 nodes with total 4 cores, 4 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-172 (the node of MPI rank 0):
+Hardware detected on host cpu-p-284 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 14.0 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 12.8 %.
 
 
- Average load imbalance: 1.9 %
+ Average load imbalance: 1.8 %
  Part of the total run time spent waiting due to load imbalance: 1.4 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 3 % Z 0 %
- Average PME mesh/force load: 0.812
- Part of the total run time spent waiting due to PP/PME imbalance: 4.0 %
+ Average PME mesh/force load: 0.806
+ Part of the total run time spent waiting due to PP/PME imbalance: 4.1 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    30526.947      136.281    22400.0
+       Time:    30545.587      136.364    22400.0
                  (ns/day)    (hour/ns)
-Performance:       12.681        1.893
+Performance:       12.673        1.894
 
-GROMACS reminds you: "All Beauty Must Die" (Nick Cave)
+GROMACS reminds you: "Lunatics On Pogo Sticks" (Red Hot Chili Peppers)
 
 
-real	2m33.891s
-user	0m0.019s
-sys	0m0.013s
+real	2m40.570s
+user	0m0.020s
+sys	0m0.020s

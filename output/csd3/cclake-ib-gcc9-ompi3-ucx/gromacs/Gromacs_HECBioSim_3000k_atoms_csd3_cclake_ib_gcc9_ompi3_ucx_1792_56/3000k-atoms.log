@@ -1,5 +1,5 @@
-Log file opened on Wed Sep 30 15:31:35 2020
-Host: cpu-p-175  pid: 58450  rank ID: 0  number of ranks:  1792
+Log file opened on Fri Oct 16 12:01:12 2020
+Host: cpu-p-296  pid: 85948  rank ID: 0  number of ranks:  1792
                       :-) GROMACS - gmx mdrun, 2016.6 (-:
 
                             GROMACS is written by:
@@ -28,7 +28,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_1792_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_1792_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
@@ -61,7 +61,7 @@ Note: 56 CPUs configured, but only 1 were detected to be online.
 Running on 32 nodes with total 32 cores, 32 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-175 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -74,7 +74,7 @@ Hardware detected on host cpu-p-175 (the node of MPI rank 0):
     Sockets, cores, and logical processors:
       Socket  0: [   0]
     Numa nodes:
-      Node  0 (99729158144 bytes mem):   0
+      Node  0 (99729166336 bytes mem):   0
       Node  1 (101446021120 bytes mem):
       Latency:
                0     1
@@ -425,7 +425,7 @@ J. Chem. Phys. 81 (1984) pp. 3684-3690
 There are: 2997924 Atoms
 Atom distribution over 1344 domains: av 2230 stddev 104 min 2074 max 2453
 
-Started mdrun on rank 0 Wed Sep 30 15:31:48 2020
+Started mdrun on rank 0 Fri Oct 16 12:01:26 2020
            Step           Time
               0        0.00000
 
@@ -435,76 +435,69 @@ Started mdrun on rank 0 Wed Sep 30 15:31:48 2020
           LJ-14     Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.
     3.07430e+05   -3.34243e+06    2.45027e+06   -3.22742e+07    1.36508e+05
       Potential    Kinetic En.   Total Energy    Temperature Pressure (bar)
-   -2.89349e+07    7.96083e+06   -2.09741e+07    3.00212e+02    1.14964e+01
+   -2.89349e+07    7.96083e+06   -2.09741e+07    3.00212e+02    1.14975e+01
    Constr. rmsd
-    9.79633e-06
+    9.79634e-06
 
-DD  step 24 load imb.: force 53.8%  pme mesh/force 1.052
+DD  step 24 load imb.: force 55.6%  pme mesh/force 1.100
 
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 11.1 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 10.7 %.
 
-step  100: timed with pme grid 384 384 128, coulomb cutoff 1.200: 240.9 M-cycles
-step  150: timed with pme grid 324 336 112, coulomb cutoff 1.346: 239.5 M-cycles
-step  200: timed with pme grid 300 300 100, coulomb cutoff 1.501: 285.5 M-cycles
-step  250: timed with pme grid 300 320 104, coulomb cutoff 1.453: 248.0 M-cycles
-step  300: timed with pme grid 320 320 104, coulomb cutoff 1.443: 241.1 M-cycles
-step  350: timed with pme grid 320 320 108, coulomb cutoff 1.406: 229.2 M-cycles
-step  400: timed with pme grid 320 324 112, coulomb cutoff 1.389: 223.5 M-cycles
-step  450: timed with pme grid 320 336 112, coulomb cutoff 1.363: 215.3 M-cycles
-step  500: timed with pme grid 324 336 112, coulomb cutoff 1.346: 212.9 M-cycles
+step  100: timed with pme grid 384 384 128, coulomb cutoff 1.200: 240.3 M-cycles
+step  150: timed with pme grid 324 336 112, coulomb cutoff 1.346: 245.2 M-cycles
+step  200: timed with pme grid 300 300 100, coulomb cutoff 1.501: 271.4 M-cycles
+step  250: timed with pme grid 300 320 104, coulomb cutoff 1.453: 251.7 M-cycles
+step  300: timed with pme grid 320 320 104, coulomb cutoff 1.443: 241.9 M-cycles
+step  350: timed with pme grid 320 320 108, coulomb cutoff 1.406: 228.4 M-cycles
+step  400: timed with pme grid 320 324 112, coulomb cutoff 1.389: 226.6 M-cycles
+step  450: timed with pme grid 320 336 112, coulomb cutoff 1.363: 215.4 M-cycles
+step  500: timed with pme grid 336 384 120, coulomb cutoff 1.298: 196.1 M-cycles
 
 step 500 Turning off dynamic load balancing, because it is degrading performance.
 
-Atom distribution over 1344 domains: av 2230 stddev 103 min 2083 max 2442
-step  550: timed with pme grid 336 384 120, coulomb cutoff 1.298: 271.7 M-cycles
-step  600: timed with pme grid 384 384 120, coulomb cutoff 1.251: 259.4 M-cycles
-step  650: timed with pme grid 384 384 128, coulomb cutoff 1.200: 237.1 M-cycles
-step  700: timed with pme grid 320 320 108, coulomb cutoff 1.406: 317.9 M-cycles
-step  750: timed with pme grid 320 324 112, coulomb cutoff 1.389: 309.9 M-cycles
-step  800: timed with pme grid 320 336 112, coulomb cutoff 1.363: 347.9 M-cycles
-step  850: timed with pme grid 324 336 112, coulomb cutoff 1.346: 336.5 M-cycles
-step  900: timed with pme grid 384 384 128, coulomb cutoff 1.200: 239.8 M-cycles
-              optimal pme grid 324 336 112, coulomb cutoff 1.346
-DD  step 4999 load imb.: force 53.4%  pme mesh/force 0.524
-
-
-step 5000 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.4 %.
+Atom distribution over 1344 domains: av 2230 stddev 103 min 2069 max 2458
+step  550: timed with pme grid 384 384 120, coulomb cutoff 1.251: 256.4 M-cycles
+              optimal pme grid 336 384 120, coulomb cutoff 1.298
+DD  step 4999 load imb.: force 52.8%  pme mesh/force 0.610
 
            Step           Time
            5000       10.00000
 
    Energies (kJ/mol)
            Bond            U-B    Proper Dih.  Improper Dih.      CMAP Dih.
-    4.39863e+05    2.30297e+06    1.04101e+06    2.70208e+04   -2.46334e+04
+    4.39724e+05    2.30101e+06    1.03962e+06    2.68768e+04   -2.50171e+04
           LJ-14     Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.
-    3.05970e+05   -3.34147e+06    2.45976e+06   -3.22386e+07    9.30809e+04
+    3.06685e+05   -3.34104e+06    2.45735e+06   -3.22483e+07    1.04428e+05
       Potential    Kinetic En.   Total Energy    Temperature Pressure (bar)
-   -2.89350e+07    7.95439e+06   -2.09806e+07    2.99969e+02    2.56624e+01
+   -2.89386e+07    7.96027e+06   -2.09784e+07    3.00191e+02   -1.19469e+01
    Constr. rmsd
-    9.79391e-06
+    9.79189e-06
 
 
-step 5500 Turning off dynamic load balancing, because it is degrading performance.
+step 7500 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.2 %.
 
-Atom distribution over 1344 domains: av 2230 stddev 102 min 2082 max 2456
 
-step 7500 Will no longer try dynamic load balancing, as it degraded performance.
+step 8000 Turning off dynamic load balancing, because it is degrading performance.
 
-DD  step 9999 load imb.: force 52.5%  pme mesh/force 0.540
+Atom distribution over 1344 domains: av 2230 stddev 102 min 2072 max 2445
+DD  step 9999 load imb.: force 54.2%  pme mesh/force 0.566
+
+
+step 10000 Will no longer try dynamic load balancing, as it degraded performance.
 
            Step           Time
           10000       20.00000
 
    Energies (kJ/mol)
            Bond            U-B    Proper Dih.  Improper Dih.      CMAP Dih.
-    4.40003e+05    2.30438e+06    1.03990e+06    2.65161e+04   -2.47560e+04
+    4.40835e+05    2.30292e+06    1.04153e+06    2.70646e+04   -2.49369e+04
           LJ-14     Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.
-    3.07043e+05   -3.34060e+06    2.45113e+06   -3.22367e+07    9.28665e+04
+    3.07155e+05   -3.34488e+06    2.45595e+06   -3.22460e+07    1.04642e+05
       Potential    Kinetic En.   Total Energy    Temperature Pressure (bar)
-   -2.89402e+07    7.95822e+06   -2.09819e+07    3.00114e+02    1.04954e+00
+   -2.89357e+07    7.95422e+06   -2.09815e+07    2.99963e+02    8.03656e+00
    Constr. rmsd
-    9.78748e-06
+    9.78879e-06
 
 	<======  ###############  ==>
 	<====  A V E R A G E S  ====>
@@ -514,26 +507,26 @@ DD  step 9999 load imb.: force 52.5%  pme mesh/force 0.540
 
    Energies (kJ/mol)
            Bond            U-B    Proper Dih.  Improper Dih.      CMAP Dih.
-    4.39588e+05    2.30441e+06    1.04008e+06    2.68542e+04   -2.48083e+04
+    4.39647e+05    2.30497e+06    1.04086e+06    2.68282e+04   -2.48741e+04
           LJ-14     Coulomb-14        LJ (SR)   Coulomb (SR)   Coul. recip.
-    3.07323e+05   -3.34047e+06    2.46039e+06   -3.22447e+07    9.38148e+04
+    3.07322e+05   -3.34169e+06    2.45842e+06   -3.22515e+07    1.04480e+05
       Potential    Kinetic En.   Total Energy    Temperature Pressure (bar)
-   -2.89375e+07    7.95662e+06   -2.09809e+07    3.00053e+02    1.61378e+01
+   -2.89355e+07    7.95665e+06   -2.09789e+07    3.00054e+02    1.59422e+01
    Constr. rmsd
     0.00000e+00
 
           Box-X          Box-Y          Box-Z
-    4.36018e+01    4.49954e+01    1.50144e+01
+    4.36018e+01    4.49954e+01    1.50129e+01
 
    Total Virial (kJ/mol)
-    2.58971e+06    9.02523e+02    1.35403e+03
-    9.09632e+02    2.59275e+06   -2.68074e+03
-    1.38058e+03   -2.62359e+03    2.73122e+06
+    2.58365e+06    2.67231e+03   -3.73057e+02
+    2.12342e+03    2.59416e+06    1.86194e+03
+   -5.00646e+02    1.87437e+03    2.73643e+06
 
    Pressure (bar)
-    2.17938e+01   -1.09683e+00   -2.78003e+00
-   -1.10487e+00    1.82914e+01    3.31953e+00
-   -2.80996e+00    3.25510e+00    8.32835e+00
+    2.89774e+01   -2.80093e+00   -5.02638e-01
+   -2.18202e+00    1.63755e+01   -1.73538e+00
+   -3.58777e-01   -1.74941e+00    2.47383e+00
 
 
        P P   -   P M E   L O A D   B A L A N C I N G
@@ -542,8 +535,8 @@ DD  step 9999 load imb.: force 52.5%  pme mesh/force 0.540
            particle-particle                    PME
             rcoulomb  rlist            grid      spacing   1/beta
    initial  1.200 nm  1.223 nm     384 384 128   0.117 nm  0.384 nm
-   final    1.346 nm  1.369 nm     324 336 112   0.135 nm  0.431 nm
- cost-ratio           1.40             0.65
+   final    1.298 nm  1.321 nm     336 384 120   0.130 nm  0.415 nm
+ cost-ratio           1.26             0.82
  (note that these numbers concern only part of the total PP and PME load)
 
 
@@ -556,19 +549,19 @@ DD  step 9999 load imb.: force 52.5%  pme mesh/force 0.540
 
  Computing:                               M-Number         M-Flops  % Flops
 -----------------------------------------------------------------------------
- Pair Search distance check          696102.056004     6264918.504     0.3
- NxN Ewald Elec. + LJ [F]          19953139.652944  1556344892.930    68.1
- NxN Ewald Elec. + LJ [V&F]          203315.871760    26227747.457     1.1
- NxN LJ [F]                              43.042240        1936.901     0.0
- NxN LJ [V&F]                             0.400224          26.015     0.0
- NxN Ewald Elec. [F]                9918137.884784   605006410.972    26.5
- NxN Ewald Elec. [V&F]               101072.599920     8490098.393     0.4
+ Pair Search distance check          671913.913322     6047225.220     0.3
+ NxN Ewald Elec. + LJ [F]          18405733.913840  1435647245.280    67.5
+ NxN Ewald Elec. + LJ [V&F]          187539.882656    24192644.863     1.1
+ NxN LJ [F]                              50.029856        2251.344     0.0
+ NxN LJ [V&F]                             0.545888          35.483     0.0
+ NxN Ewald Elec. [F]                9148460.495248   558056090.210    26.2
+ NxN Ewald Elec. [V&F]                93235.378784     7831771.818     0.4
  1,4 nonbonded interactions           25358.295576     2282246.602     0.1
- Calc Weights                         89946.713772     3238081.696     0.1
+ Calc Weights                         89946.713772     3238081.696     0.2
  Spread Q Bspline                   1918863.227136     3837726.454     0.2
  Gather F Bspline                   1918863.227136    11513179.363     0.5
- 3D-FFT                             5804130.562942    46433044.504     2.0
- Solve PME                            35078.274048     2245009.539     0.1
+ 3D-FFT                             7339723.286440    58717786.292     2.8
+ Solve PME                            41072.595968     2628646.142     0.1
  Reset In Box                          1193.173752        3579.521     0.0
  CG-CoM                                1202.167524        3606.503     0.0
  Bonds                                 3754.935456      221541.192     0.0
@@ -578,27 +571,27 @@ DD  step 9999 load imb.: force 52.5%  pme mesh/force 0.540
  Stop-CM                                  8.993772          89.938     0.0
  P-Coupling                            2997.924000       17987.544     0.0
  Calc-Ekin                            11997.691848      323937.680     0.0
- Lincs                                 6492.285831      389537.150     0.0
- Lincs-Mat                            44317.375716      177269.503     0.0
- Constraint-V                         35581.173366      284649.387     0.0
- Constraint-Vir                        2911.514557       69876.349     0.0
- Settle                                7532.200568     2432900.783     0.1
+ Lincs                                 6491.035249      389462.115     0.0
+ Lincs-Mat                            44310.985896      177243.944     0.0
+ Constraint-V                         35577.903074      284623.225     0.0
+ Constraint-Vir                        2911.309947       69871.439     0.0
+ Settle                                7531.944192     2432817.974     0.1
  CMAP                                    56.685668       96365.636     0.0
- Urey-Bradley                         18173.217140     3325698.737     0.1
+ Urey-Bradley                         18173.217140     3325698.737     0.2
 -----------------------------------------------------------------------------
- Total                                              2285691826.386   100.0
+ Total                                              2127801223.345   100.0
 -----------------------------------------------------------------------------
 
 
     D O M A I N   D E C O M P O S I T I O N   S T A T I S T I C S
 
- av. #atoms communicated per step for force:  2 x 7182714.7
- av. #atoms communicated per step for LINCS:  2 x 334641.5
+ av. #atoms communicated per step for force:  2 x 6878859.6
+ av. #atoms communicated per step for LINCS:  2 x 334368.5
 
  Average load imbalance: 14.3 %
- Part of the total run time spent waiting due to load imbalance: 3.4 %
- Average PME mesh/force load: 0.769
- Part of the total run time spent waiting due to PP/PME imbalance: 2.8 %
+ Part of the total run time spent waiting due to load imbalance: 2.9 %
+ Average PME mesh/force load: 0.807
+ Part of the total run time spent waiting due to PP/PME imbalance: 2.2 %
 
 
      R E A L   C Y C L E   A N D   T I M E   A C C O U N T I N G
@@ -609,45 +602,40 @@ on 448 MPI ranks doing PME
  Computing:          Num   Num      Call    Wall time         Giga-Cycles
                      Ranks Threads  Count      (s)         total sum    %
 -----------------------------------------------------------------------------
- Domain decomp.      1344    1        400      11.781      34752.192  10.1
- DD comm. load       1344    1         43       0.001          1.926   0.0
- DD comm. bounds     1344    1         37       0.011         31.424   0.0
- Send X to PME       1344    1      10001       3.015       8894.296   2.6
- Neighbor search     1344    1        401       2.551       7525.125   2.2
- Comm. coord.        1344    1       9600       1.375       4056.690   1.2
- Force               1344    1      10001      40.361     119059.344  34.5
- Wait + Comm. F      1344    1      10001      11.730      34600.688  10.0
- PME mesh *           448    1      10001      33.007      32456.044   9.4
- PME wait for PP *                             54.779      53863.789  15.6
- Wait + Recv. PME F  1344    1      10001       3.491      10299.270   3.0
- NB X/F buffer ops.  1344    1      29201       0.434       1279.382   0.4
- Write traj.         1344    1          3       0.004         10.483   0.0
- Update              1344    1      10001       0.274        807.456   0.2
- Constraints         1344    1      10001       9.679      28550.725   8.3
- Comm. energies      1344    1       2001       2.908       8577.579   2.5
- Rest                                           0.174        513.886   0.1
+ Domain decomp.      1344    1        400      10.751      31715.169   9.7
+ DD comm. load       1344    1         43       0.001          2.007   0.0
+ DD comm. bounds     1344    1         37       0.010         28.751   0.0
+ Send X to PME       1344    1      10001       3.904      11516.727   3.5
+ Neighbor search     1344    1        401       2.423       7148.572   2.2
+ Comm. coord.        1344    1       9600       1.319       3890.176   1.2
+ Force               1344    1      10001      37.561     110799.438  33.8
+ Wait + Comm. F      1344    1      10001      11.121      32804.244  10.0
+ PME mesh *           448    1      10001      33.485      32925.626  10.0
+ PME wait for PP *                             49.897      49063.604  15.0
+ Wait + Recv. PME F  1344    1      10001       3.238       9551.946   2.9
+ NB X/F buffer ops.  1344    1      29201       0.419       1236.329   0.4
+ Write traj.         1344    1          3       0.004         11.351   0.0
+ Update              1344    1      10001       0.271        800.627   0.2
+ Constraints         1344    1      10001       9.171      27053.274   8.2
+ Comm. energies      1344    1       2001       3.033       8946.282   2.7
+ Rest                                           0.157        463.536   0.1
 -----------------------------------------------------------------------------
- Total                                         87.787     345280.622 100.0
+ Total                                         83.382     327957.906 100.0
 -----------------------------------------------------------------------------
 (*) Note that with separate PME ranks, the walltime column actually sums to
     twice the total reported, but the cycle count total and % are correct.
 -----------------------------------------------------------------------------
  Breakdown of PME mesh computation
 -----------------------------------------------------------------------------
- PME redist. X/F      448    1      20002       6.505       6396.488   1.9
- PME spread/gather    448    1      20002       8.966       8815.800   2.6
- PME 3D-FFT           448    1      20002       4.765       4685.482   1.4
- PME 3D-FFT Comm.     448    1      40004      11.826      11628.292   3.4
- PME solve Elec       448    1      10001       0.931        915.537   0.3
+ PME redist. X/F      448    1      20002       6.197       6093.409   1.9
+ PME spread/gather    448    1      20002       8.863       8715.151   2.7
+ PME 3D-FFT           448    1      20002       5.069       4984.617   1.5
+ PME 3D-FFT Comm.     448    1      40004      12.237      12032.599   3.7
+ PME solve Elec       448    1      10001       1.104       1085.242   0.3
 -----------------------------------------------------------------------------
 
-NOTE: 10 % of the run time was spent in domain decomposition,
-      2 % of the run time was spent in pair search,
-      you might want to increase nstlist (this has no effect on accuracy)
-
-
                Core t (s)   Wall t (s)        (%)
-       Time:   157313.672       87.787   179200.0
+       Time:   149421.016       83.382   179200.0
                  (ns/day)    (hour/ns)
-Performance:       19.686        1.219
-Finished mdrun on rank 0 Wed Sep 30 15:33:16 2020
+Performance:       20.726        1.158
+Finished mdrun on rank 0 Fri Oct 16 12:02:50 2020

@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_1792_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_1792_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 32 nodes with total 32 cores, 32 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-176 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,33 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
- Average load imbalance: 57.7 %
+step 7500 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.4 %.
+
+
+ Average load imbalance: 8.6 %
  Part of the total run time spent waiting due to load imbalance: 2.8 %
- Average PME mesh/force load: 1.182
- Part of the total run time spent waiting due to PP/PME imbalance: 1.2 %
+ Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
+ Average PME mesh/force load: 1.355
+ Part of the total run time spent waiting due to PP/PME imbalance: 11.2 %
+
+NOTE: 11.2 % performance was lost because the PME ranks
+      had more work to do than the PP ranks.
+      You might want to increase the number of PME ranks
+      or increase the cut-off and the grid spacing.
 
 
-NOTE: 5 % of the run time was spent communicating energies,
+NOTE: 10 % of the run time was spent communicating energies,
       you might want to use the -gcom option of mdrun
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    92021.184       51.351   179200.0
+       Time:    97749.736       54.548   179200.0
                  (ns/day)    (hour/ns)
-Performance:       33.654        0.713
+Performance:       31.682        0.758
 
-GROMACS reminds you: "Just Give Me a Blip" (F. Black)
+GROMACS reminds you: "I managed to get two hours of work done before work" (E. Lindahl)
 
 
-real	1m13.375s
-user	0m0.052s
-sys	0m0.038s
+real	1m16.946s
+user	0m0.064s
+sys	0m0.051s

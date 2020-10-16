@@ -26,13 +26,13 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_56_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_56_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
 
 Running on 1 node with total 1 cores, 1 logical cores
-Hardware detected on host cpu-p-171 (the node of MPI rank 0):
+Hardware detected on host cpu-p-281 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -58,29 +58,29 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.9 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.6 %.
 
 
  Average load imbalance: 0.4 %
  Part of the total run time spent waiting due to load imbalance: 0.4 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 %
- Average PME mesh/force load: 0.668
- Part of the total run time spent waiting due to PP/PME imbalance: 8.1 %
+ Average PME mesh/force load: 0.664
+ Part of the total run time spent waiting due to PP/PME imbalance: 8.2 %
 
-NOTE: 8.1 % performance was lost because the PME ranks
+NOTE: 8.2 % performance was lost because the PME ranks
       had less work to do than the PP ranks.
       You might want to decrease the number of PME ranks
       or decrease the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    69354.259     1238.469     5600.0
+       Time:    69640.647     1243.583     5600.0
                  (ns/day)    (hour/ns)
-Performance:        1.395       17.199
+Performance:        1.390       17.270
 
-GROMACS reminds you: "Is This the Right Room for an Argument ?" (Monty Python)
+GROMACS reminds you: "Cowardly refusing to create an empty archive" (GNU tar)
 
 
-real	21m1.330s
-user	0m0.016s
-sys	0m0.011s
+real	21m2.558s
+user	0m0.017s
+sys	0m0.005s

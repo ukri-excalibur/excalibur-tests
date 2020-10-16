@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_112_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_112_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 2 nodes with total 2 cores, 2 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-196 (the node of MPI rank 0):
+Hardware detected on host cpu-p-282 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.8 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 7.0 %.
 
 
- Average load imbalance: 0.7 %
- Part of the total run time spent waiting due to load imbalance: 0.5 %
+ Average load imbalance: 0.8 %
+ Part of the total run time spent waiting due to load imbalance: 0.6 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 %
- Average PME mesh/force load: 0.876
- Part of the total run time spent waiting due to PP/PME imbalance: 2.7 %
+ Average PME mesh/force load: 0.879
+ Part of the total run time spent waiting due to PP/PME imbalance: 2.6 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    67504.029      602.715    11200.0
+       Time:    67691.660      604.390    11200.0
                  (ns/day)    (hour/ns)
-Performance:        2.867        8.370
+Performance:        2.859        8.393
 
-GROMACS reminds you: "I am at two with nature." (Woody Allen)
+GROMACS reminds you: "I'm Gonna Get Medieval On Your Ass" (Pulp Fiction)
 
 
-real	10m24.037s
-user	0m0.015s
-sys	0m0.011s
+real	10m22.781s
+user	0m0.012s
+sys	0m0.013s

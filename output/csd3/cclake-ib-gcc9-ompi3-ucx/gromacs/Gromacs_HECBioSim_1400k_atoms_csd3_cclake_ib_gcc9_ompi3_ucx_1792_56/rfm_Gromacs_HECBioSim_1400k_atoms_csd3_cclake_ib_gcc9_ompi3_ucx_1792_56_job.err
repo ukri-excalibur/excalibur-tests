@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_1792_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_1792_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 32 nodes with total 32 cores, 32 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-185 (the node of MPI rank 0):
+Hardware detected on host cpu-p-288 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,31 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 2500 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.8 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.3 %.
 
 
- Average load imbalance: 5.5 %
- Part of the total run time spent waiting due to load imbalance: 3.1 %
- Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
- Average PME mesh/force load: 1.057
- Part of the total run time spent waiting due to PP/PME imbalance: 2.9 %
+step 500 Turning off dynamic load balancing, because it is degrading performance.
+
+
+ Average load imbalance: 24.1 %
+ Part of the total run time spent waiting due to load imbalance: 1.0 %
+ Average PME mesh/force load: 0.511
+ Part of the total run time spent waiting due to PP/PME imbalance: 7.2 %
+
+NOTE: 7.2 % performance was lost because the PME ranks
+      had less work to do than the PP ranks.
+      You might want to decrease the number of PME ranks
+      or decrease the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    75664.232       42.223   179200.0
+       Time:    86553.596       48.300   179200.0
                  (ns/day)    (hour/ns)
-Performance:       40.929        0.586
+Performance:       35.780        0.671
 
-GROMACS reminds you: "In my opinion, we don't devote nearly enough scientific research to finding a cure for jerks." (Bill Watterson)
+GROMACS reminds you: "That Was Pretty Cool" (Beavis)
 
 
-real	1m1.062s
-user	0m0.051s
-sys	0m0.058s
+real	1m11.131s
+user	0m0.063s
+sys	0m0.033s

@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_448_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_448_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 8 nodes with total 8 cores, 8 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-174 (the node of MPI rank 0):
+Hardware detected on host cpu-p-288 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 19.6 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 18.0 %.
 
 
  Average load imbalance: 1.7 %
  Part of the total run time spent waiting due to load imbalance: 1.3 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
- Average PME mesh/force load: 0.814
+ Average PME mesh/force load: 0.813
  Part of the total run time spent waiting due to PP/PME imbalance: 3.9 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    70937.774      158.343    44800.0
+       Time:    70986.157      158.451    44800.0
                  (ns/day)    (hour/ns)
-Performance:       10.914        2.199
+Performance:       10.907        2.200
 
-GROMACS reminds you: "It all works because Avogadro's number is closer to infinity than to 10." (Ralph Baierlein)
+GROMACS reminds you: "Interfacing Space and Beyond..." (P. J. Harvey)
 
 
-real	3m0.696s
-user	0m0.019s
-sys	0m0.020s
+real	2m56.774s
+user	0m0.020s
+sys	0m0.018s

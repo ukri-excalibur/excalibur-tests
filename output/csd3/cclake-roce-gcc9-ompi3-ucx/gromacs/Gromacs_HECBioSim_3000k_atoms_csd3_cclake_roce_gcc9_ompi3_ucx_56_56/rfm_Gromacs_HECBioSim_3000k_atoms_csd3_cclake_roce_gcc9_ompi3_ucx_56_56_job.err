@@ -26,13 +26,13 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_56_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_56_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
 
 Running on 1 node with total 1 cores, 1 logical cores
-Hardware detected on host cpu-p-169 (the node of MPI rank 0):
+Hardware detected on host cpu-p-281 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -58,29 +58,29 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.8 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.5 %.
 
 
- Average load imbalance: 0.4 %
+ Average load imbalance: 0.5 %
  Part of the total run time spent waiting due to load imbalance: 0.4 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 %
- Average PME mesh/force load: 0.672
- Part of the total run time spent waiting due to PP/PME imbalance: 8.0 %
+ Average PME mesh/force load: 0.656
+ Part of the total run time spent waiting due to PP/PME imbalance: 8.4 %
 
-NOTE: 8.0 % performance was lost because the PME ranks
+NOTE: 8.4 % performance was lost because the PME ranks
       had less work to do than the PP ranks.
       You might want to decrease the number of PME ranks
       or decrease the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    69726.222     1245.111     5600.0
+       Time:    69731.954     1245.213     5600.0
                  (ns/day)    (hour/ns)
-Performance:        1.388       17.291
+Performance:        1.388       17.293
 
-GROMACS reminds you: "The time for theory is over" (J. Hajdu)
+GROMACS reminds you: "One Cross Each" (Monty Python)
 
 
-real	21m5.020s
-user	0m0.015s
-sys	0m0.007s
+real	21m4.517s
+user	0m0.012s
+sys	0m0.010s

@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 16 nodes with total 16 cores, 16 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-184 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,20 +60,20 @@ disabling internal thread affinity
 starting mdrun 'Protein'
 50000 steps,    100.0 ps.
 
- Average load imbalance: 81.8 %
- Part of the total run time spent waiting due to load imbalance: 4.7 %
- Average PME mesh/force load: 1.306
+ Average load imbalance: 85.8 %
+ Part of the total run time spent waiting due to load imbalance: 4.9 %
+ Average PME mesh/force load: 1.314
  Part of the total run time spent waiting due to PP/PME imbalance: 2.9 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    22844.512       25.496    89600.0
+       Time:    23241.524       25.939    89600.0
                  (ns/day)    (hour/ns)
-Performance:      338.882        0.071
+Performance:      333.093        0.072
 
-GROMACS reminds you: "You Leave Me Dry" (P.J. Harvey)
+GROMACS reminds you: "It Costs Too Much If It Costs a Lot" (Magnapop)
 
 
-real	0m39.146s
-user	0m0.032s
-sys	0m0.030s
+real	0m40.932s
+user	0m0.035s
+sys	0m0.031s

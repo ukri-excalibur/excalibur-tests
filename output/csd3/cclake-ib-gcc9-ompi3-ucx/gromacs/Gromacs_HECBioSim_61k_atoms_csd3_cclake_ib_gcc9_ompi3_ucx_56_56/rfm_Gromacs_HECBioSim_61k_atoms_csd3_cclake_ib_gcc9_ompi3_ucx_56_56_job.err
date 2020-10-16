@@ -26,13 +26,13 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_56_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_56_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
 
 Running on 1 node with total 1 cores, 1 logical cores
-Hardware detected on host cpu-p-169 (the node of MPI rank 0):
+Hardware detected on host cpu-p-281 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -58,29 +58,29 @@ disabling internal thread affinity
 starting mdrun 'Protein'
 50000 steps,    100.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 3.0 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 2.9 %.
 
 
  Average load imbalance: 2.1 %
  Part of the total run time spent waiting due to load imbalance: 1.5 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Z 0 %
- Average PME mesh/force load: 0.586
- Part of the total run time spent waiting due to PP/PME imbalance: 9.7 %
+ Average PME mesh/force load: 0.581
+ Part of the total run time spent waiting due to PP/PME imbalance: 9.8 %
 
-NOTE: 9.7 % performance was lost because the PME ranks
+NOTE: 9.8 % performance was lost because the PME ranks
       had less work to do than the PP ranks.
       You might want to decrease the number of PME ranks
       or decrease the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:     8068.898      144.087     5600.0
+       Time:     8048.187      143.718     5600.0
                  (ns/day)    (hour/ns)
-Performance:       59.965        0.400
+Performance:       60.119        0.399
 
-GROMACS reminds you: "...sometimes a scream is better than a thesis." (Ralph Waldo Emerson)
+GROMACS reminds you: "My greatest contribution to the field of science is that I never entered it." (Colin Powell)
 
 
-real	2m37.054s
-user	0m0.013s
+real	2m38.420s
+user	0m0.014s
 sys	0m0.008s

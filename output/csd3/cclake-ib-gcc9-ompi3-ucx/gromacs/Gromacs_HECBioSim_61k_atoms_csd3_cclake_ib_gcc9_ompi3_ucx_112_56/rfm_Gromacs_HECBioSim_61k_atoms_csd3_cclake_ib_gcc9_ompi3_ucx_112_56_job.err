@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_112_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_112_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 2 nodes with total 2 cores, 2 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-170 (the node of MPI rank 0):
+Hardware detected on host cpu-p-282 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -66,18 +66,18 @@ step 75 Turning on dynamic load balancing, because the performance loss due to l
  Average load imbalance: 3.1 %
  Part of the total run time spent waiting due to load imbalance: 2.2 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
- Average PME mesh/force load: 0.919
- Part of the total run time spent waiting due to PP/PME imbalance: 1.6 %
+ Average PME mesh/force load: 0.870
+ Part of the total run time spent waiting due to PP/PME imbalance: 2.6 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:     8062.754       71.989    11200.0
+       Time:     8013.267       71.547    11200.0
                  (ns/day)    (hour/ns)
-Performance:      120.021        0.200
+Performance:      120.762        0.199
 
-GROMACS reminds you: "You Can Always Go On Ricky Lake" (Offspring)
+GROMACS reminds you: "Uh-oh .... Right Again" (Laurie Anderson)
 
 
-real	1m24.702s
-user	0m0.017s
-sys	0m0.006s
+real	1m25.595s
+user	0m0.014s
+sys	0m0.010s

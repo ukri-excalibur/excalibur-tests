@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_112_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_112_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 2 nodes with total 2 cores, 2 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-170 (the node of MPI rank 0):
+Hardware detected on host cpu-p-282 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
- Average load imbalance: 11.4 %
- Part of the total run time spent waiting due to load imbalance: 8.1 %
- Average PME mesh/force load: 0.999
- Part of the total run time spent waiting due to PP/PME imbalance: 0.0 %
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 6.9 %.
 
-NOTE: 8.1 % of the available CPU time was lost due to load imbalance
-      in the domain decomposition.
-      You might want to use dynamic load balancing (option -dlb.)
+
+ Average load imbalance: 0.7 %
+ Part of the total run time spent waiting due to load imbalance: 0.6 %
+ Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 %
+ Average PME mesh/force load: 0.959
+ Part of the total run time spent waiting due to PP/PME imbalance: 0.9 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    72945.869      651.302    11200.0
+       Time:    67878.453      606.058    11200.0
                  (ns/day)    (hour/ns)
-Performance:        2.653        9.045
+Performance:        2.851        8.417
 
-GROMACS reminds you: "For those who want some proof that physicists are human, the proof is in the idiocy of all the different units which they use for measuring energy." (Richard Feynman)
+GROMACS reminds you: "Documentation is like sex: When it's good it's great, and when it's bad it's better than nothing." (Linus Torvalds)
 
 
-real	11m10.446s
-user	0m0.015s
-sys	0m0.012s
+real	10m23.902s
+user	0m0.011s
+sys	0m0.014s

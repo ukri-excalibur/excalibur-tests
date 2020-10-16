@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_224_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_224_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 4 nodes with total 4 cores, 4 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-172 (the node of MPI rank 0):
+Hardware detected on host cpu-p-284 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -64,25 +64,25 @@ step 2500 Turning on dynamic load balancing, because the performance loss due to
 
 
  Average load imbalance: 4.9 %
- Part of the total run time spent waiting due to load imbalance: 2.5 %
+ Part of the total run time spent waiting due to load imbalance: 2.6 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
- Average PME mesh/force load: 1.282
- Part of the total run time spent waiting due to PP/PME imbalance: 13.7 %
+ Average PME mesh/force load: 1.268
+ Part of the total run time spent waiting due to PP/PME imbalance: 13.1 %
 
-NOTE: 13.7 % performance was lost because the PME ranks
+NOTE: 13.1 % performance was lost because the PME ranks
       had more work to do than the PP ranks.
       You might want to increase the number of PME ranks
       or increase the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    11965.776       53.419    22400.0
+       Time:    11919.327       53.211    22400.0
                  (ns/day)    (hour/ns)
-Performance:      161.745        0.148
+Performance:      162.375        0.148
 
-GROMACS reminds you: "You Should Sleep Late Man, It's Much Easier On Your Constitution" (Beastie Boys)
+GROMACS reminds you: "She Says She Can't Go Home Without a Chaperone" (E. Costello)
 
 
-real	1m8.961s
-user	0m0.013s
-sys	0m0.013s
+real	1m7.576s
+user	0m0.021s
+sys	0m0.007s

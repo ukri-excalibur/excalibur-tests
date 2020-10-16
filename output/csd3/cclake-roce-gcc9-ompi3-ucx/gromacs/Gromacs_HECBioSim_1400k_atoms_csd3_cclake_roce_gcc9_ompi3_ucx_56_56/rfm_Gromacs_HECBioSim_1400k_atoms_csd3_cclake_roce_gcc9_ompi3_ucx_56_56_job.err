@@ -26,13 +26,13 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_56_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_1400k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_56_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 1400k-atoms.log -noconfout
 
 
 Running on 1 node with total 1 cores, 1 logical cores
-Hardware detected on host cpu-p-169 (the node of MPI rank 0):
+Hardware detected on host cpu-p-281 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -64,23 +64,23 @@ step 75 Turning on dynamic load balancing, because the performance loss due to l
  Average load imbalance: 1.0 %
  Part of the total run time spent waiting due to load imbalance: 0.8 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: Y 0 % Z 0 %
- Average PME mesh/force load: 0.657
- Part of the total run time spent waiting due to PP/PME imbalance: 8.5 %
+ Average PME mesh/force load: 0.643
+ Part of the total run time spent waiting due to PP/PME imbalance: 8.8 %
 
-NOTE: 8.5 % performance was lost because the PME ranks
+NOTE: 8.8 % performance was lost because the PME ranks
       had less work to do than the PP ranks.
       You might want to decrease the number of PME ranks
       or decrease the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    31004.793      553.657     5600.0
+       Time:    30866.338      551.185     5600.0
                  (ns/day)    (hour/ns)
-Performance:        3.121        7.689
+Performance:        3.135        7.655
 
-GROMACS reminds you: "A computer would deserve to be called intelligent if it could deceive a human into believing that it was human." (Alan Turing)
+GROMACS reminds you: "Sitting on a rooftop watching molecules collide" (A Camp)
 
 
-real	9m34.242s
-user	0m0.014s
-sys	0m0.007s
+real	9m34.378s
+user	0m0.017s
+sys	0m0.005s

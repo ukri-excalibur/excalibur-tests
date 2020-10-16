@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-ib-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_3000k_atoms_csd3_cclake_ib_gcc9_ompi3_ucx_896_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 3000k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 16 nodes with total 16 cores, 16 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-175 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,24 +60,24 @@ disabling internal thread affinity
 starting mdrun 'Her1-Her1'
 10000 steps,     20.0 ps.
 
-step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 16.4 %.
+step 75 Turning on dynamic load balancing, because the performance loss due to load imbalance is 16.0 %.
 
 
  Average load imbalance: 2.3 %
  Part of the total run time spent waiting due to load imbalance: 1.7 %
  Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 % Y 0 % Z 0 %
- Average PME mesh/force load: 0.791
- Part of the total run time spent waiting due to PP/PME imbalance: 4.4 %
+ Average PME mesh/force load: 0.793
+ Part of the total run time spent waiting due to PP/PME imbalance: 4.3 %
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    73969.975       82.556    89600.0
+       Time:    73686.440       82.239    89600.0
                  (ns/day)    (hour/ns)
-Performance:       20.933        1.146
+Performance:       21.014        1.142
 
-GROMACS reminds you: "Hold On Like Cliffhanger" (Urban Dance Squad)
+GROMACS reminds you: "If Java had true garbage collection, most programs would delete themselves upon execution." (Robert Sewell)
 
 
-real	1m45.719s
-user	0m0.034s
-sys	0m0.027s
+real	1m41.869s
+user	0m0.030s
+sys	0m0.020s

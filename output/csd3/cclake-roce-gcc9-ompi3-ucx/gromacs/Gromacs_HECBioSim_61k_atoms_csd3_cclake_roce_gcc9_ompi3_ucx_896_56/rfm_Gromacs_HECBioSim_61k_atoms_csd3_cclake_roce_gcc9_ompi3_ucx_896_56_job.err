@@ -26,7 +26,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx mdrun, version 2016.6
 Executable:   /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl/bin/gmx_mpi
 Data prefix:  /home/hpcbras1/spack/opt/spack/linux-scientific7-skylake_avx512/gcc-9.1.0/gromacs-2016.6-kgomb677so5w42qytvzkbdmclmzk5mvl
-Working dir:  /home/hpcbras1/hpc-tests/stage/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_896_56
+Working dir:  /rds/user/hpcbras1/hpc-work/csd3/cclake-roce-gcc9-ompi3-ucx/gromacs/Gromacs_HECBioSim_61k_atoms_csd3_cclake_roce_gcc9_ompi3_ucx_896_56
 Command line:
   gmx_mpi mdrun -s benchmark.tpr -g 61k-atoms.log -noconfout
 
@@ -34,7 +34,7 @@ Command line:
 Running on 16 nodes with total 16 cores, 16 logical cores
   Cores per node:            1 - 56
   Logical cores per node:    1 - 56
-Hardware detected on host cpu-p-184 (the node of MPI rank 0):
+Hardware detected on host cpu-p-296 (the node of MPI rank 0):
   CPU info:
     Vendor: Intel
     Brand:  Intel(R) Xeon(R) Platinum 8276 CPU @ 2.20GHz
@@ -60,25 +60,29 @@ disabling internal thread affinity
 starting mdrun 'Protein'
 50000 steps,    100.0 ps.
 
- Average load imbalance: 85.0 %
- Part of the total run time spent waiting due to load imbalance: 4.9 %
- Average PME mesh/force load: 1.677
- Part of the total run time spent waiting due to PP/PME imbalance: 6.7 %
+ Average load imbalance: 83.3 %
+ Part of the total run time spent waiting due to load imbalance: 6.9 %
+ Average PME mesh/force load: 1.692
+ Part of the total run time spent waiting due to PP/PME imbalance: 10.2 %
 
-NOTE: 6.7 % performance was lost because the PME ranks
+NOTE: 6.9 % of the available CPU time was lost due to load imbalance
+      in the domain decomposition.
+      You might want to use dynamic load balancing (option -dlb.)
+
+NOTE: 10.2 % performance was lost because the PME ranks
       had more work to do than the PP ranks.
       You might want to increase the number of PME ranks
       or increase the cut-off and the grid spacing.
 
 
                Core t (s)   Wall t (s)        (%)
-       Time:    27507.531       30.700    89600.0
+       Time:    27103.958       30.250    89600.0
                  (ns/day)    (hour/ns)
-Performance:      281.435        0.085
+Performance:      285.626        0.084
 
-GROMACS reminds you: "Creativity in science, as in art, cannot be organized. It arises spontaneously from individual talent. Well-run laboratories can foster it, but hierarchical organizations, inflexible bureaucratic rules, and mountains of futile paperwork can kill it." (Max Perutz)
+GROMACS reminds you: "The Path Of the Righteous Man is Beset On All Sides With the Iniquities Of the Selfish and the Tyranny Of Evil Men." (Pulp Fiction)
 
 
-real	0m46.766s
-user	0m0.033s
-sys	0m0.021s
+real	0m45.969s
+user	0m0.029s
+sys	0m0.025s

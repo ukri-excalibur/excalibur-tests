@@ -8,7 +8,7 @@
 #SBATCH --exclusive
 #SBATCH --partition=cclake
 #SBATCH --account=support-cpu
-#SBATCH --exclude=cpu-p-[1-168,225-672]
+#SBATCH --exclude=cpu-p-[1-280,337-672]
 module load openmpi-3.1.6-gcc-9.1.0-omffmfv
 export SLURM_MPI_TYPE=pmix_v3
 export UCX_NET_DEVICES=mlx5_0:1
