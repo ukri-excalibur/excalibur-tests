@@ -8,6 +8,7 @@ reframe.out
 stage/*
 apps/castep/downloads/*
 apps/wrf/downloads/*
+apps/gromacs/downloads/*
 
 # other
 setup/.sslconfig
