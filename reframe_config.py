@@ -114,7 +114,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl', 'sysinfo', 'nxnlatbw'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'sysinfo', 'nxnlatbw'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -128,7 +128,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher':'srun',
                     'max_jobs':8,
-                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'hpl',  'nxnlatbw'],
+                    'environs':['imb', 'omb', 'gromacs', 'openfoam', 'cp2k', 'nxnlatbw'],
                     'modules': ['gcc/9.3.0-5abm3xg', 'openmpi/4.0.3-qpsxmnc'],
                     'variables': [
                         ['SLURM_MPI_TYPE', 'pmix_v2'],
@@ -190,14 +190,6 @@ site_configuration = {
             'name': 'omb',
             'target_systems': ['csd3:cclake-ib-gcc9-ompi3-ucx', 'csd3:cclake-roce-gcc9-ompi3-ucx'],
             'modules': ['osu-micro-benchmarks-5.6.3-gcc-9.1.0-nsxydkj']
-        },
-        {
-            'name': 'hpl',
-        },
-        {
-            'name': 'hpl',
-            'target_systems': ['alaska:ib-gcc9-openmpi4-ucx', 'alaska:roce-gcc9-openmpi4-ucx'],
-            'modules': ['hpl/2.3-iyor3px'],
         },
         {
             'name': 'intel-hpl',

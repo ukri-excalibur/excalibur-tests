@@ -49,16 +49,14 @@ class IntelHpl(rfm.RunOnlyRegressionTest):
         self.valid_prog_environs = ['intel-hpl']
         self.sourcesdir = os.path.join(self.prefix, '..', '..', 'systems', self.current_system.name, 'hpl', size) # use self.prefix so relative to test dir, not pwd
         
-        self.num_tasks_per_node = Scheduler_Info().sockets_per_node
-        self.num_nodes = {'single':1, 'all':Scheduler_Info().num_nodes}[size]        
-        self.num_tasks = self.num_nodes * self.num_tasks_per_node
+        # NB num tasks etc done after setup
         self.exclusive_access = True
         self.time_limit = '1h'
         self.executable = 'xhpl_intel64_dynamic'
         
         git_ref = modules.utils.git_describe()
-        self.tags = {size, 'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes, 'git=%s' % git_ref}
-        
+        self.tags |= {size, 'git=%s' % git_ref}
+
         self.sanity_patterns = sn.all([
             sn.assert_found('End of Tests.', self.stdout),
             sn.assert_found('0 tests completed and failed residual checks', self.stdout),
@@ -78,3 +76,14 @@ class IntelHpl(rfm.RunOnlyRegressionTest):
                 'Gflops': (None, None, None, 'Gflops'),
                 }
         }
+
+    
+    @rfm.run_after('setup')
+    def set_procs(self):
+        rfm_part = self.current_partition
+        self.num_tasks_per_node = 1
+        self.num_nodes = {'single':1, 'all':Scheduler_Info(rfm_part).num_nodes}[self.size]
+        self.num_tasks = self.num_nodes * self.num_tasks_per_node
+
+        self.tags |= {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
+        
