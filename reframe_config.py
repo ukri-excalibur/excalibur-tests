@@ -198,17 +198,17 @@ site_configuration = {
             'name': 'intel-hpl',
             'target_systems': ['alaska:ib-gcc9-impi-verbs', 'alaska:roce-gcc9-impi-verbs'],
             'modules': ['intel-mkl/2020.1.217-5tpgp7b'], # now installed
-            'variables':[
-                ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
-            ],
+            # 'variables':[
+            #     ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
+            # ],
         },
         {
             'name': 'intel-hpl',
             'target_systems': ['csd3:cclake-ib-icc19-impi19-ucx', 'csd3:cclake-roce-icc19-impi19-ucx'],
             'modules': [], # MKL provided as part of partition's modules
-            'variables':[
-                ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
-            ],
+            # 'variables':[
+            #     ['PATH', '$PATH:$MKLROOT/benchmarks/mp_linpack/'], # MKLROOT provided by mkl module
+            # ],
         },
         {
             'name': 'intel-hpcg',

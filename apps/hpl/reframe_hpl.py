@@ -15,12 +15,10 @@
     Requires files :
         - <repo_root>/systems/<sysname>/hpl/{single,all}/HPL.dat
     
-    This uses the prebuilt binaries provided with MKL so the ReFrame partition/environment must include that and add the path
-    
-        $MKLROOT/benchmarks/mp_linpack/
+    This uses the prebuilt binaries provided with MKL so the ReFrame partition/environment must include.
 
-    The Intel HPL uses one MPI process per socket and automatically generates TBB threads to use the available cores.
-    Therefore the PxQ in the HPL.dat should equal the number of sockets in the system.
+    The Intel HPL uses one MPI process per node and automatically generates TBB threads to use the available cores.
+    Therefore PxQ in the HPL.dat should equal the number of nodes in the system.
 
     The following tags are defined:
     - Number of nodes to use: 'single' or 'all'
@@ -52,7 +50,7 @@ class IntelHpl(rfm.RunOnlyRegressionTest):
         # NB num tasks etc done after setup
         self.exclusive_access = True
         self.time_limit = '1h'
-        self.executable = 'xhpl_intel64_dynamic'
+        self.executable = '$MKLROOT/benchmarks/mp_linpack/xhpl_intel64_dynamic'
         
         git_ref = modules.utils.git_describe()
         self.tags |= {size, 'git=%s' % git_ref}
