@@ -4,22 +4,20 @@
 
 Performance testing-as-code for HPC systems.
 
-This package defines automated performance tests for HPC systems using both synthetic and MPI-based application benchmarks. It is designed to easily compare results from different systems, system configurations and/or environments (e.g. compilers & MPI libraries).
+This package defines automated performance tests for HPC systems using both synthetic and MPI-based application benchmarks. It is designed to easily compare results from different systems, system configurations and/or environments (e.g. compilers & MPI libraries). At present results are included for 2x systems, with comparisons of performance using InfiniBand and RoCE (RDMA over Converged Ethernet) interconnects.
 
-The intended test matrix is shown below, marked with (A) where there is an implementation (possibly not finalised) for the `AlaSKA` system:
+The current test matrix is shown below:
 
 | Application | Benchmark | MPI Library | Notes |
-| ---         | ---       | ---         | --  |
-| OSU Micro Benchmarks (OMB)       | latency (A), bandwidth (A), alltoall (A), allgather (A), allreduce (A)          | IntelMPI (A), OpenMPI (A)       | mbw_mr also added for AlaSKA for range of node numbers |
-| Intel MPI Benchmarks (IMB)       | uniband (A), biband (A)                                                         | IntelMPI (A), OpenMPI (A)       | PingPong also added for AlaSKA for basic debugging |
+| ---         | ---       | ---         | ---   |
+| OSU Micro Benchmarks (OMB)       | latency, bandwidth, alltoall, allgather, allreduce, mbw_mr                      | IntelMPI, OpenMPI  |  |
+| Intel MPI Benchmarks (IMB)       | PingPong, uniband, biband                                                       | IntelMPI, OpenMPI  |  |
 | High Performance Linpack (HPL)   | -                                                                               | IntelMPI | Uses Intel-optimised version with MKL |
-| High Performance Conjugate Gradient (HPCG) | -                                                                     | IntelMPI (A) | Uses Intel-optimised version with MKL |
-| Castep                           | tbd                                                                             | tbd  | Requires licence  |
-| CP2K                             | H20-256                                                                         | IntelMPI, OpenMPI (A)  |   |
-| OpenFOAM                         | Motorbike                                                                       | IntelMPI, OpenMPI (A)  |   |
-| GROMACS                          | HECBioSim benchmarks: 61k (A), 1.4M (A) and 3M atom cases (A)                   | IntelMPI, OpenMPI (A)  |   |
-| WRF                              | CONUS 2.5km, CONUS 12.5kms, TBD                                                 | IntelMPI, OpenMPI  |   |
-| TensorFlow                       | ResNet50                                                                        | tbd  |   |
+| Castep                           | TiN, Al3x3, DNA                                                                 | IntelMPI | Requires licence  |
+| CP2K                             | H20-256                                                                         | IntelMPI, OpenMPI  |   |
+| OpenFOAM                         | Motorbike                                                                       | IntelMPI, OpenMPI  |   |
+| GROMACS                          | HECBioSim benchmarks: 61k, 1.4M and 3M atom cases                               | IntelMPI, OpenMPI  |   |
+| WRF                              | CONUS 2.5km, CONUS 12.5kms                                                      | IntelMPI, OpenMPI  |   |
 
 For more information on the actual tests defined and how to run them see the README file in the relevant benchmark directory.
 
