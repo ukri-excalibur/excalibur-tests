@@ -5,16 +5,17 @@ __pycache__
 reframe/
 reframe.log
 reframe.out
-stage/*
-apps/castep/downloads/*
-apps/wrf/downloads/*
-apps/gromacs/downloads/*
+stage/
+output/
+apps/castep/downloads/
+apps/wrf/downloads/
+apps/gromacs/downloads/
 
 # other
 setup/.sslconfig
 Miniconda*.sh
-working/*
-outdated/*
+working/
+outdated/
 
 # jupyter checkpoints:
 *-checkpoint.ipynb
