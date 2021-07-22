@@ -5,11 +5,17 @@ Performance benchmarks and regression tests for the ExCALIBUR project.
 These benchmarks are based on a similar project by
 [StackHPC](https://github.com/stackhpc/hpc-tests).
 
-_**Note**_: at the moment the ExCALIBUR benchmarks are a work-in-progress.
+_**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 ## Requirements
 
 ### Spack
+
+_**Note**: in some HPC facilities there may be already a central Spack
+installation available.  In principle you should be able to use that one (you
+only need to set the `SPACK_ROOT` environment variable), but you may need an
+up-to-date version of Spack in order to install some packages.  Instructions
+below show you how to install Spack locally._
 
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
 facilities.  Follow the [official
