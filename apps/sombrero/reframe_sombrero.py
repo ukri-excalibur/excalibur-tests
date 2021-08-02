@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
 
@@ -13,13 +14,8 @@ class SombreroBenchmark(rfm.RegressionTest):
     valid_prog_environs = ['*']
     build_system = 'Spack'
     executable = 'sombrero.sh'
-    executable_opts = ['-w', '-s', 'medium']
-    num_tasks = 4
+    executable_opts = ['-w', '-s', 'medium', '-n', '4']
     time_limit = '10m'
-    variables = {
-        'OMP_NUM_THREADS': '4',
-        'OMP_PLACES': 'cores'
-    }
     reference = {
         '*': {
             'flops': (30, -0.5, 0.5, 'Gflops/seconds'),
@@ -28,7 +24,11 @@ class SombreroBenchmark(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['sombrero@1.0']
+        self.build_system.specs = ['sombrero@2021-07-08']
+        self.build_system.environment = path.realpath(
+            path.join(path.dirname(__file__), '..', '..', 'spack-environments',
+                      self.current_system.name)
+        )
 
     @run_before('sanity')
     def set_sanity_patterns(self):
