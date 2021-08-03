@@ -5,38 +5,67 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
+from modules.reframe_extras import scaling_config
 
 
 @rfm.simple_test
 class SombreroBenchmark(rfm.RegressionTest):
-    valid_systems = ['*']
-    valid_prog_environs = ['*']
-    build_system = 'Spack'
-    executable = 'sombrero.sh'
-    executable_opts = ['-w', '-s', 'medium']
-    num_tasks = 4
-    time_limit = '10m'
-    variables = {
-        'OMP_NUM_THREADS': '4',
-        'OMP_PLACES': 'cores'
-    }
-    reference = {
-        '*': {
-            'flops': (30, -0.5, 0.5, 'Gflops/seconds'),
+    def __init__(self):
+        self.valid_systems = ['*']
+        self.valid_prog_environs = ['*']
+        self.build_system = 'Spack'
+        self.executable = 'sombrero.sh'
+        self.num_tasks = 2
+        self.time_limit = '10m'
+        self.reference = {
+            '*': {
+                'flops_average': (0, None, None, 'Gflops/seconds'),
+                'flops_1': (0, None, None, 'Gflops/seconds'),
+                'flops_2': (0, None, None, 'Gflops/seconds'),
+                'flops_3': (0, None, None, 'Gflops/seconds'),
+                'flops_4': (0, None, None, 'Gflops/seconds'),
+                'flops_5': (0, None, None, 'Gflops/seconds'),
+                'flops_6': (0, None, None, 'Gflops/seconds'),
+            }
         }
-    }
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['sombrero@1.0']
+        self.build_system.environment = '.'
+        self.build_system.specs = ['sombrero@2021-07-31']
 
     @run_before('sanity')
     def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_found(r'\[RESULT\] SUM', self.stdout)
+        self.sanity_patterns = sn.all(
+            [sn.assert_found(r'\[RESULT\] SUM', self.stdout)] + [
+                sn.assert_found(r'\[RESULT\]\[0]\ Case '
+                                f'{i}', self.stdout) for i in range(1, 7)
+            ])
 
     @run_before('performance')
     def set_perf_patterns(self):
-        self.perf_patterns = {
-            'flops': sn.extractsingle(r'\[RESULT\] SUM (\S+) Gflops/seconds',
-                                      self.stdout, 1, float),
-        }
+
+        pattern_template = r'\[RESULT\]\[0\] Case {i} (\S+) Gflops/seconds'
+
+        pattern_dict = [(f"flops_{i}", pattern_template.format(i=i))
+                        for i in range(1, 7)]
+        pattern_dict.append(
+            ('flops_average', r'\[RESULT\] SUM (\S+) Gflops/seconds'))
+
+        self.perf_patterns = dict(
+            (pattern[0], sn.extractsingle(pattern[1], self.stdout, 1, float))
+            for pattern in pattern_dict)
+
+        print(self.perf_patterns)
+
+
+@rfm.parameterized_test(*scaling_config())
+class SombreroBenchmarkStrongMedium(SombreroBenchmark):
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        self.executable_opts = ['-n', f"{num_tasks}", "medium"]
+
+
+@rfm.parameterized_test(*scaling_config())
+class SombreroBenchmarkWeakMedium(SombreroBenchmark):
+    def __init__(self, part, num_tasks, num_tasks_per_node):
+        self.executable_opts = ['-n', f"{num_tasks}", "-w", "medium"]

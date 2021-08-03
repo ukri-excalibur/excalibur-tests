@@ -1,0 +1,4 @@
+spack:
+  specs:
+  - sombrero@2021-07-31
+  view: true
