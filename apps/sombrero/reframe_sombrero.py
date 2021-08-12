@@ -5,9 +5,9 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-from modules.reframe_extras import scaling_config
+from modules.reframe_extras import scaling_config_mock
 import itertools as it
-from collections import IntEnum
+from enum import IntEnum
 
 class SombreroCase:
     class Idx(IntEnum):
@@ -36,15 +36,15 @@ class SombreroCase:
         if np%2 == 1:
             return np in [1,3]
         else:
-            return _check_nprocesses(np // 2)
+            return SombreroCase._check_nprocesses(np // 2)
 
     @staticmethod
     def _case_filter(case):
-        strong_or_weak = case[Idx.strong_or_weak]
-        size = case[Idx.size]
-        nprocesses = case[Idx.nprocesses]
+        strong_or_weak = case[SombreroCase.Idx.strong_or_weak]
+        size = case[SombreroCase.Idx.size]
+        nprocesses = case[SombreroCase.Idx.nprocesses]
 
-        if not _check_nprocesses(nprocesses):
+        if not SombreroCase._check_nprocesses(nprocesses):
             return False
         if strong_or_weak == "weak" and size != "medium":
             return False
@@ -52,7 +52,7 @@ class SombreroCase:
         return True
 
     @staticmethod
-    def generate():
+    def generate(scaling_config):
         theory_ids = range(1,7)
         sizes = ['small','medium','large','very_large']
         strong_or_weak = ['strong','weak']
@@ -63,9 +63,9 @@ class SombreroCase:
                                   scaling_config(),
                                   theory_ids)
 
-        cases = map(_flatten_nested_case,nested_cases)
+        cases = map(SombreroCase._flatten_nested_case,nested_cases)
 
-        filtered = filter(_case_filter,cases)
+        filtered = filter(SombreroCase._case_filter,cases)
 
         filtered_list = list(filtered)
         for case in filtered_list:
@@ -76,7 +76,7 @@ class SombreroCase:
 @rfm.simple_test
 class SombreroBenchmark(rfm.RegressionTest):
 
-    params = rfm.parameter(SombreroCase.generate())
+    params = parameter(SombreroCase.generate(scaling_config_mock))
     def __init__(self):
         self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
@@ -90,12 +90,13 @@ class SombreroBenchmark(rfm.RegressionTest):
 
     @run_after('init')
     def set_up_from_parameters(self):
-        self.executable = 'sombrero'+str(params[SombreroCase.Idx.theory_id])
+        self.theory_str = str(self.params[SombreroCase.Idx.theory_id])
+        self.executable = 'sombrero'+ self.theory_str
         self.executable_opts = []
-        if params[SombreroCase.Idx.strong_or_weak] == "weak":
+        if self.params[SombreroCase.Idx.strong_or_weak] == "weak":
             self.executable_opts.append('-w')
-        self.executable_opts += ['-s',params[SombreroCase.Idx.size]]
-        self.num_tasks = params[SombreroCase.Idx.nprocesses]
+        self.executable_opts += ['-s',self.params[SombreroCase.Idx.size]]
+        self.num_tasks = self.params[SombreroCase.Idx.nprocesses]
 
     @run_before('compile')
     def setup_build_system(self):
@@ -105,11 +106,7 @@ class SombreroBenchmark(rfm.RegressionTest):
 
     @run_before('sanity')
     def set_sanity_patterns(self):
-        self.sanity_patterns = sn.all(
-            [sn.assert_found(r'\[RESULT\] SUM', self.stdout)] + [
-                sn.assert_found(r'\[RESULT\]\[0]\ Case '
-                                f'{i}', self.stdout) for i in range(1, 7)
-            ])
+        self.sanity_patterns = sn.assert_found(r'\[RESULT\]\[0]\ Case '+self.theory_str, self.stdout)
 
     @run_before('performance')
     def set_perf_patterns(self):
@@ -117,6 +114,5 @@ class SombreroBenchmark(rfm.RegressionTest):
         pattern_template = r'\[RESULT\]\[0\] Case {i} (\S+) Gflops/seconds'
 
         self.perf_patterns = {'flops':
-                              r'\[RESULT\]\[0\] Case '
-                              f'{self.case}'
+                              r'\[RESULT\]\[0\] Case ' + self.theory_str +
                               r' (\S+) Gflops/seconds'}
