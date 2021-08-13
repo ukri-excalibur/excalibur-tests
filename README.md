@@ -66,6 +66,25 @@ If you want to use a different ReFrame configuration file, for example because
 you use a different system, you can set this environment variable to the path of
 that file.
 
+**Note**: in order to use the Spack build system in ReFrame, the `spack`
+executable must be in the `PATH`, also on the computing nodes of a cluster, if
+you want to run your benchmarks on them.  Note that by default ReFrame uses
+
+```sh
+!#/bin/bash
+```
+
+as [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)), which would not load
+the user's init script.  You may want to set the
+[`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
+environment variable in order to make ReFrame use
+
+```sh
+!#/bin/bash -l
+```
+
+as shebang line, instead.
+
 ## Usage
 
 TODO: expand

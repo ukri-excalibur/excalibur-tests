@@ -23,7 +23,6 @@ site_configuration = {
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
                     'environs': ['gnu'],
                     'max_jobs': 64,
-                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
                 }
             ]
         },
@@ -31,7 +30,6 @@ site_configuration = {
             'name': 'myriad',
             'descr': 'Myriad',
             'hostnames': ['login[0-9]+\.myriad\.ucl\.ac\.uk'],
-            'modules_system': 'tmod',
             'partitions': [
                 {
                     'name': 'login',
@@ -47,7 +45,6 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['gnu'],
                     'max_jobs': 64,
-                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
                     'resources': [
                         {
                             'name': 'mpi',
