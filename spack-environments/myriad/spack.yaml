@@ -1,0 +1,124 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: [sombrero@2021-07-08]
+  view: true
+  config:
+    install_tree:
+      root: opt/spack
+  compilers:
+  - compiler:
+      spec: intel@18.0.3
+      paths:
+        cc: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/icc
+        cxx: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/icpc
+        f77: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/ifort
+        fc: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.8.5
+      paths:
+        cc: /usr/bin/gcc
+        cxx: null
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.9.2
+      paths:
+        cc: /shared/ucl/apps/gcc/4.9.2/bin/gcc
+        cxx: /shared/ucl/apps/gcc/4.9.2/bin/g++
+        f77: /shared/ucl/apps/gcc/4.9.2/bin/gfortran
+        fc: /shared/ucl/apps/gcc/4.9.2/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@7.3.0
+      paths:
+        cc: /shared/ucl/apps/gcc/7.3.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/7.3.0/bin/g++
+        f77: /shared/ucl/apps/gcc/7.3.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/7.3.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.3.0
+      paths:
+        cc: /shared/ucl/apps/gcc/8.3.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/8.3.0/bin/g++
+        f77: /shared/ucl/apps/gcc/8.3.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/8.3.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.2.0
+      paths:
+        cc: /shared/ucl/apps/gcc/9.2.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/9.2.0/bin/g++
+        f77: /shared/ucl/apps/gcc/9.2.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/9.2.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.2.0
+      paths:
+        cc: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gcc
+        cxx: /shared/ucl/apps/gcc/10.2.0-p95889/bin/g++
+        f77: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gfortran
+        fc: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  packages:
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.3~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
+      buildable: false
+    cmake:
+      externals:
+      - spec: cmake@3.21.1
+        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+      buildable: false
+    python:
+      externals:
+      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.8.6+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /shared/ucl/apps/python/bundles/python38-5.0.0/venv
+      buildable: false

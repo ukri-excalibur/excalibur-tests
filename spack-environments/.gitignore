@@ -1,0 +1,4 @@
+# Ignore all files...
+*
+# ...except `spack.yaml`
+!spack.yaml
