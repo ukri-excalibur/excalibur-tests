@@ -39,18 +39,41 @@ site_configuration = {
                     'environs': ['gnu', 'intel'],
                 },
                 {
-                    'name': 'cn',
+                    'name': 'compute-node',
                     'descr': 'Computing nodes',
                     'scheduler': 'sge',
                     'launcher': 'mpirun',
                     'environs': ['gnu'],
-                    'max_jobs': 64,
+                    'max_jobs': 36,
                     'resources': [
                         {
                             'name': 'mpi',
                             'options': ['-pe mpi {num_slots}']
                         },
                     ]
+                },
+            ]
+        },
+        {
+            'name': 'isambard-cascadelake',
+            'descr': 'Cascade Lake nodes of Isambard 2',
+            'hostnames': ['login-0[12]'],
+            'partitions': [
+                {
+                    'name': 'login',
+                    'descr': 'Login nodes',
+                    'scheduler': 'local',
+                    'launcher': 'local',
+                    'environs': ['gnu'],
+                },
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q clxq'],
+                    'environs': ['gnu'],
+                    'max_jobs': 20,
                 },
             ]
         },

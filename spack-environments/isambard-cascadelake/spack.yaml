@@ -1,0 +1,96 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: true
+  config:
+    install_tree:
+      root: opt/spack
+  compilers:
+  - compiler:
+      spec: cce@11.0.2
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-cray
+      - cce/11.0.2
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: cce@11.0.4
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-cray
+      - cce/11.0.4
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.1.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-gnu
+      - gcc/8.1.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.2.0
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-gnu
+      - gcc/9.2.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: pgi@64
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-pgi
+      - pgi/64
+      environment: {}
+      extra_rpaths: []
+  packages:
+    all:
+      target: [cascadelake]
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.3rc4~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /usr/mpi/gcc/openmpi-4.0.3rc4
+      buildable: false
