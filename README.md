@@ -99,3 +99,9 @@ systems.  If you use it, the automatic detection of the system may fail, as some
 systems may use clashing hostnames.  You can always use the flag [`--system
 NAME:PARTITION`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-system)
 to specify the system (and optionally the partition) to use.
+
+## Contributing new systems or benchmarks
+
+Feel free to add new benchmark apps or support new systems that are part of the
+ExCALIBUR benchmarking collaboration.  Read
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
