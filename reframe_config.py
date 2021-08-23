@@ -5,7 +5,7 @@ site_configuration = {
         {
             'name': 'csd3',
             'descr': 'CSD3',
-            'hostnames': ['login-e-[0-9]+\.data\.cluster'],
+            'hostnames': ['login-e-[0-9]+'],
             'modules_system': 'tmod32',
             'partitions': [
                 {
@@ -19,7 +19,7 @@ site_configuration = {
                     'name': 'compute-node',
                     'descr': 'Compute nodes',
                     'scheduler': 'slurm',
-                    'launcher': 'local',
+                    'launcher': 'mpirun',
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
                     'environs': ['gnu'],
                     'max_jobs': 64,
@@ -29,7 +29,7 @@ site_configuration = {
         {
             'name': 'myriad',
             'descr': 'Myriad',
-            'hostnames': ['login[0-9]+\.myriad\.ucl\.ac\.uk'],
+            'hostnames': ['login[0-9]+'],
             'partitions': [
                 {
                     'name': 'login',
