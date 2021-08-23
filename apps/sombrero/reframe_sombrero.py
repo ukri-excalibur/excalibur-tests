@@ -14,13 +14,17 @@ class SombreroBenchmark(rfm.RegressionTest):
     valid_systems = ['*']
     valid_prog_environs = ['*']
     build_system = 'Spack'
+    num_tasks = 4
     executable = 'sombrero.sh'
-    executable_opts = ['-w', '-s', 'medium', '-n', '4']
+    executable_opts = ['-w', '-s', 'medium', '-n', f'{num_tasks}']
     time_limit = '10m'
     reference = {
         '*': {
             'flops': (30, -0.5, 0.5, 'Gflops/seconds'),
         }
+    }
+    extra_resources = {
+        'mpi': {'num_slots': num_tasks}
     }
 
     @run_before('compile')

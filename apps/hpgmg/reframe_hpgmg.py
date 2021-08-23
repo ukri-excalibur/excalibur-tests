@@ -17,9 +17,10 @@ class HpgmgTest(rfm.RegressionTest):
     executable = 'hpgmg-fv'
     executable_opts = ['7', '8']
     num_tasks = 4
+    num_cpus_per_task = 4
     time_limit = '30m'
     variables = {
-        'OMP_NUM_THREADS': '4',
+        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
         'OMP_PLACES': 'cores'
     }
     reference = {
@@ -28,6 +29,9 @@ class HpgmgTest(rfm.RegressionTest):
             'l_1': (1e8, -0.9, 0.6, 'DOF/s'),
             'l_2': (1e8, -0.9, 0.6, 'DOF/s'),
         }
+    }
+    extra_resources = {
+        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
     }
 
     @run_before('compile')
