@@ -19,7 +19,7 @@ Spack as build system, which will deal with that.
 
 ### Spack configuration
 
-ReFrame needs a [Spack
+When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
 its tests.  We provide already configured Spack environments in the
 [`spack-environments`](./spack-environments) directory, for each system in the
@@ -34,7 +34,7 @@ Here are the steps to create a Spack environment for a new system:
   where `SYSTEM-NAME` is the same name as the ReFrame system name
 * activate it:
   ```
-  spack env activate -d spack-environments/SYSTEM-NAME`
+  spack env activate -d spack-environments/SYSTEM-NAME
   ```
 * set the
   [`install_tree`](https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree):
