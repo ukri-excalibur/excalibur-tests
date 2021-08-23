@@ -94,3 +94,10 @@ spack:
           fabrics=ucx schedulers=slurm
         prefix: /usr/mpi/gcc/openmpi-4.0.3rc4
       buildable: false
+    python:
+      externals:
+      - spec: python@2.7.17+bz2+ctypes+dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      buildable: false
