@@ -7,6 +7,9 @@ import os
 import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
+from reframe.core.exceptions import BuildSystemError
+from reframe.core.logging import getlogger
+from reframe.utility.osext import run_command
 
 
 @rfm.simple_test
@@ -40,8 +43,7 @@ class HpgmgTest(rfm.RegressionTest):
         # Select the Spack environment:
         # * if `EXCALIBUR_SPACK_ENV` is set, use that one
         # * if not, use a provided spack environment for the current system
-        # * if that doesn't exist, default to `None` and let ReFrame
-        #   automatically create a minimal environment
+        # * if that doesn't exist, create a persistent minimal environment
         # TODO: this snippet should be in a utility function that all tests will
         # use
         if os.getenv('EXCALIBUR_SPACK_ENV'):
@@ -51,10 +53,21 @@ class HpgmgTest(rfm.RegressionTest):
                 path.join(path.dirname(__file__), '..', '..', 'spack-environments',
                           self.current_system.name)
             )
-            if path.isdir(env):
-                self.build_system.environment = env
-            else:
-                self.build_system.environment = None
+            if not path.isdir(env):
+                cmd = run_command(["spack", "env", "create", "-d", env])
+                if cmd.returncode != 0:
+                    raise BuildSystemError("Creation of the Spack "
+                                           f"environment {env} failed")
+                cmd = run_command(["spack", "-e", env, "config", "add",
+                                   "config:install_tree:root:opt/spack"])
+                if cmd.returncode != 0:
+                    raise BuildSystemError("Setting up the Spack "
+                                           f"environment {env} failed")
+                getlogger().info("Spack environment successfully created at"
+                                 f"{env}")
+
+            self.build_system.environment = env
+
 
     @run_before('sanity')
     def set_sanity_patterns(self):
