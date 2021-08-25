@@ -12,7 +12,7 @@ csd3_cclake_common = {
 
 site_configuration = {
     'systems': [
-        {
+         {
             'name':'csd3',
             'descr': 'Cambridge Service for Data Driven Discovery: https://docs.hpc.cam.ac.uk/hpc/index.html',
             'hostnames': ['login-e-*'],
@@ -138,6 +138,24 @@ site_configuration = {
                 },
             ]
         }, # end alaska
+        {
+            'name': 'cosma8',
+            'descr': 'COSMA',
+            'hostnames': ['login[0-9]a'],
+            'modules_system': 'nomod',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--account=tc004', '--partition=cosma8'],
+                    'environs': ['gnu'],
+                    'max_jobs': 64,
+                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
+                }
+            ]
+        },
         # < insert new systems here >
     ],
     'environments': [
