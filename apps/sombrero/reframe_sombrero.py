@@ -27,7 +27,11 @@ class SombreroBenchmarkScaling(rfm.RegressionTest):
 
         self.reference = {
             '*': {
-                'flops': (0, None, None, 'Gflops/seconds'),
+                'flops': (0, None, None, 'Gflops/second'),
+                'time': (10, None, None, 'second'),
+                'communicated': (0, None, None, 'byte'),
+                'avg_arithmetic_intensity': (0, None, None, 'Flops/byte'),
+                'computation/communication': (0, None, None, 'Flops/byte'),
             }
         }
 
@@ -84,10 +88,21 @@ class SombreroBenchmarkScaling(rfm.RegressionTest):
     @run_before('performance')
     def set_perf_patterns(self):
 
-        pattern_template = r'\[RESULT\]\[0\] Case {i} (\S+) Gflops/seconds'
-
         self.perf_patterns = {
             'flops':
-            sn.extractsingle(r'\[RESULT\]\[0\] Case ' + self.theory_str + r' (\S+) Gflops/seconds', 1, self.stdout
-            )
+            sn.extractsingle(r'\[RESULT\]\[0\] Case ' +
+                             self.theory_str +
+                             r' (\S+) Gflops/seconds', 1, self.stdout),
+            'time':sn.extractsingle(r'\[RESULT\]\[0\] Case ' +
+                             self.theory_str +
+                             r' \S+ Gflops in (\S+) seconds', 1, self.stdout),
+            'communicated': sn.extractsingle(r'\[MAIN\]\[0\] Case ' +
+                             self.theory_str +
+                             r' .* (\S+) bytes communicated', 1, self.stdout),
+            'avg_arithmetic_intensity': sn.extractsingle(r'\[MAIN\]\[0\] Case ' +
+                             self.theory_str +
+                             r' (\S+) average arithmetic intensity', 1, self.stdout),
+            'computation/communication': sn.extractsingle(r'\[MAIN\]\[0\] Case ' +
+                             self.theory_str +
+                             r' (\S+) flop per byte communicated', 1, self.stdout),
         }
