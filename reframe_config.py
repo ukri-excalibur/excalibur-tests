@@ -5,7 +5,7 @@ site_configuration = {
         {
             'name': 'csd3',
             'descr': 'CSD3',
-            'hostnames': ['login-e-[0-9]+\.data\.cluster'],
+            'hostnames': ['login-e-[0-9]+'],
             'modules_system': 'tmod32',
             'partitions': [
                 {
@@ -19,19 +19,17 @@ site_configuration = {
                     'name': 'compute-node',
                     'descr': 'Compute nodes',
                     'scheduler': 'slurm',
-                    'launcher': 'local',
+                    'launcher': 'mpirun',
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
                     'environs': ['gnu'],
                     'max_jobs': 64,
-                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
                 }
             ]
         },
         {
             'name': 'myriad',
             'descr': 'Myriad',
-            'hostnames': ['login[0-9]+\.myriad\.ucl\.ac\.uk'],
-            'modules_system': 'tmod',
+            'hostnames': ['login[0-9]+'],
             'partitions': [
                 {
                     'name': 'login',
@@ -41,19 +39,41 @@ site_configuration = {
                     'environs': ['gnu', 'intel'],
                 },
                 {
-                    'name': 'cn',
+                    'name': 'compute-node',
                     'descr': 'Computing nodes',
                     'scheduler': 'sge',
                     'launcher': 'mpirun',
                     'environs': ['gnu'],
-                    'max_jobs': 64,
-                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
+                    'max_jobs': 36,
                     'resources': [
                         {
                             'name': 'mpi',
                             'options': ['-pe mpi {num_slots}']
                         },
                     ]
+                },
+            ]
+        },
+        {
+            'name': 'isambard-cascadelake',
+            'descr': 'Cascade Lake nodes of Isambard 2',
+            'hostnames': ['login-0[12]'],
+            'partitions': [
+                {
+                    'name': 'login',
+                    'descr': 'Login nodes',
+                    'scheduler': 'local',
+                    'launcher': 'local',
+                    'environs': ['gnu'],
+                },
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q clxq'],
+                    'environs': ['gnu'],
+                    'max_jobs': 20,
                 },
             ]
         },

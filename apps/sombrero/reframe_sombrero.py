@@ -7,77 +7,17 @@ import os
 import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
+from reframe.core.exceptions import BuildSystemError
+from reframe.core.logging import getlogger
+from reframe.utility.osext import run_command
+
 from modules.reframe_extras import scaling_config
-import itertools as it
-from enum import IntEnum
 
-
-class SombreroCase:
-    class Idx(IntEnum):
-        # See _flatten_nested_case() and generate()
-        strong_or_weak = 0
-        size = 1
-        partition = 2
-        nprocesses = 3
-        nprocesses_per_node = 4
-        theory_id = 5
-
-    @staticmethod
-    def _flatten_nested_case(nested_case):
-        # See Idx and generate()
-        return (
-            nested_case[0],  # strong/weak
-            nested_case[1],  # size
-            *nested_case[2],  # input from scaling config
-            nested_case[3])  # theory_id
-
-    @staticmethod
-    def _check_nprocesses(np):
-        '''
-        Make sure the number of processes is 2^n or 2^n x 3
-        '''
-        assert np > 0
-        if np % 2 == 1:
-            return np in [1, 3]
-        else:
-            return SombreroCase._check_nprocesses(np // 2)
-
-    @staticmethod
-    def _case_filter(case):
-        strong_or_weak = case[SombreroCase.Idx.strong_or_weak]
-        size = case[SombreroCase.Idx.size]
-        nprocesses = case[SombreroCase.Idx.nprocesses]
-
-        if not SombreroCase._check_nprocesses(nprocesses):
-            return False
-        if strong_or_weak == "weak" and size != "medium":
-            return False
-
-        return True
-
-    @staticmethod
-    def generate(scaling_config):
-        theory_ids = range(1, 7)
-        sizes = ['small', 'medium', 'large', 'very_large']
-        strong_or_weak = ['strong', 'weak']
-
-        # See Idx and _flatten_nested_case()
-        nested_cases = it.product(strong_or_weak, sizes, scaling_config(),
-                                  theory_ids)
-
-        cases = map(SombreroCase._flatten_nested_case, nested_cases)
-
-        filtered = filter(SombreroCase._case_filter, cases)
-
-        filtered_list = list(filtered)
-        for case in filtered_list:
-            assert len(case) == 6
-        return filtered_list
-
+from apps.sombrero import case_filter
 
 @rfm.simple_test
-class SombreroBenchmark(rfm.RegressionTest):
-    params = parameter(SombreroCase.generate(scaling_config))
+class SombreroBenchmarkScaling(rfm.RegressionTest):
+    params = parameter(case_filter.generate(scaling_config))
 
     def __init__(self):
         self.valid_systems = ['*']
@@ -93,33 +33,46 @@ class SombreroBenchmark(rfm.RegressionTest):
 
     @run_after('init')
     def set_up_from_parameters(self):
-        self.theory_str = str(self.params[SombreroCase.Idx.theory_id])
+        self.theory_str = str(self.params[case_filter.Idx.theory_id])
         self.executable = 'sombrero' + self.theory_str
         self.executable_opts = []
-        if self.params[SombreroCase.Idx.strong_or_weak] == "weak":
+        if self.params[case_filter.Idx.strong_or_weak] == "weak":
             self.executable_opts.append('-w')
-        self.executable_opts += ['-s', self.params[SombreroCase.Idx.size]]
-        self.num_tasks = self.params[SombreroCase.Idx.nprocesses]
+        self.executable_opts += ['-s', self.params[case_filter.Idx.size]]
+        self.num_tasks = self.params[case_filter.Idx.nprocesses]
+        self.extra_resources = { # TODO: check that this can be an instance variable
+            'mpi': {'num_slots': self.num_tasks}
+        }
 
     @run_before('compile')
     def setup_build_system(self):
         # Select the Spack environment:
         # * if `EXCALIBUR_SPACK_ENV` is set, use that one
         # * if not, use a provided spack environment for the current system
-        # * if that doesn't exist, default to `None` and let ReFrame
-        #   automatically create a minimal environment
+        # * if that doesn't exist, create a persistent minimal environment
         # TODO: this snippet should be in a utility function that all tests will
         # use
         if os.getenv('EXCALIBUR_SPACK_ENV'):
             self.build_system.environment = os.getenv('EXCALIBUR_SPACK_ENV')
         else:
             env = path.realpath(
-                path.join(path.dirname(__file__), '..', '..',
-                          'spack-environments', self.current_system.name))
-            if path.isdir(env):
-                self.build_system.environment = env
-            else:
-                self.build_system.environment = None
+                path.join(path.dirname(__file__), '..', '..', 'spack-environments',
+                          self.current_system.name)
+            )
+            if not path.isdir(env):
+                cmd = run_command(["spack", "env", "create", "-d", env])
+                if cmd.returncode != 0:
+                    raise BuildSystemError("Creation of the Spack "
+                                           f"environment {env} failed")
+                cmd = run_command(["spack", "-e", env, "config", "add",
+                                   "config:install_tree:root:opt/spack"])
+                if cmd.returncode != 0:
+                    raise BuildSystemError("Setting up the Spack "
+                                           f"environment {env} failed")
+                getlogger().info("Spack environment successfully created at"
+                                 f"{env}")
+
+            self.build_system.environment = env
 
         self.build_system.specs = ['sombrero@2021-07-31']
 

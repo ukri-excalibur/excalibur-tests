@@ -115,3 +115,12 @@ spack:
           fabrics=ofi,psm2 schedulers=slurm
         prefix: /usr/local/Cluster-Apps/openmpi/gcc/9.3/4.0.4
       buildable: false
+    python:
+      externals:
+      - spec: python@3.8.2+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /usr/local/software/master/python/3.8
+      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      buildable: false

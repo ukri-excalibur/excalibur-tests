@@ -4,7 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs: [sombrero@2021-07-08]
+  specs: []
   view: true
   config:
     install_tree:
@@ -119,6 +119,4 @@ spack:
       externals:
       - spec: python@2.7.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /usr
-      - spec: python@3.8.6+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
-        prefix: /shared/ucl/apps/python/bundles/python38-5.0.0/venv
       buildable: false
