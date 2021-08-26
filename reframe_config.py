@@ -76,7 +76,26 @@ site_configuration = {
                     'max_jobs': 20,
                 },
             ]
+        }, # end alaska
+        {
+            'name': 'cosma8',
+            'descr': 'COSMA',
+            'hostnames': ['login[0-9]a'],
+            'modules_system': 'nomod',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--account=tc004', '--partition=cosma8'],
+                    'environs': ['gnu'],
+                    'max_jobs': 64,
+                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
+                }
+            ]
         },
+        # < insert new systems here >
     ],
     'environments': [
         {
