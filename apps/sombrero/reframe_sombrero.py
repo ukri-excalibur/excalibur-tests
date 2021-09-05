@@ -77,7 +77,7 @@ class SombreroBenchmarkBase(rfm.RegressionTest):
     @run_after('init')
     def inject_dependencies(self):
         self.depends_on("SombreroBuild", udeps.fully)
-        self.build_system.environment = identify_build_environment(self)
+        self.build_system.environment = identify_build_environment(self.current_system.name)
         self.build_system.specs = ['sombrero@2021-08-16']
 
     @run_after('init')
