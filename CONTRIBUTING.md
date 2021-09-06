@@ -44,7 +44,7 @@ Here are the steps to create a Spack environment for a new system:
 * make sure the compilers you want to add are in the `PATH` (e.g., load the
   relevant modules), then add them to the Spack environment with:
   ```
-  spack compilers find
+  spack compiler find
   ```
 * add other packages (e.g., MPI): make sure the package you want to add are
   "visible" (e.g., load the relevant modules) and add them to the environment

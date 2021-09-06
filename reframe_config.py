@@ -36,7 +36,7 @@ site_configuration = {
                     'descr': 'Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu', 'intel'],
+                    'environs': ['gnu'],
                 },
                 {
                     'name': 'compute-node',
@@ -92,9 +92,13 @@ site_configuration = {
                     'environs': ['gnu'],
                     'max_jobs': 64,
                     'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
+                    'processor': {'num_cpus':256,
+                                  'num_cpus_per_core':2,
+                                  'num_sockets':2,
+                                  'num_cpus_per_socket':128}
                 }
             ]
-        },
+        }, # end cosma8
         # < insert new systems here >
     ],
     'environments': [
