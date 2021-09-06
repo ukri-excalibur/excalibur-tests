@@ -12,7 +12,7 @@ from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
 import reframe.utility.udeps as udeps
 
-from modules.reframe_extras import scaling_config_mock as scaling_config  # FIXME
+from modules.reframe_extras import scaling_config
 
 from apps.sombrero import case_filter
 
@@ -71,7 +71,7 @@ class SombreroBenchmarkBase(rfm.RegressionTest):
     valid_systems = []
     valid_prog_environs = ['*']
     build_system = 'Spack'
-    time_limit = '10m'
+    time_limit = '3m'
     theory_id = parameter(range(1,7))
 
     @run_after('init')
