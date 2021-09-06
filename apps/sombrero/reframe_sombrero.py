@@ -165,6 +165,9 @@ class SombreroITTsn(SombreroBenchmarkBase):
     @run_after('init')
     def set_up_from_parameters(self):
         self.executable_opts = ['-s', 'small']
+    
+    @run_after('setup')
+    def setup_num_tasks(self):
         self.num_tasks = self.current_partition.processor.num_cores
         self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
 
@@ -177,5 +180,8 @@ class SombreroITT64n(SombreroBenchmarkBase):
     @run_after('init')
     def set_up_from_parameters(self):
         self.executable_opts = ['-s', 'medium']
+
+    @run_after('setup')
+    def setup_num_tasks(self):
         self.num_tasks = self.current_partition.processor.num_cores * 64
         self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
