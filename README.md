@@ -34,26 +34,74 @@ fi
 
 replacing `/path/to/spack` with the actual path to Spack.
 
+ReFrame, the framework we use to run the benchmarks (see below) requires a
+[Spack Environment](https://spack.readthedocs.io/en/latest/environments.html).
+We provide Spack environments for some of the systems that are part of the
+ExCALIBUR project.  If you want to use a different Spack environment, set the
+environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory where
+the environment is.  If this is not set, ReFrame will try to use the environment
+for the current system, if known, otherwise it will automatically create a very
+basic environment.
+
 ### ReFrame
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.6.2.  Follow the [official
+require ReFrame 3.7.3.  Follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
 
-TODO: provide ReFrame configuration files, and explain how to use them:
+We provide a ReFrame configuration file with the settings of some systems that
+are part of the ExCALIBUR project.  You can point ReFrame to this file by
+setting the
+[`RFM_CONFIG_FILE`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_CONFIG_FILE)
+environment variable:
 
 ```sh
-export RFM_CONFIG_FILE="/path/to/reframe-settings.py"
+export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
 ```
+
+If you want to use a different ReFrame configuration file, for example because
+you use a different system, you can set this environment variable to the path of
+that file.
+
+**Note**: in order to use the Spack build system in ReFrame, the `spack`
+executable must be in the `PATH`, also on the computing nodes of a cluster, if
+you want to run your benchmarks on them.  Note that by default ReFrame uses
+
+```sh
+!#/bin/bash
+```
+
+as [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)), which would not load
+the user's init script.  You may want to set the
+[`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
+environment variable in order to make ReFrame use
+
+```sh
+!#/bin/bash -l
+```
+
+as shebang line, instead.
 
 ## Usage
 
 TODO: expand
 
 ```sh
-/path/to/reframe/bin/reframe -c apps/hpgmg/reframe_hpgmg.py -r --performance-report
-/path/to/reframe/bin/reframe -c apps/sombrero/reframe_sombrero.py -r --performance-report
+/path/to/reframe/bin/reframe -c apps/hpgmg -r --performance-report
+/path/to/reframe/bin/reframe -c apps/sombrero -r --performance-report
 ```
+
+The provided ReFrame configuration file contains the settings for multiple
+systems.  If you use it, the automatic detection of the system may fail, as some
+systems may use clashing hostnames.  You can always use the flag [`--system
+NAME:PARTITION`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-system)
+to specify the system (and optionally the partition) to use.
+
+## Contributing new systems or benchmarks
+
+Feel free to add new benchmark apps or support new systems that are part of the
+ExCALIBUR benchmarking collaboration.  Read
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
