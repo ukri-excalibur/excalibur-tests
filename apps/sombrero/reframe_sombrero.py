@@ -19,6 +19,10 @@ from apps.sombrero import case_filter
 
 
 def identify_build_environment(current_system_name):
+    # Select the Spack environment:
+    # * if `EXCALIBUR_SPACK_ENV` is set, use that one
+    # * if not, use a provided spack environment for the current system
+    # * if that doesn't exist, create a persistent minimal environment
     if os.getenv('EXCALIBUR_SPACK_ENV'):
         env = os.getenv('EXCALIBUR_SPACK_ENV')
     else:
@@ -52,12 +56,6 @@ class SombreroBuild(rfm.CompileOnlyRegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        # Select the Spack environment:
-        # * if `EXCALIBUR_SPACK_ENV` is set, use that one
-        # * if not, use a provided spack environment for the current system
-        # * if that doesn't exist, create a persistent minimal environment
-        # TODO: this snippet should be in a utility function that all tests will
-        # use
         self.build_system.environment = identify_build_environment(self.current_system.name)
         self.build_system.specs = ['sombrero@2021-08-16']
 
@@ -107,7 +105,6 @@ class SombreroBenchmarkBase(rfm.RegressionTest):
     def set_perf_patterns(self):
         i = self.theory_id
         self.perf_patterns = {
-                # metric,expression for each case
                 f'flops{i}':
                 sn.extractsingle(
                     r'\[RESULT\]\[0\] Case ' + str(i) +
@@ -140,7 +137,7 @@ class SombreroBenchmarkMini(SombreroBenchmarkBase):
     def set_up_from_parameters(self):
         self.executable_opts = ['-l', '8x4x4x4', '-p', '2x1x1x1']
         self.num_tasks = 2
-        self.extra_resources = {  # TODO: check that this can be an instance variable
+        self.extra_resources = {
             'mpi': {
                 'num_slots': self.num_tasks
             }
