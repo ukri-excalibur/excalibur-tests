@@ -1,0 +1,833 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: [sombrero@2021-08-16]
+  view: true
+  compilers:
+  - compiler:
+      spec: aocc@1.3.0
+      paths:
+        cc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang
+        cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
+        f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+        fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+      flags:
+        cflags: null
+        cxxflags: null
+        fflags: null
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: clang@7.0.0
+      paths:
+        cc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang
+        cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
+        f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+        fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.4.7
+      paths:
+        cc: /usr/bin/gcc44
+        cxx: /usr/bin/g++44
+        f77: /usr/bin/gfortran44
+        fc: /usr/bin/gfortran44
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.8.2
+      paths:
+        cc: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gcc
+        cxx: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/g++
+        f77: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gfortran
+        fc: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.8.5
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@2.0.0
+      paths:
+        cc: /cosma/local/aocc/2.0.0/bin/clang
+        cxx: /cosma/local/aocc/2.0.0/bin/clang++
+        f77: /cosma/local/aocc/2.0.0/bin/flang
+        fc: /cosma/local/aocc/2.0.0/bin/flang
+      flags:
+        cflags: null
+        cxxflags: null
+        fflags: null
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: clang@8.0.0
+      paths:
+        cc: /cosma/local/aocc/2.0.0/bin/clang
+        cxx: /cosma/local/aocc/2.0.0/bin/clang++
+        f77: /cosma/local/aocc/2.0.0/bin/flang
+        fc: /cosma/local/aocc/2.0.0/bin/flang
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@2.2.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+      flags:
+        cflags: null
+        cxxflags: null
+        fflags: null
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@3.0.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@7.3.0
+      paths:
+        cc: /cosma/local/gcc/7.3.0/bin/gcc
+        cxx: /cosma/local/gcc/7.3.0/bin/g++
+        f77: /cosma/local/gcc/7.3.0/bin/gfortran
+        fc: /cosma/local/gcc/7.3.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.2.0
+      paths:
+        cc: /cosma/local/gcc/8.2.0/bin/gcc
+        cxx: /cosma/local/gcc/8.2.0/bin/g++
+        f77: /cosma/local/gcc/8.2.0/bin/gfortran
+        fc: /cosma/local/gcc/8.2.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.1.0
+      paths:
+        cc: /cosma/local/gcc/9.1.0/bin/gcc
+        cxx: /cosma/local/gcc/9.1.0/bin/g++
+        f77: /cosma/local/gcc/9.1.0/bin/gfortran
+        fc: /cosma/local/gcc/9.1.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.3.0
+      paths:
+        cc: /cosma/local/gcc/9.3.0/bin/gcc
+        cxx: /cosma/local/gcc/9.3.0/bin/g++
+        f77: /cosma/local/gcc/9.3.0/bin/gfortran
+        fc: /cosma/local/gcc/9.3.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.2.0
+      paths:
+        cc: /cosma/local/gcc/10.2.0/bin/gcc
+        cxx: /cosma/local/gcc/10.2.0/bin/g++
+        f77: /cosma/local/gcc/10.2.0/bin/gfortran
+        fc: /cosma/local/gcc/10.2.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@11.1.0
+      paths:
+        cc: /cosma/local/gcc/11.1.0/bin/gcc
+        cxx: /cosma/local/gcc/11.1.0/bin/g++
+        f77: /cosma/local/gcc/11.1.0/bin/gfortran
+        fc: /cosma/local/gcc/11.1.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@17.0.2
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@18.0.2
+      paths:
+        cc: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/icc
+        cxx: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/icpc
+        f77: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/ifort
+        fc: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.0.3.199
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.0.1.144
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.0.2.187
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.0.4.243
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.1.0.166
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.1.1.217
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.1.2.254
+      paths:
+        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@2021.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: oneapi@2021.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@2021.3.0
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: oneapi@2021.3.0
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.13.4
+        prefix: /usr
+    bash:
+      externals:
+      - spec: bash@4.2.46
+        prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+    cpio:
+      externals:
+      - spec: cpio@2.11
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.3
+        prefix: /usr
+    doxygen:
+      externals:
+      - spec: doxygen@1.8.5~graphviz~mscgen
+        prefix: /usr
+    file:
+      externals:
+      - spec: file@5.11
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.5.11
+        prefix: /usr
+    flex:
+      externals:
+      - spec: flex@2.5.37+lex
+        prefix: /usr
+    gawk:
+      externals:
+      - spec: gawk@4.0.2
+        prefix: /usr
+    gcc:
+      externals:
+      - spec: gcc@2021.3.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@2021.1 languages=c
+        prefix: /cosma/local/intel/oneAPI_2021.1.0/mpi/2021.1.1
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/oneAPI_2021.1.0/mpi/2021.1.1/bin/mpigcc
+      - spec: gcc@19.1.2.254 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@19.1.1.217 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@19.1.0.166 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@19.0.4.243 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@19.0.2.187 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64/bin/mpigcc
+      - spec: gcc@19.0.1.144 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64/bin/mpigcc
+      - spec: gcc@19.0.3.199 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2019/impi/2019.1.144/intel64/bin/mpigcc
+      - spec: gcc@18.0.2 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@17.0.2 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@11.1.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@11.1.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/11.1.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/11.1.0/bin/gcc
+            cxx: /cosma/local/gcc/11.1.0/bin/g++
+            fortran: /cosma/local/gcc/11.1.0/bin/gfortran
+      - spec: gcc@10.2.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@10.2.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/10.2.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/10.2.0/bin/gcc
+            cxx: /cosma/local/gcc/10.2.0/bin/x86_64-pc-linux-gnu-g++
+            fortran: /cosma/local/gcc/10.2.0/bin/x86_64-pc-linux-gnu-gfortran
+      - spec: gcc@9.3.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/9.3.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/9.3.0/bin/x86_64-pc-linux-gnu-gcc
+            cxx: /cosma/local/gcc/9.3.0/bin/x86_64-pc-linux-gnu-g++
+            fortran: /cosma/local/gcc/9.3.0/bin/gfortran
+      - spec: gcc@9.3.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@9.1.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@9.1.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/9.1.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/9.1.0/bin/gcc
+            cxx: /cosma/local/gcc/9.1.0/bin/x86_64-pc-linux-gnu-g++
+            fortran: /cosma/local/gcc/9.1.0/bin/x86_64-pc-linux-gnu-gfortran
+      - spec: gcc@8.2.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/8.2.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/8.2.0/bin/x86_64-pc-linux-gnu-gcc-8.2.0
+            cxx: /cosma/local/gcc/8.2.0/bin/g++
+            fortran: /cosma/local/gcc/8.2.0/bin/gfortran
+      - spec: gcc@8.2.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@7.3.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@7.3.0 languages=c,c++,fortran
+        prefix: /cosma/local/gcc/7.3.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/gcc/7.3.0/bin/x86_64-pc-linux-gnu-gcc-7.3.0
+            cxx: /cosma/local/gcc/7.3.0/bin/x86_64-pc-linux-gnu-g++
+            fortran: /cosma/local/gcc/7.3.0/bin/x86_64-pc-linux-gnu-gfortran
+      - spec: gcc@4.8.5 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@12.0.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+      - spec: gcc@10.0.0 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/impi/2019.6.166/intel64/bin/mpigcc
+      - spec: gcc@4.4.7 languages=c,c++,fortran
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc44
+            cxx: /usr/bin/g++44
+            fortran: /usr/bin/gfortran44
+      - spec: gcc@4.8.5 languages=c,c++,fortran
+        prefix: /usr
+        extra_attributes:
+          compilers:
+            c: /usr/bin/gcc
+            cxx: /usr/bin/g++
+            fortran: /usr/bin/gfortran
+      - spec: gcc@4.8.2 languages=c,c++,fortran
+        prefix: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/x86_64-unknown-linux-gnu-gcc-4.8.2
+            cxx: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/g++
+            fortran: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/x86_64-unknown-linux-gnu-gfortran
+      - spec: gcc@4.2.1 languages=c
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64
+        extra_attributes:
+          compilers:
+            c: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mpi/intel64/bin/mpigcc
+    ghostscript:
+      externals:
+      - spec: ghostscript@9.25
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@1.8.3.1+tcltk
+        prefix: /usr
+    gmake:
+      externals:
+      - spec: gmake@3.82
+        prefix: /usr
+    go:
+      externals:
+      - spec: go@1.15.5
+        prefix: /usr
+    groff:
+      externals:
+      - spec: groff@1.22.2
+        prefix: /usr
+    openjdk:
+      externals:
+      - spec: openjdk@1.8.0_292-b10
+        prefix: /usr
+    krb5:
+      externals:
+      - spec: krb5@1.15.1
+        prefix: /usr
+    libfuse:
+      externals:
+      - spec: libfuse@2.9.2
+        prefix: /usr
+    libtool:
+      externals:
+      - spec: libtool@2.4.2
+        prefix: /usr
+    lustre:
+      externals:
+      - spec: lustre@2.12.6
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
+    ncurses:
+      externals:
+      - spec: ncurses@5.9.20130511+termlib abi=5
+        prefix: /usr
+    openssh:
+      externals:
+      - spec: openssh@7.4p1
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1k
+        prefix: /cosma/local/intel/oneAPI_2021.3.0/intelpython/latest
+      - spec: openssl@1.1.1h
+        prefix: /cosma/local/intel/oneAPI_2021.1.0/intelpython/latest
+      - spec: openssl@1.1.1g
+        prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
+      - spec: openssl@1.0.2k-fips
+        prefix: /usr
+    perl:
+      externals:
+      - spec: perl@5.16.3~cpanm+shared+threads
+        prefix: /usr
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.27.1
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@3.7.10+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/intel/oneAPI_2021.3.0/intelpython/latest
+      - spec: python@3.7.7+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
+      - spec: python@3.7.9+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/intel/oneAPI_2021.1.0/intelpython/latest
+      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@2.7.15+bz2+ctypes+dbm~lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/Python/2.7.15
+    rsync:
+      externals:
+      - spec: rsync@3.1.2
+        prefix: /usr
+    ruby:
+      externals:
+      - spec: ruby@2.0.0
+        prefix: /usr
+    sed:
+      externals:
+      - spec: sed@4.2.2
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.26
+        prefix: /usr
+    texinfo:
+      externals:
+      - spec: texinfo@5.1
+        prefix: /usr
+    texlive:
+      externals:
+      - spec: texlive@20130530
+        prefix: /usr
+    xz:
+      externals:
+      - spec: xz@5.2.5
+        prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
+      - spec: xz@5.2.2
+        prefix: /usr
+    openmpi:
+      externals:
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/intel_2018/3.0.1
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
+      - spec: openmpi@3.0.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_10.2.0/3.0.1
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_9.3.0/4.1.1
+      - spec: openmpi@4.0.3~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_9.3.0/4.0.3
+      - spec: openmpi@4.1.0a1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_7.3.0/20190429
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_7.3.0/3.0.1
+      - spec: openmpi@4.0.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/aocc_2.2.0/4.0.5
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/aocc_2.0.0/4.0.1
+      - spec: openmpi@4.0.1%aocc@1.3.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/aocc_1.3.0/4.0.1
+    mvapich2:
+      externals:
+      - spec: mvapich2@2.3.6%gcc@11.1.0~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=hydra threads=multiple
+        prefix: /cosma/local/mvapich2/gnu_11.1.0/2.3.6
+      - spec: mvapich2@2.3.6%gcc@10.2.0~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=slurm threads=multiple
+        prefix: /cosma/local/mvapich2/gnu_10.2.0/2.3.6
+      - spec: mvapich2@2.3.6%gcc@9.3.0~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=slurm threads=multiple
+        prefix: /cosma/local/mvapich2/gnu_9.3.0/2.3.6
+    cuda:
+      externals:
+      - spec: cuda@10.1.243
+        prefix: /cosma/local/cuda/10.1
+    llvm:
+      externals:
+      - spec: llvm@12.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/aocc-compiler-3.0.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang
+            cxx: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang++
+            f77: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+            fc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+      - spec: llvm@10.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/aocc-compiler-2.2.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang
+            cxx: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang++
+            f77: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+            fc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+      - spec: llvm@8.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/2.0.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/2.0.0/bin/clang-8
+            cxx: /cosma/local/aocc/2.0.0/bin/clang++
+            f77: /cosma/local/aocc/2.0.0/bin/flang
+            fc: /cosma/local/aocc/2.0.0/bin/flang
+      - spec: llvm@7.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/AOCC-1.3.0-Compiler
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang-7
+            cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
+            f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+            fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+    llvm-doe:
+      externals:
+      - spec: llvm-doe@12.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/aocc-compiler-3.0.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang
+            cxx: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang++
+            f77: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+            fc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+      - spec: llvm-doe@10.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/aocc-compiler-2.2.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang
+            cxx: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang++
+            f77: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+            fc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+      - spec: llvm-doe@8.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/2.0.0
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/2.0.0/bin/clang-8
+            cxx: /cosma/local/aocc/2.0.0/bin/clang++
+            f77: /cosma/local/aocc/2.0.0/bin/flang
+            fc: /cosma/local/aocc/2.0.0/bin/flang
+      - spec: llvm-doe@7.0.0+clang+flang~lld~lldb
+        prefix: /cosma/local/aocc/AOCC-1.3.0-Compiler
+        extra_attributes:
+          compilers:
+            c: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang-7
+            cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
+            f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
+            fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
