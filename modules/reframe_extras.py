@@ -10,6 +10,7 @@ from reframe.core.runtime import runtime
 import reframe.utility.sanity as sn
 
 import os, shutil, subprocess, shlex, subprocess
+from subprocess import PIPE
 from pprint import pprint
 
 def scaling_config(min_nodes=1, max_node_factor=1.0, core_factor=1.0):
@@ -225,7 +226,7 @@ def slurm_node_info(partition=None):
     sinfo_cmd = ['sinfo', '--Node', '--long']
     if partition:
         sinfo_cmd.append('--partition=%s' % partition)
-    nodeinfo = subprocess.run(sinfo_cmd, capture_output=True).stdout.decode('utf-8') # encoding?
+    nodeinfo = subprocess.run(sinfo_cmd, stdout=PIPE, stderr=PIPE).stdout.decode('utf-8') # encoding?
 
     nodes = []
     lines = nodeinfo.split('\n')
@@ -333,4 +334,3 @@ if __name__ == '__main__':
         print(Scheduler_Info())
     else:
         print(Scheduler_Info(sys.argv[1]))
-    
