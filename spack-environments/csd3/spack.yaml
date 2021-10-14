@@ -9,13 +9,13 @@ spack:
   config:
     install_tree:
       root: opt/spack
-  include:
-  - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/modules.yaml
-  - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/packages.yaml
-  - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/repos.yaml
-  upstreams:
-    system-spack:
-      install_tree: /usr/local/software/spack/spack-0.11.2/opt/spack
+  # include:
+  # - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/modules.yaml
+  # - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/packages.yaml
+  # - /usr/local/software/spack/spack-0.11.2/etc/spack/defaults/repos.yaml
+  # upstreams:
+  #   system-spack:
+  #     install_tree: /usr/local/software/spack/spack-0.11.2/opt/spack
   compilers:
   - compiler:
       spec: intel@17.0.4
