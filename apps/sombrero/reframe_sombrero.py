@@ -5,6 +5,7 @@
 
 import os
 import os.path as path
+import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 from reframe.core.exceptions import BuildSystemError
@@ -12,6 +13,7 @@ from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
 import reframe.utility.udeps as udeps
 
+sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 from modules.reframe_extras import scaling_config
 
 from apps.sombrero import case_filter
@@ -165,7 +167,7 @@ class SombreroITTsn(SombreroBenchmarkBase):
     @run_after('init')
     def set_up_from_parameters(self):
         self.executable_opts = ['-s', 'small']
-    
+
     @run_after('setup')
     def setup_num_tasks(self):
         self.num_tasks = self.current_partition.processor.num_cores
