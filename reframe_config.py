@@ -76,7 +76,7 @@ site_configuration = {
                     'max_jobs': 20,
                 },
             ]
-        }, # end alaska
+        },  # end Isambard Cascadelake
         {
             'name': 'cosma8',
             'descr': 'COSMA',
@@ -91,14 +91,13 @@ site_configuration = {
                     'access': ['--account=tc004', '--partition=cosma8'],
                     'environs': ['gnu'],
                     'max_jobs': 64,
-                    'variables': [['SPACK_ROOT', os.getenv('SPACK_ROOT')]],
-                    'processor': {'num_cpus':256,
-                                  'num_cpus_per_core':2,
-                                  'num_sockets':2,
-                                  'num_cpus_per_socket':128}
+                    'processor': {'num_cpus': 256,
+                                  'num_cpus_per_core': 2,
+                                  'num_sockets': 2,
+                                  'num_cpus_per_socket': 128}
                 }
             ]
-        }, # end cosma8
+        },  # end cosma8
         # < insert new systems here >
     ],
     'environments': [
