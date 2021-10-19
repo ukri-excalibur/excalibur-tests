@@ -60,7 +60,13 @@ def scaling_config(min_nodes=1, max_node_factor=1.0, core_factor=1.0):
         # create largest test:
         n_tasks = n_tasks_per_node * int(sched_partition.num_nodes * max_node_factor)
         yield (part.fullname, n_tasks, n_tasks_per_node)
-        
+
+def scaling_config_mock():
+    """
+    A mock of scaling config that can be used on one's laptop,
+    for testing/debugging purposes.
+    """
+    yield("no-partition",2,2)
 
 class ScalingTest(rfm.RegressionTest):
     """ Mixin to specify the number of nodes and processes-per-node to use relative to current partition resources.
