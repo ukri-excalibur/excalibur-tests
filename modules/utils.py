@@ -1,6 +1,15 @@
-import os, datetime, fnmatch, subprocess, json, sys, pprint, fnmatch
+import os
+import datetime
+import fnmatch
+import subprocess
+import json
+import sys
+import pprint
 import pandas as pd
-import matplotlib.pyplot as plt
+
+from reframe.core.exceptions import BuildSystemError
+from reframe.core.logging import getlogger
+from reframe.utility.osext import run_command
 
 
 SYSFILE = 'systems/sysinfo.json' # interpreted relative to jupyter root
@@ -24,7 +33,7 @@ def get_sys_param(param):
 
         Args:
             param: str, parameter within system definition(s) in SYSFILE
-        
+
         Returns a dict where keys are from SYSFILE, i.e. system:partition patterns and values are the given parameter value.
     """
     results = {}
@@ -42,7 +51,7 @@ def get_sysinfo(sys_part):
 
         Args:
             sys_part: A full 'system:partion' string
-        
+
         Returns a dict.
     """
     results = {}
@@ -53,16 +62,16 @@ def get_sysinfo(sys_part):
         if fnmatch.fnmatch(sys_part, k):
             results.update(sysdata[k])
     return results
-    
-def parse_time_cmd(s):	
-    """ Convert timing info from `time` into float seconds.	
-       E.g. parse_time('0m0.000s') -> 0.0	
-    """	
-    
+
+def parse_time_cmd(s):
+    """ Convert timing info from `time` into float seconds.
+       E.g. parse_time('0m0.000s') -> 0.0
+    """
+
     s = s.strip()
-    mins, _, secs = s.partition('m')	
-    mins = float(mins)	
-    secs = float(secs.rstrip('s'))	
+    mins, _, secs = s.partition('m')
+    mins = float(mins)
+    secs = float(secs.rstrip('s'))
 
     return mins * 60.0 + secs
 
@@ -89,18 +98,18 @@ def parse_path_metadata(path):
 
 def find_run_outputs(root='.', test='*', ext='.out'):
     """ Find test files within an output tree.
-    
+
         Args:
             root: str, path to start searching from
             test: str, limit results to last directory component matching this (can use shell-style wildcards), default any
             ext: str, limit results to files with this extension
-        
+
         Returns a sequence of str paths.
     """
-    
+
     # directory is soemthing like:
     # ../output/sausage-newslurm/compute/gnu8-openmpi3/IMB_MPI1Test/
-    
+
     # TODO: use reframe/reframe/frontend/cli.py code to get the current system, something like
     # import reframe
     # import reframe.core.config as config
@@ -113,7 +122,7 @@ def find_run_outputs(root='.', test='*', ext='.out'):
     # settings = config.load_settings_from_file(config_file)
     # runtime.init_runtime(settings.site_configuration, options.system,
     #                              non_default_craype=options.non_default_craype)
-    
+
     results = []
     for (dirpath, dirnames, filenames) in os.walk(root):
         # in-place filter dirnames to avoid hidden directories:
@@ -130,9 +139,9 @@ def find_run_outputs(root='.', test='*', ext='.out'):
 
 def diff_dicts(dicts, ignore=None):
     """ Given a sequence of dicts, returns
-            
+
             common, [difference1, difference2, ...]
-        
+
         where `commmon` is a dict containing items in all dicts, and `differenceN` is a dict containing keys
         unique to the corresponding dict in `dicts`, ignoring any keys in `ignore`.
     """
@@ -149,10 +158,10 @@ def diff_dicts(dicts, ignore=None):
 
 def read_perflog(path):
     """ Return a pandas dataframe from a ReFrame performance log.
-    
+
         Args:
             path: str, path to log file.
-        
+
         NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
 
         The returned dataframe will have columns for:
@@ -163,7 +172,7 @@ def read_perflog(path):
             - 'perf_var' and 'perf_value', derived from 'perf_info' field
             - <key> for any tags of the format "<key>=<value>", with values converted to int or float if possible
     """
-    
+
     # NB:
     # b/c perflog prefix is '%(check_system)s/%(check_partition)s/%(check_environ)s/%(check_name)s'
     # we know that this is unique for this combo - as it was for results
@@ -175,7 +184,7 @@ def read_perflog(path):
         try:
 
             for line in f:
-                
+
                 # turn the line into a dict so we can access it:
                 line = line.strip()
                 # TODO: read this from reframe-settings handlers_perflog.filelog.format? (is adapted tho)
@@ -183,7 +192,7 @@ def read_perflog(path):
                 record = meta.copy()
                 fields = dict(zip(LOG_FIELDS, line.split('|')))
                 record.update(fields) # allows this to override metadata
-                
+
                 # process values:
                 perf_var, perf_value = record['perf_data'].split('=')
                 record['perf_var'] = perf_var
@@ -211,7 +220,7 @@ def read_perflog(path):
         except Exception as e:
             e.args = (e.args[0] + ': during processing %s' % path,) + e.args[1:]
             raise
-            
+
     return pd.DataFrame.from_records(records)
 
 def load_perf_logs(root='.', test=None, ext='.log', last=False):
@@ -236,7 +245,7 @@ def load_perf_logs(root='.', test=None, ext='.log', last=False):
 
     if last:
         perf_records = perf_records.sort_index().groupby(['sysname', 'partition', 'environ', 'testname', 'perf_var']).tail(1)
-    
+
     return perf_records
 
 def tabulate_last_perf(test, index, perf_var, root='../../perflogs'):
@@ -247,28 +256,28 @@ def tabulate_last_perf(test, index, perf_var, root='../../perflogs'):
             index: str, name of perf_log parameter to use as index (see `read_perflog()` for valid names)
             perf_var: str, name of perf_var to extract
             root: str, path to root of tree containing perf logs of interest - default assumes this is called from an `apps/<application>/` directory
-        
+
         Returns a dataframe with columns:
             case: TODO:
 
     """
-    
+
     df = load_perf_logs(root=root, test=test, ext='.log', last=True)
     if df is None: # no data
         return None
-    
+
     # filter to rows for correct perf_var:
     df = df.loc[df['perf_var'] == perf_var]
-    
+
     # keep only the LAST record in each system/partition/environment/xvar
     df = df.sort_index().groupby(['sysname', 'partition', 'environ', index]).tail(1)
-    
+
     # Add "case" column from combined system/partition:
     df['case'] = df[['sysname', 'partition']].agg(':'.join, axis=1)
-    
+
     # reshape to wide table:
     df = df.pivot(index=index, columns='case', values='perf_value')
-    
+
     return df
 
 def sizeof_fmt(num, suffix='B'):
@@ -288,16 +297,16 @@ def sizeof_fmt(num, suffix='B'):
 
 def get_nested(dct, key_pattern):
     """ Get value(s) from a nested dict
-    
+
         Args:
             dct: dict having str keys and values which may be other `dct`s
             key_pattern: str giving dotted key
-        
+
         Returns the value. Note that if key_pattern does not go to full depth then a dict is returned.
     """
     d = dct
     patt_parts = key_pattern.split('.')
-    for kp in patt_parts:       
+    for kp in patt_parts:
         if kp in d:
             d = d[kp]
         else:
@@ -319,7 +328,7 @@ def split_numeric(s):
 
 def singleval(seq, sep=', '):
     """ Convert an object to a single value.
-    
+
         If the object has no length it is returned as-is.
         If the object is a sequence or set of length 1 the first value is returned.
         If the object is a sequence or set of length > 1 a string concatenation using `sep` is returned.
@@ -330,10 +339,35 @@ def singleval(seq, sep=', '):
         return list(seq)[0]
     return sep.join(str(v) for v in seq)
 
+def identify_build_environment(current_system_name):
+    # Select the Spack environment:
+    # * if `EXCALIBUR_SPACK_ENV` is set, use that one
+    # * if not, use a provided spack environment for the current system
+    # * if that doesn't exist, create a persistent minimal environment
+    if os.getenv('EXCALIBUR_SPACK_ENV'):
+        env = os.getenv('EXCALIBUR_SPACK_ENV')
+    else:
+        env = os.path.realpath(
+            os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
+                         current_system_name))
+        if not os.path.isdir(env):
+            cmd = run_command(["spack", "env", "create", "-d", env])
+            if cmd.returncode != 0:
+                raise BuildSystemError("Creation of the Spack "
+                                       f"environment {env} failed")
+            cmd = run_command([
+                "spack", "-e", env, "config", "add",
+                "config:install_tree:root:opt/spack"
+            ])
+            if cmd.returncode != 0:
+                raise BuildSystemError("Setting up the Spack "
+                                       f"environment {env} failed")
+            getlogger().info("Spack environment successfully created at"
+                             f"{env}")
+    return env
 
 if __name__ == '__main__':
-    
+
     #v = get_sysinfo(sys.argv[-1])
     v = get_sys_param(sys.argv[-1])
     pprint.pprint(v)
-    

@@ -3,48 +3,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import os
 import os.path as path
 import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-from reframe.core.exceptions import BuildSystemError
-from reframe.core.logging import getlogger
-from reframe.utility.osext import run_command
 import reframe.utility.udeps as udeps
-
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.reframe_extras import scaling_config
 
 from apps.sombrero import case_filter
 
-
-def identify_build_environment(current_system_name):
-    # Select the Spack environment:
-    # * if `EXCALIBUR_SPACK_ENV` is set, use that one
-    # * if not, use a provided spack environment for the current system
-    # * if that doesn't exist, create a persistent minimal environment
-    if os.getenv('EXCALIBUR_SPACK_ENV'):
-        env = os.getenv('EXCALIBUR_SPACK_ENV')
-    else:
-        env = path.realpath(
-            path.join(path.dirname(__file__), '..', '..', 'spack-environments',
-                      current_system_name))
-        if not path.isdir(env):
-            cmd = run_command(["spack", "env", "create", "-d", env])
-            if cmd.returncode != 0:
-                raise BuildSystemError("Creation of the Spack "
-                                       f"environment {env} failed")
-            cmd = run_command([
-                "spack", "-e", env, "config", "add",
-                "config:install_tree:root:opt/spack"
-            ])
-            if cmd.returncode != 0:
-                raise BuildSystemError("Setting up the Spack "
-                                       f"environment {env} failed")
-            getlogger().info("Spack environment successfully created at"
-                             f"{env}")
-    return env
+sys.path.append(path.join(path.dirname(__file__), '..', '..'))
+from modules.reframe_extras import scaling_config
+from modules.utils import identify_build_environment
 
 
 @rfm.simple_test

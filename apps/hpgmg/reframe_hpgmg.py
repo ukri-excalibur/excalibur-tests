@@ -3,13 +3,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import os
 import os.path as path
+import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-from reframe.core.exceptions import BuildSystemError
-from reframe.core.logging import getlogger
-from reframe.utility.osext import run_command
+
+sys.path.append(path.join(path.dirname(__file__), '..', '..'))
+from modules.utils import identify_build_environment
 
 
 @rfm.simple_test
@@ -40,34 +40,8 @@ class HpgmgTest(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = ['hpgmg@0.4']
-        # Select the Spack environment:
-        # * if `EXCALIBUR_SPACK_ENV` is set, use that one
-        # * if not, use a provided spack environment for the current system
-        # * if that doesn't exist, create a persistent minimal environment
-        # TODO: this snippet should be in a utility function that all tests will
-        # use
-        if os.getenv('EXCALIBUR_SPACK_ENV'):
-            self.build_system.environment = os.getenv('EXCALIBUR_SPACK_ENV')
-        else:
-            env = path.realpath(
-                path.join(path.dirname(__file__), '..', '..', 'spack-environments',
-                          self.current_system.name)
-            )
-            if not path.isdir(env):
-                cmd = run_command(["spack", "env", "create", "-d", env])
-                if cmd.returncode != 0:
-                    raise BuildSystemError("Creation of the Spack "
-                                           f"environment {env} failed")
-                cmd = run_command(["spack", "-e", env, "config", "add",
-                                   "config:install_tree:root:opt/spack"])
-                if cmd.returncode != 0:
-                    raise BuildSystemError("Setting up the Spack "
-                                           f"environment {env} failed")
-                getlogger().info("Spack environment successfully created at"
-                                 f"{env}")
-
-            self.build_system.environment = env
-
+        self.build_system.environment = identify_build_environment(
+            self.current_system.name)
 
     @run_before('sanity')
     def set_sanity_patterns(self):
