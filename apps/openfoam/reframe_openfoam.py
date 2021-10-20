@@ -7,39 +7,37 @@
     TODO: Move to use newer scaling_config().
 """
 
+import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-from reframe.utility.sanity import defer
-from pprint import pprint
-import sys, os
-from collections import namedtuple
-from reframe.core.logging import getlogger
+
 sys.path.append('.')
 from modules.reframe_extras import scaling_config
-from modules.utils import parse_time_cmd
+from modules.utils import parse_time_cmd, identify_build_environment
 
 
 @rfm.parameterized_test(*scaling_config())
-class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
+class Openfoam_Mbike(rfm.RegressionTest):
 
     def __init__(self, part, n_tasks, n_tasks_per_node):
-        
-        self.valid_systems = [part]
-        self.valid_prog_environs = ['openfoam']
-        
+
+        self.valid_systems = ['*']
+        self.valid_prog_environs = ['*']
+        self.build_system = 'Spack'
+
         self.num_tasks_per_node = n_tasks_per_node
         self.num_tasks = n_tasks
         self.num_nodes = int(n_tasks / n_tasks_per_node)
         self.tags = {'num_procs=%i' % self.num_tasks, 'num_nodes=%i' % self.num_nodes}
-        
+
         self.sourcesdir = 'downloads'
         self.exclusive_access = True
         self.time_limit = '1h'
 
         self.prerun_cmds = [
             'tar --strip-components 2 -xf Motorbike_bench_template.tar.gz bench_template/basecase',
-            './Allclean', # removes logs, old timehistories etc just in case 
-            
+            './Allclean', # removes logs, old timehistories etc just in case
+
             # set domain decomposition:
             # using 'scotch' method means simpleCoeffs is ignored so it doesn't need to match num_tasks:
             'sed -i -- "s/method .*/method          scotch;/g" system/decomposeParDict',
@@ -75,12 +73,12 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
             sn.assert_found('End', 'log.blockMesh'),
             sn.assert_found('End', 'log.decomposePar'),
             sn.assert_found('Finished meshing without any errors', 'log.snappyHexMesh'),
-            
+
             # ensure simpleFoam finished ok:
             sn.assert_found('Finalising parallel run', self.stdout),
             sn.assert_not_found('FOAM FATAL ERROR', self.stdout),
             sn.assert_not_found('FOAM FATAL ERROR', self.stderr),
-            
+
             # ensure continuity errors small enough - copied from
             # https://github.com/eth-cscs/reframe/blob/0a4dc5207b35c737861db346bd483fd4ac202846/cscs-checks/apps/openfoam/check_openfoam_extend.py#L56
             sn.all(
@@ -102,3 +100,9 @@ class Openfoam_Mbike(rfm.RunOnlyRegressionTest):
                 'runtime_real': (0, None, None, 's'),
             }
         }
+
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.environment = identify_build_environment(
+            self.current_system.name)
+        self.build_system.specs = ['openfoam']
