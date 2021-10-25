@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: "main"
+    tags: ["*"]
+  pull_request:
+  release:
+
+jobs:
+  test:
+    name: Tests on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Spack
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          git clone https://github.com/spack/spack.git
+          echo "SPACK_ROOT=${PWD}/spack" >> "${GITHUB_ENV}"
+      - name: Install Reframe
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          git clone https://github.com/eth-cscs/reframe.git
+          cd reframe
+          ./bootstrap.sh
+          bin/reframe -V
+          echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
+      - name: Install OpenMPI, CMake and extra Python packages
+        shell: bash
+        run: sudo apt-get install openmpi-bin libopenmpi-dev cmake python3-matplotlib python3-pandas
+      - name: Run sample benchmark
+        shell: bash
+        run: |
+          source "${SPACK_ROOT}/share/spack/setup-env.sh"
+          export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
+          reframe -v -c examples/sombrero --run --performance-report --system github-actions:default
