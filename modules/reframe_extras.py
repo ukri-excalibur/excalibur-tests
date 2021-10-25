@@ -93,7 +93,7 @@ class ScalingTest(rfm.RegressionTest):
         - `procs_per_node`: the number of MPI tasks/processes per node
     """
 
-    @rfm.run_after('setup')
+    @run_after('setup')
     def set_nodes(self):
         
         scheduler_partition = Scheduler_Info(self.current_partition)
@@ -131,10 +131,10 @@ class CachedRunTest(rfm.RegressionTest):
 
         set self.use_cache to True or a path relative to cwd.
     
-        NB Any class using this MUST NOT change self.executable in a method decorated with `@rfm.run_before('run')` as that will override functionality here.
+        NB Any class using this MUST NOT change self.executable in a method decorated with `@run_before('run')` as that will override functionality here.
     """
 
-    @rfm.run_before('run')
+    @run_before('run')
     def no_run(self):
         """ Turn the run phase into a no-op. """
 
@@ -143,7 +143,7 @@ class CachedRunTest(rfm.RegressionTest):
                 noop.write('#!/bin/bash\necho "noop $@"\n')
             self.executable = "./noop.sh"
 
-    @rfm.run_after('run')
+    @run_after('run')
     def copy_saved_output(self):
         """ Copy saved output files to stage dir. """
 
@@ -176,7 +176,7 @@ class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
 
         TODO: Make logging tidier - currently produces info-level (stdout by default) messaging on whether cache is used.
     """
-    @rfm.run_before('compile')
+    @run_before('compile')
     def conditional_compile(self):
         build_dir = os.path.abspath(os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name))
         build_path = os.path.join(build_dir, self.executable)
@@ -188,7 +188,7 @@ class CachedCompileOnlyTest(rfm.CompileOnlyRegressionTest):
         else:
             self.build_path = None
 
-    @rfm.run_after('compile')
+    @run_after('compile')
     def copy_executable(self):
         if not self.build_path: # i.e. only if actually did a compile:
             self.exes_dir = os.path.join('builds', self.current_system.name, self.current_partition.name, self.current_environ.name, self.name)
