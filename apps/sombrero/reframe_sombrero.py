@@ -9,9 +9,8 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
-from apps.sombrero import case_filter
-
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
+from apps.sombrero import case_filter
 from modules.reframe_extras import scaling_config
 from modules.utils import identify_build_environment
 
