@@ -20,10 +20,15 @@ below show you how to install Spack locally._
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
 facilities.  Follow the [official
 instructions](https://spack.readthedocs.io/en/latest/getting_started.html) to
-install the latest version of Spack.  Remember to run the commands to get shell
-support, or add them to your shell init script to do it automatically.  For
-example, if you use a shell of the family bash/zsh/sh you can add to your init
-script:
+install the latest version of Spack.
+
+In order to use Spack in ReFrame, the framework we use to run the benchmarks
+(see below), the directory where the `spack` program is installed needs to be in
+the `PATH` environment variable.  This can be achieved for instance by running
+the commands to get shell support described in Spack documentation, which you
+can also add to your shell init script to do it automatically in every session.
+For example, if you use a shell of the family bash/zsh/sh you can add to your
+init script:
 
 ```sh
 export SPACK_ROOT="/path/to/spack"
@@ -32,11 +37,11 @@ if [ -f "${SPACK_ROOT}/share/spack/setup-env.sh" ]; then
 fi
 ```
 
-replacing `/path/to/spack` with the actual path to Spack.
+replacing `/path/to/spack` with the actual path to your Spack installation.
 
-ReFrame, the framework we use to run the benchmarks (see below) requires a
-[Spack Environment](https://spack.readthedocs.io/en/latest/environments.html).
-We provide Spack environments for some of the systems that are part of the
+ReFrame requires a [Spack
+Environment](https://spack.readthedocs.io/en/latest/environments.html).  We
+provide Spack environments for some of the systems that are part of the
 ExCALIBUR project.  If you want to use a different Spack environment, set the
 environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory where
 the environment is.  If this is not set, ReFrame will try to use the environment
@@ -75,7 +80,8 @@ you want to run your benchmarks on them.  Note that by default ReFrame uses
 ```
 
 as [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)), which would not load
-the user's init script.  You may want to set the
+the user's init script.  If you have added Spack to your `PATH` within your init
+script, you may want to set the
 [`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
 environment variable in order to make ReFrame use
 
@@ -84,6 +90,17 @@ environment variable in order to make ReFrame use
 ```
 
 as shebang line, instead.
+
+### Extra Python modules
+
+Many benchmarks in this suite will additionally need some other Python modules:
+
+* [`matplotlib`](https://matplotlib.org/)
+* [`pandas`](https://pandas.pydata.org/)
+
+Check the recommended way to install Python modules in your system, it may be
+for example by using `pip`, or creating environments with `pyenv` or
+Conda/Anaconda.
 
 ## Usage
 
