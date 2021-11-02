@@ -26,7 +26,7 @@ from modules.utils import identify_build_environment
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
 # for more information about the API of ReFrame tests.
 @rfm.simple_test
-class LibtreeTest(rfm.RegressionTest):
+class SombreroBenchmark(rfm.RegressionTest):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
@@ -34,28 +34,44 @@ class LibtreeTest(rfm.RegressionTest):
     valid_prog_environs = ['*']
     # The build system to use.  We always use Spack.
     build_system = 'Spack'
-    # The program to run the benchmarks.
-    executable = 'libtree'
-    # Arguments to pass to the program above to run the benchmarks.
-    executable_opts = ['--version']
+    # Number of (MPI) tasks and CPUs per task.  Here we hard-code 1, but in
+    # other cases you may want to use something different.  Note: ReFrame will
+    # automatically launch MPI with the given number of tasks, using the
+    # launcher specificed in the config for the current system.
     num_tasks = 1
     num_cpus_per_task = 1
-    # Time limit for the benchmark job in the scheduler.
+    # The program for running the benchmarks.
+    executable = 'sombrero1'
+    # Arguments to pass to the program above to run the benchmarks.
+    executable_opts = ['-w', '-s', 'small']
+    # Time limit of the job, automatically set in the job script.
     time_limit = '2m'
+    # With `variables` you can set environment variables to be used in the job.
+    # For example with `OMP_NUM_THREADS` we set the number of OpenMP threads
+    # (not actually used in this specific benchmark).
     variables = {
         'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-        'OMP_PLACES': 'cores'
     }
+    # These extra resources are needed for when using the SGE scheduler.
     extra_resources = {
         'mpi': {'num_slots': num_tasks * num_cpus_per_task}
     }
+    # Reference values for the performance benchmarks, see the
+    # `set_perf_patterns` function below.
+    reference = {
+        '*': {
+            # 1 is the reference value, second and third elements are the lower
+            # and upper bound (if `None`, there are no bounds), last element is
+            # the unit.
+            'flops': (1, None, None, 'Gflops/seconds'),
+        }
+    }
 
-    # Function to install the package with Spack.
     @run_before('compile')
     def setup_build_system(self):
         # Spack spec(s) to install the desired package(s).  It is recommended
-        # to specify also the version number.
-        self.build_system.specs = ['libtree@2.0.0']
+        # to specify also the version number for reproducibility.
+        self.build_system.specs = ['sombrero@2021-08-16']
         # Identify the Spack environment for the current system.  Keep this
         # setting as is.
         self.build_system.environment = identify_build_environment(
@@ -66,4 +82,17 @@ class LibtreeTest(rfm.RegressionTest):
     # for the API of ReFrame tests, including performance ones.
     @run_before('sanity')
     def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_found(r'2.0.0', self.stdout)
+        # Check that the string `[RESULT][0]` appears in the standard outout of
+        # the program.
+        self.sanity_patterns = sn.assert_found(r'\[RESULT\]\[0\]', self.stdout)
+
+    # A performance benchmark.
+    @run_before('performance')
+    def set_perf_patterns(self):
+        # This performance pattern parses the output of the program to extract
+        # the desired figure of merit.
+        self.perf_patterns = {
+            'flops': sn.extractsingle(
+                r'\[RESULT\]\[0\] Case 1 (\S+) Gflops/seconds',
+                self.stdout, 1, float),
+        }

@@ -87,11 +87,20 @@ as shebang line, instead.
 
 ## Usage
 
-TODO: expand
+Once you have set up Spack and ReFrame, you can execute a benchmark with
 
 ```sh
-/path/to/reframe/bin/reframe -c apps/hpgmg -r --performance-report
-/path/to/reframe/bin/reframe -c apps/sombrero -r --performance-report
+reframe -c apps/BENCH_NAME -r --performance-report
+```
+
+where `apps/BENCH_NAME` is the directory where the benchmark is.  The command
+above supposes you have the program `reframe` in your PATH, if it is not the
+case you can also call `reframe` with its relative or absolute path.  For
+example, to run the Sombrero benchmark in the `apps/sombrero` directory you can
+use
+
+```sh
+reframe -c apps/sombrero -r --performance-report
 ```
 
 The provided ReFrame configuration file contains the settings for multiple
