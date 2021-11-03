@@ -3,7 +3,7 @@
 You are welcome to contribute new application benchmarks and new systems part of
 the ExCALIBUR benchmarking effort.
 
-## New systems
+## Adding new systems
 
 We need the [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/)
 configuration and a Spack environment for the system.
@@ -59,6 +59,26 @@ Here are the steps to create a Spack environment for a new system:
   or [add its install trees as
   upstreams](https://spack.readthedocs.io/en/latest/chain.html).
 
-## New tests
+## Adding new benchmarks
 
-TODO
+### Spack package
+
+Before adding a new benchmark, make sure the application is available in
+[Spack](https://spack.readthedocs.io/en/latest/package_list.html).  If it is
+not, you can read the [Spack Package Creation
+Tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html)
+to contribute a new recipe to build the application.
+
+### ReFrame benchmark
+
+New benchmarks should be added in the `apps/` directory, under the specific
+application subdirectory.  Please, add also a `README.md` file explaining what
+the application does and how to run the benchmarks.
+
+For writing ReFrame benchmarks you can read the documentation, in particular
+
+* [ReFrame Tutorials](https://reframe-hpc.readthedocs.io/en/stable/tutorials.html)
+* [Regression Test API](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html)
+
+but you can also have a look at the sample file in
+[`examples/sombrero/reframe_sombrero.py`](./examples/sombrero/reframe_sombrero.py).
