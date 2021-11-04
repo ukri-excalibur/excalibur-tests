@@ -30,6 +30,8 @@ jobs:
         run: |
           git clone https://github.com/eth-cscs/reframe.git
           cd reframe
+          # In README.md we claim compatibility with at least v3.8.0, test that version.
+          git checkout v3.8.0
           ./bootstrap.sh
           bin/reframe -V
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"

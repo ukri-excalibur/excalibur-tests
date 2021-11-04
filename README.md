@@ -52,7 +52,7 @@ basic environment.
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.7.3.  Follow the [official
+require ReFrame 3.8.0.  Follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
