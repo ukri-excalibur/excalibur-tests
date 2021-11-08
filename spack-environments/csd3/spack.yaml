@@ -4,7 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs: [sombrero@2021-08-16, intel-mpi-benchmarks@2019.6%intel ^openmpi]
+  specs: [sombrero@2021-08-16, intel-mpi-benchmarks@2019.6]
   view: true
   config:
     install_tree:

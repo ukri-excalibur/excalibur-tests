@@ -13,7 +13,7 @@ site_configuration = {
                     'descr': 'CSD3 Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu'],
+                    'environs': ['gnu','intel'],
                 },
                 {
                     'name': 'compute-node',
@@ -21,7 +21,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
-                    'environs': ['gnu'],
+                    'environs': ['gnu','intel'],
                     'max_jobs': 64,
                 }
             ]
@@ -106,6 +106,12 @@ site_configuration = {
             'cc': 'gcc',
             'cxx': 'g++',
             'ftn': 'gfortran'
+        },
+        {
+            'name': 'intel',
+            'cc': 'icc',
+            'cxx': 'icpc',
+            'ftn': 'ifort'
         },
     ],
     'logging': [
