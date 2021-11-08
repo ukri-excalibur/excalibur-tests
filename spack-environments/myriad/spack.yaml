@@ -102,6 +102,11 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2019.9.166
+        prefix: /shared/ucl/apps/intel/2020/impi/2019.6.166/intel64/
+      buildable: false
     openmpi:
       externals:
       - spec: openmpi@4.0.3~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath

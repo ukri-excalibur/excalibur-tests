@@ -102,6 +102,18 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    cmake:
+      externals:
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+      - spec: cmake@3.17.0
+        prefix: /usr/local/software/master/cmake/latest
+      buildable: false
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2017.4.239
+        prefix: /usr/local/Cluster-Apps/intel/2017.4/compilers_and_libraries_2017.4.196/linux/mpi/intel64
+      buildable: false
     openmpi:
       externals:
       - spec: openmpi@4.0.4~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
