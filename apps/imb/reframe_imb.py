@@ -12,32 +12,36 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-from reframe.utility.sanity import defer
-from pprint import pprint
 import sys, os
 from collections import namedtuple
-from reframe.core.logging import getlogger
 sys.path.append('.')
-import modules
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from modules.imb import read_imb_out
 from modules.reframe_extras import ScalingTest
+from modules.utils import identify_build_environment
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
-class IMB_MPI1(rfm.RunOnlyRegressionTest):
+class IMB_MPI1(rfm.RegressionTest):
     METRICS = []
 
     def __init__(self):
-        self.valid_systems = ['*']
-        self.valid_prog_environs = ['imb']
+        self.valid_systems = ['*:compute-node']
+        self.valid_prog_environs = ['intel']
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
         self.perf_patterns = {} # something funny about reframe's attr lookup
         self.executable = 'IMB-MPI1'
-    
-    # @rfm.run_before('run')
+        self.build_system = 'Spack'
+
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.specs = ['intel-mpi-benchmarks@2019.6']
+        self.build_system.environment = identify_build_environment(self.current_system.name)
+
     def set_block_distribution(self):
         """ Ensure first half of processes are on first node
-        
+
             TOOD: make conditional on using openmpi + srun
         """
 
@@ -50,27 +54,22 @@ class IMB_MPI1(rfm.RunOnlyRegressionTest):
         else:
             raise NotImplementedError('do not know how to set block distribution for partition %r' % self.current_partition.name )
 
-    @rfm.run_before('run')
+    @run_before('run')
     def add_metrics(self):
         """ Create `self.perf_patterns` and units only in `self.reference`.
-        
+
             Args:
                 metrics: TODO
                 n_procs: TODO
-            
+
             TODO: Requires self.METRICS
         """
-        
+
         for metric in self.METRICS:
-            #getlogger().info('creating metric %s', metric.label)
             self.perf_patterns[metric.label] = reduce(self.stdout, self.num_tasks, metric.column, metric.function)
-            self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
+            self.reference[metric.label] = (0, None, None, metric.unit)
 
-    # @rfm.run_before('run')
-    # def add_launcher_options(self):
-    #     self.job.launcher.options = ['--report-bindings'] # note these are output to stdERR
-
-@sn.sanity_function
+@sn.deferrable
 def reduce(path, n_procs, column, function):
     """ Calculate an aggregate value from IMB output.
 
@@ -80,12 +79,12 @@ def reduce(path, n_procs, column, function):
             column: str, column name
             function: callable to apply to specified `column` of table for `n_procs` in `path`
     """
-    tables = modules.imb.read_imb_out(path)
+    tables = read_imb_out(path)
     table = tables[n_procs] # separate lines here for more useful KeyError if missing:
     col = table[column]
-    result = function(col) 
+    result = function(col)
     return result
-    
+
 @rfm.simple_test
 class IMB_PingPong(IMB_MPI1):
     """ Runs on 2x cores of 2x nodes """
@@ -98,52 +97,56 @@ class IMB_PingPong(IMB_MPI1):
         super().__init__()
         self.executable_opts = ['pingpong']
         self.num_tasks = 2
+        self.num_cpus_per_task = 1
         self.num_tasks_per_node = 1
-        self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
         self.tags = {'pingpong'}
 
-PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
+    @run_before('sanity')
+    def set_sanity_patterns(self):
+        self.sanity_patterns = sn.assert_found('# Benchmarking PingPong', self.stdout)
 
-@rfm.parameterized_test(*[[np] for np in PROC_STEPS])
-class IMB_Uniband(IMB_MPI1, ScalingTest):
-    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
-    
-        NB: name encodes number/proportion of processes PER NODE, not total.
-    """
-    METRICS = [
-        Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
-    ]
-    def __init__(self, proc_step):
-        """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
-        """
-        super().__init__()
         
-        self.partition_fraction = -2 # 2x nodes only
-        self.node_fraction = proc_step
+# PROC_STEPS = [-1, -2, 0.25, 0.5, 0.75, 1.0] # processes PER NODE as number (-ve) or proportion of physical cores
 
-        self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
-        self.executable_opts = ['uniband', '-npmin', str(self.num_tasks)]
-        self.tags = {'uniband'}
-    
-@rfm.parameterized_test(*[[np] for np in PROC_STEPS])
-class IMB_Biband(IMB_MPI1, ScalingTest):  # NB: on alaska ib- fails with a timeout!
-    """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
+# @rfm.parameterized_test(*[[np] for np in PROC_STEPS])
+# class IMB_Uniband(IMB_MPI1, ScalingTest):
+#     """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
 
-        NB: name encodes number/proportion of processes PER NODE, not total.
-    """
-    METRICS = [
-        Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
-    ]
-    def __init__(self, proc_step):
-        """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
-        """
-        
-        super().__init__()
-        
-        self.partition_fraction = -2 # 2x nodes only
-        self.node_fraction = proc_step
-        
-        self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
-        self.executable_opts = ['biband', '-npmin', str(self.num_tasks)]
-        self.tags = {'biband'}
-        
+#         NB: name encodes number/proportion of processes PER NODE, not total.
+#     """
+#     METRICS = [
+#         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
+#     ]
+#     def __init__(self, proc_step):
+#         """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
+#         """
+#         super().__init__()
+
+#         self.partition_fraction = -2 # 2x nodes only
+#         self.node_fraction = proc_step
+
+#         self.sanity_patterns = sn.assert_found('# Benchmarking Uniband', self.stdout)
+#         self.executable_opts = ['uniband', '-npmin', str(self.num_tasks)]
+#         self.tags = {'uniband'}
+
+# @rfm.parameterized_test(*[[np] for np in PROC_STEPS])
+# class IMB_Biband(IMB_MPI1, ScalingTest):  # NB: on alaska ib- fails with a timeout!
+#     """ Runs on varying numbers of processes from 2 up to physical cores of 2x nodes.
+
+#         NB: name encodes number/proportion of processes PER NODE, not total.
+#     """
+#     METRICS = [
+#         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
+#     ]
+#     def __init__(self, proc_step):
+#         """ proc_step: number of processes per node - see `modules.reframe_extras.ScalingTest.node_fraction`.
+#         """
+
+#         super().__init__()
+
+#         self.partition_fraction = -2 # 2x nodes only
+#         self.node_fraction = proc_step
+
+#         self.sanity_patterns = sn.assert_found('# Benchmarking Biband', self.stdout)
+#         self.executable_opts = ['biband', '-npmin', str(self.num_tasks)]
+#         self.tags = {'biband'}
