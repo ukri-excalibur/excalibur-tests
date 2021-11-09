@@ -23,6 +23,10 @@ site_configuration = {
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
                     'environs': ['gnu','intel'],
                     'max_jobs': 64,
+                    'processor': {'num_cpus': 32,
+                                  'num_cpus_per_core': 2,
+                                  'num_sockets': 2,
+                                  'num_cpus_per_socket': 16}
                 }
             ]
         },
