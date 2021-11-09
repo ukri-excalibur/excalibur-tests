@@ -101,16 +101,19 @@ which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 task
     ]
 
     tasks = parameter([ 2 ** x for x in range(1,9)])
-    band = parameter(['Uniband','Biband'])
+    
+    # For possible modes see
+    # https://www.intel.com/content/www/us/en/develop/documentation/imb-user-guide/top/mpi-1-benchmarks.html
+    mode = parameter(['Uniband','Biband'])
 
     @run_after('setup')
     def set_options(self):
-        self.executable_opts = [self.band.lower(), '-npmin', str(self.num_tasks)]
+        self.executable_opts = [self.mode.lower(), '-npmin', str(self.num_tasks)]
         self.num_tasks = self.tasks
         self.num_cpus_per_task = 1
-        self.tags = {self.band.lower()}
+        self.tags = {self.mode.lower()}
         #TODO: What is the default behaviour if I don't set num_tasks_per_node?
         
     @run_before('sanity')
     def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_found('# Benchmarking '+self.band, self.stdout)
+        self.sanity_patterns = sn.assert_found('# Benchmarking '+self.mode, self.stdout)
