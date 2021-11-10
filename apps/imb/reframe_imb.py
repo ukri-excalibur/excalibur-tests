@@ -24,6 +24,8 @@ Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 class IMB_base(rfm.RegressionTest):
     METRICS = []
 
+    mpi_implementation = parameter(['openmpi','intel-mpi'])
+
     def __init__(self):
         self.valid_systems = ['*:compute-node']
         self.valid_prog_environs = ['*']
@@ -35,7 +37,7 @@ class IMB_base(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['intel-mpi-benchmarks@2019.6%intel']
+        self.build_system.specs = ['intel-mpi-benchmarks@2019.6%intel^'+self.mpi_implementation]
         self.build_system.environment = identify_build_environment(self.current_system.name)
 
     @run_before('performance')
@@ -100,8 +102,8 @@ which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 task
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
 
-    tasks = parameter([ 2 ** x for x in range(1,3)])
-    
+    tasks = parameter([ 2 ** x for x in range(1,9)])
+
     # For possible modes see
     # https://www.intel.com/content/www/us/en/develop/documentation/imb-user-guide/top/mpi-1-benchmarks.html
     mode = parameter(['Uniband','Biband'])
@@ -113,7 +115,7 @@ which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 task
         self.num_cpus_per_task = 1
         self.tags = {self.mode.lower()}
         #TODO: What is the default behaviour if I don't set num_tasks_per_node?
-        
+
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('# Benchmarking '+self.mode, self.stdout)
