@@ -102,6 +102,19 @@ site_configuration = {
                 }
             ]
         },  # end cosma8
+        {
+            'name': 'github-actions',
+            'descr': 'GitHub Actions runner',
+            'hostnames': ['fv-az.*'],  # Just to not have '.*'
+            'partitions': [
+                {
+                    'name': 'default',
+                    'scheduler': 'local',
+                    'launcher': 'mpirun',
+                    'environs': ['builtin']
+                }
+            ]
+        },  # End GitHub Actions
         # < insert new systems here >
     ],
     'environments': [

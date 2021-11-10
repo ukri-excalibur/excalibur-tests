@@ -52,7 +52,7 @@ basic environment.
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.7.3.  Follow the [official
+require ReFrame 3.8.0.  Follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
@@ -103,11 +103,20 @@ for example by using `pip`, or creating environments with `pyenv` or
 Conda/Anaconda. For example, see [the guide for CSD3](https://docs.hpc.cam.ac.uk/hpc/software-tools/python.html).
 ## Usage
 
-TODO: expand
+Once you have set up Spack and ReFrame, you can execute a benchmark with
 
 ```sh
-/path/to/reframe/bin/reframe -c apps/hpgmg -r --performance-report
-/path/to/reframe/bin/reframe -c apps/sombrero -r --performance-report
+reframe -c apps/BENCH_NAME -r --performance-report
+```
+
+where `apps/BENCH_NAME` is the directory where the benchmark is.  The command
+above supposes you have the program `reframe` in your PATH, if it is not the
+case you can also call `reframe` with its relative or absolute path.  For
+example, to run the Sombrero benchmark in the `apps/sombrero` directory you can
+use
+
+```sh
+reframe -c apps/sombrero -r --performance-report
 ```
 
 The provided ReFrame configuration file contains the settings for multiple

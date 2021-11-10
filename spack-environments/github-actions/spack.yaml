@@ -1,0 +1,91 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: true
+  config:
+    install_tree:
+      root: opt/spack
+  compilers:
+  - compiler:
+      spec: clang@10.0.0
+      paths:
+        cc: /usr/bin/clang-10
+        cxx: /usr/bin/clang++-10
+        f77: null
+        fc: null
+      flags: {}
+      operating_system: ubuntu20.04
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: clang@11.0.0
+      paths:
+        cc: /usr/bin/clang
+        cxx: /usr/bin/clang++
+        f77: null
+        fc: null
+      flags: {}
+      operating_system: ubuntu20.04
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: clang@12.0.0
+      paths:
+        cc: /usr/bin/clang-12
+        cxx: /usr/bin/clang++-12
+        f77: null
+        fc: null
+      flags: {}
+      operating_system: ubuntu20.04
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.3.0
+      paths:
+        cc: /usr/bin/gcc-10
+        cxx: /usr/bin/g++-10
+        f77: /usr/bin/gfortran-10
+        fc: /usr/bin/gfortran-10
+      flags: {}
+      operating_system: ubuntu20.04
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.3.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: ubuntu20.04
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  packages:
+    cmake:
+      externals:
+      - spec: cmake@3.16.3
+        prefix: /usr
+      - spec: cmake@3.21.3
+        prefix: /usr/local
+      buildable: false
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.3%clang@10.0.0~cuda+cxx~cxx_exceptions+java~memchecker+pmi+pmix~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ofi,psm,psm2 schedulers=slurm
+        prefix: /usr
+      buildable: false
