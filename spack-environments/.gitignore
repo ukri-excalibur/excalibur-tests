@@ -1,4 +1,4 @@
-# Ignore all files...
-*
+# Ignore all files in all subdirectories...
+*/*
 # ...except `spack.yaml`
-!spack.yaml
+!**/spack.yaml

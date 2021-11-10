@@ -13,7 +13,7 @@ site_configuration = {
                     'descr': 'CSD3 Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                 },
                 {
                     'name': 'compute-node',
@@ -21,8 +21,12 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                     'max_jobs': 64,
+                    'processor': {'num_cpus': 32,
+                                  'num_cpus_per_core': 2,
+                                  'num_sockets': 2,
+                                  'num_cpus_per_socket': 16}
                 }
             ]
         },
@@ -36,14 +40,14 @@ site_configuration = {
                     'descr': 'Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                 },
                 {
                     'name': 'compute-node',
                     'descr': 'Computing nodes',
                     'scheduler': 'sge',
                     'launcher': 'mpirun',
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                     'max_jobs': 36,
                     'resources': [
                         {
@@ -64,7 +68,7 @@ site_configuration = {
                     'descr': 'Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                 },
                 {
                     'name': 'compute-node',
@@ -72,7 +76,7 @@ site_configuration = {
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
                     'access': ['-q clxq'],
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                     'max_jobs': 20,
                 },
             ]
@@ -89,7 +93,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--account=tc004', '--partition=cosma8'],
-                    'environs': ['gnu'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {'num_cpus': 256,
                                   'num_cpus_per_core': 2,
@@ -115,10 +119,13 @@ site_configuration = {
     ],
     'environments': [
         {
-            'name': 'gnu',
-            'cc': 'gcc',
-            'cxx': 'g++',
-            'ftn': 'gfortran'
+            # Since we always build with spack, we are not using the compilers in this environment.
+            # The compilers spack uses are definied in the spack specs of the reframe config
+            # for each app. Nevertheless, we have to define an environment here to make ReFrame happy.
+            'name': 'default',
+            'cc': 'cc',
+            'cxx': 'c++',
+            'ftn': 'ftn'
         },
     ],
     'logging': [
