@@ -34,6 +34,7 @@ class IMB_base(rfm.RegressionTest):
         self.perf_patterns = {} # something funny about reframe's attr lookup
         self.executable = 'IMB-MPI1'
         self.build_system = 'Spack'
+        self.tags = {self.mpi_implementation}
 
     @run_before('compile')
     def setup_build_system(self):
@@ -86,7 +87,7 @@ class IMB_PingPong(IMB_base):
         self.num_tasks = 2
         self.num_cpus_per_task = 1
         self.num_tasks_per_node = 1
-        self.tags = {'pingpong'}
+        self.tags.add('pingpong')
 
     @run_before('sanity')
     def set_sanity_patterns(self):
@@ -108,12 +109,12 @@ which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 task
     # https://www.intel.com/content/www/us/en/develop/documentation/imb-user-guide/top/mpi-1-benchmarks.html
     mode = parameter(['Uniband','Biband'])
 
-    @run_after('setup')
-    def set_options(self):
+    def __init__(self):
+        super().__init__()
         self.executable_opts = [self.mode.lower(), '-npmin', str(self.num_tasks)]
         self.num_tasks = self.tasks
         self.num_cpus_per_task = 1
-        self.tags = {self.mode.lower()}
+        self.tags.add(self.mode.lower())
         #TODO: What is the default behaviour if I don't set num_tasks_per_node?
 
     @run_before('sanity')
