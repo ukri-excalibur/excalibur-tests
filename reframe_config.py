@@ -13,7 +13,7 @@ site_configuration = {
                     'descr': 'CSD3 Login nodes',
                     'scheduler': 'local',
                     'launcher': 'local',
-                    'environs': ['gnu','intel'],
+                    'environs': ['gnu'],
                 },
                 {
                     'name': 'compute-node',
@@ -21,7 +21,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--account=DIRAC-DO006-CPU', '--partition=skylake'],
-                    'environs': ['gnu','intel'],
+                    'environs': ['gnu'],
                     'max_jobs': 64,
                     'processor': {'num_cpus': 32,
                                   'num_cpus_per_core': 2,

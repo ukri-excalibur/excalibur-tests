@@ -26,7 +26,7 @@ class IMB_base(rfm.RegressionTest):
 
     def __init__(self):
         self.valid_systems = ['*:compute-node']
-        self.valid_prog_environs = ['intel']
+        self.valid_prog_environs = ['*']
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
         self.perf_patterns = {} # something funny about reframe's attr lookup
@@ -35,7 +35,7 @@ class IMB_base(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['intel-mpi-benchmarks@2019.6']
+        self.build_system.specs = ['intel-mpi-benchmarks@2019.6%intel']
         self.build_system.environment = identify_build_environment(self.current_system.name)
 
     @run_before('performance')
@@ -100,7 +100,7 @@ which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 task
         Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
     ]
 
-    tasks = parameter([ 2 ** x for x in range(1,9)])
+    tasks = parameter([ 2 ** x for x in range(1,3)])
     
     # For possible modes see
     # https://www.intel.com/content/www/us/en/develop/documentation/imb-user-guide/top/mpi-1-benchmarks.html
