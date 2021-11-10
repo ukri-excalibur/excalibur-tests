@@ -119,16 +119,13 @@ site_configuration = {
     ],
     'environments': [
         {
-            'name': 'gnu',
-            'cc': 'gcc',
-            'cxx': 'g++',
-            'ftn': 'gfortran'
-        },
-        {
-            'name': 'intel',
-            'cc': 'icc',
-            'cxx': 'icpc',
-            'ftn': 'ifort'
+            # Since we always build with spack, we are not using the compilers in this environment.
+            # The compilers spack uses are definied in the spack specs of the reframe config
+            # for each app. Nevertheless, we have to define an environment here to make ReFrame happy.
+            'name': 'default',
+            'cc': 'cc',
+            'cxx': 'c++',
+            'ftn': 'ftn'
         },
     ],
     'logging': [
