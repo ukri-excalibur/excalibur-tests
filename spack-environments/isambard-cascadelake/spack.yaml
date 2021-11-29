@@ -88,6 +88,16 @@ spack:
   packages:
     all:
       target: [cascadelake]
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+      buildable: false
+    cmake:
+      externals:
+      - spec: cmake@3.11.4
+        prefix: /usr
+      buildable: false
     openmpi:
       externals:
       - spec: openmpi@4.0.3rc4~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath

@@ -102,6 +102,18 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+      buildable: false
+    cmake:
+      externals:
+      - spec: cmake@3.21.1
+        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+      buildable: false
     intel-mpi:
       externals:
       - spec: intel-mpi@2019.9.166
@@ -112,13 +124,6 @@ spack:
       - spec: openmpi@4.0.3~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           fabrics=ucx schedulers=slurm
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
-      buildable: false
-    cmake:
-      externals:
-      - spec: cmake@3.21.1
-        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
-      - spec: cmake@2.8.12.2
-        prefix: /usr
       buildable: false
     python:
       externals:

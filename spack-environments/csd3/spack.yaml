@@ -141,6 +141,11 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+      buildable: false
     cmake:
       externals:
       - spec: cmake@2.8.12.2
