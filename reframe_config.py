@@ -9,13 +9,6 @@ site_configuration = {
             'modules_system': 'tmod32',
             'partitions': [
                 {
-                    'name': 'login',
-                    'descr': 'CSD3 Login nodes',
-                    'scheduler': 'local',
-                    'launcher': 'local',
-                    'environs': ['default'],
-                },
-                {
                     'name': 'compute-node',
                     'descr': 'Compute nodes',
                     'scheduler': 'slurm',
@@ -29,19 +22,12 @@ site_configuration = {
                                   'num_cpus_per_socket': 16}
                 }
             ]
-        },
+        },  # end CSD3
         {
             'name': 'myriad',
             'descr': 'Myriad',
             'hostnames': ['login[0-9]+'],
             'partitions': [
-                {
-                    'name': 'login',
-                    'descr': 'Login nodes',
-                    'scheduler': 'local',
-                    'launcher': 'local',
-                    'environs': ['default'],
-                },
                 {
                     'name': 'compute-node',
                     'descr': 'Computing nodes',
@@ -57,19 +43,12 @@ site_configuration = {
                     ]
                 },
             ]
-        },
+        },  # end Myriad
         {
             'name': 'isambard-cascadelake',
             'descr': 'Cascade Lake nodes of Isambard 2',
             'hostnames': ['login-0[12]'],
             'partitions': [
-                {
-                    'name': 'login',
-                    'descr': 'Login nodes',
-                    'scheduler': 'local',
-                    'launcher': 'local',
-                    'environs': ['default'],
-                },
                 {
                     'name': 'compute-node',
                     'descr': 'Computing nodes',
