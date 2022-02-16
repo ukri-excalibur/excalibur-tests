@@ -119,11 +119,19 @@ use
 reframe -c apps/sombrero -r --performance-report
 ```
 
-The provided ReFrame configuration file contains the settings for multiple
-systems.  If you use it, the automatic detection of the system may fail, as some
-systems may use clashing hostnames.  You can always use the flag [`--system
+### Selecting system and queue access options
+
+The provided ReFrame configuration file contains the settings for multiple systems.  If you
+use it, the automatic detection of the system may fail, as some systems may use clashing
+hostnames.  You can always use the flag [`--system
 NAME:PARTITION`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-system)
 to specify the system (and optionally the partition) to use.
+
+Additionally, if submitting jobs to the compute nodes requires additional options, like for
+example the resource group you belong to (for example `--account=...` for Slurm), you have
+to pass the command line flag
+[`--job-option=...`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-J)
+to `reframe` (e.g., `--job-option='--account=...'`).
 
 ## Contributing new systems or benchmarks
 
