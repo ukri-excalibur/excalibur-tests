@@ -94,6 +94,21 @@ site_configuration = {
                 }
             ]
         },  # End GitHub Actions
+        {
+            'name': 'tesseract',
+            'descr': 'Extreme Scaling Tesseract',
+            'hostnames': ['tesseract-login.*'],
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 16,
+                },
+            ]
+        },  # end Isambard Cascadelake
         # < insert new systems here >
     ],
     'environments': [
