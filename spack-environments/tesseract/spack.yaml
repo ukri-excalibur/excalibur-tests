@@ -76,13 +76,38 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
-    cmake:
+    autoconf:
       externals:
-      - spec: cmake@3.11.2
-        prefix: /tessfs1/home/y07/y07/rse/spack/spack-tesseract/opt/spack/linux-rhel7-x86_64/gcc-7.3.0/cmake-3.11.2-k6bcm3yt3bgi5v6uwhlu2puwf6rxzmpo
+      - spec: autoconf@2.69
+        prefix: /usr
       buildable: false
-    intel-mpi:
+    automake:
       externals:
-      - spec: intel-mpi@2018.1.163
-        prefix: /tessfs1/sw/Intel/impi/2018.1.163/intel64
+      - spec: automake@1.13.4
+        prefix: /usr
+      buildable: false
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
+      buildable: false
+    openssh:
+      externals:
+      - spec: openssh@7.4p1
+        prefix: /usr
+      buildable: false
+    openssl:
+      externals:
+      - spec: openssl@1.0.2k-fips
+        prefix: /usr
+      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.16.3~cpanm+shared+threads
+        prefix: /usr
+      buildable: false
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.27.1
+        prefix: /usr
       buildable: false
