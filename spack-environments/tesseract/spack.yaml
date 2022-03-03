@@ -4,7 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs: [sombrero@2021-08-16]
+  specs: []
   view: true
   config:
     install_tree:
@@ -86,6 +86,21 @@ spack:
       - spec: automake@1.13.4
         prefix: /usr
       buildable: false
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+      buildable: false
+    diffutils:
+      externals:
+      - spec: diffutils@3.3
+        prefix: /usr
+      buildable: false
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+      buildable: false
     m4:
       externals:
       - spec: m4@1.4.16
@@ -109,5 +124,15 @@ spack:
     pkg-config:
       externals:
       - spec: pkg-config@0.27.1
+        prefix: /usr
+      buildable: false
+    tar:
+      externals:
+      - spec: tar@1.26
+        prefix: /usr
+      buildable: false
+    xz:
+      externals:
+      - spec: xz@5.2.2
         prefix: /usr
       buildable: false
