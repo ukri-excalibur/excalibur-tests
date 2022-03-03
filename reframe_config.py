@@ -108,7 +108,32 @@ site_configuration = {
                     'max_jobs': 16,
                 },
             ]
-        },  # end Isambard Cascadelake
+        },  # end Tesseract
+        {
+            'name': 'tursa',
+            'descr': 'Tursa',
+            'hostnames': ['tursa-login.*'],
+            'partitions': [
+                {
+                    'name': 'cpu-compute-node',
+                    'descr': 'CPU computing nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=cpu', '--qos=standard'],
+                    'environs': ['default'],
+                    'max_jobs': 16,
+                },
+                {
+                    'name': 'gpu-compute-node',
+                    'descr': 'GPU computing nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=gpu', '--qos=standard'],
+                    'environs': ['default'],
+                    'max_jobs': 16,
+                },
+            ]
+        },  # end Tursa
         # < insert new systems here >
     ],
     'environments': [
@@ -157,5 +182,12 @@ site_configuration = {
                 }
             ]
         }
+    ],
+    'schedulers': [
+        {
+            'name': 'slurm',
+            'target_systems': ['tursa'],
+            'use_nodes_option': True,
+        },
     ],
 }
