@@ -20,6 +20,7 @@ class HpgmgTest(rfm.RegressionTest):
     executable = 'hpgmg-fv'
     executable_opts = ['7', '8']
     num_tasks = 4
+    num_tasks_per_node = 4
     num_cpus_per_task = 4
     time_limit = '30m'
     variables = {
