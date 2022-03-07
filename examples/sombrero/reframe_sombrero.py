@@ -39,6 +39,7 @@ class SombreroBenchmark(rfm.RegressionTest):
     # automatically launch MPI with the given number of tasks, using the
     # launcher specificed in the config for the current system.
     num_tasks = 1
+    num_tasks_per_node = 1
     num_cpus_per_task = 1
     # The program for running the benchmarks.
     executable = 'sombrero1'
