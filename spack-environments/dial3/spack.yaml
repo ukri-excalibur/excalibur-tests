@@ -1,0 +1,111 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: [sombrero@2021-08-16]
+  view: true
+  config:
+    install_tree:
+      root: opt/spack
+  compilers:
+  - compiler:
+      spec: gcc@10.3.0
+      paths:
+        cc: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gcc-10.3.0-picedkdwcwjaro4xyounzdiqihlfgmsi/bin/gcc
+        cxx: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gcc-10.3.0-picedkdwcwjaro4xyounzdiqihlfgmsi/bin/g++
+        f77: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gcc-10.3.0-picedkdwcwjaro4xyounzdiqihlfgmsi/bin/gfortran
+        fc: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gcc-10.3.0-picedkdwcwjaro4xyounzdiqihlfgmsi/bin/gfortran
+      flags: {}
+      operating_system: rocky8
+      target: x86_64
+      modules:
+      - gcc/10.3.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.5.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rocky8
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+      buildable: false
+    automake:
+      externals:
+      - spec: automake@1.16.1
+        prefix: /usr
+      buildable: false
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+      buildable: false
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+      buildable: false
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+      buildable: false
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+      buildable: false
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.5%gcc@10.3.0
+        modules:
+        - openmpi/4.0.5
+      buildable: false
+    openssh:
+      externals:
+      - spec: openssh@8.0p1
+        prefix: /usr
+      buildable: false
+    openssl:
+      externals:
+      - spec: openssl@1.1.1k
+        prefix: /usr
+      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.26.3~cpanm+shared+threads
+        prefix: /usr
+      buildable: false
+    pkgconf:
+      externals:
+      - spec: pkgconf@1.4.2
+        prefix: /usr
+      buildable: false
+    sqlite:
+      externals:
+      - spec: sqlite@3.26.0+fts~functions+rtree
+        prefix: /usr
+      buildable: false
+    tar:
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+      buildable: false
+    xz:
+      externals:
+      - spec: xz@5.2.4
+        prefix: /usr
+      buildable: false

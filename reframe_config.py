@@ -134,6 +134,21 @@ site_configuration = {
                 },
             ]
         },  # end Tursa
+        {
+            'name': 'dial3',
+            'descr': 'DiaL3',
+            'hostnames': ['d3-login.*'],
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 16,
+                },
+            ]
+        },  # end DiaL3
         # < insert new systems here >
     ],
     'environments': [
