@@ -111,11 +111,6 @@ spack:
       - spec: openssh@7.4p1
         prefix: /usr
       buildable: false
-    openssl:
-      externals:
-      - spec: openssl@1.0.2k-fips
-        prefix: /usr
-      buildable: false
     perl:
       externals:
       - spec: perl@5.16.3~cpanm+shared+threads
