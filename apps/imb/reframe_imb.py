@@ -34,11 +34,12 @@ class IMB_base(rfm.RegressionTest):
         self.perf_patterns = {} # something funny about reframe's attr lookup
         self.executable = 'IMB-MPI1'
         self.build_system = 'Spack'
+        self.spack_spec = variable(str, value='intel-mpi-benchmarks@2019.6%intel')
         self.tags = {self.mpi_implementation}
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['intel-mpi-benchmarks@2019.6%intel^'+self.mpi_implementation]
+        self.build_system.specs = [self.spack_spec+'^'+self.mpi_implementation]
         self.build_system.environment = identify_build_environment(self.current_system.name)
 
     @run_before('performance')

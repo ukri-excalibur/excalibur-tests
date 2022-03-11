@@ -119,6 +119,16 @@ use
 reframe -c apps/sombrero -r --performance-report
 ```
 
+For benchmark using the Spack build system, the tests define a default Spack specification
+to be installed in the environment, but users can change it when invoking ReFrame on the
+command line with the
+[`-S`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S) option to set
+the `spack_spec` variable:
+
+```
+reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrer@2021-08-16%intel'
+```
+
 ### Selecting system and queue access options
 
 The provided ReFrame configuration file contains the settings for multiple systems.  If you

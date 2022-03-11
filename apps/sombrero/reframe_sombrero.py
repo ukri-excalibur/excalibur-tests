@@ -21,12 +21,13 @@ class SombreroBuild(rfm.CompileOnlyRegressionTest):
     valid_systems = ['*']
     valid_prog_environs = ['*']
     build_system = 'Spack'
+    spack_spec = variable(str, value='sombrero@2021-08-16')
 
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.environment = identify_build_environment(
             self.current_system.name)
-        self.build_system.specs = ['sombrero@2021-08-16']
+        self.build_system.specs = [self.spack_spec]
 
     @run_before('sanity')
     def set_sanity_patterns(self):

@@ -17,6 +17,7 @@ class HpgmgTest(rfm.RegressionTest):
     valid_systems = ['*']
     valid_prog_environs = ['*']
     build_system = 'Spack'
+    spack_spec = variable(str, value='hpgmg@0.4')
     executable = 'hpgmg-fv'
     executable_opts = ['7', '8']
     num_tasks = 4
@@ -40,7 +41,7 @@ class HpgmgTest(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = ['hpgmg@0.4']
+        self.build_system.specs = [self.spack_spec]
         self.build_system.environment = identify_build_environment(
             self.current_system.name)
 
