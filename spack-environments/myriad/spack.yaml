@@ -116,12 +116,12 @@ spack:
       buildable: false
     intel-mpi:
       externals:
-      - spec: intel-mpi@2019.9.166
+      - spec: intel-mpi@2019.9.166%intel
         prefix: /shared/ucl/apps/intel/2020/impi/2019.6.166/intel64/
       buildable: false
     openmpi:
       externals:
-      - spec: openmpi@4.0.3~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+      - spec: openmpi@4.0.3%gcc~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           fabrics=ucx schedulers=slurm
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
       buildable: false
