@@ -101,6 +101,11 @@ spack:
       - spec: gettext@0.19.8.1
         prefix: /usr
       buildable: false
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2018.1.163
+        prefix: /tessfs1/sw/Intel
+      buildable: false
     m4:
       externals:
       - spec: m4@1.4.16
