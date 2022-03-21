@@ -185,13 +185,20 @@ site_configuration = {
                     'prefix': '%(check_system)s/%(check_partition)s',
                     'level': 'info',
                     'format': (
-                        '%(check_job_completion_time)s|reframe %(version)s|'
-                        '%(check_info)s|jobid=%(check_jobid)s|'
+                        '%(check_job_completion_time)s|'
+                        'reframe %(version)s|'
+                        '%(check_info)s|'
+                        'jobid=%(check_jobid)s|'
                         '%(check_perf_var)s=%(check_perf_value)s|'
-                        'ref=%(check_perf_ref)s '
+                        'units=%(check_perf_unit)s|'
+                        'num_total_cores=%(check_num_total_cores)s|'
+                        'num_mpi_tasks=%(check_num_mpi_tasks)s|'
+                        'num_omp_threads=%(check_num_omp_threads)s|'
+                        'num_nodes=%(check_num_nodes)s|'
+                        'num_mpi_tasks_per_node=%(check_num_mpi_tasks_per_node)s|'
+                        'ref=%(check_perf_ref)s|'
                         '(l=%(check_perf_lower_thres)s, '
-                        'u=%(check_perf_upper_thres)s)|'
-                        '%(check_perf_unit)s'
+                        'u=%(check_perf_upper_thres)s)'
                     ),
                     'append': True
                 }
