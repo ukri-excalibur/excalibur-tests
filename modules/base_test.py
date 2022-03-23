@@ -21,11 +21,11 @@ class DiRACTest(rfm.RegressionTest):
         self.num_mpi_tasks = self.num_tasks = max(self.num_total_cores//self.num_omp_threads, 1)
 
         try:
-            cpus_per_node = self._current_partition.processor.num_cpus
-            if cpus_per_node is None:
+            num_cores_per_node = self._current_partition.processor.num_cpus
+            if num_cores_per_node is None:
                 raise AttributeError('Cannot determine the number of cores PP')
 
-            self.num_nodes = math.ceil(self.num_mpi_tasks / cpus_per_node)
+            self.num_nodes = math.ceil(self.num_total_cores / num_cores_per_node)
 
         except AttributeError:
             print('WARNING: Failed to determine the number of nodes required '
@@ -36,7 +36,7 @@ class DiRACTest(rfm.RegressionTest):
         self.num_tasks_per_node = self.num_mpi_tasks_per_node
 
         if self.num_total_cores // self.num_omp_threads == 0:
-            print('WARNING: Had fewer total number of cores than the default '
+            print('WARNING: Had fewer total number of cores than the '
                   f'number of OMP threads, using {self.num_total_cores} OMP '
                   f'threads')
             self.num_omp_threads = self.num_total_cores
