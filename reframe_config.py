@@ -149,6 +149,20 @@ site_configuration = {
                 },
             ]
         },  # end DiaL3
+        {
+            'name': 'generic',
+            'descr': 'generic',
+            'hostnames': ['.*'],
+            'partitions': [
+                {
+                    'name': 'default',
+                    'descr': 'Default system',
+                    'scheduler': 'local',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                },
+            ]
+        },  # end generic
         # < insert new systems here >
     ],
     'environments': [

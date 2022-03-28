@@ -101,6 +101,7 @@ The benchmarks in this suite will additionally need the following Python modules
 Check the recommended way to install Python modules in your system, it may be
 for example by using `pip`, or creating environments with `pyenv` or
 Conda/Anaconda. For example, see [the guide for CSD3](https://docs.hpc.cam.ac.uk/hpc/software-tools/python.html).
+
 ## Usage
 
 Once you have set up Spack and ReFrame, you can execute a benchmark with
@@ -142,6 +143,19 @@ example the resource group you belong to (for example `--account=...` for Slurm)
 to pass the command line flag
 [`--job-option=...`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-J)
 to `reframe` (e.g., `--job-option='--account=...'`).
+
+### Unsupported systems
+
+The configuration provided in [`reframe_config.py`](./reframe_config.py) lets you run the
+benchmarks on systems for which the configuration has been already contributed.  However you
+can still use this framework on any system by choosing the "generic" system with `--system
+generic`, or using your own ReFrame configuration.  Note, however, that if you use the
+"generic" system, ReFrame will not know anything about the queue manager of your system, if
+any, or the MPI launcher.  For the benchmarks using the Spack build system, if you choose
+the "generic" system, a new empty Spack environment will be automatically created in
+`spack-environments/generic`.  In any case, you can always make the benchmarks use a
+different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
+described above.
 
 ## Contributing new systems or benchmarks
 
