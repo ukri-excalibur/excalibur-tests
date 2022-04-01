@@ -145,28 +145,63 @@ spack:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
-      buildable: false
+    automake:
+      externals:
+      - spec: automake@1.13.4
+        prefix: /usr
     cmake:
       externals:
       - spec: cmake@2.8.12.2
         prefix: /usr
       - spec: cmake@3.17.0
         prefix: /usr/local/software/master/cmake/latest
-      buildable: false
+    gsl:
+      externals:
+      - spec: gsl@2.1
+        prefix: /usr/local/Cluster-Apps/gsl/2.1
+      - spec: gsl@2.4
+        prefix: /usr/local/Cluster-Apps/gsl/2.4
+    hdf5:
+      externals:
+      - spec: hdf5@1.10.3~mpi
+        prefix: /usr/local/software/hdf5/1.10.3
+      - spec: hdf5@1.10.5%gcc+mpi^openmpi
+        prefix: /usr/local/Cluster-Apps/hdf5/openmpi/gcc/9.2/1.10.5
+      - spec: hdf5@1.10.5%intel+mpi^intel-mpi
+        prefix: /usr/local/Cluster-Apps/hdf5/mpi/intel/2019.3/1.10.5
+      - spec: hdf5@1.12.0%gcc+mpi^openmpi
+        prefix: /usr/local/Cluster-Apps/hdf5/openmpi/gcc/9.3/1.12.0
+      - spec: hdf5@1.12.1~mpi
+        prefix: /usr/local/software/hdf5/1.12.1
     intel-mpi:
       externals:
       - spec: intel-mpi@2017.4.239
         prefix: /usr/local/Cluster-Apps/intel/2017.4/compilers_and_libraries_2017.4.196/linux/mpi/intel64
-      buildable: false
+    libtool:
+      externals:
+      - spec: libtool@2.4
+        prefix: /usr
     openmpi:
       externals:
+      - spec: openmpi@4.0.4~cuda~cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ofi,psm2 schedulers=slurm
+        prefix: /usr/local/Cluster-Apps/openmpi/gcc/9.3/4.0.4
+      - spec: openmpi@4.0.2~cuda~cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ofi,psm2 schedulers=slurm
+        prefix: /usr/local/Cluster-Apps/openmpi/gnu/4.0.2-gcc-9.2
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3+static~thread_multiple~wrapper-rpath
+          fabrics=ofi,psm2 schedulers=slurm
+        prefix: /usr/local/Cluster-Apps/openmpi/gnu/4.0.1-gcc-9.2
       - spec: openmpi@4.0.0~cuda+cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3+static~thread_multiple~wrapper-rpath
           fabrics=ofi,psm2 schedulers=slurm
         prefix: /usr/local/software/spack/spack-0.11.2/opt/spack/linux-rhel7-x86_64/intel-17.0.8/openmpi-4.0.0-tnwn5io24eaoxhdxxcscx5jrsvlneqqx
       - spec: openmpi@4.0.4~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           fabrics=ofi,psm2 schedulers=slurm
         prefix: /usr/local/Cluster-Apps/openmpi/gcc/9.3/4.0.4
-      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.16.3+cpanm+shared+threads
+        prefix: /usr
     python:
       externals:
       - spec: python@3.8.2+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
@@ -175,4 +210,3 @@ spack:
         prefix: /usr
       - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /usr
-      buildable: false
