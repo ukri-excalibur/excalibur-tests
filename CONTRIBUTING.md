@@ -29,9 +29,13 @@ Here are the steps to create a Spack environment for a new system:
 
 * create the environment:
   ```
-  spack env create -d spack-environments/SYSTEM-NAME
+  spack env create --without-view -d spack-environments/SYSTEM-NAME
   ```
-  where `SYSTEM-NAME` is the same name as the ReFrame system name
+  where `SYSTEM-NAME` is the same name as the ReFrame system name.  Remember to
+  [disable
+  views](https://spack.readthedocs.io/en/latest/environments.html#filesystem-views)
+  with `--without-view` to avoid conflicts when installing incompatible packages
+  in the same environment
 * activate it:
   ```
   spack env activate -d spack-environments/SYSTEM-NAME
@@ -50,7 +54,7 @@ Here are the steps to create a Spack environment for a new system:
   "visible" (e.g., load the relevant modules) and add them to the environment
   with
   ```
-  spack external find --not-buildable PACKAGE-NAME ...
+  spack external find PACKAGE-NAME ...
   ```
   where `PACKAGE-NAME ...` are the names of the corresponding Spack packages
 * manually tweak the environment as necessary.  For example, if there is already
