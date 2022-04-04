@@ -106,6 +106,10 @@ spack:
       - spec: intel-mpi@2018.1.163
         prefix: /tessfs1/sw/Intel
       buildable: false
+    libtool:
+      externals:
+      - spec: libtool@2.4
+        prefix: /usr
     m4:
       externals:
       - spec: m4@1.4.16
