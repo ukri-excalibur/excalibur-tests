@@ -17,17 +17,39 @@ class SwiftBenchmark(rfm.RegressionTest):
     valid_prog_environs = ['*']
     build_system = 'Spack'
     spack_spec = variable(str, value='swiftsim@0.9.0')
-    num_tasks = 1
+    num_tasks = 4
     num_tasks_per_node = 1
-    num_cpus_per_task = 1
-    executable = 'swift'
-    executable_opts = ['--help']
-    time_limit = '2m'
+    num_cpus_per_task = 8
+    sourcesdir = path.join(path.dirname(__file__), 'input')
+    executable = 'swift_mpi'
+    executable_opts = ['--hydro', f'--threads={num_cpus_per_task}',
+                       'sodShock.yml']
+    time_limit = '20m'
     variables = {
         'OMP_NUM_THREADS': f'{num_cpus_per_task}',
     }
     extra_resources = {
         'mpi': {'num_slots': num_tasks * num_cpus_per_task}
+    }
+    reference = {
+        'cosma8': {
+            'duration': (50, None, 0.2, 'seconds'),
+        },
+        'csd3:skylake': {
+            'duration': (50, None, 0.2, 'seconds'),
+        },
+        'csd3:icelake': {
+            'duration': (350, None, 0.2, 'seconds'),
+        },
+        'dial3': {
+            'duration': (150, None, 0.2, 'seconds'),
+        },
+        'tesseract': {
+            'duration': (250, None, 0.2, 'seconds'),
+        },
+        '*': {
+            'duration': (250, None, None, 'seconds'),
+        }
     }
 
     @run_before('compile')
@@ -38,4 +60,14 @@ class SwiftBenchmark(rfm.RegressionTest):
 
     @run_before('sanity')
     def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_found(r'Version : 0.9.0', self.stdout)
+        self.sanity_patterns = sn.assert_found(r'main: done. Bye.', self.stdout)
+
+    @run_before('performance')
+    def set_perf_patterns(self):
+        # This performance pattern parses the output of the program to extract
+        # the desired figure of merit.
+        self.perf_patterns = {
+            'duration': sn.extractsingle(
+                r'\[(\S+)\] main: done. Bye.',
+                self.stdout, 1, float),
+        }
