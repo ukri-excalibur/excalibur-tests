@@ -127,7 +127,7 @@ command line with the
 the `spack_spec` variable:
 
 ```
-reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrer@2021-08-16%intel'
+reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08-16%intel'
 ```
 
 ### Selecting system and queue access options
