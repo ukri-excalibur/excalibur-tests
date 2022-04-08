@@ -78,7 +78,7 @@ class Hpcg(rfm.RunOnlyRegressionTest, CachedRunTest):
         """
         dat_file = 'hpcg-%s.dat' % self.size
         dat_source = None
-        prefix = os.path.join(self.prefix, '..', 'systems', self.current_system.name) # use self.prefix so relative to test dir, not pwd
+        prefix = os.path.join(self.prefix, '..', 'systems', self.current_partition) # use self.prefix so relative to test dir, not pwd
         suffixes = ['', self.current_partition.name]
         locations = [os.path.abspath(os.path.join(prefix, suffix, 'hpcg', dat_file)) for suffix in suffixes]
         for location in locations:

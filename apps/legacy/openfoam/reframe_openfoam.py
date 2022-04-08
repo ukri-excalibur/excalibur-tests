@@ -104,5 +104,5 @@ class Openfoam_Mbike(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.environment = identify_build_environment(
-            self.current_system.name)
+            self.current_partition)
         self.build_system.specs = ['openfoam']

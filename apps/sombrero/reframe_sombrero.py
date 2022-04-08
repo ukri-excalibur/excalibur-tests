@@ -26,7 +26,7 @@ class SombreroBuild(rfm.CompileOnlyRegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.environment = identify_build_environment(
-            self.current_system.name)
+            self.current_partition)
         self.build_system.specs = [self.spack_spec]
 
     @run_before('sanity')
@@ -46,7 +46,7 @@ class SombreroBenchmarkBase(rfm.RunOnlyRegressionTest):
     def inject_dependencies(self):
         self.depends_on("SombreroBuild", udeps.fully)
         self.build_system.environment = identify_build_environment(
-            self.current_system.name)
+            self.current_partition)
         self.build_system.specs = ['sombrero@2021-08-16']
 
     @run_after('init')

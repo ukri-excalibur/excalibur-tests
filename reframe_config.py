@@ -9,8 +9,8 @@ site_configuration = {
             'modules_system': 'tmod32',
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Compute nodes',
+                    'name': 'skylake',
+                    'descr': 'Skylake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--partition=skylake'],
@@ -20,7 +20,20 @@ site_configuration = {
                                   'num_cpus_per_core': 2,
                                   'num_sockets': 2,
                                   'num_cpus_per_socket': 16}
-                }
+                },
+                {
+                    'name': 'icelake',
+                    'descr': 'Icelake compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=icelake'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {'num_cpus': 32,
+                                  'num_cpus_per_core': 2,
+                                  'num_sockets': 2,
+                                  'num_cpus_per_socket': 16}
+                },
             ]
         },  # end CSD3
         {
@@ -45,13 +58,13 @@ site_configuration = {
             ]
         },  # end Myriad
         {
-            'name': 'isambard-cascadelake',
+            'name': 'isambard',
             'descr': 'Cascade Lake nodes of Isambard 2',
             'hostnames': ['login-0[12]'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Computing nodes',
+                    'name': 'cascadelake',
+                    'descr': 'Cascadelake computing nodes',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
                     'access': ['-q clxq'],
@@ -115,7 +128,7 @@ site_configuration = {
             'hostnames': ['tursa-login.*'],
             'partitions': [
                 {
-                    'name': 'cpu-compute-node',
+                    'name': 'cpu',
                     'descr': 'CPU computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
@@ -124,7 +137,7 @@ site_configuration = {
                     'max_jobs': 16,
                 },
                 {
-                    'name': 'gpu-compute-node',
+                    'name': 'gpu',
                     'descr': 'GPU computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',

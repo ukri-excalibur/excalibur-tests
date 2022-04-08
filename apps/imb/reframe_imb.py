@@ -40,7 +40,7 @@ class IMB_base(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec+'^'+self.mpi_implementation]
-        self.build_system.environment = identify_build_environment(self.current_system.name)
+        self.build_system.environment = identify_build_environment(self.current_partition)
 
     @run_before('performance')
     def add_metrics(self):

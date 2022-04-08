@@ -43,7 +43,7 @@ class HpgmgTest(rfm.RegressionTest):
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
         self.build_system.environment = identify_build_environment(
-            self.current_system.name)
+            self.current_partition)
 
     @run_before('sanity')
     def set_sanity_patterns(self):

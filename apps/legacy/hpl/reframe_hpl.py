@@ -45,7 +45,7 @@ class IntelHpl(rfm.RunOnlyRegressionTest):
         self.size = size
         self.valid_systems = ['*']
         self.valid_prog_environs = ['intel-hpl']
-        self.sourcesdir = os.path.join(self.prefix, '..', '..', 'systems', self.current_system.name, 'hpl', size) # use self.prefix so relative to test dir, not pwd
+        self.sourcesdir = os.path.join(self.prefix, '..', '..', 'systems', self.current_partition, 'hpl', size) # use self.prefix so relative to test dir, not pwd
         
         # NB num tasks etc done after setup
         self.exclusive_access = True

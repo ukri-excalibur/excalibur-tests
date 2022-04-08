@@ -80,7 +80,7 @@ class SombreroBenchmark(rfm.RegressionTest):
         # Identify the Spack environment for the current system.  Keep this
         # setting as is.
         self.build_system.environment = identify_build_environment(
-            self.current_system.name)
+            self.current_partition)
 
     # Function defining a sanity check.  See
     # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html

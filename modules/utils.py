@@ -339,17 +339,20 @@ def singleval(seq, sep=', '):
         return list(seq)[0]
     return sep.join(str(v) for v in seq)
 
-def identify_build_environment(current_system_name):
+def identify_build_environment(current_partition):
     # Select the Spack environment:
     # * if `EXCALIBUR_SPACK_ENV` is set, use that one
-    # * if not, use a provided spack environment for the current system
+    # * if not, use a provided spack environment for the current partition
     # * if that doesn't exist, create a persistent minimal environment
     if os.getenv('EXCALIBUR_SPACK_ENV'):
         env = os.getenv('EXCALIBUR_SPACK_ENV')
     else:
         env = os.path.realpath(
             os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
-                         current_system_name))
+                         # Note: we can't have `:` in the path of the install
+                         # tree, otherwise the PATH environment variable is
+                         # going to be messed up
+                         current_partition.fullname.replace(':', '/')))
         if not os.path.isdir(env):
             cmd = run_command(["spack", "env", "create", "-d", env])
             if cmd.returncode != 0:

@@ -1,0 +1,18 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  concretization: separately
+  view: false
+  include:
+  - ../compilers.yaml
+  - ../packages.yaml
+  config:
+    install_tree:
+      root: opt/spack
+  packages:
+    all:
+      target: [icelake]
