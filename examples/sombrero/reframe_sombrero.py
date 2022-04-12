@@ -64,10 +64,39 @@ class SombreroBenchmark(rfm.RegressionTest):
     # Reference values for the performance benchmarks, see the
     # `set_perf_patterns` function below.
     reference = {
+        # `reference` is a dictionary, to add reference values for different
+        # systems.  The keys of the dictionary will match the `system:partition`
+        # you're running the benchmarks on.  The values are dictionaries, where
+        # the key is the name of the performance benchmark, and the value is the
+        # list of reference values: first element is the reference value, second
+        # and third elements are the lower and upper thresholds as fractions (if
+        # `None`, there are no bounds), last element is the unit.  See
+        # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.reference
+        # for more information.  The key `*` matches all systems/partitions not
+        # matched by the other entries of the dictionary and can be used to
+        # provide a default reference value.
+        'cosma8': {
+            'flops': (3.8, -0.2, None, 'Gflops/seconds'),
+        },
+        'csd3:skylake': {
+            'flops': (1.2, -0.2, None, 'Gflops/seconds'),
+        },
+        'csd3:icelake': {
+            'flops': (1.5, -0.2, None, 'Gflops/seconds'),
+        },
+        'dial3': {
+            'flops': (1.2, -0.2, None, 'Gflops/seconds'),
+        },
+        'github-actions': {
+            'flops': (0.9, None, None, 'Gflops/seconds'),
+        },
+        'myriad': {
+            'flops': (1, -0.2, None, 'Gflops/seconds'),
+        },
+        'tesseract': {
+            'flops': (0.75, -0.2, None, 'Gflops/seconds'),
+        },
         '*': {
-            # 1 is the reference value, second and third elements are the lower
-            # and upper bound (if `None`, there are no bounds), last element is
-            # the unit.
             'flops': (1, None, None, 'Gflops/seconds'),
         }
     }
