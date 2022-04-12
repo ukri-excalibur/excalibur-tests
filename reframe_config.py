@@ -39,7 +39,7 @@ site_configuration = {
         {
             'name': 'myriad',
             'descr': 'Myriad',
-            'hostnames': ['login[0-9]+'],
+            'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
             'partitions': [
                 {
                     'name': 'compute-node',
@@ -76,7 +76,7 @@ site_configuration = {
         {
             'name': 'cosma8',
             'descr': 'COSMA',
-            'hostnames': ['login[0-9]a'],
+            'hostnames': ['login[0-9]a.pri.cosma[0-9].alces.network'],
             'modules_system': 'nomod',
             'partitions': [
                 {
