@@ -7,6 +7,7 @@ import os.path as path
 import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
+import reframe.utility.osext as osext
 
 # Add top-level directory to `sys.path` so we can easily import extra modules
 # from any directory.
@@ -28,6 +29,7 @@ from modules.utils import SpackTest
 # for more information about the API of ReFrame tests.
 @rfm.simple_test
 class SombreroBenchmark(SpackTest):
+    compiler_version = variable(str, value='', loggable=True)
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
@@ -123,3 +125,9 @@ class SombreroBenchmark(SpackTest):
                 r'\[RESULT\]\[0\] Case 1 (\S+) Gflops/seconds',
                 self.stdout, 1, float),
         }
+
+
+    @run_after('run')
+    def get_compiler_version(self):
+        with osext.change_dir(self.stagedir):
+            self.compiler_version = sn.extractsingle(r'(.*(?:\((?:G|I)CC\)|version) .*)', self.stdout, 1).evaluate()
