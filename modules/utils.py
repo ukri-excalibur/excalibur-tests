@@ -354,7 +354,7 @@ def identify_build_environment(current_partition):
                          # going to be messed up
                          current_partition.fullname.replace(':', '/')))
         if not os.path.isdir(env):
-            cmd = run_command(["spack", "env", "create", "-d", env])
+            cmd = run_command(["spack", "env", "create", "--without-view", "-d", env])
             if cmd.returncode != 0:
                 raise BuildSystemError("Creation of the Spack "
                                        f"environment {env} failed")
