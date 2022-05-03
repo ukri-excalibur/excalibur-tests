@@ -4,7 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs: [sombrero@2021-08-16, hipsycl ^boost@1.67.0%gcc@10.2.0]
+  specs: []
   concretization: separately
   view: false
   compilers:
