@@ -27,12 +27,12 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--partition=icelake'],
-                    'environs': ['default'],
+                    'environs': ['default', 'intel20-mpi'],
                     'max_jobs': 64,
-                    'processor': {'num_cpus': 32,
-                                  'num_cpus_per_core': 2,
+                    'processor': {'num_cpus': 76,
+                                  'num_cpus_per_core': 1,
                                   'num_sockets': 2,
-                                  'num_cpus_per_socket': 16}
+                                  'num_cpus_per_socket': 38}
                 },
             ]
         },  # end CSD3
@@ -187,6 +187,20 @@ site_configuration = {
             'cc': 'cc',
             'cxx': 'c++',
             'ftn': 'ftn'
+        },
+        {
+            'name': 'intel20-mpi',
+            'modules': ['intel/compilers/2020.4',
+                        'intel/mkl/2020.4',
+                        'intel/impi/2020.4/intel',
+                        'intel/libs/idb/2020.4',
+                        'intel/libs/tbb/2020.4',
+                        'intel/libs/ipp/2020.4',
+                        'intel/libs/daal/2020.4',
+                        'intel/bundles/complib/2020.4'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
         },
     ],
     'logging': [
