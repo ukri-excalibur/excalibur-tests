@@ -4,7 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs: [sombrero@2021-08-16]
+  specs: [sombrero@2021-08-16, hipsycl ^boost@1.67.0%gcc@10.2.0]
   concretization: separately
   view: false
   compilers:
@@ -397,6 +397,10 @@ spack:
       externals:
       - spec: bash@4.2.46
         prefix: /usr
+    boost:
+      externals:
+      - spec: boost@1.67.0%gcc@10.2.0 arch=linux-centos7-zen2
+        prefix: /cosma/local/boost/gnu_10.2.0/1_67_0/
     bzip2:
       externals:
       - spec: bzip2@1.0.6
@@ -405,6 +409,10 @@ spack:
       externals:
       - spec: cmake@2.8.12.2
         prefix: /usr
+      - spec: cmake@3.11.4
+        prefix: /cosma/local/cmake/3.11.4/
+      - spec: cmake@3.18.1
+        prefix: /cosma/local/cmake/3.18.1/
     cpio:
       externals:
       - spec: cpio@2.11
