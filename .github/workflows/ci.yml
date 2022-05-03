@@ -10,6 +10,7 @@ on:
 jobs:
   test:
     name: Tests on ${{ matrix.os }}
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -17,7 +18,7 @@ jobs:
         os:
           - ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Spack
         shell: bash
         working-directory: ${{runner.workspace}}
