@@ -33,7 +33,11 @@ class GridBenchmark(rfm.RunOnlyRegressionTest):
     }
 
     reference = {
-        '*': {'Performance': (150000, None, None, 'Mflop/s per node'),
+        'csd3:icelake': {
+            'Performance': (228286, None, None, 'Mflop/s per node')
+        },
+        '*': {
+            'Performance': (150000, None, None, 'Mflop/s per node'),
         }
     }
 
