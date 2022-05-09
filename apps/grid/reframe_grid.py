@@ -56,5 +56,5 @@ class GridBenchmark(rfm.RunOnlyRegressionTest):
 
         self.perf_patterns = {
             'Performance':
-                sn.extractsingle('.*?result:.+', self.stdout, 0, lambda x: float(x.split()[-4]))
+                sn.extractsingle('result: (\S+) Mflop/s per node', self.stdout, 1, float)
                 }
