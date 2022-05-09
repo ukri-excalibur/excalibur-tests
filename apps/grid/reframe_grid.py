@@ -16,7 +16,7 @@ import reframe.utility.sanity as sn
 class GridBenchmark(rfm.RunOnlyRegressionTest):
 
     valid_systems = ['*']
-    valid_prog_environs = ['intel20-mpi']
+    valid_prog_environs = ['*']
 
     num_tasks = 1
     num_tasks_per_node = 1
