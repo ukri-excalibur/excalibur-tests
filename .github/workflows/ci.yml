@@ -24,7 +24,11 @@ jobs:
         working-directory: ${{runner.workspace}}
         run: |
           git clone https://github.com/spack/spack.git
-          echo "SPACK_ROOT=${PWD}/spack" >> "${GITHUB_ENV}"
+          echo "PATH=${PWD}/spack/bin:${PATH}" >> "${GITHUB_ENV}"
+      # Make sure `spack` command works
+      - name: Spack version number
+        shell: bash
+        run: spack --version
       - name: Install Reframe
         shell: bash
         working-directory: ${{runner.workspace}}
@@ -34,14 +38,16 @@ jobs:
           # In README.md we claim compatibility with at least v3.8.0, test that version.
           git checkout v3.8.0
           ./bootstrap.sh
-          bin/reframe -V
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
+      # Make sure `reframe` command works
+      - name: ReFrame version number
+        shell: bash
+        run: reframe -V
       - name: Install OpenMPI, CMake and extra Python packages
         shell: bash
         run: sudo apt-get install openmpi-bin libopenmpi-dev cmake python3-matplotlib python3-pandas
       - name: Run sample benchmark
         shell: bash
         run: |
-          source "${SPACK_ROOT}/share/spack/setup-env.sh"
           export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
           reframe -v -c examples/sombrero --run --performance-report --system github-actions:default
