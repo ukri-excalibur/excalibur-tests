@@ -220,29 +220,23 @@ def identify_build_environment(current_partition):
     # * if not, use a provided spack environment for the current partition
     # * if that doesn't exist, create a persistent minimal environment
     if os.getenv('EXCALIBUR_SPACK_ENV'):
-        env = os.getenv('EXCALIBUR_SPACK_ENV')
+        cp_dir = os.getenv('EXCALIBUR_SPACK_ENV')
+        subdir = ''
     else:
-        env = os.path.realpath(
+        system, partition = current_partition.fullname.split(':')
+        cp_dir = os.path.realpath(
             os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
-                         # Note: we can't have `:` in the path of the install
-                         # tree, otherwise the PATH environment variable is
-                         # going to be messed up
-                         current_partition.fullname.replace(':', '/')))
-        if not os.path.isdir(env):
+                         system))
+        subdir = partition
+        if not os.path.isdir(cp_dir):
+            env = os.path.join(cp_dir, partition)
             cmd = run_command(["spack", "env", "create", "--without-view", "-d", env])
             if cmd.returncode != 0:
                 raise BuildSystemError("Creation of the Spack "
                                        f"environment {env} failed")
-            cmd = run_command([
-                "spack", "-e", env, "config", "add",
-                "config:install_tree:root:opt/spack"
-            ])
-            if cmd.returncode != 0:
-                raise BuildSystemError("Setting up the Spack "
-                                       f"environment {env} failed")
             getlogger().info("Spack environment successfully created at"
                              f"{env}")
-    return env
+    return cp_dir, subdir
 
 if __name__ == '__main__':
 
