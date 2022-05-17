@@ -3,6 +3,7 @@ import os
 site_configuration = {
     'systems': [
         {
+            # https://www.hpc.cam.ac.uk/systems/peta-4
             'name': 'csd3',
             'descr': 'CSD3',
             'hostnames': ['login-e-[0-9]+'],
@@ -29,14 +30,17 @@ site_configuration = {
                     'access': ['--partition=icelake'],
                     'environs': ['default', 'intel20-mpi'],
                     'max_jobs': 64,
-                    'processor': {'num_cpus': 76,
-                                  'num_cpus_per_core': 1,
-                                  'num_sockets': 2,
-                                  'num_cpus_per_socket': 38}
+                    'processor': {
+                        'num_cpus': 76,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 38,
+                    },
                 },
             ]
         },  # end CSD3
         {
+            # https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/#node-types
             'name': 'myriad',
             'descr': 'Myriad',
             'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
@@ -48,6 +52,12 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
                     'resources': [
                         {
                             'name': 'mpi',
@@ -58,9 +68,10 @@ site_configuration = {
             ]
         },  # end Myriad
         {
+            # https://gw4-isambard.github.io/docs/user-guide/MACS.html
             'name': 'isambard',
             'descr': 'Cascade Lake nodes of Isambard 2',
-            'hostnames': ['login-0[12]'],
+            'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
             'partitions': [
                 {
                     'name': 'cascadelake',
@@ -70,13 +81,20 @@ site_configuration = {
                     'access': ['-q clxq'],
                     'environs': ['default'],
                     'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 40,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 20,
+                    },
                 },
             ]
         },  # end Isambard Cascadelake
         {
+            # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
             'descr': 'COSMA',
-            'hostnames': ['login[0-9]a.pri.cosma[0-9].alces.network'],
+            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'nomod',
             'partitions': [
                 {
@@ -87,10 +105,12 @@ site_configuration = {
                     'access': ['--partition=cosma8'],
                     'environs': ['default'],
                     'max_jobs': 64,
-                    'processor': {'num_cpus': 256,
-                                  'num_cpus_per_core': 2,
-                                  'num_sockets': 2,
-                                  'num_cpus_per_socket': 128}
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 128,
+                    },
                 }
             ]
         },  # end cosma8
@@ -108,6 +128,7 @@ site_configuration = {
             ]
         },  # End GitHub Actions
         {
+            # https://tesseract-dirac.readthedocs.io/en/latest/user-guide/introduction.html
             'name': 'tesseract',
             'descr': 'Extreme Scaling Tesseract',
             'hostnames': ['tesseract-login.*'],
@@ -119,10 +140,17 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 16,
+                    'processor': {
+                        'num_cpus': 24,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 12,
+                    },
                 },
             ]
         },  # end Tesseract
         {
+            # https://epcced.github.io/dirac-docs/tursa-user-guide/scheduler/#partitions
             'name': 'tursa',
             'descr': 'Tursa',
             'hostnames': ['tursa-login.*'],
@@ -135,6 +163,12 @@ site_configuration = {
                     'access': ['--partition=cpu', '--qos=standard'],
                     'environs': ['default'],
                     'max_jobs': 16,
+                    'processor': {
+                        'num_cpus': 64,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 32,
+                    },
                 },
                 {
                     'name': 'gpu',
@@ -148,6 +182,7 @@ site_configuration = {
             ]
         },  # end Tursa
         {
+            # https://dial3-docs.dirac.ac.uk/About_dial3/architecture/
             'name': 'dial3',
             'descr': 'DiaL3',
             'hostnames': ['d3-login.*'],
@@ -159,6 +194,12 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 16,
+                    'processor': {
+                        'num_cpus': 128,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
+                    },
                 },
             ]
         },  # end DiaL3
