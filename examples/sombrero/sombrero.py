@@ -28,7 +28,7 @@ class SpackSetup(rfm.RegressionTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
     executable = 'true'
-    spack_spec = variable(str, value='')
+    spack_spec = variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
