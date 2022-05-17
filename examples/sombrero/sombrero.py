@@ -22,12 +22,8 @@ from modules.utils import identify_build_environment
 # * https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html
 #   (reference about the regression tests API)
 
-@rfm.simple_test
 class SpackSetup(rfm.RegressionTest):
     build_system = 'Spack'
-    valid_systems = ['*']
-    valid_prog_environs = ['default']
-    executable = 'true'
     spack_spec = variable(str, value='', loggable=True)
 
     @run_before('compile')
@@ -37,9 +33,9 @@ class SpackSetup(rfm.RegressionTest):
         self.build_system.environment = path.join(dest, subdir)
         self.prebuild_cmds = [f'cp -arv {cp_dir} {dest}']
 
-    @run_before('sanity')
-    def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_true(1)
+    # @run_before('sanity')
+    # def set_sanity_patterns(self):
+    #     self.sanity_patterns = sn.assert_true(1)
 
 # Class to define the benchmark.  See
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
@@ -49,6 +45,8 @@ class SombreroBenchmark(SpackSetup):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
+    valid_systems = ['*']
+    valid_prog_environs = ['default']
     # Spack specification with default value.  A different value can be set
     # from the command line with `-S spack_spec='...'`:
     # https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S
