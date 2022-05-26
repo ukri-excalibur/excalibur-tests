@@ -100,12 +100,22 @@ spack:
       operating_system: rhel7
       target: x86_64
       modules: []
-      environment: {}
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/10.2.0-p95889/lib64
       extra_rpaths: []
   packages:
     autoconf:
       externals:
       - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.13.4
+        prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
         prefix: /usr
     cmake:
       externals:
@@ -113,15 +123,34 @@ spack:
         prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
       - spec: cmake@2.8.12.2
         prefix: /usr
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
     intel-mpi:
       externals:
       - spec: intel-mpi@2020.0.166
         prefix: /shared/ucl/apps/intel/2020
+    libtool:
+      externals:
+      - spec: libtool@2.4.3
+        prefix: /usr
+    libxsmm:
+      externals:
+      - spec: libxsmm@1.16.1
+        prefix: /shared/ucl/apps/cp2k/8.2/cp2k-8.2/tools/toolchain/install/libxsmm-1.16.1
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
     openmpi:
       externals:
-      - spec: openmpi@4.0.3%gcc~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
-          fabrics=ucx schedulers=slurm
+      - spec: openmpi@4.0.3%gcc@4.9.2
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
+    perl:
+      externals:
+      - spec: perl@5.16.3~cpanm+shared+threads
+        prefix: /usr
     python:
       externals:
       - spec: python@2.7.5+bz2+ctypes+dbm+nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
