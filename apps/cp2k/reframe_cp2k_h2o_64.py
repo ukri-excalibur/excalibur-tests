@@ -17,25 +17,33 @@ class Cp2kH2O64Benchmark(rfm.RegressionTest):
     valid_prog_environs = ['*']
     build_system = 'Spack'
     spack_spec = variable(str, value='cp2k@9.1')
-    num_tasks = 12
-    num_tasks_per_node = num_tasks
-    num_cpus_per_task = 2
     sourcesdir = path.join(path.dirname(__file__), 'input-h2o_64')
     executable = 'cp2k.psmp'
     executable_opts = ['-i', 'H2O-64.inp']
     time_limit = '60m'
-    variables = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-        'OMP_PLACES': 'cores',
-    }
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
+    num_tasks = 1
+    num_tasks_per_node = num_tasks
     reference = {
+        'cosma8': {
+            'Maximum total time': (25, None, 0.2, 'seconds'),
+        },
         '*': {
-            'Total time': (200, None, None, 'seconds'),
+            'Maximum total time': (200, None, None, 'seconds'),
         }
     }
+
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.num_tasks = self.current_partition.processor.num_cpus // 2
+        self.num_tasks_per_node = self.num_tasks
+        self.num_cpus_per_task = 2
+        self.extra_resources = {
+            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
+        }
+        self.variables = {
+            'OMP_NUM_THREADS': f'{self.num_cpus_per_task}',
+            'OMP_PLACES': 'cores',
+        }
 
     @run_before('compile')
     def setup_build_system(self):
@@ -50,6 +58,6 @@ class Cp2kH2O64Benchmark(rfm.RegressionTest):
     @run_before('performance')
     def set_perf_patterns(self):
         self.perf_patterns = {
-            'Total time':
-            sn.extractsingle(r'CP2K +(\S+) +(\S+) +(\S+) +(\S+) +(\S+) +(\S+)', self.stdout, 6, float)
+            'Maximum total time':
+            sn.extractsingle(r'CP2K +([0-9]+) +([0-9.]+) +([0-9.]+) +([0-9.]+) +([0-9.]+) +([0-9.]+)', self.stdout, 6, float)
         }
