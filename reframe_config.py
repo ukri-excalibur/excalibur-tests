@@ -101,15 +101,15 @@ site_configuration = {
                     'name': 'compute-node',
                     'descr': 'Compute nodes',
                     'scheduler': 'slurm',
-                    'launcher': 'mpirun',
+                    'launcher': 'mpiexec',
                     'access': ['--partition=cosma8'],
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
-                        'num_cpus': 256,
+                        'num_cpus': 128,
                         'num_cpus_per_core': 2,
                         'num_sockets': 2,
-                        'num_cpus_per_socket': 128,
+                        'num_cpus_per_socket': 64,
                     },
                 }
             ]
