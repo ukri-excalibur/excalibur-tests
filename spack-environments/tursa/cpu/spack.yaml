@@ -60,13 +60,13 @@ spack:
       buildable: false
     openmpi:
       externals:
-      - spec: openmpi@4.1.1%gcc@9.3.0+cuda~cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3~static~thread_multiple~wrapper-rpath
+      - spec: openmpi@4.1.1%gcc@9.3.0+cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           fabrics=ucx schedulers=slurm
         prefix: /mnt/lustre/tursafs1/apps/basestack/cuda-11.4/openmpi/4.1.1-cuda11.4
-      - spec: openmpi@4.1.1%gcc@8.4.1+cuda~cxx~cxx_exceptions~java~memchecker+pmi+pmix~sqlite3~static~thread_multiple~wrapper-rpath
+      - spec: openmpi@4.1.1%gcc@8.4.1+cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           fabrics=ucx schedulers=slurm
         prefix: /mnt/lustre/tursafs1/apps/basestack/cuda-11.0.2/openmpi/4.1.1
-      - spec: openmpi@4.0.4%gcc@8.4.1+cuda~cxx~cxx_exceptions~java~memchecker~pmi+pmix~sqlite3~thread_multiple~wrapper-rpath
+      - spec: openmpi@4.0.4%gcc@8.4.1+cuda~cxx~cxx_exceptions~java~memchecker~pmi~sqlite3~thread_multiple~wrapper-rpath
         prefix: /mnt/lustre/tursafs1/apps/openmpi/4.0.4
       buildable: false
     perl:
