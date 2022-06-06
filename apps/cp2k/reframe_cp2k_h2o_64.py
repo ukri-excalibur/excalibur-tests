@@ -21,6 +21,7 @@ class Cp2kH2O64Benchmark(rfm.RegressionTest):
     executable = 'cp2k.psmp'
     executable_opts = ['-i', 'H2O-64.inp']
     time_limit = '60m'
+    num_cpus_per_task = 2
     num_tasks = 1
     num_tasks_per_node = num_tasks
     reference = {
@@ -34,9 +35,8 @@ class Cp2kH2O64Benchmark(rfm.RegressionTest):
 
     @run_after('setup')
     def setup_num_tasks(self):
-        self.num_tasks = self.current_partition.processor.num_cpus // 2
+        self.num_tasks = self.current_partition.processor.num_cpus // self.num_cpus_per_task
         self.num_tasks_per_node = self.num_tasks
-        self.num_cpus_per_task = 2
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
