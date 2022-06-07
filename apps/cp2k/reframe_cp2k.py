@@ -19,13 +19,14 @@ class Cp2kBaseBenchmark(rfm.RegressionTest):
     executable = 'cp2k.psmp'
     time_limit = '60m'
     num_cpus_per_task = 2
-    num_tasks = 1
-    num_tasks_per_node = num_tasks
+    num_tasks = required
+    num_tasks_per_node = required
 
     @run_after('setup')
     def setup_num_tasks(self):
-        self.num_tasks = self.current_partition.processor.num_cpus // self.num_cpus_per_task
-        self.num_tasks_per_node = self.num_tasks
+        self.set_var_default('num_tasks',
+                             self.current_partition.processor.num_cpus // self.num_cpus_per_task)
+        self.set_var_default('num_tasks_per_node', self.num_tasks)
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
