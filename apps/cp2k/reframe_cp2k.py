@@ -62,6 +62,9 @@ class Cp2kH2O64Benchmark(Cp2kBaseBenchmark):
         'cosma8': {
             'Maximum total time': (25, None, 0.2, 'seconds'),
         },
+        'tesseract': {
+            'Maximum total time': (100, None, 0.2, 'seconds'),
+        },
         '*': {
             'Maximum total time': (200, None, None, 'seconds'),
         }
@@ -74,6 +77,9 @@ class Cp2kLiH_HFXBenchmark(Cp2kBaseBenchmark):
     sourcesdir = path.join(path.dirname(__file__), 'input-lih-hfx')
     executable_opts = ['-i', 'input_bulk_B88_3.inp']
     reference = {
+        'tesseract': {
+            'Maximum total time': (400, None, 0.2, 'seconds'),
+        },
         '*': {
             'Maximum total time': (200, None, None, 'seconds'),
         }
