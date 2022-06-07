@@ -55,6 +55,7 @@ class Cp2kBaseBenchmark(rfm.RegressionTest):
 
 @rfm.simple_test
 class Cp2kH2O64Benchmark(Cp2kBaseBenchmark):
+    tags = {"h2o-64"}
     sourcesdir = path.join(path.dirname(__file__), 'input-h2o_64')
     executable_opts = ['-i', 'H2O-64.inp']
     reference = {
@@ -69,6 +70,7 @@ class Cp2kH2O64Benchmark(Cp2kBaseBenchmark):
 
 @rfm.simple_test
 class Cp2kLiH_HFXBenchmark(Cp2kBaseBenchmark):
+    tags = {"lih-hfx"}
     sourcesdir = path.join(path.dirname(__file__), 'input-lih-hfx')
     executable_opts = ['-i', 'input_bulk_B88_3.inp']
     reference = {
