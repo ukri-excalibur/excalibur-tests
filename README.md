@@ -13,9 +13,9 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 _**Note**: in some HPC facilities there may be already a central Spack
 installation available.  In principle you should be able to use that one (you
-only need to set the `SPACK_ROOT` environment variable), but you may need an
-up-to-date version of Spack in order to install some packages.  Instructions
-below show you how to install Spack locally._
+only need to have `spack` in the `PATH`), but you may need an up-to-date version
+of Spack in order to install some packages.  Instructions below show you how to
+install Spack locally._
 
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
 facilities.  Follow the [official
@@ -42,17 +42,17 @@ replacing `/path/to/spack` with the actual path to your Spack installation.
 ReFrame requires a [Spack
 Environment](https://spack.readthedocs.io/en/latest/environments.html).  We
 provide Spack environments for some of the systems that are part of the
-ExCALIBUR project.  If you want to use a different Spack environment, set the
-environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory where
-the environment is.  If this is not set, ReFrame will try to use the environment
-for the current system, if known, otherwise it will automatically create a very
-basic environment.
+ExCALIBUR and DiRac projects.  If you want to use a different Spack environment,
+set the environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory
+where the environment is.  If this is not set, ReFrame will try to use the
+environment for the current system, if known, otherwise it will automatically
+create a very basic environment.
 
 ### ReFrame
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.8.0.  Follow the [official
+require ReFrame 3.10.1.  Follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
