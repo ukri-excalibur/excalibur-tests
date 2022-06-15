@@ -25,27 +25,6 @@ class GridBenchmark(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='grid@develop')
 
-    num_tasks = 1
-    num_tasks_per_node = 1
-    num_cpus_per_task = 20
-
-    variables = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-    }
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
-
-    reference = {
-        'csd3:icelake': {
-            'Performance': (228286, None, None, 'Mflop/s per node')
-        },
-        '*': {
-            'Performance': (150000, None, None, 'Mflop/s per node'),
-        }
-    }
-
-
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
@@ -59,6 +38,33 @@ class GridBenchmark_ITT(GridBenchmark):
     executable = 'Benchmark_ITT'
     executable_opts = ['--shm 1024 --shm-hugetlb']
     time_limit = '20m'
+
+    num_cpus_per_task = required
+    num_tasks = required
+    num_tasks_per_node = required
+
+    reference = {
+        'csd3:icelake': {
+            'Performance': (450000, None, None, 'Mflop/s per node')
+        },
+        '*': {
+            'Performance': (150000, None, None, 'Mflop/s per node'),
+        }
+    }
+
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.set_var_default('num_cpus_per_task',
+                             self.current_partition.processor.num_cpus)
+        self.set_var_default('num_tasks', 1)
+        self.set_var_default('num_tasks_per_node', 1)
+        self.extra_resources = {
+            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
+        }
+        self.variables = {
+            'OMP_NUM_THREADS': f'{self.num_cpus_per_task}',
+            'OMP_PLACES': 'cores',
+        }
 
     @run_before('sanity')
     def set_sanity_patterns(self):
