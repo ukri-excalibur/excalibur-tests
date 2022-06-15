@@ -37,15 +37,27 @@ class GridBenchmark_ITT(GridBenchmark):
     tags = {"ITT"}
     executable = 'Benchmark_ITT'
     executable_opts = ['--shm 1024 --shm-hugetlb']
-    time_limit = '20m'
+    time_limit = '59m'
 
     num_cpus_per_task = required
     num_tasks = required
     num_tasks_per_node = required
 
     reference = {
+        'cosma8': {
+            'Performance': (425000, None, None, 'Mflop/s per node')
+        },
         'csd3:icelake': {
             'Performance': (450000, None, None, 'Mflop/s per node')
+        },
+        'csd3:skylake': {
+            'Performance': (22000, None, None, 'Mflop/s per node')
+        },
+        'myriad': {
+            'Performance': (350000, None, None, 'Mflop/s per node')
+        },
+        'tesseract': {
+            'Performance': (250000, None, None, 'Mflop/s per node')
         },
         '*': {
             'Performance': (150000, None, None, 'Mflop/s per node'),
