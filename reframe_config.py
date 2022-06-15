@@ -28,7 +28,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--partition=icelake'],
-                    'environs': ['default', 'intel20-mpi'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 76,
