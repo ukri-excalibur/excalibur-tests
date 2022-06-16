@@ -53,6 +53,9 @@ class GridBenchmark_ITT(GridBenchmark):
         'csd3:skylake': {
             'Performance': (22000, None, None, 'Mflop/s per node')
         },
+        'dial3': {
+            'Performance': (28000, None, None, 'Mflop/s per node')
+        },
         'myriad': {
             'Performance': (350000, None, None, 'Mflop/s per node')
         },
