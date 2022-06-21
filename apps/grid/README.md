@@ -29,18 +29,20 @@ reframe -c apps/grid -r --performance-report --tag ITT
 
 By default, these benchmarks will use
 
+* `mpi`: `'1.1.1.1'`.  This is the string to pass to the benchmarking applications with the
+  `--mpi` flag.  This will also automatically set the ReFrame variable
+  [`num_tasks`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks)
 * [`num_cpus_per_task`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_cpus_per_task):
   `current_partition.processor.num_cpus`
-* [`num_tasks`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks):
-  1
-* [`num_tasks_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node): 1
+* [`num_tasks_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node):
+  `num_tasks`
 
 You can override the values of these variables from the command line with the
 [`--setvar`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S)
 option, for example
 
 ```sh
-reframe -c apps/grid -r --performance-report --setvar=num_cpus_per_task=16 --setvar=num_tasks=4
+reframe -c apps/grid -r --performance-report --setvar=mpi='2.2.1.1' --setvar=num_cpus_per_task=12
 ```
 
 _**Note**_: you're responsible for overriding these variables in a consistent

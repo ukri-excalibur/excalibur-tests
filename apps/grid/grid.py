@@ -11,6 +11,8 @@ The code is Hybrid OpenMP + MPI with NUMA socket aware optimisations.
 The relevant options can make big changes to delivered performance.
 """
 
+from functools import reduce
+from operator import mul
 import os.path as path
 import sys
 
@@ -36,11 +38,10 @@ class GridBenchmark(rfm.RegressionTest):
 class GridBenchmark_ITT(GridBenchmark):
     tags = {"ITT"}
     executable = 'Benchmark_ITT'
-    executable_opts = ['--shm 1024 --shm-hugetlb']
     time_limit = '59m'
 
+    mpi = variable(str, value='1.1.1.1')
     num_cpus_per_task = required
-    num_tasks = required
     num_tasks_per_node = required
 
     reference = {
@@ -69,10 +70,11 @@ class GridBenchmark_ITT(GridBenchmark):
 
     @run_after('setup')
     def setup_num_tasks(self):
+        self.num_tasks = reduce(mul, list(map(int, self.mpi.split("."))), 1)
         self.set_var_default('num_cpus_per_task',
                              self.current_partition.processor.num_cpus)
-        self.set_var_default('num_tasks', 1)
-        self.set_var_default('num_tasks_per_node', 1)
+        self.set_var_default('num_tasks_per_node', self.num_tasks)
+        self.executable_opts = [f'--mpi {self.mpi}', '--shm 1024', '--shm-hugetlb']
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
