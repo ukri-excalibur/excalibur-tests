@@ -7,6 +7,7 @@ site_configuration = {
             'name': 'csd3',
             'descr': 'CSD3',
             'hostnames': ['login-[eq]-[0-9]+'],
+            'modules_system': 'tmod32',
             'partitions': [
                 {
                     'name': 'skylake',
@@ -29,7 +30,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--partition=icelake'],
-                    'environs': ['default'],
+                    'environs': ['default', 'intel2020-csd3'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 76,
@@ -96,7 +97,7 @@ site_configuration = {
             'name': 'cosma8',
             'descr': 'COSMA',
             'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
-            'modules_system': 'nomod',
+            'modules_system': 'tmod4',
             'partitions': [
                 {
                     'name': 'compute-node',
@@ -104,13 +105,13 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpiexec',
                     'access': ['--partition=cosma8'],
-                    'environs': ['default'],
+                    'environs': ['default', 'intel20-mpi-durham', 'intel20_u2-mpi-durham', 'intel19-mpi-durham', 'intel19_u3-mpi-durham'],
                     'max_jobs': 64,
                     'processor': {
-                        'num_cpus': 128,
+                        'num_cpus': 256,
                         'num_cpus_per_core': 2,
                         'num_sockets': 2,
-                        'num_cpus_per_socket': 64,
+                        'num_cpus_per_socket': 128,
                     },
                 }
             ]
@@ -185,19 +186,20 @@ site_configuration = {
         {
             # https://dial3-docs.dirac.ac.uk/About_dial3/architecture/
             'name': 'dial3',
-            'descr': 'DiaL3',
+            'descr': 'Dirac Data Intensive @ Leicester',
             'hostnames': ['d3-login.*'],
+            'modules_system': 'lmod',
             'partitions': [
                 {
                     'name': 'compute-node',
                     'descr': 'Computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'environs': ['default'],
-                    'max_jobs': 16,
+                    'environs': ['default', 'intel-oneapi-openmpi-dial3','intel19-mpi-dial3'],
+                    'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
-                        'num_cpus_per_core': 2,
+                        'num_cpus_per_core': 1,
                         'num_sockets': 2,
                         'num_cpus_per_socket': 64,
                     },
@@ -231,15 +233,57 @@ site_configuration = {
             'ftn': 'ftn'
         },
         {
-            'name': 'intel20-mpi',
-            'modules': ['intel/compilers/2020.4',
-                        'intel/mkl/2020.4',
-                        'intel/impi/2020.4/intel',
-                        'intel/libs/idb/2020.4',
-                        'intel/libs/tbb/2020.4',
-                        'intel/libs/ipp/2020.4',
-                        'intel/libs/daal/2020.4',
-                        'intel/bundles/complib/2020.4'],
+            'name': 'intel20-mpi-durham',
+            'modules':['intel_comp/2020','intel_mpi/2020'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
+        },
+        {
+            'name': 'intel20_u2-mpi-durham',
+            'modules':['intel_comp/2020-update2','intel_mpi/2020-update2'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
+        },
+        {
+            'name': 'intel19-mpi-durham',
+            'modules':['intel_comp/2019','intel_mpi/2019'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
+        },
+        {
+            'name': 'intel19_u3-mpi-durham',
+            'modules':['intel_comp/2019-update3','intel_mpi/2019-update3'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
+        },
+        {
+            'name':'intel-oneapi-openmpi-dial3',
+            'modules':['intel-oneapi-compilers/2021.2.0','openmpi4/intel/4.0.5'],
+            'cc':'mpicc',
+            'cxx':'mpicxx',
+            'ftn':'mpif90'
+        },
+        {
+            'name': 'intel19-mpi-dial3',
+            'modules':['intel-parallel-studio/cluster.2019.5'],
+            'cc': 'mpiicc',
+            'cxx': 'mpiicpc',
+            'ftn': 'mpiifort'
+        },
+        {
+            'name': 'intel2020-csd3',
+            'modules': ["intel/compilers/2020.4",
+                        "intel/mkl/2020.4",
+                        "intel/impi/2020.4/intel",
+                        "intel/libs/idb/2020.4",
+                        "intel/libs/tbb/2020.4",
+                        "intel/libs/ipp/2020.4",
+                        "intel/libs/daal/2020.4",
+                        "intel/bundles/complib/2020.4"],
             'cc': 'mpiicc',
             'cxx': 'mpiicpc',
             'ftn': 'mpiifort'
@@ -289,7 +333,7 @@ site_configuration = {
     'schedulers': [
         {
             'name': 'slurm',
-            'target_systems': ['tursa'],
+            'target_systems': ['tursa', 'cosma8'],
             'use_nodes_option': True,
         },
     ],
