@@ -12,19 +12,16 @@ We tested the DI benchmarks on 3 DiRAC systems namely:
 
 We plan to add the instructions to get the SRC code in near future.
 
-### Organisation of the Repository
+### Contents
 
-The repository contains the following directories and files:-
+This directory contains the following directories and files:-
 
 1.  **Additional_Input_Data:-** This folder contains instructions to get the input data required for Ramses. We do not need any other input data for other benchmarks. We cannot include them in the current repository as they are big in size.
-2. **Executables:-** This directory contains the binary files or the executable based on the system name. 
 3.  **graphing:-** This directory contains the code for post-processing or collection of results from the perflogs directory (contains the performance log and the output we want from the benchmarks).
 4. **Readme.md:-** File explaining the directory structure and instructions to run the code.
-5. **Settings.py:-** This file contains various environments and module settings which are used by Reframe to generate the submission scripts.
 6. **Others:-** All other directories are the apps/benchmarks that we would like to run. Each of the app contains the following files:-
-   1. **perflogs:-** Also known as performance logs. This directory contains that output that we get by running the benchmark on a particular system.
-   2. **Pyhton code:-** There is one file with extension `.py` which is the reframe code to generate and run the benchmark.
-   3. **SRC:-** This is the directory which contains the various inputs for the test cases under consideration. It is this directory where you would need to copy the executable from the `Executable` directory to run the benchmark. Please read the instructions below to know what needs to be copied and where.
+   1. **Pyhton code:-** There is one file with extension `.py` which is the reframe code to generate and run the benchmark.
+   2. **SRC:-** This is the directory which contains the various inputs for the test cases under consideration. It is this directory where you would need to copy the executable from the `Executable` directory to run the benchmark. Please read the instructions below to know what needs to be copied and where.
 
 ### Steps to run a benchmark
 
