@@ -1,16 +1,14 @@
-# Bmark_reframe
+# Data Intensive (DI) Benchmarks
 
 This repository contains the reframe code to run the the four benchmark codes for Leicester namely: `Ramses`,` Sphng` and `Trove` (Initial matrix generation) and `Trove_pdsyev` (Diagonalisation).
 
 At present, the build step is separate and is not integrated with the Reframe. For building codes, we can use either Spack and its associated settings file or the normal build process using make. Moreover, the source codes are not public and hence they have not been include in this repository.
 
-However, for 3 DiRAC systems namely: 
+We tested the DI benchmarks on 3 DiRAC systems namely: 
 
 1. DIaL3 (University of Leicester), 
 2. Cosma8 (University of Durham) and,
 3. CSD3 Icelake nodes (University of Cambridge),
-
-we have included the executable in the directory `Bmark_reframe/Executables/System_name` where `System_name` can be any of the 3 system names mentioned above.     
 
 We plan to add the instructions to get the SRC code in near future.
 
