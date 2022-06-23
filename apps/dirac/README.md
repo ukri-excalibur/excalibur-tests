@@ -25,26 +25,23 @@ This directory contains the following directories and files:-
 
 ### Steps to run a benchmark
 
-1. You would first need to use the settings file that is included in the current repository. This file has been specifically written for Dial3 cluster while the logging format at the end is generic and can be adapted to any system.
+1. You would first need to use the settings file that is included in the current repository. This file is located at`excalibur-tests/reframe_config.py`.
 
    ```bash
-   export RFM_CONFIG_FILE=Settings.py
+   export RFM_CONFIG_FILE=reframe_config.py
    ```
 
-2. First chose the benchmark you want to run and on which you would like to run. For the sake of explaining, we assume that you want to run `Ramses` on Dial3. You then need to copy the executable  to the `App_name/src` directory where `App_name` can be Ramses, Sphng, Trove or Trove_pdsyey.
+2. First chose the benchmark you want to run and on which system you would like to run. For the sake of explaining, we assume that you want to run `Ramses` on Dial3. 
 
-   ```bash
-   #cp Executables/System_on_which_you_want_to_run/App_name/ramses3d App_name/src/
-   cp Executables/Dial3/Ramses/ramses3d Ramses/src/
-   ```
+   Once you have the executable (You may need to get the source code and compile the same separately) for the app you want to run, you need to copy the executable  to the `App_name/src` directory where `App_name` can be Ramses, Sphng, Trove or Trove_pdsyey.
    
-   In each of the app that you would like to run, you will see a python code (Based on Reframe) in which we defined the executable name. For example, in case on Ramses, you will notice a file `ramses.py` in `Bmark_reframe/Ramses` directory. If you open this file in your favourite editor, you will find the following instruction in the first few lines of the code,
+   In each of the apps, you will see a python code (Based on Reframe) in which we have defined the executable name. For example, in case on Ramses, you will notice a file `ramses.py` in `Bmark_reframe/Ramses` directory. If you open this file in your favourite editor, you will find the following instruction in the first few lines of the code,
    
    ```python
    self.executable = './ramses3d'
    ```
-
-   Make sure that the executable you copied and the executable name in Python code are same. At present, the files in the `Executable` directory may have different names. This is for our reference as it helps us to know which compiler was used to generate the binary file and which environment we need to choose. 
+   
+   Make sure that the executable you have and the executable name in Python code are same. 
    
 2. Then you can run the three benchmarks by one of the following three commands.
 
