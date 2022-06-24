@@ -12,42 +12,35 @@ We tested the DI benchmarks on 3 DiRAC systems namely:
 
 We plan to add the instructions to get the SRC code in near future.
 
-### Organisation of the Repository
+### Contents
 
-The repository contains the following directories and files:-
+This directory contains the following directories and files:-
 
 1.  **Additional_Input_Data:-** This folder contains instructions to get the input data required for Ramses. We do not need any other input data for other benchmarks. We cannot include them in the current repository as they are big in size.
-2. **Executables:-** This directory contains the binary files or the executable based on the system name. 
 3.  **graphing:-** This directory contains the code for post-processing or collection of results from the perflogs directory (contains the performance log and the output we want from the benchmarks).
-4. **Readme.md:-** File explaining the directory structure and instructions to run the code.
-5. **Settings.py:-** This file contains various environments and module settings which are used by Reframe to generate the submission scripts.
 6. **Others:-** All other directories are the apps/benchmarks that we would like to run. Each of the app contains the following files:-
-   1. **perflogs:-** Also known as performance logs. This directory contains that output that we get by running the benchmark on a particular system.
-   2. **Pyhton code:-** There is one file with extension `.py` which is the reframe code to generate and run the benchmark.
-   3. **SRC:-** This is the directory which contains the various inputs for the test cases under consideration. It is this directory where you would need to copy the executable from the `Executable` directory to run the benchmark. Please read the instructions below to know what needs to be copied and where.
+   1. **Pyhton code:-** There is one file with extension `.py` which is the reframe code to generate and run the benchmark.
+   2. **SRC:-** This is the directory which contains the various inputs for the test cases under consideration. It is this directory where you would need to copy the executable from the `Executable` directory to run the benchmark. Please read the instructions below to know what needs to be copied and where.
 
 ### Steps to run a benchmark
 
-1. You would first need to use the settings file that is included in the current repository. This file has been specifically written for Dial3 cluster while the logging format at the end is generic and can be adapted to any system.
+1. You would first need to use the settings file that is included in the current repository. This file is located at`excalibur-tests/reframe_config.py`.
 
    ```bash
-   export RFM_CONFIG_FILE=Settings.py
+   export RFM_CONFIG_FILE=reframe_config.py
    ```
 
-2. First chose the benchmark you want to run and on which you would like to run. For the sake of explaining, we assume that you want to run `Ramses` on Dial3. You then need to copy the executable  to the `App_name/src` directory where `App_name` can be Ramses, Sphng, Trove or Trove_pdsyey.
+2. First chose the benchmark you want to run and on which system you would like to run. For the sake of explaining, we assume that you want to run `Ramses` on Dial3. 
 
-   ```bash
-   #cp Executables/System_on_which_you_want_to_run/App_name/ramses3d App_name/src/
-   cp Executables/Dial3/Ramses/ramses3d Ramses/src/
-   ```
+   Once you have the executable (You may need to get the source code and compile the same separately) for the app you want to run, you need to copy the executable  to the `App_name/src` directory where `App_name` can be Ramses, Sphng, Trove or Trove_pdsyey.
    
-   In each of the app that you would like to run, you will see a python code (Based on Reframe) in which we defined the executable name. For example, in case on Ramses, you will notice a file `ramses.py` in `Bmark_reframe/Ramses` directory. If you open this file in your favourite editor, you will find the following instruction in the first few lines of the code,
+   In each of the apps, you will see a python code (Based on Reframe) in which we have defined the executable name. For example, in case on Ramses, you will notice a file `ramses.py` in `Bmark_reframe/Ramses` directory. If you open this file in your favourite editor, you will find the following instruction in the first few lines of the code,
    
    ```python
    self.executable = './ramses3d'
    ```
-
-   Make sure that the executable you copied and the executable name in Python code are same. At present, the files in the `Executable` directory may have different names. This is for our reference as it helps us to know which compiler was used to generate the binary file and which environment we need to choose. 
+   
+   Make sure that the executable you have and the executable name in Python code are same. 
    
 2. Then you can run the three benchmarks by one of the following three commands.
 
