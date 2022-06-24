@@ -45,7 +45,7 @@ class SphngBase_ifile(SphngBase):
 #------------------------------------------------------------------------------------------------------------------------------------
 # This class acts as a base class for the evolutions stage.
 # This clsss adds a sanity test for the evolution stage.
-# This class will be used in the evolition stage for all Single Node, strong and weak scaling tests. 
+# This class will be used in the evolition stage for all Single Node, strong and weak scaling tests.
 #------------------------------------------------------------------------------------------------------------------------------------
 class SphngBase_evolution(SphngBase):
     def __init__(self):
@@ -76,7 +76,7 @@ class SphngBase_evolution(SphngBase):
                 }
 #------------------------------------------------------------------------------------------------------------------------------------
 # End of base class for evolition stage.
-#------------------------------------------------------------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------------------------------------------------------------
 
 
 #------------------------------------------------------------------------------------------------------------------------------------
@@ -86,24 +86,21 @@ class SphngBase_evolution(SphngBase):
 # We do not need to decorate this class as it will be used as a fixture and this will cause it to run as a separate test.
 #------------------------------------------------------------------------------------------------------------------------------------
 class Sphng_Single_Node_ifile(SphngBase_ifile):
-    
+
     mpi_tasks = parameter(2**i for i in range(0,8))
 
     def __init__(self):
         super().__init__()
         self.num_tasks = self.mpi_tasks           # Total number of mpi tasks.
         self.num_tasks_per_node = self.mpi_tasks  # MPi tasks on one node. Here it will be same as total mpi tasks.
-        
+
     @run_after('setup')
     def set_env_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
 
         self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
-        
+
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
                        self.thread_count +  ' threads per node')
 
@@ -116,7 +113,7 @@ class Sphng_Single_Node_ifile(SphngBase_ifile):
 # This class runs the evolution stage of the Sphng.
 @rfm.simple_test
 class Sphng_Single_Node_evolution(SphngBase_evolution):
-    
+
     tags = {"Single_node"}
 
     # Define the fixture here. It also acts a test on which the current test depends.
@@ -125,9 +122,9 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
 
     def __init__(self):
         super().__init__()
-    
+
     @run_after('setup')
-    def set_sourcedir_and_job_params(self):     
+    def set_sourcedir_and_job_params(self):
         self.num_tasks = self.Ifile_fixture.mpi_tasks
         self.num_tasks_per_node = self.Ifile_fixture.mpi_tasks
         self.thread_count = self.Ifile_fixture.thread_count
@@ -162,21 +159,18 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
         super().__init__()
         self.num_tasks = 16                                             #Hard coded because this gave the  best performance.
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes)
-        
+
     @run_after('setup')
     def set_env_variables(self):
-            
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus
+
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
 
         self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
 
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count + ' threads per node')
 
-        self.variables= {    
+        self.variables= {
                         'OMP_NUM_THREADS':self.thread_count,
                         'OMP_PLACES':'cores'
                         }
@@ -187,20 +181,20 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
 class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
 
     tags = {"Strong_scaling"}
-    
+
     # Define the fixture here. It also acts a test on which the current test depends.
     # By defining the fixture, we can access the properties associates with the respective test such as num_tasks.
     Ifile_fixture = fixture(Sphng_Strong_Scaling_ifile, scope = 'session')
 
     def __init__(self):
         super().__init__()
-    
+
     @run_after('setup')
-    def set_sourcedir_and_job_params(self):     
+    def set_sourcedir_and_job_params(self):
         self.num_tasks = self.Ifile_fixture.num_tasks
         self.num_tasks_per_node = self.Ifile_fixture.num_tasks_per_node
         self.thread_count = self.Ifile_fixture.thread_count
-        
+
         self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
@@ -232,10 +226,7 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
     @run_after('setup')
     def set_env_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
 
         self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
 
@@ -253,7 +244,7 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
 # This class runs the evolution stage of the Sphng.
 @rfm.simple_test
 class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
-    
+
     tags = {"Weak_scaling"}
 
     # Define the fixture here. It also acts a test on which the current test depends.
@@ -262,9 +253,9 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
 
     def __init__(self):
         super().__init__()
-    
+
     @run_after('setup')
-    def set_sourcedir_and_job_params(self):     
+    def set_sourcedir_and_job_params(self):
         self.num_tasks = self.Ifile_fixture.num_tasks
         self.num_tasks_per_node = self.Ifile_fixture.num_tasks_per_node
         self.thread_count = self.Ifile_fixture.thread_count
@@ -280,5 +271,3 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
 #------------------------------------------------------------------------------------------------------------------------------------
 # End of weak scaling.
 #------------------------------------------------------------------------------------------------------------------------------------
-
-

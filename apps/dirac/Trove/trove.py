@@ -65,11 +65,8 @@ class TROVE_12N(Trove):
     @run_after('setup')
     def set_job_script_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus
-        
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
@@ -100,11 +97,8 @@ class TROVE_14N(Trove):
     @run_after('setup')
     def set_job_script_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus    
-        
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
@@ -135,11 +129,8 @@ class TROVE_16N(Trove):
     @run_after('setup')
     def set_job_script_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus
-        
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
@@ -151,7 +142,3 @@ class TROVE_16N(Trove):
 #--------------------------------------------------------------------------
 # End of code for file named 16N.
 #--------------------------------------------------------------------------
-
-
-
-

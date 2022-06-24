@@ -6,7 +6,7 @@ import reframe.utility.sanity as sn
 # Also defines the sanity test.
 #------------------------------------------------------------------------------------------------------------------------------------
 class RamsesMPI(rfm.RunOnlyRegressionTest):
-    
+
     def __init__(self):
 
         self.time_limit = '0d0h10m0s'
@@ -46,15 +46,12 @@ class RamsesMPI_strong(RamsesMPI):
 
     tags = {"Strong"}
     num_nodes = parameter(2**i for i in range(0,5))
-    
+
     @run_after('setup')
     def set_job_script_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus 
-        
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+
         self.num_tasks = self.num_nodes * self.core_count_1_node
         self.num_tasks_per_node = self.core_count_1_node    #We are using the full node with MPI tasks.
         self.descr = ('Strong Scaling Ramses on '+ str(self.num_nodes) + ' node/s')
@@ -71,18 +68,15 @@ class RamsesMPI_strong(RamsesMPI):
 #------------------------------------------------------------------------------------------------------------------------------------
 @rfm.simple_test
 class RamsesMPI_weak(RamsesMPI):
-    
+
     tags = {"Weak"}
     num_nodes = parameter(2**i for i in range(0,4))
 
     @run_after('setup')
     def set_job_script_variables(self):
 
-        if self.current_partition.processor.num_cpus_per_core > 1:
-            self.core_count_1_node = int(self.current_partition.processor.num_cpus/self.current_partition.processor.num_cpus_per_core)
-        else:    
-            self.core_count_1_node = self.current_partition.processor.num_cpus 
-        
+        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+
         self.num_tasks = self.num_nodes * self.core_count_1_node
         self.num_tasks_per_node = self.core_count_1_node
         self.descr = ('Weak Scaling Ramses on '+str(self.num_nodes)+ ' node/s')
@@ -91,4 +85,3 @@ class RamsesMPI_weak(RamsesMPI):
 #------------------------------------------------------------------------------------------------------------------------------------
 # End of weak scaling tests.
 #------------------------------------------------------------------------------------------------------------------------------------
-

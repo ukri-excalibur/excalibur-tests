@@ -71,8 +71,10 @@ class GridBenchmark_ITT(GridBenchmark):
     @run_after('setup')
     def setup_num_tasks(self):
         self.num_tasks = reduce(mul, list(map(int, self.mpi.split("."))), 1)
-        self.set_var_default('num_cpus_per_task',
-                             self.current_partition.processor.num_cpus)
+        self.set_var_default(
+            'num_cpus_per_task',
+            self.current_partition.processor.num_cpus //
+            min(1, self.current_partition.processor.num_cpus_per_core))
         self.set_var_default('num_tasks_per_node', self.num_tasks)
         self.executable_opts = [f'--mpi {self.mpi}', '--shm 1024', '--shm-hugetlb']
         self.extra_resources = {
