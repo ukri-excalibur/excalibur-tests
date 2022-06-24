@@ -23,7 +23,7 @@ from modules.utils import identify_build_environment
 
 class GridBenchmark(rfm.RegressionTest):
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     build_system = 'Spack'
     spack_spec = variable(str, value='grid@develop')
 

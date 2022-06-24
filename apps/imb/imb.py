@@ -28,7 +28,7 @@ class IMB_base(rfm.RegressionTest):
 
     def __init__(self):
         self.valid_systems = ['*:compute-node']
-        self.valid_prog_environs = ['*']
+        self.valid_prog_environs = ['default']
         self.exclusive_access = True
         self.perf_patterns = {} # must do this
         self.perf_patterns = {} # something funny about reframe's attr lookup

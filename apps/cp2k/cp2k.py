@@ -13,7 +13,7 @@ from modules.utils import identify_build_environment
 
 class Cp2kBaseBenchmark(rfm.RegressionTest):
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     build_system = 'Spack'
     spack_spec = variable(str, value='cp2k@9.1')
     executable = 'cp2k.psmp'
