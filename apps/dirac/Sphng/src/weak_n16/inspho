@@ -1,0 +1,19 @@
+1       Pressure gradient (0: off, 1: on)
+6 0.1 1.0 0.0 1.0 Artificial viscosity and resistivity (0: off, 1: on) and alpha and beta for each
+0 1. 0  0.0  Physical Resistivity (1=const,2=func), etafac
+0       Coriolis and centrifugal force (0: off, 1: on)
+0       Kinetic energy: radiated: (0), dissipated (1)
+0       P dV: radiated (0), dissipated (1)
+0.0     Artificial damping (0., 1. or 2.)
+0       External force (1 > 9) flag ?
+0       Expanding or contracting referential (0: off, 1: on)
+1       Binary Dump every N maximum time steps
+1       Full Binary Dump every N Binary Dumps
+256      N Ptmass Dumps every maximum time steps (binned into power of 2)
+1e-5 1e-9 1e-5  Precision of the Runge-Kutta integration (absolute error)
+1       Initial value of binary dump counter
+1000000.  Maximum CPU time for program (minutes)
+0.099   Maximum dynamical time for program
+0.317907   Maximum dynamical timestep
+0.005   Initial dynamical timestep
+1.E-12

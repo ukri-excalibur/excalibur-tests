@@ -19,7 +19,7 @@ from modules.utils import identify_build_environment
 class SombreroBuild(rfm.CompileOnlyRegressionTest):
     descr = "Build SOMBRERO"
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     build_system = 'Spack'
     spack_spec = variable(str, value='sombrero@2021-08-16')
 
@@ -37,7 +37,7 @@ class SombreroBuild(rfm.CompileOnlyRegressionTest):
 @rfm.simple_test
 class SombreroBenchmarkBase(rfm.RunOnlyRegressionTest):
     valid_systems = []
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     build_system = 'Spack'
     time_limit = '3m'
     theory_id = parameter(range(1, 7))

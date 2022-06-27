@@ -38,7 +38,7 @@ By default, these benchmarks will use
 * [`num_cpus_per_task`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_cpus_per_task):
   2
 * [`num_tasks`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks):
-  `current_partition.processor.num_cpus // num_cpus_per_task`
+  `current_partition.processor.num_cpus // min(1, current_partition.processor.num_cpus_per_core) // num_cpus_per_task`
 * [`num_tasks_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node): `num_tasks`
 
 You can override the values of these variables from the command line with the

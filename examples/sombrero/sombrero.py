@@ -31,7 +31,7 @@ class SombreroBenchmark(rfm.RegressionTest):
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     # The build system to use.  We always use Spack.
     build_system = 'Spack'
     # Spack specification with default value.  A different value can be set

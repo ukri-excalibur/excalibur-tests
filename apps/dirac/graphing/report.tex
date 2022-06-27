@@ -1,0 +1,130 @@
+\documentclass[10pt]{article}
+\usepackage{bm, url, graphicx, amsmath, xcolor}
+\nonstopmode
+
+\title{DiRAC Benchmarks}
+\author{...}
+
+\begin{document}
+
+\maketitle
+
+\section{DiAL: Data Intensive at Leicester}
+
+\subsection{Overview{\footnote{see \url{https://www2.le.ac.uk/offices/itservices/ithelp/services/hpc/dirac/about}}}
+}
+
+The University of Leicester hosts one of five High Performance Computing (HPC) systems that forms
+part of the DiRAC service. The focus of the service is to support data intensive science problems
+in Theoretical Astrophysics and Particle Physics. The DIaL service provides:
+
+\begin{itemize}
+	\item 400 dual-socket nodes with 36 2.3 GHz intel skylake cores, 192 GB RAM per node.
+	\item 3 large memory nodes: 36 skylake cores, 1.5TB RAM per node.
+	\item 1 large memory node with 144 skylake 3GHz cores, 6 TB RAM, supporting larger shared memory codes.
+	\item EDR Infiniband Interconnect (2:1 blocking)
+	\item 3.3 TB of Lustre parallel storage, supporting over 40GB/s read/write.
+	\item 100 GB NVMEoFC storage - experimental data intensive file store with a theoretical peak read/write of 50GB/s.
+	\item All nodes run linux CentOS 7 or RHEL 7
+\end{itemize}
+
+\clearpage
+\subsection{Benchmarks}
+
+{\color{orange} WARNING:} Scaling benchmarks are plotted relative to the lowest value of the
+performance metric and are \emph{not} comparable across systems.
+
+\subsubsection{Ramses}
+Ramses is a program to model astrophysical systems, featuring
+self-gravitating, magnetised, compressible, radiative fluid flows. It is based
+on the Adaptive Mesh Refinement (AMR) technique on a fully-threaded graded octree.\footnote{see \url{https://bitbucket.org/rteyssie/ramses/src/master/}}
+
+{\color{red} Some outline of the specific system(s) used for the scaling benchmarks}
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{Ramses_strong.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{Ramses strong scaling benchmark.}
+	\label{fig::ramses_ss}
+\end{figure*}
+
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{Ramses_weak.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{Ramses weak scaling benchmark.}
+	\label{fig::ramses_ws}
+\end{figure*}
+
+
+\clearpage
+\subsubsection{Sphng}
+Smoothed-particle hydrodynamics code used to simulate the mechanics of
+continuum media.
+
+{\color{red} Some outline of the specific system(s) used for the scaling benchmarks}
+
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{Sphng_strong.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{Sphng strong scaling benchmark.}
+	\label{fig::sphng_ss}
+\end{figure*}
+
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{Sphng_weak.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{Sphng weak scaling benchmark.}
+	\label{fig::sphng_ws}
+\end{figure*}
+
+
+\clearpage
+\subsubsection{Trove}
+TROVE (Theoretical ROtational Vibrational Energies) is a suite of programs
+primarily designed for the calculation of molecular infrared line lists.\footnote{see \url{https://github.com/Trovemaster/TROVE}}
+
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{trove_strong_12N.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{TROVE strong scaling benchmark.}
+	\label{fig::trove_ss_12N}
+\end{figure*}
+
+\begin{figure*}[h!]
+	\centering
+	\includegraphics[height=5cm]{trove_strong_16N.pdf}
+	\vspace{0.1cm}
+	\hrule
+	\vspace{0.01cm}
+	\caption{TROVE strong scaling benchmark.}
+	\label{fig::trove_ss_16N}
+\end{figure*}
+
+
+\clearpage
+\subsection{Summary}
+
+{\color{red} TODO}
+
+
+
+\end{document}
