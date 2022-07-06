@@ -91,17 +91,6 @@ environment variable in order to make ReFrame use
 
 as shebang line, instead.
 
-### Extra Python modules
-
-The benchmarks in this suite will additionally need the following Python modules:
-
-* [`matplotlib`](https://matplotlib.org/)
-* [`pandas`](https://pandas.pydata.org/)
-
-Check the recommended way to install Python modules in your system, it may be
-for example by using `pip`, or creating environments with `pyenv` or
-Conda/Anaconda. For example, see [the guide for CSD3](https://docs.hpc.cam.ac.uk/hpc/software-tools/python.html).
-
 ## Usage
 
 Once you have set up Spack and ReFrame, you can execute a benchmark with
