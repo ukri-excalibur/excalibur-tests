@@ -25,16 +25,16 @@ class IMB_base(rfm.RegressionTest):
     METRICS = []
 
     mpi_implementation = parameter(['openmpi','intel-mpi'])
+    valid_systems = ['*']
+    valid_prog_environs = ['default']
+    exclusive_access = True
+    perf_patterns = {} # must do this
+    perf_patterns = {} # something funny about reframe's attr lookup
+    executable = 'IMB-MPI1'
+    build_system = 'Spack'
+    spack_spec = variable(str, value='intel-mpi-benchmarks@2019.6')
 
     def __init__(self):
-        self.valid_systems = ['*:compute-node']
-        self.valid_prog_environs = ['default']
-        self.exclusive_access = True
-        self.perf_patterns = {} # must do this
-        self.perf_patterns = {} # something funny about reframe's attr lookup
-        self.executable = 'IMB-MPI1'
-        self.build_system = 'Spack'
-        self.spack_spec = variable(str, value='intel-mpi-benchmarks@2019.6%intel')
         self.tags = {self.mpi_implementation}
 
     @run_before('compile')
