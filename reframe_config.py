@@ -4,13 +4,13 @@ site_configuration = {
     'systems': [
         {
             # https://www.hpc.cam.ac.uk/systems/peta-4
-            'name': 'csd3',
-            'descr': 'CSD3',
-            'hostnames': ['login-[eq]-[0-9]+'],
+            'name': 'csd3-skylake',
+            'descr': 'CSD3 Skylake',
+            'hostnames': ['login-e-[0-9]+'],
             'modules_system': 'tmod32',
             'partitions': [
                 {
-                    'name': 'skylake',
+                    'name': 'compute-node',
                     'descr': 'Skylake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
@@ -24,8 +24,17 @@ site_configuration = {
                         'num_cpus_per_socket': 16,
                     }
                 },
+            ]
+        },  # end CSD3 Skylake
+        {
+            # https://www.hpc.cam.ac.uk/systems/peta-4
+            'name': 'csd3-icelake',
+            'descr': 'CSD3 Icelake',
+            'hostnames': ['login-q-[0-9]+'],
+            'modules_system': 'tmod4',
+            'partitions': [
                 {
-                    'name': 'icelake',
+                    'name': 'compute-node',
                     'descr': 'Icelake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
@@ -40,7 +49,7 @@ site_configuration = {
                     },
                 },
             ]
-        },  # end CSD3
+        },  # end CSD3 Icelake
         {
             # https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/#node-types
             'name': 'myriad',

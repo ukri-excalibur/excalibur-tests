@@ -78,10 +78,10 @@ class SombreroBenchmark(rfm.RegressionTest):
         'cosma8': {
             'flops': (3.8, -0.2, None, 'Gflops/seconds'),
         },
-        'csd3:skylake': {
+        'csd3-skylake': {
             'flops': (1.2, -0.2, None, 'Gflops/seconds'),
         },
-        'csd3:icelake': {
+        'csd3-icelake': {
             'flops': (1.5, -0.2, None, 'Gflops/seconds'),
         },
         'dial3': {
