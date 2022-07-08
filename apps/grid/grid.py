@@ -48,10 +48,10 @@ class GridBenchmark_ITT(GridBenchmark):
         'cosma8': {
             'Performance': (425000, None, None, 'Mflop/s per node')
         },
-        'csd3:icelake': {
+        'csd3-icelake': {
             'Performance': (450000, None, None, 'Mflop/s per node')
         },
-        'csd3:skylake': {
+        'csd3-skylake': {
             'Performance': (22000, None, None, 'Mflop/s per node')
         },
         'dial3': {

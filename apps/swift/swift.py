@@ -35,10 +35,10 @@ class SwiftBenchmark(rfm.RegressionTest):
         'cosma8': {
             'duration': (50, None, 0.2, 'seconds'),
         },
-        'csd3:skylake': {
+        'csd3-skylake': {
             'duration': (50, None, 0.2, 'seconds'),
         },
-        'csd3:icelake': {
+        'csd3-icelake': {
             'duration': (350, None, 0.2, 'seconds'),
         },
         'dial3': {
