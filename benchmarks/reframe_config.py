@@ -1,4 +1,13 @@
 import os
+import reframe.core.launchers.mpi as rfmmpi
+
+# OpenMPI Launcher on COSMA7 Rockport network:
+# <https://www.dur.ac.uk/icc/cosma/support/rockport/>.  Requires
+# <https://github.com/reframe-hpc/reframe/issues/2560>.
+@rfmmpi.register_launcher('rockport_openmpi')
+class RockportOpenmpiLauncher(rfmmpi.MpirunLauncher):
+    def command(self, job):
+        return ['mpirun', '$RP_OPENMPI_ARGS']
 
 # Some systems, notably some Cray-based ones, don't have access to the home filesystem.
 # This means that if you set up Spack in your bashrc script, this file won't be loaded and
