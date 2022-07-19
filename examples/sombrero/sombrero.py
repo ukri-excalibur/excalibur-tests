@@ -28,10 +28,14 @@ class SpackSetup(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_spack_environment(self):
-        cp_dir, subdir = identify_build_environment(self.current_partition)
+        env_dir, cp_dir, subdir = identify_build_environment(
+            self.current_partition)
         dest = path.join(self.stagedir, 'spack_env')
         self.build_system.environment = path.join(dest, subdir)
-        self.prebuild_cmds = [f'cp -arv {cp_dir} {dest}']
+        self.prebuild_cmds = [
+            f'cp -arv {cp_dir} {dest}',
+            f'spack config add "config:install_tree:root:{env_dir}/opt/spack"',
+        ]
 
     # @run_before('sanity')
     # def set_sanity_patterns(self):
