@@ -11,9 +11,10 @@ import reframe.utility.sanity as sn
 # Add top-level directory to `sys.path` so we can easily import extra modules
 # from any directory.
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-# `identify_build_environment` will be used to identify the Spack environment
-# to be used when running the benchmark.
-from modules.utils import identify_build_environment
+# `SpackTest` is a class for benchmarks which will use Spack as build system.
+# The only requirement is to inherit this class and set the `spack_spec`
+# attribute.
+from modules.utils import SpackTest
 
 # See ReFrame documentation about writing tests for more details.  In
 # particular:
@@ -22,30 +23,11 @@ from modules.utils import identify_build_environment
 # * https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html
 #   (reference about the regression tests API)
 
-class SpackSetup(rfm.RegressionTest):
-    build_system = 'Spack'
-    spack_spec = variable(str, value='', loggable=True)
-
-    @run_before('compile')
-    def setup_spack_environment(self):
-        env_dir, cp_dir, subdir = identify_build_environment(
-            self.current_partition)
-        dest = path.join(self.stagedir, 'spack_env')
-        self.build_system.environment = path.join(dest, subdir)
-        self.prebuild_cmds = [
-            f'cp -arv {cp_dir} {dest}',
-            f'spack config add "config:install_tree:root:{env_dir}/opt/spack"',
-        ]
-
-    # @run_before('sanity')
-    # def set_sanity_patterns(self):
-    #     self.sanity_patterns = sn.assert_true(1)
-
 # Class to define the benchmark.  See
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
 # for more information about the API of ReFrame tests.
 @rfm.simple_test
-class SombreroBenchmark(SpackSetup):
+class SombreroBenchmark(SpackTest):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.

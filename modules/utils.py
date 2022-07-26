@@ -6,6 +6,7 @@ import json
 import sys
 import pprint
 
+import reframe as rfm
 from reframe.core.exceptions import BuildSystemError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
@@ -237,6 +238,23 @@ def identify_build_environment(current_partition):
             getlogger().info("Spack environment successfully created at"
                              f"{env}")
     return env_dir, cp_dir, subdir
+
+
+class SpackTest(rfm.RegressionTest):
+    build_system = 'Spack'
+    spack_spec = variable(str, value='', loggable=True)
+
+    @run_before('compile')
+    def setup_spack_environment(self):
+        env_dir, cp_dir, subdir = identify_build_environment(
+            self.current_partition)
+        dest = os.path.join(self.stagedir, 'spack_env')
+        self.build_system.environment = os.path.join(dest, subdir)
+        self.prebuild_cmds = [
+            f'cp -arv {cp_dir} {dest}',
+            f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt/spack"',
+        ]
+
 
 if __name__ == '__main__':
 
