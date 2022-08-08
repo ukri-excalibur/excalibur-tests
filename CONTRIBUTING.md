@@ -85,4 +85,4 @@ For writing ReFrame benchmarks you can read the documentation, in particular
 * [Regression Test API](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html)
 
 but you can also have a look at the sample file in
-[`examples/sombrero/reframe_sombrero.py`](./examples/sombrero/reframe_sombrero.py).
+[`examples/sombrero/sombrero.py`](./examples/sombrero/sombrero.py).
