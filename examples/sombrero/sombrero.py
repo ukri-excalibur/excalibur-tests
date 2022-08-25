@@ -11,9 +11,10 @@ import reframe.utility.sanity as sn
 # Add top-level directory to `sys.path` so we can easily import extra modules
 # from any directory.
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-# `identify_build_environment` will be used to identify the Spack environment
-# to be used when running the benchmark.
-from modules.utils import identify_build_environment
+# `SpackTest` is a class for benchmarks which will use Spack as build system.
+# The only requirement is to inherit this class and set the `spack_spec`
+# attribute.
+from modules.utils import SpackTest
 
 # See ReFrame documentation about writing tests for more details.  In
 # particular:
@@ -26,18 +27,16 @@ from modules.utils import identify_build_environment
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
 # for more information about the API of ReFrame tests.
 @rfm.simple_test
-class SombreroBenchmark(rfm.RegressionTest):
+class SombreroBenchmark(SpackTest):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    # The build system to use.  We always use Spack.
-    build_system = 'Spack'
     # Spack specification with default value.  A different value can be set
     # from the command line with `-S spack_spec='...'`:
     # https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S
-    spack_spec = variable(str, value='sombrero@2021-08-16')
+    spack_spec = 'sombrero@2021-08-16'
     # Number of (MPI) tasks and CPUs per task.  Here we hard-code 1, but in
     # other cases you may want to use something different.  Note: ReFrame will
     # automatically launch MPI with the given number of tasks, using the
@@ -103,13 +102,7 @@ class SombreroBenchmark(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
-        # Spack spec(s) to install the desired package(s).  It is recommended
-        # to specify also the version number for reproducibility.
         self.build_system.specs = [self.spack_spec]
-        # Identify the Spack environment for the current system.  Keep this
-        # setting as is.
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
 
     # Function defining a sanity check.  See
     # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html

@@ -6,6 +6,7 @@ import json
 import sys
 import pprint
 
+import reframe as rfm
 from reframe.core.exceptions import BuildSystemError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
@@ -220,29 +221,40 @@ def identify_build_environment(current_partition):
     # * if not, use a provided spack environment for the current partition
     # * if that doesn't exist, create a persistent minimal environment
     if os.getenv('EXCALIBUR_SPACK_ENV'):
-        env = os.getenv('EXCALIBUR_SPACK_ENV')
+        env_dir = cp_dir = os.getenv('EXCALIBUR_SPACK_ENV')
+        subdir = ''
     else:
-        env = os.path.realpath(
+        system, partition = current_partition.fullname.split(':')
+        cp_dir = os.path.realpath(
             os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
-                         # Note: we can't have `:` in the path of the install
-                         # tree, otherwise the PATH environment variable is
-                         # going to be messed up
-                         current_partition.fullname.replace(':', '/')))
-        if not os.path.isdir(env):
+                         system))
+        subdir = partition
+        env_dir = os.path.join(cp_dir, partition)
+        if not os.path.isdir(cp_dir):
             cmd = run_command(["spack", "env", "create", "--without-view", "-d", env])
             if cmd.returncode != 0:
                 raise BuildSystemError("Creation of the Spack "
                                        f"environment {env} failed")
-            cmd = run_command([
-                "spack", "-e", env, "config", "add",
-                "config:install_tree:root:opt/spack"
-            ])
-            if cmd.returncode != 0:
-                raise BuildSystemError("Setting up the Spack "
-                                       f"environment {env} failed")
             getlogger().info("Spack environment successfully created at"
                              f"{env}")
-    return env
+    return env_dir, cp_dir, subdir
+
+
+class SpackTest(rfm.RegressionTest):
+    build_system = 'Spack'
+    spack_spec = variable(str, value='', loggable=True)
+
+    @run_before('compile')
+    def setup_spack_environment(self):
+        env_dir, cp_dir, subdir = identify_build_environment(
+            self.current_partition)
+        dest = os.path.join(self.stagedir, 'spack_env')
+        self.build_system.environment = os.path.join(dest, subdir)
+        self.prebuild_cmds = [
+            f'cp -arv {cp_dir} {dest}',
+            f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt/spack"',
+        ]
+
 
 if __name__ == '__main__':
 
