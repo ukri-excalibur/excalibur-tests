@@ -231,12 +231,12 @@ def identify_build_environment(current_partition):
         subdir = partition
         env_dir = os.path.join(cp_dir, partition)
         if not os.path.isdir(cp_dir):
-            cmd = run_command(["spack", "env", "create", "--without-view", "-d", env])
+            cmd = run_command(["spack", "env", "create", "--without-view", "-d", env_dir])
             if cmd.returncode != 0:
                 raise BuildSystemError("Creation of the Spack "
-                                       f"environment {env} failed")
+                                       f"environment {env_dir} failed")
             getlogger().info("Spack environment successfully created at"
-                             f"{env}")
+                             f"{env_dir}")
     return env_dir, cp_dir, subdir
 
 
