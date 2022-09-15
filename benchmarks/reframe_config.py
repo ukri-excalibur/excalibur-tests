@@ -267,10 +267,34 @@ site_configuration = {
             ]
         },  # end Isambard XCI
         {
+            'name': 'cosma7',
+            'descr': 'COSMA',
+            'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
+            'modules_system': 'tmod4',
+            'partitions': [
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'compute-node-rockport',
+                    'descr': 'Rockport compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpiexec',
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                }
+            ]
+        },  # end cosma7
+        {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
             'descr': 'COSMA',
-            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
+            'hostnames': ['login8[a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'tmod4',
             'partitions': [
                 {
