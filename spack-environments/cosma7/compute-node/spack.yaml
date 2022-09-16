@@ -560,12 +560,6 @@ spack:
     openmpi:
       externals:
       - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi+static~wrapper-rpath
-          schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
-      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi+static~wrapper-rpath
-          fabrics=ucx schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.4
-      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi+static~wrapper-rpath
           fabrics=ucx schedulers=slurm
         prefix: /cosma/local/openmpi/gnu_9.3.0/4.1.1
     perl:
