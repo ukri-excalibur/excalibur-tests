@@ -1,13 +1,14 @@
 import os
 import reframe.core.launchers.mpi as rfmmpi
 
+
 # OpenMPI Launcher on COSMA7 Rockport network:
-# <https://www.dur.ac.uk/icc/cosma/support/rockport/>.  Requires
-# <https://github.com/reframe-hpc/reframe/issues/2560>.
-@rfmmpi.register_launcher('rockport_openmpi')
+# <https://www.dur.ac.uk/icc/cosma/support/rockport/>.
+@rfmmpi.register_launcher('rockport_openmpi_mpirun')
 class RockportOpenmpiLauncher(rfmmpi.MpirunLauncher):
     def command(self, job):
         return ['mpirun', '$RP_OPENMPI_ARGS']
+
 
 # Some systems, notably some Cray-based ones, don't have access to the home filesystem.
 # This means that if you set up Spack in your bashrc script, this file won't be loaded and
@@ -27,6 +28,7 @@ def spack_root_to_path():
                 return path
             else:
                 return spack_bindir * os.path.pathsep * path
+
 
 site_configuration = {
     'systems': [
@@ -274,10 +276,11 @@ site_configuration = {
             'partitions': [
                 # https://www.dur.ac.uk/icc/cosma/support/rockport/
                 {
-                    'name': 'compute-node-rockport',
-                    'descr': 'Rockport compute nodes',
+                    'name': 'rockport-intelmpi-compute-node',
+                    'descr': 'Rockport compute nodes using Intel MPI',
                     'scheduler': 'slurm',
-                    'launcher': 'mpiexec',
+                    'launcher': 'mpirun',
+                    'modules': ['rockport-settings'],
                     'access': ['--partition=cosma7-rp'],
                     'environs': ['default'],
                     'max_jobs': 64,
@@ -287,7 +290,24 @@ site_configuration = {
                         'num_sockets': 1,
                         'num_cpus_per_socket': 28,
                     },
-                }
+                },
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'rockport-openmpi-compute-node',
+                    'descr': 'Rockport compute nodes using OpenMPI',
+                    'scheduler': 'slurm',
+                    'launcher': 'rockport_openmpi_mpirun',
+                    'modules': ['rockport-settings'],
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
             ]
         },  # end cosma7
         {
