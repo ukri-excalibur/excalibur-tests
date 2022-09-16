@@ -541,6 +541,10 @@ spack:
       externals:
       - spec: gmake@3.82
         prefix: /usr
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2018.1.199
+        prefix: /cosma/local/Intel/Parallel_Studio_XE_2018
     libtool:
       externals:
       - spec: libtool@2.4.2
