@@ -32,7 +32,6 @@ class IMB_base(SpackTest):
     executable = 'IMB-MPI1'
     build_system = 'Spack'
     spack_spec = 'intel-mpi-benchmarks@2019.6'
-    tags = {}
 
     @run_before('compile')
     def setup_build_system(self):
