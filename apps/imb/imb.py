@@ -17,11 +17,11 @@ from collections import namedtuple
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from modules.imb import read_imb_out
 from modules.reframe_extras import ScalingTest
-from modules.utils import identify_build_environment
+from modules.utils import SpackTest
 
 Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 
-class IMB_base(rfm.RegressionTest):
+class IMB_base(SpackTest):
     METRICS = []
 
     mpi_implementation = parameter(['openmpi','intel-mpi'])
@@ -31,8 +31,7 @@ class IMB_base(rfm.RegressionTest):
     perf_patterns = {} # must do this
     perf_patterns = {} # something funny about reframe's attr lookup
     executable = 'IMB-MPI1'
-    build_system = 'Spack'
-    spack_spec = variable(str, value='intel-mpi-benchmarks@2019.6')
+    spack_spec = 'intel-mpi-benchmarks@2019.6'
 
     def __init__(self):
         self.tags = {self.mpi_implementation}
@@ -40,7 +39,6 @@ class IMB_base(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec+'^'+self.mpi_implementation]
-        self.build_system.environment = identify_build_environment(self.current_partition)
 
     @run_before('performance')
     def add_metrics(self):

@@ -19,19 +19,16 @@ import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import identify_build_environment
+from modules.utils import SpackTest
 
-class GridBenchmark(rfm.RegressionTest):
+class GridBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    build_system = 'Spack'
-    spack_spec = variable(str, value='grid@develop')
+    spack_spec = 'grid@develop'
 
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
 
 
 @rfm.simple_test

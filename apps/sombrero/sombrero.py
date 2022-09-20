@@ -12,21 +12,18 @@ import reframe.utility.udeps as udeps
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 from apps.sombrero import case_filter
 from modules.reframe_extras import scaling_config
-from modules.utils import identify_build_environment
+from modules.utils import SpackTest
 
 
 @rfm.simple_test
-class SombreroBuild(rfm.CompileOnlyRegressionTest):
+class SombreroBuild(SpackTest, rfm.CompileOnlyRegressionTest):
     descr = "Build SOMBRERO"
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    build_system = 'Spack'
-    spack_spec = variable(str, value='sombrero@2021-08-16')
+    spack_spec = 'sombrero@2021-08-16'
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
         self.build_system.specs = [self.spack_spec]
 
     @run_before('sanity')
@@ -35,19 +32,17 @@ class SombreroBuild(rfm.CompileOnlyRegressionTest):
 
 
 @rfm.simple_test
-class SombreroBenchmarkBase(rfm.RunOnlyRegressionTest):
+class SombreroBenchmarkBase(SpackTest, rfm.RunOnlyRegressionTest):
     valid_systems = []
     valid_prog_environs = ['default']
-    build_system = 'Spack'
     time_limit = '3m'
+    spack_spec = 'sombrero@2021-08-16'
     theory_id = parameter(range(1, 7))
 
     @run_after('init')
     def inject_dependencies(self):
         self.depends_on("SombreroBuild", udeps.fully)
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
-        self.build_system.specs = ['sombrero@2021-08-16']
+        self.build_system.specs = [self.spack_spec]
 
     @run_after('init')
     def set_executable(self):

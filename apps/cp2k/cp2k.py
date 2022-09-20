@@ -9,13 +9,12 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import identify_build_environment
+from modules.utils import SpackTest
 
-class Cp2kBaseBenchmark(rfm.RegressionTest):
+class Cp2kBaseBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    build_system = 'Spack'
-    spack_spec = variable(str, value='cp2k@9.1')
+    spack_spec = 'cp2k@9.1'
     executable = 'cp2k.psmp'
     time_limit = '60m'
     num_cpus_per_task = 2
@@ -41,8 +40,6 @@ class Cp2kBaseBenchmark(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
 
     @run_before('sanity')
     def set_sanity_patterns(self):

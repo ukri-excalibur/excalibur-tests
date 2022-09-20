@@ -9,15 +9,14 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 
 sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import identify_build_environment
+from modules.utils import SpackTest
 
 
 @rfm.simple_test
-class HpgmgTest(rfm.RegressionTest):
+class HpgmgTest(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    build_system = 'Spack'
-    spack_spec = variable(str, value='hpgmg@0.4')
+    spack_spec = 'hpgmg@0.4'
     executable = 'hpgmg-fv'
     executable_opts = ['7', '8']
     num_tasks = 4
@@ -42,8 +41,6 @@ class HpgmgTest(rfm.RegressionTest):
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
-        self.build_system.environment = identify_build_environment(
-            self.current_partition)
 
     @run_before('sanity')
     def set_sanity_patterns(self):
