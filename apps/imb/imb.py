@@ -31,7 +31,7 @@ class IMB_base(SpackTest):
     perf_patterns = {} # must do this
     perf_patterns = {} # something funny about reframe's attr lookup
     executable = 'IMB-MPI1'
-    spack_spec = variable(str, value='intel-mpi-benchmarks@2019.6')
+    spack_spec = 'intel-mpi-benchmarks@2019.6'
 
     def __init__(self):
         self.tags = {self.mpi_implementation}
