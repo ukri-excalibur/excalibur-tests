@@ -24,21 +24,19 @@ Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
 class IMB_base(SpackTest):
     METRICS = []
 
-    mpi_implementation = parameter(['openmpi','intel-mpi'])
     valid_systems = ['*']
     valid_prog_environs = ['default']
     exclusive_access = True
     perf_patterns = {} # must do this
     perf_patterns = {} # something funny about reframe's attr lookup
     executable = 'IMB-MPI1'
+    build_system = 'Spack'
     spack_spec = 'intel-mpi-benchmarks@2019.6'
-
-    def __init__(self):
-        self.tags = {self.mpi_implementation}
+    tags = {}
 
     @run_before('compile')
     def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec+'^'+self.mpi_implementation]
+        self.build_system.specs = [self.spack_spec]
 
     @run_before('performance')
     def add_metrics(self):
