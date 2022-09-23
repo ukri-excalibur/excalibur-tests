@@ -274,6 +274,22 @@ site_configuration = {
             'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'tmod4',
             'partitions': [
+                # https://www.dur.ac.uk/icc/cosma/cosma7/
+                {
+                    'name': 'compute-node',
+                    'descr': 'Compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=cosma7'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
                 # https://www.dur.ac.uk/icc/cosma/support/rockport/
                 {
                     'name': 'rockport-intelmpi-compute-node',
