@@ -32,10 +32,8 @@ class Cp2kBaseBenchmark(SpackTest):
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
-        self.variables = {
-            'OMP_NUM_THREADS': f'{self.num_cpus_per_task}',
-            'OMP_PLACES': 'cores',
-        }
+        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.variables['OMP_PLACES'] = 'cores'
 
     @run_before('compile')
     def setup_build_system(self):

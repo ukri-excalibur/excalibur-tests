@@ -24,9 +24,6 @@ class SwiftBenchmark(SpackTest):
     executable_opts = ['--hydro', f'--threads={num_cpus_per_task}',
                        'sodShock.yml']
     time_limit = '20m'
-    variables = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-    }
     extra_resources = {
         'mpi': {'num_slots': num_tasks * num_cpus_per_task}
     }
@@ -50,6 +47,10 @@ class SwiftBenchmark(SpackTest):
             'duration': (250, None, None, 'seconds'),
         }
     }
+
+    @run_after('setup')
+    def setup_variables(self):
+        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('compile')
     def setup_build_system(self):

@@ -23,10 +23,6 @@ class HpgmgTest(SpackTest):
     num_tasks_per_node = 4
     num_cpus_per_task = 4
     time_limit = '30m'
-    variables = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-        'OMP_PLACES': 'cores'
-    }
     reference = {
         '*': {
             'l_0': (1e8, -0.9, 0.6, 'DOF/s'),
@@ -37,6 +33,11 @@ class HpgmgTest(SpackTest):
     extra_resources = {
         'mpi': {'num_slots': num_tasks * num_cpus_per_task}
     }
+
+    @run_after('setup')
+    def setup_variables(self):
+        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.variables['OMP_PLACES'] = 'cores'
 
     @run_before('compile')
     def setup_build_system(self):

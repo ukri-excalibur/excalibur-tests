@@ -50,12 +50,6 @@ class SombreroBenchmark(SpackTest):
     executable_opts = ['-w', '-s', 'small']
     # Time limit of the job, automatically set in the job script.
     time_limit = '2m'
-    # With `variables` you can set environment variables to be used in the job.
-    # For example with `OMP_NUM_THREADS` we set the number of OpenMP threads
-    # (not actually used in this specific benchmark).
-    variables = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-    }
     # These extra resources are needed for when using the SGE scheduler.
     extra_resources = {
         'mpi': {'num_slots': num_tasks * num_cpus_per_task}
@@ -99,6 +93,15 @@ class SombreroBenchmark(SpackTest):
             'flops': (1, None, None, 'Gflops/seconds'),
         }
     }
+
+    @run_after('setup')
+    def setup_variables(self):
+        # With `variables` you can set environment variables to be used in the
+        # job.  For example with `OMP_NUM_THREADS` we set the number of OpenMP
+        # threads (not actually used in this specific benchmark).  Note that
+        # this has to be done after setup because we need to add entries to
+        # ReFrame built-in `variables` variable.
+        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('compile')
     def setup_build_system(self):

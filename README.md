@@ -119,6 +119,18 @@ the `spack_spec` variable:
 reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08-16%intel'
 ```
 
+Note that the `-S` option can be used to set from the command line on a per-job
+basis the built-in fields of ReFrame regressions classes, e.g.
+[`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables),
+which controls the environment variables used in a job.  For example
+
+```
+reframe -c apps/sombrero -r --performance-report -S variables=OMP_PLACES:threads
+```
+
+runs the `apps/sombrero` benchmark setting the environment variable `OMP_PLACES`
+to `threads`.
+
 ### Selecting system and queue access options
 
 The provided ReFrame configuration file contains the settings for multiple systems.  If you
