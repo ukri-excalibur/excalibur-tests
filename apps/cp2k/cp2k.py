@@ -28,7 +28,9 @@ class Cp2kBaseBenchmark(SpackTest):
             self.current_partition.processor.num_cpus //
             min(1, self.current_partition.processor.num_cpus_per_core) //
             self.num_cpus_per_task)
-        self.set_var_default('num_tasks_per_node', self.num_tasks)
+        self.set_var_default('num_tasks_per_node',
+                             self.current_partition.processor.num_cpus //
+                             self.num_cpus_per_task)
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
