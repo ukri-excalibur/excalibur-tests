@@ -117,10 +117,10 @@ site_configuration = {
                     'environs': ['default', 'intel20-mpi-durham', 'intel20_u2-mpi-durham', 'intel19-mpi-durham', 'intel19_u3-mpi-durham'],
                     'max_jobs': 64,
                     'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 2,
+                        'num_cpus': 128,
+                        'num_cpus_per_core': 1,
                         'num_sockets': 2,
-                        'num_cpus_per_socket': 128,
+                        'num_cpus_per_socket': 64,
                     },
                 }
             ]
