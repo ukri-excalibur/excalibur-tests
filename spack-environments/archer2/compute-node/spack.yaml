@@ -303,10 +303,10 @@ spack:
         prefix: /usr
     cray-mpich:
       externals:
-      - spec: cray-mpich@8.1.4
-        prefix: /opt/cray/pe/lib64
+      - spec: cray-mpich@8.1.15
+        prefix: /opt/cray/pe/mpich/8.1.15/ofi/crayclang/10.0
         modules:
-        - cray-mpich/8.1.4
+        - cray-mpich/8.1.15
     diffutils:
       externals:
       - spec: diffutils@3.6
