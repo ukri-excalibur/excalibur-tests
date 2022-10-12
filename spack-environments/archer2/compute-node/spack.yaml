@@ -305,6 +305,8 @@ spack:
       externals:
       - spec: cray-mpich@8.1.4
         prefix: /opt/cray/pe/lib64
+        modules:
+        - cray-mpich/8.1.4
     diffutils:
       externals:
       - spec: diffutils@3.6
