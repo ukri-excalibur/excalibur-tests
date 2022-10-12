@@ -3,6 +3,31 @@ import os
 site_configuration = {
     'systems': [
         {
+            # https://www.archer2.ac.uk/about/hardware.html
+            # https://docs.archer2.ac.uk/
+            'name': 'archer2',
+            'descr': 'ARCHER2',
+            'hostnames': ['ln[0-9]+'],
+            'modules_system': 'lmod',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'ARCHER2 compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'srun',
+                    'access': ['--partition=standard'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 128,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
+                    }
+                },
+            ]
+        },  # end ARCHER2
+        {
             # https://www.hpc.cam.ac.uk/systems/peta-4
             'name': 'csd3-skylake',
             'descr': 'CSD3 Skylake',
