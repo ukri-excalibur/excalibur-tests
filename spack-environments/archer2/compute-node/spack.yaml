@@ -85,60 +85,6 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: aocc@8.0.0
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags:
-        cflags: null
-        cxxflags: null
-        fflags: null
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-aocc
-      - aocc/8.0.0
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: aocc@8.1.0
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags:
-        cflags: null
-        cxxflags: null
-        fflags: null
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-aocc
-      - aocc/8.1.0
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: aocc@8.3.3
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags:
-        cflags: null
-        cxxflags: null
-        fflags: null
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-aocc
-      - aocc/8.3.3
-      environment: {}
-      extra_rpaths: []
-  - compiler:
       spec: cce@11.0.4
       paths:
         cc: cc
@@ -181,21 +127,6 @@ spack:
       modules:
       - PrgEnv-cray
       - cce/13.0.2
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: gcc@8.1.0
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags: {}
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-gnu
-      - gcc/8.1.0
       environment: {}
       extra_rpaths: []
   - compiler:
@@ -256,36 +187,6 @@ spack:
       modules:
       - PrgEnv-gnu
       - gcc/11.2.0
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: rocmcc@2.14-nosmp
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags: {}
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-amd
-      - rocmcc/2.14-nosmp
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: rocmcc@2.14
-      paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
-      flags: {}
-      operating_system: sles15
-      target: any
-      modules:
-      - PrgEnv-amd
-      - rocmcc/2.14
       environment: {}
       extra_rpaths: []
   packages:
