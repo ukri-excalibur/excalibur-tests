@@ -68,6 +68,9 @@ class SombreroBenchmark(SpackTest):
         # for more information.  The key `*` matches all systems/partitions not
         # matched by the other entries of the dictionary and can be used to
         # provide a default reference value.
+        'archer2': {
+            'flops': (1.2, -0.2, None, 'Gflops/seconds'),
+        },
         'cosma8': {
             'flops': (3.8, -0.2, None, 'Gflops/seconds'),
         },
