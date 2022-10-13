@@ -34,7 +34,14 @@ site_configuration = {
                     'descr': 'ARCHER2 compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'srun',
-                    'variables': [['PATH', spack_root_to_path()]],
+                    'variables': [
+                        # Propagate PATH to compute nodes, including `spack` bindir
+                        ['PATH', spack_root_to_path()],
+                        # Work around for Spack erroring out on non-existing home directory:
+                        # https://github.com/spack/spack/issues/33265#issuecomment-1277343920
+                        ['SPACK_USER_CONFIG_PATH', os.path.expanduser("~").replace('home', 'work')],
+                        ['SPACK_USER_CACHE_PATH',  os.path.expanduser("~").replace('home', 'work')],
+                    ],
                     'access': ['--partition=standard'],
                     'environs': ['default'],
                     'max_jobs': 64,
