@@ -219,9 +219,15 @@ spack:
         - cray-libsci/21.04.1.1
     cray-mpich:
       externals:
-      - spec: cray-mpich@8.1.15
+      - spec: cray-mpich@8.1.15%cce
         prefix: /opt/cray/pe/mpich/8.1.15/ofi/crayclang/10.0
         modules:
+        - libfabric/1.11.0.4.71
+        - cray-mpich/8.1.15
+      - spec: cray-mpich@8.1.15%gcc
+        prefix: /opt/cray/pe/mpich/8.1.15/ofi/gnu/9.1
+        modules:
+        - libfabric/1.11.0.4.71
         - cray-mpich/8.1.15
     diffutils:
       externals:
@@ -251,16 +257,26 @@ spack:
         prefix: /usr
     gmp:
       externals:
-      - spec: gmp@6.2.1
+      - spec: gmp@6.2.1%cce
         prefix: /work/y07/shared/libs/core/gmp/6.2.1/CRAYCLANG/10.0
+      - spec: gmp@6.2.1%gcc
+        prefix: /work/y07/shared/libs/core/gmp/6.2.1/GNU/9.1
     hdf5:
       externals:
-      - spec: hdf5@1.12.0+cxx~mpi
+      - spec: hdf5@1.12.0+cxx~mpi%cce
         prefix: /opt/cray/pe/hdf5/1.12.0.3/crayclang/9.1
         modules:
         - cray-hdf5/1.12.0.3
-      - spec: hdf5@1.12.0+cxx+mpi^cray-mpich
+      - spec: hdf5@1.12.0+cxx+mpi^cray-mpich%cce
         prefix: /opt/cray/pe/hdf5-parallel/1.12.0.3/crayclang/9.1
+        modules:
+        - cray-hdf5-parallel/1.12.0.3
+      - spec: hdf5@1.12.0+cxx~mpi%gcc
+        prefix: /opt/cray/pe/hdf5/1.12.0.3/gnu/9.1
+        modules:
+        - cray-hdf5/1.12.0.3
+      - spec: hdf5@1.12.0+cxx+mpi^cray-mpich%gcc
+        prefix: /opt/cray/pe/hdf5-parallel/1.12.0.3/gnu/9.1
         modules:
         - cray-hdf5-parallel/1.12.0.3
     libtool:
