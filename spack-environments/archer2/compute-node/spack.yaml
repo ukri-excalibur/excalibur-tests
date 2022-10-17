@@ -227,6 +227,8 @@ spack:
       externals:
       - spec: diffutils@3.6
         prefix: /usr
+    fftw-api:
+      require: cray-fftw
     file:
       externals:
       - spec: file@5.32
@@ -247,6 +249,10 @@ spack:
       externals:
       - spec: gmake@4.2.1
         prefix: /usr
+    gmp:
+      externals:
+      - spec: gmp@6.2.1
+        prefix: /work/y07/shared/libs/core/gmp/6.2.1/CRAYCLANG/10.0
     hdf5:
       externals:
       - spec: hdf5@1.12.0+cxx~mpi
@@ -290,6 +296,10 @@ spack:
     tar:
       externals:
       - spec: tar@1.30
+        prefix: /usr
+    texinfo:
+      externals:
+      - spec: texinfo@6.5
         prefix: /usr
     xz:
       externals:
