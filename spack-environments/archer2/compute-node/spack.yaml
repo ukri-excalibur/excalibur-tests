@@ -297,10 +297,6 @@ spack:
       externals:
       - spec: tar@1.30
         prefix: /usr
-    texinfo:
-      externals:
-      - spec: texinfo@6.5
-        prefix: /usr
     xz:
       externals:
       - spec: xz@5.2.3
