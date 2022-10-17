@@ -132,10 +132,10 @@ spack:
   - compiler:
       spec: gcc@9.3.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/cray/pe/gcc/9.3.0/snos/bin/gcc
+        cxx: /opt/cray/pe/gcc/9.3.0/snos/bin/g++
+        f77: /opt/cray/pe/gcc/9.3.0/snos/bin/gfortran
+        fc: /opt/cray/pe/gcc/9.3.0/snos/bin/gfortran
       flags: {}
       operating_system: sles15
       target: any
@@ -147,10 +147,10 @@ spack:
   - compiler:
       spec: gcc@10.2.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/gcc/10.2.0/snos/bin/gcc
+        cxx: /opt/gcc/10.2.0/snos/bin/g++
+        f77: /opt/gcc/10.2.0/snos/bin/gfortran
+        fc: /opt/gcc/10.2.0/snos/bin/gfortran
       flags:
         fflags: -fallow-argument-mismatch
       operating_system: sles15
@@ -163,10 +163,10 @@ spack:
   - compiler:
       spec: gcc@10.3.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/cray/pe/gcc/10.3.0/snos/bin/gcc
+        cxx: /opt/cray/pe/gcc/10.3.0/snos/bin/g++
+        f77: /opt/cray/pe/gcc/10.3.0/snos/bin/gfortran
+        fc: /opt/cray/pe/gcc/10.3.0/snos/bin/gfortran
       flags:
         fflags: -fallow-argument-mismatch
       operating_system: sles15
@@ -179,10 +179,10 @@ spack:
   - compiler:
       spec: gcc@11.2.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/cray/pe/gcc/11.2.0/snos/bin/gcc
+        cxx: /opt/cray/pe/gcc/11.2.0/snos/bin/g++
+        f77: /opt/cray/pe/gcc/11.2.0/snos/bin/gfortran
+        fc: /opt/cray/pe/gcc/11.2.0/snos/bin/gfortran
       flags:
         fflags: -fallow-argument-mismatch
       operating_system: sles15
