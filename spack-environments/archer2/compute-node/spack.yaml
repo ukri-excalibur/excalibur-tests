@@ -193,10 +193,6 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
-    slurm:
-      externals:
-      - spec: slurm@21.08.8
-        prefix: /usr
     autoconf:
       externals:
       - spec: autoconf@2.69
@@ -327,11 +323,15 @@ spack:
       externals:
       - spec: python@2.7.18+bz2+ctypes~dbm+nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /usr
-      - spec: python@3.6.12+bz2+ctypes~dbm+lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
-        prefix: /usr
+      - spec: python@3.8.5+bz2+ctypes+dbm+lzma~nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /opt/cray/pe/python/3.8.5.0
     sed:
       externals:
       - spec: sed@4.4
+        prefix: /usr
+    slurm:
+      externals:
+      - spec: slurm@21.08.8
         prefix: /usr
     tar:
       externals:
