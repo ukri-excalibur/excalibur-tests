@@ -251,7 +251,7 @@ class SpackTest(rfm.RegressionTest):
         dest = os.path.join(self.stagedir, 'spack_env')
         self.build_system.environment = os.path.join(dest, subdir)
         self.prebuild_cmds = [
-            f'cp -arv {cp_dir} {dest}',
+            f'cp -srv {cp_dir} {dest}',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt/spack"',
         ]
 
