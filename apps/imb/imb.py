@@ -19,7 +19,7 @@ from modules.imb import read_imb_out
 from modules.reframe_extras import ScalingTest
 from modules.utils import SpackTest
 
-Metric = namedtuple('Metric', ['column', 'function', 'unit', 'label'])
+Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 
 class IMB_base(SpackTest):
     METRICS = []
@@ -50,22 +50,22 @@ class IMB_base(SpackTest):
         """
 
         for metric in self.METRICS:
-            self.perf_patterns[metric.label] = reduce(self.stdout, self.num_tasks, metric.column, metric.function)
+            self.perf_patterns[metric.label] = reduce(self.stdout, self.num_tasks, metric.column_number, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit)
 
 @sn.deferrable
-def reduce(path, n_procs, column, function):
+def reduce(path, n_procs, column_number, function):
     """ Calculate an aggregate value from IMB output.
 
         Args:
             path: str, path to file
             n_procs: int, number of processes
-            column: str, column name
+            column_number: int, column number
             function: callable to apply to specified `column` of table for `n_procs` in `path`
     """
     tables = read_imb_out(path)
     table = tables[n_procs] # separate lines here for more useful KeyError if missing:
-    col = table[column]
+    col = [row[column_number] for row in table]
     result = function(col)
     return result
 
@@ -73,10 +73,10 @@ def reduce(path, n_procs, column, function):
 class IMB_PingPong(IMB_base):
     """ Runs on 2 nodes """
     METRICS = [
-        # 'column' 'function', 'unit', 'label'
-        Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth'),
-        Metric('t[usec]', min, 't[usec]', 'min_latency'),
-        Metric('t[usec]', max, 't[usec]', 'max_latency'),
+        # 'column_number' 'function', 'unit', 'label'
+        Metric(3, max, 'Mbytes/sec', 'max_bandwidth'),
+        Metric(2, min, 't[usec]', 'min_latency'),
+        Metric(2, max, 't[usec]', 'max_latency'),
     ]
     def __init__(self):
         super().__init__()
