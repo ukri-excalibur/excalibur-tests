@@ -1,0 +1,167 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: true
+  concretizer:
+    unify: false
+  config:
+    install_tree:
+      root: opt/spack
+  compilers:
+  - compiler:
+      spec: cce@10.0.3
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-cray
+      - cce/10.0.3
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.1.0
+      paths:
+        cc: /opt/gcc/8.1.0/bin/gcc
+        cxx: /opt/gcc/8.1.0/bin/g++
+        f77: /opt/gcc/8.1.0/bin/gfortran
+        fc: /opt/gcc/8.1.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/8.1.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.2.0
+      paths:
+        cc: /lustre/projects/bristol/modules-a64fx/gcc/10.2.0/bin/gcc
+        cxx: /lustre/projects/bristol/modules-a64fx/gcc/10.2.0/bin/g++
+        f77: /lustre/projects/bristol/modules-a64fx/gcc/10.2.0/bin/gfortran
+        fc: /lustre/projects/bristol/modules-a64fx/gcc/10.2.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/10.2.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.3.0
+      paths:
+        cc: /lustre/projects/bristol/modules-a64fx/gcc/10.3.0/bin/gcc
+        cxx: /lustre/projects/bristol/modules-a64fx/gcc/10.3.0/bin/g++
+        f77: /lustre/projects/bristol/modules-a64fx/gcc/10.3.0/bin/gfortran
+        fc: /lustre/projects/bristol/modules-a64fx/gcc/10.3.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/10.3.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@11.1.0
+      paths:
+        cc: /snx11273/projects/bristol/modules-a64fx/gcc/11.1.0/bin/gcc
+        cxx: /snx11273/projects/bristol/modules-a64fx/gcc/11.1.0/bin/g++
+        f77: /snx11273/projects/bristol/modules-a64fx/gcc/11.1.0/bin/gfortran
+        fc: /snx11273/projects/bristol/modules-a64fx/gcc/11.1.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/11.1.0
+      environment: {}
+      extra_rpaths: []
+  packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.16.1
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@3.11.4
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.6.0
+        prefix: /usr
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+    libtool:
+      externals:
+      - spec: libtool@2.4.6
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.4%gcc@8.1.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~static~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /lustre/projects/bristol/modules-a64fx/openmpi/4.0.4/gcc-8.1
+      - spec: openmpi@4.0.4%gcc@11.1.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~static~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /snx11273/projects/bristol/modules-a64fx/openmpi/4.0.4/gcc-11.0
+      - spec: openmpi@4.1.0%gcc@11.1.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~static~wrapper-rpath
+          fabrics=ucx schedulers=tm
+        prefix: /snx11273/projects/bristol/modules-a64fx/openmpi/4.1.0/gcc-11.0
+    openssh:
+      externals:
+      - spec: openssh@8.0p1
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1c
+        prefix: /usr
+    perl:
+      externals:
+      - spec: perl@5.26.3~cpanm+shared+threads
+        prefix: /usr
+    pkgconf:
+      externals:
+      - spec: pkgconf@1.4.2
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@2.7.17+bz2+ctypes+dbm+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+    xz:
+      externals:
+      - spec: xz@5.2.4
+        prefix: /usr
