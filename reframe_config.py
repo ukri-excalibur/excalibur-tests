@@ -151,6 +151,21 @@ site_configuration = {
                         'num_cpus_per_socket': 20,
                     },
                 },
+                {
+                    'name': 'a64fx',
+                    'descr': 'A64FX computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q a64fx'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 48,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 48,
+                    },
+                },
             ]
         },  # end Isambard Cascadelake
         {
