@@ -74,6 +74,8 @@ class IMB_PingPong(IMB_base):
     """ Runs on 2 nodes """
     METRICS = [
         # 'column_number' 'function', 'unit', 'label'
+        # Columns in the output of the benchmarks are:
+        #    #bytes | #repetitions | t[usec] | Mbytes/sec
         Metric(3, max, 'Mbytes/sec', 'max_bandwidth'),
         Metric(2, min, 't[usec]', 'min_latency'),
         Metric(2, max, 't[usec]', 'max_latency'),
