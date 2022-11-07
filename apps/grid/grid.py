@@ -38,6 +38,7 @@ class GridBenchmark_ITT(GridBenchmark):
     time_limit = '59m'
 
     mpi = variable(str, value='1.1.1.1')
+    shm = variable(int, value=1024)
     num_cpus_per_task = required
     num_tasks_per_node = required
 
@@ -75,7 +76,7 @@ class GridBenchmark_ITT(GridBenchmark):
         self.set_var_default('num_tasks_per_node',
                              self.current_partition.processor.num_cpus //
                              self.num_cpus_per_task)
-        self.executable_opts = [f'--mpi {self.mpi}', '--shm 1024', '--shm-hugetlb']
+        self.executable_opts = [f'--mpi {self.mpi}', f'--shm {self.shm}', '--shm-hugetlb']
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }

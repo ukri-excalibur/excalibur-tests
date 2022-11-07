@@ -25,9 +25,10 @@ Examples:
 reframe -c apps/grid -r --performance-report --tag ITT
 ```
 
-### Setting the number of threads and MPI processes
+### Options (memory, number of threads and MPI processes)
 
-By default, these benchmarks will use
+There are some options you can set to control the settings of the benchmark.
+These are the currently available options, with their default values:
 
 * `mpi`: `'1.1.1.1'`.  This is the string to pass to the benchmarking applications with the
   `--mpi` flag.  This will also automatically set the ReFrame variable
@@ -36,6 +37,8 @@ By default, these benchmarks will use
   `current_partition.processor.num_cpus // min(1, current_partition.processor.num_cpus_per_core)`
 * [`num_tasks_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node):
   `current_partition.processor.num_cpus // num_cpus_per_task`
+* `shm`: `1024`.  This is the size of the shared memory used by the benchmark, in MiB, as an
+  integer.
 
 You can override the values of these variables from the command line with the
 [`--setvar`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S)
@@ -43,6 +46,7 @@ option, for example
 
 ```sh
 reframe -c apps/grid -r --performance-report --setvar=mpi='2.2.1.1' --setvar=num_cpus_per_task=12
+reframe -c apps/grid -r --performance-report --setvar=mpi='4.4.4.4' --setvar=shm=4096
 ```
 
 _**Note**_: you're responsible for overriding these variables in a consistent
