@@ -1,27 +1,25 @@
-import pandas as pd
-
 # examples of output - note that a single file *may* contain multiple
 # benchmark results
 #
-# # Benchmarking Uniband 
-# # #processes = 2 
+# # Benchmarking Uniband
+# # #processes = 2
 # #---------------------------------------------------
 #        #bytes #repetitions   Mbytes/sec      Msg/sec
 #             0         1000         0.00      2189915
 #
-# # Benchmarking PingPong 
-# # #processes = 2 
+# # Benchmarking PingPong
+# # #processes = 2
 # #---------------------------------------------------
 #        #bytes #repetitions      t[usec]   Mbytes/sec
 #             0         1000         2.25         0.00
 
 def read_imb_out(path):
     """ Read stdout from an IMB-MPI1 run.
-        
+
         Returns a dict with:
             key:= int, total number of processes involved
             value:= pandas dataframe, i.e. one per results table. Columns as per table.
-        
+
         If multiple results tables are present it is assumed that they are all the same benchmark,
         and only differ in the number of processes.
     """
@@ -49,15 +47,13 @@ def read_imb_out(path):
                 n_procs = int(line.split('=')[-1].strip())
                 while line.startswith('#'):
                     line = next(f) # may or may not include line "# .. additional processes waiting in MPI_Barrier", plus other # lines
-                cols = line.strip().split()
                 rows = []
                 while True:
                     line = next(f).strip()
                     if line == '':
                         break
-                    rows.append(f(v) for (f, v) in zip(converters, line.split()))
-                dframes[n_procs] = pd.DataFrame(rows, columns=cols)
-                #print('MAX %s: %s' % (n_procs, max(data['Mbytes/sec'])))
+                    rows.append([f(v) for (f, v) in zip(converters, line.split())])
+                dframes[n_procs] = rows
     return dframes
 
 if __name__ == '__main__':
@@ -65,4 +61,3 @@ if __name__ == '__main__':
     d = read_imb_out(sys.argv[1])
     for n, df in d.items():
         print(n)
-        
