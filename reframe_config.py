@@ -186,7 +186,7 @@ site_configuration = {
                     'name': 'default',
                     'scheduler': 'local',
                     'launcher': 'mpirun',
-                    'environs': ['builtin']
+                    'environs': ['default']
                 }
             ]
         },  # End GitHub Actions
