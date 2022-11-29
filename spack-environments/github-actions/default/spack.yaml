@@ -5,7 +5,8 @@
 spack:
   # add package specs to the `specs` list
   specs: []
-  concretization: separately
+  concretizer:
+    unify: false
   view: false
   config:
     install_tree:
