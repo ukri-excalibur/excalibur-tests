@@ -6,11 +6,8 @@ spack:
   # add package specs to the `specs` list
   specs: []
   view: false
-  concretizer:
-    unify: false
-  config:
-    install_tree:
-      root: opt/spack
+  include:
+  - ../../common.yaml
   compilers:
   - compiler:
       spec: aocc@2.2.0
