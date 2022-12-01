@@ -11,7 +11,7 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 ### Spack
 
-_**Note**: we require Spack 0.19.  In some HPC facilities there may be already a
+_**Note**: we require Spack 0.18.  In some HPC facilities there may be already a
 central Spack installation available.  In principle you should be able to use a
 system installation of Spack (you only need to have `spack` in the `PATH`), but
 you need to make sure the version is recent enough to install the required
