@@ -5,11 +5,9 @@
 spack:
   # add package specs to the `specs` list
   specs: []
-  concretization: separately
   view: false
-  config:
-    install_tree:
-      root: opt/spack
+  include:
+  - ../../common.yaml
   compilers:
   - compiler:
       spec: intel@18.0.3

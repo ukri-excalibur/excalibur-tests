@@ -5,8 +5,9 @@
 spack:
   # add package specs to the `specs` list
   specs: []
-  concretization: separately
   view: false
+  include:
+  - ../../common.yaml
   compilers:
   - compiler:
       spec: aocc@1.3.0

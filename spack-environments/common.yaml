@@ -1,0 +1,5 @@
+concretizer:
+  unify: false
+config:
+  install_tree:
+    root: opt/spack
