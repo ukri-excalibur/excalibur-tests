@@ -132,12 +132,12 @@ site_configuration = {
         },  # end Myriad
         {
             # https://gw4-isambard.github.io/docs/user-guide/MACS.html
-            'name': 'isambard',
+            'name': 'isambard-cascadelake',
             'descr': 'Cascade Lake nodes of Isambard 2',
             'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
             'partitions': [
                 {
-                    'name': 'cascadelake',
+                    'name': 'compute-node',
                     'descr': 'Cascadelake computing nodes',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
@@ -153,6 +153,29 @@ site_configuration = {
                 },
             ]
         },  # end Isambard Cascadelake
+        {
+            # https://gw4-isambard.github.io/docs/user-guide/A64FX.html
+            'name': 'isambard-a64fx',
+            'descr': 'A64FX nodes of Isambard 2',
+            'hostnames': ['gw4a64fxlogin[0-9]+'],
+            'partitions': [
+                {
+                    'name': 'a64fx',
+                    'descr': 'A64FX computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q a64fx'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 48,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 48,
+                    },
+                },
+            ]
+        },  # end Isambard A64FX
         {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
