@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Tests on ${{ matrix.os }}
+    name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Reframe ${{ matrix.reframe_version }}
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
@@ -17,6 +17,15 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+        spack_version:
+          # In README.md we claim compatibility with v0.18.0
+          - v0.18.0
+          - develop
+        reframe_version:
+          # In README.md we claim compatibility with v3.11.0
+          - v3.11.0
+          # Our ReFrame config files are currently not compatible with `master`
+          # - master
     steps:
       - uses: actions/checkout@v3
       - name: Install Spack
@@ -24,7 +33,9 @@ jobs:
         working-directory: ${{runner.workspace}}
         run: |
           git clone https://github.com/spack/spack.git
-          echo "PATH=${PWD}/spack/bin:${PATH}" >> "${GITHUB_ENV}"
+          cd spack
+          git checkout ${{ matrix.spack_version }}
+          echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
       # Make sure `spack` command works
       - name: Spack version number
         shell: bash
@@ -35,8 +46,7 @@ jobs:
         run: |
           git clone https://github.com/eth-cscs/reframe.git
           cd reframe
-          # In README.md we claim compatibility with at least v3.11.0, test that version.
-          git checkout v3.11.0
+          git checkout ${{ matrix.reframe_version }}
           ./bootstrap.sh
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
       # Make sure `reframe` command works
