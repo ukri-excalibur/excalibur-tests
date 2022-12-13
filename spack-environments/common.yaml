@@ -3,3 +3,6 @@ concretizer:
 config:
   install_tree:
     root: opt/spack
+packages:
+  mpi:
+    buildable: false
