@@ -171,6 +171,10 @@ spack:
       externals:
       - spec: hwloc@1.11.12
         prefix: /shared/ucl/apps/hwloc/1.11.12
+    intel-mkl:
+      externals:
+      - spec: intel-mkl@2020.0.166
+        prefix: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/mkl
     intel-mpi:
       externals:
       - spec: intel-mpi@2020.0.166
