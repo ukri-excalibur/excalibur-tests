@@ -27,6 +27,17 @@ class Hpl(SpackTest):
 
     config_dir = variable(str, value='')
 
+    # Dictionary of reference values, indexed by number of tasks.
+    full_reference = {
+        1: {
+            'csd3-skylake': {
+                'Gflops': (2000, -0.2, None, 'Gflops'),
+            },
+            'csd3-icelake': {
+                'Gflops': (4500, -0.2, None, 'Gflops'),
+            },
+        },
+    }
 
     @run_after('setup')
     def set_sourcesdir(self):
@@ -61,8 +72,14 @@ class Hpl(SpackTest):
             # see hpl-2.3/testing/ptest/HPL_pdtest.c:{219,253-256} for pattern details - assuming Intel is the same
             'Gflops': sn.extractsingle(r'^W[R|C]\S+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d[\d.]+\s+(\d[\d.eE+]+)', self.stdout, 1, float),
         }
-        self.reference = {
-            '*': {
-                'Gflops': (None, None, None, 'Gflops'),
+        # If we have a reference for current combination of system + number of
+        # tasks, use it, otherwise default to generic empty reference.
+        if self.num_tasks in self.full_reference.keys() and self.current_system.name in self.full_reference[self.num_tasks].keys():
+            self.reference = self.full_reference[self.num_tasks]
+        else:
+            self.reference = {
+                '*': {
+                    'Gflops': (None, None, None, 'Gflops'),
+                }
             }
-        }
+
