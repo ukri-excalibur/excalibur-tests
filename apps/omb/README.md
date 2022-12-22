@@ -21,27 +21,7 @@ The following tags are defined:
     - Test name, as given above without the leading "osu_"
     - "procs_per_node=N" where N is as described above for the relevant test
 
-# Installation - OpenHPC
-
-Install a `perf-tools` package e.g.:
-
-    sudo yum install ohpc-gnu8-perf-tools
-
-This installs gnu8, openmpi3 (and mvapich2) as well as OMB.
-
-# Installation - Spack
-
-Install package `osu-micro-benchmarks` with default variants.
-
-See note in main README re. usage of spack with existing mpi library installations.
-
-# Configurating ReFrame
-
-See main README.
-
 # Running
 Run all tests using e.g.:
         
-    cd hpc-tests
-    conda activate hpc-tests
     reframe/bin/reframe -C reframe_config.py -c apps/omb/ --run --performance-report
