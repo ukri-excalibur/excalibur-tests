@@ -38,12 +38,12 @@ def read_imb_out(path):
             if line.startswith('# Benchmarking '):
                 benchmark = line.split()[-1].lower()
                 if benchmark not in COLTYPES:
-                    raise ValueError('Do not know how to read %r benchmark in %s' % (benchmark, path))
+                    raise ValueError(f'Do not know how to read {benchmark} benchmark in {path}')
                 converters = COLTYPES[benchmark]
                 line = next(f)
                 expect = '# #processes = '
                 if not line.startswith(expect):
-                    raise ValueError('expected %s, got %s' % (expect, nprocs_line))
+                    raise ValueError(f'expected {expect}, got {nprocs_line}')
                 n_procs = int(line.split('=')[-1].strip())
                 while line.startswith('#'):
                     line = next(f) # may or may not include line "# .. additional processes waiting in MPI_Barrier", plus other # lines

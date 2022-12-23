@@ -1,4 +1,4 @@
-import pandas as pd
+import re
 
 # Example formats
 
@@ -40,71 +40,48 @@ import pandas as pd
 """
 
 OSU_OUTPUT_COLS = {
-    '# OSU MPI All-to-All Personalized Exchange Latency Test': ('Size', 'Avg Latency(us)'),
-    '# OSU MPI Bandwidth Test': ('Size', 'Bandwidth (MB/s)'),
-    '# OSU MPI Bi-Directional Bandwidth Test': ('Size', 'Bandwidth (MB/s)'),
-    '# OSU MPI Multiple Bandwidth / Message Rate Test': ('Size', 'MB/s', 'Messages/s'),
-    '# OSU MPI Latency Test': ('Size', 'Latency (us)'),
-    '# OSU MPI Allgather Latency Test': ('Size', 'Avg Latency(us)'),
-    '# OSU MPI Allreduce Latency Test': ('Size', 'Avg Latency(us)'),
+    '# OSU MPI All-to-All Personalized Exchange Latency Test': (int, float), # ('Size', 'Avg Latency(us)')
+    '# OSU MPI Bandwidth Test': (int, float), # ('Size', 'Bandwidth (MB/s)')
+    '# OSU MPI Bi-Directional Bandwidth Test': (int, float), # ('Size', 'Bandwidth (MB/s)')
+    '# OSU MPI Multiple Bandwidth / Message Rate Test': (int, float, float), # ('Size', 'MB/s', 'Messages/s')
+    '# OSU MPI Latency Test': (int, float), # ('Size', 'Latency (us)')
+    '# OSU MPI Allgather Latency Test': (int, float), # ('Size', 'Avg Latency(us)')
+    '# OSU MPI Allreduce Latency Test': (int, float), # ('Size', 'Avg Latency(us)')
 }
-
-STRIP_LINES = [
-    'WARNING: release_mt library was used but no multi-ep feature was enabled. Please use release library instead.' # TODO: workaround for Intel MPI library misconfiguration?
-]
-
-def clean(path, prefixes):
-    """ Remove lines starting with any string in `prefixes` from a file.
-
-        Modifies `path`, returns None.
-    """
-    saved_lines = []
-    with open(path) as f:
-        for line in f:
-            if any([line.startswith(prefix) for prefix in prefixes]):
-                continue
-            else:
-                saved_lines.append(line)
-    with open(path, 'w') as f:
-        for line in saved_lines:
-            f.write(line)
-    
 
 
 def read_omb_out(path):
     """ Read stdout from a multi-column OMB output file.
-        
+
         Returns a pandas dataframe.
     """
-
-    
-    clean(path, STRIP_LINES)
-    # NB: Some output files contain blank lines before # header lines.
-
     # work out file type:
+    rows = []
     with open(path) as f:
         for line in f:
-            if line.strip() == '':
+            if line.strip() == '' or re.match('^(#|\d)', line) is None:
+                # Skip empty lines or lines not starting with either `#` or a
+                # number.
                 continue
             elif line.startswith('#'):
-                test_type, test_ver = line.strip().split(' v')
-                try:
-                    header = OSU_OUTPUT_COLS[test_type]
-                except KeyError:
-                    raise KeyError('Do not know how to parse output for "%s"' % test_type)
-                break
+                if line.startswith('# OSU MPI'):
+                    # Line with benchmark name
+                    test_type, test_ver = line.strip().split(' v')
+                    try:
+                        converters = OSU_OUTPUT_COLS[test_type]
+                    except KeyError:
+                        raise KeyError(f'Do not know how to parse output for "{test_type}"')
+                else:
+                    # Other commented out lines we don't need to parse, skip.
+                    continue
             else:
-                raise ValueError('Unexpected non-blank/non-# line %r' % line)
-            
-    # read actual data:
-    data = pd.read_csv(path, delim_whitespace=True, comment='#', names=header, header=0, skip_blank_lines=True)
-    return data
-    
+                # Line starting with a number
+                rows.append([f(v) for (f, v) in zip(converters, line.split())])
+    return rows
+
+
 if __name__ == '__main__':
     import sys
-    d = read_omb_out(sys.argv[1])
-    d = print(d)
-
-
-
-
+    rows = read_omb_out(sys.argv[1])
+    for r in rows:
+        print(r)
