@@ -10,7 +10,6 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 sys.path.append('.')
 import modules
-from modules.reframe_extras import ScalingTest
 from modules.omb import read_omb_out
 from modules.utils import SpackTest
 
@@ -31,7 +30,7 @@ class OSU_Micro_Benchmarks(SpackTest):
         """ Add all Metrics from self.METRICS to sanity/performance/reference patterns """
 
         for metric in self.METRICS:
-            self.sanity_patterns = sn.assert_found(re.escape(metric.column_number), self.stdout)
+            self.sanity_patterns = sn.assert_found('# OSU MPI', self.stdout)
             self.perf_patterns[metric.label] = reduce(self.stdout, metric.column_number, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
 
@@ -55,9 +54,12 @@ class Osu_alltoall(OSU_Micro_Benchmarks):
     def __init__(self):
         super().__init__()
         self.executable = 'osu_alltoall'
-        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
-        self.num_tasks = 2 * self.num_tasks_per_node
         self.tags = {'alltoall'}
+
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.num_tasks_per_node = self.current_partition.processor.num_cpus
+        self.num_tasks = 2 * self.num_tasks_per_node
 
 
 @rfm.simple_test
@@ -67,9 +69,12 @@ class Osu_allgather(OSU_Micro_Benchmarks):
     def __init__(self):
         super().__init__()
         self.executable = 'osu_allgather'
-        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
-        self.num_tasks = 2 * self.num_tasks_per_node
         self.tags = {'allgather'}
+
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.num_tasks_per_node = self.current_partition.processor.num_cpus
+        self.num_tasks = 2 * self.num_tasks_per_node
 
 
 @rfm.simple_test
@@ -80,9 +85,12 @@ class Osu_allreduce(OSU_Micro_Benchmarks):
     def __init__(self):
         super().__init__()
         self.executable = 'osu_allreduce '
-        self.num_tasks_per_node = modules.reframe_extras.Scheduler_Info().pcores_per_node
-        self.num_tasks = 2 * self.num_tasks_per_node
         self.tags = {'allreduce'}
+
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.num_tasks_per_node = self.current_partition.processor.num_cpus
+        self.num_tasks = 2 * self.num_tasks_per_node
 
 
 @rfm.simple_test
