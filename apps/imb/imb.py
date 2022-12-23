@@ -10,13 +10,13 @@
         reframe/bin/reframe -C reframe_config.py -c apps/imb/ --run --performance-report
 """
 
+import sys
+import os
 import reframe as rfm
 import reframe.utility.sanity as sn
-import sys, os, math
 from collections import namedtuple
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from modules.imb import read_imb_out
-from modules.reframe_extras import ScalingTest
 from modules.utils import SpackTest
 
 Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
@@ -30,7 +30,6 @@ class IMB_base(SpackTest):
     perf_patterns = {} # must do this
     perf_patterns = {} # something funny about reframe's attr lookup
     executable = 'IMB-MPI1'
-    build_system = 'Spack'
     spack_spec = 'intel-mpi-benchmarks@2019.6'
     time_limit = '59m'
 
