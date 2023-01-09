@@ -15,7 +15,6 @@ class Cp2kBaseBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
     spack_spec = 'cp2k@9.1'
-    executable = 'cp2k.psmp'
     time_limit = '60m'
     num_cpus_per_task = 2
     num_tasks = required
@@ -36,6 +35,9 @@ class Cp2kBaseBenchmark(SpackTest):
         }
         self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.variables['OMP_PLACES'] = 'cores'
+        # For choosing the executable name, see for reference
+        # <https://github.com/cp2k/cp2k/blob/e390d0e8443cbafd3d0c65e9488279ca0b9bafcf/benchmarks/QS/check-release-comparison.py#L33>.
+        self.executable = f"cp2k.{'p' if self.num_tasks > 0 else 's'}{'smp' if self.num_cpus_per_task > 0 else 'opt'}"
 
     @run_before('compile')
     def setup_build_system(self):
