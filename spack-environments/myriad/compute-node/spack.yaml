@@ -149,10 +149,6 @@ spack:
       externals:
       - spec: gawk@4.0.2
         prefix: /usr
-    gettext:
-      externals:
-      - spec: gettext@0.19.8.1
-        prefix: /usr
     git:
       externals:
       - spec: git@2.32.0+tcltk
@@ -234,8 +230,4 @@ spack:
     tar:
       externals:
       - spec: tar@1.26
-        prefix: /usr
-    texinfo:
-      externals:
-      - spec: texinfo@5.1
         prefix: /usr
