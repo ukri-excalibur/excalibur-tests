@@ -1,10 +1,7 @@
 # CP2K benchmarks
 
-[CP2K](https://www.cp2k.org/) is a quantum chemistry and solid state physics
-software package.  This directory includes the `H2O-64` and `LiH_HFX` CP2K
-benchmarks based on [ARCHER
-2](https://github.com/hpc-uk/archer-benchmarks/tree/d6739bb77b798a0ef014c710e781d52fc7b206c5/apps/CP2K)
-HPC benchmarks.
+[CP2K](https://www.cp2k.org/) is a quantum chemistry and solid state physics software package.
+This directory includes the `H2O-64`, `H20-256`, and `LiH_HFX` CP2K benchmarks based on [ARCHER 2](https://github.com/hpc-uk/archer-benchmarks/tree/d6739bb77b798a0ef014c710e781d52fc7b206c5/apps/CP2K) HPC benchmarks.
 
 ## Usage
 
@@ -16,18 +13,18 @@ reframe -c apps/cp2k -r --performance-report
 
 ### Filtering the benchmarks
 
-This will run both the `H2O-64` and `LiH_HFX` benchmarks.  You can run
-individual benchmarks with the
-[`--tag`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0)
-option:
+By default all benchmarks will be run.
+You can run individual benchmarks with the [`--tag`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0) option:
 
 * `h2o-64` to run the `H2O-64` benchmark,
+* `h2o-256` to run the `H2O-256` benchmark,
 * `lih-hfx` to run the `LiH_HFX` benchmark.
 
 Examples:
 
 ```sh
 reframe -c apps/cp2k -r --performance-report --tag h2o-64
+reframe -c apps/cp2k -r --performance-report --tag h2o-256
 reframe -c apps/cp2k -r --performance-report --tag lih-hfx
 ```
 

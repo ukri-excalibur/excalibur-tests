@@ -74,6 +74,18 @@ class Cp2kH2O64Benchmark(Cp2kBaseBenchmark):
 
 
 @rfm.simple_test
+class Cp2kH2O256Benchmark(Cp2kBaseBenchmark):
+    tags = {"h2o-256"}
+    sourcesdir = path.join(path.dirname(__file__), 'input-h2o_256')
+    executable_opts = ['-i', 'H2O-256.inp']
+    reference = {
+        '*': {
+            'Maximum total time': (200, None, None, 'seconds'),
+        }
+    }
+
+
+@rfm.simple_test
 class Cp2kLiH_HFXBenchmark(Cp2kBaseBenchmark):
     tags = {"lih-hfx"}
     sourcesdir = path.join(path.dirname(__file__), 'input-lih-hfx')
