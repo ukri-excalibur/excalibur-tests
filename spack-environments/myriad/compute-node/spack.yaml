@@ -23,6 +23,19 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
+      spec: intel@19.1.0.166
+      paths:
+        cc: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icc
+        cxx: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icpc
+        f77: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+        fc: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
       spec: gcc@4.8.5
       paths:
         cc: /usr/bin/gcc
@@ -169,10 +182,14 @@ spack:
         prefix: /shared/ucl/apps/hwloc/1.11.12
     intel-mkl:
       externals:
+      - spec: intel-mkl@2018.3.222
+        prefix: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/mkl
       - spec: intel-mkl@2020.0.166
         prefix: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/mkl
     intel-mpi:
       externals:
+      - spec: intel-mpi@2018.3.222
+        prefix: /shared/ucl/apps/intel/2018.Update3
       - spec: intel-mpi@2020.0.166
         prefix: /shared/ucl/apps/intel/2020
     libtool:
