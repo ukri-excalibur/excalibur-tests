@@ -137,10 +137,18 @@ spack:
         prefix: /usr
     cmake:
       externals:
-      - spec: cmake@3.21.1
-        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
       - spec: cmake@2.8.12.2
         prefix: /usr
+      - spec: cmake@3.2.1
+        prefix: /shared/ucl/apps/cmake/3.2.1/gnu-4.9.2
+      - spec: cmake@3.7.2
+        prefix: /shared/ucl/apps/cmake/3.7.2/gnu-4.9.2
+      - spec: cmake@3.13.3
+        prefix: /shared/ucl/apps/cmake/3.13.3/gnu-4.9.2
+      - spec: cmake@3.19.1
+        prefix: /shared/ucl/apps/cmake/3.19.1/gnu-4.9.2
+      - spec: cmake@3.21.1
+        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
     coreutils:
       externals:
       - spec: coreutils@8.22
@@ -221,8 +229,18 @@ spack:
         prefix: /shared/ucl/apps/numactl/2.0.12
     openmpi:
       externals:
+      - spec: openmpi@3.1.4%intel@18.0.3
+        prefix: /shared/ucl/apps/openmpi/3.1.4/intel-2018
+      - spec: openmpi@3.1.6%gcc@4.9.2
+        prefix: /shared/ucl/apps/openmpi/3.1.6/gnu-4.9.2
       - spec: openmpi@4.0.3%gcc@4.9.2
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
+      - spec: openmpi@4.1.1%gcc@4.9.2
+        prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
+      # Unfortunately system OpenMPI was built with a very old version of GCC,
+      # if we sticked to `buildable: false` it would be impossible to compile
+      # Fortran software which requires newer versions of GCC.
+      buildable: true
     openssh:
       externals:
       - spec: openssh@7.4p1
