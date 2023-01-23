@@ -63,7 +63,7 @@ TIMING_CONSTANTS = {
 class WRFBaseBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    spack_spec = 'wrf@4.4'
+    spack_spec = 'wrf@3.9.1.1'
 
     time_limit = '3h'
 
