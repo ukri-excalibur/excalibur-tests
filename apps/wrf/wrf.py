@@ -132,6 +132,8 @@ class WRF_2_5km_Benchmark(WRFBaseBenchmark):
         self.tags = {self.benchmark}
         self.benchdir = os.path.join(self.prefix, 'downloads', self.benchmark)
         self.prerun_cmds += [ # from http://www2.mmm.ucar.edu/WG2bench/conus_2.5_v3/READ-ME.txt
+            'set -u', # make sure variables below are set
+            'ln -sf ${WRF_HOME}/run/* .',
             f'ln -sf {self.benchdir}/* .',  # must be second to overwrite namelist.input from run/
             'cat rst_6hr* | gunzip -c > wrfrst_d01_2005-06-04_06_00_00',
             'gunzip --force wrfbdy_d01.gz', # --force reqd. as symlink
@@ -153,6 +155,8 @@ class WRF_12km_Benchmark(WRFBaseBenchmark):
         self.tags = {self.benchmark}
         self.benchdir = os.path.join(self.prefix, 'downloads', self.benchmark)
         self.prerun_cmds += [
+            'set -u', # make sure variables below are set
+            'ln -sf ${WRF_HOME}/run/* .',
             f'ln -sf {self.benchdir}/* .',  # must be second to overwrite namelist.input from run/
             "sed '/&dynamics/a \ use_baseparam_fr_nml = .t.' -i namelist.input", # NB this changes namelist.input into NOT a symlink!
             # not using pnetcdf so io_form_* being 2 already is correct
