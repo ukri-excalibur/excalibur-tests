@@ -143,7 +143,7 @@ class WRF_2_5km_Benchmark(WRFBaseBenchmark):
         ]
         self.reference = {
             '*': {
-                'gflops': (0, None, None, '/s'),
+                'gflops': (0, None, None, 'GFLOPS/s'),
             }
         }
 
@@ -164,6 +164,6 @@ class WRF_12km_Benchmark(WRFBaseBenchmark):
         ]
         self.reference = {
             '*': {
-                'gflops': (0, None, None, '/s'),
+                'gflops': (0, None, None, 'GFLOPS/s'),
             }
         }
