@@ -13,6 +13,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from modules.utils import SpackTest
 
 
+@sn.deferrable
 def extract_timings(rsl_error_path):
     step_times = []
     with open(rsl_error_path) as f:
@@ -120,7 +121,7 @@ class WRFBaseBenchmark(SpackTest):
         model_timestep = TIMING_CONSTANTS[self.benchmark]['model_timestep']
         gflops_factor = TIMING_CONSTANTS[self.benchmark]['gflops_factor']
         self.perf_patterns = {
-            'gflops': (model_timestep / sn.avg(sn.sanity_function(extract_timings)('rsl.error.0000'))) * gflops_factor
+            'gflops': (model_timestep / sn.avg(extract_timings('rsl.error.0000'))) * gflops_factor
         }
 
 
