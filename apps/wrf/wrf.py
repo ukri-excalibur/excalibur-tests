@@ -93,6 +93,8 @@ class WRFBaseBenchmark(SpackTest):
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
+        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.variables['OMP_PLACES'] = 'cores'
 
     @run_after('setup')
     def download_benchmark(self):

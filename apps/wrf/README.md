@@ -35,4 +35,24 @@ reframe/bin/reframe -c apps/wrf/ --run --performance-report --tag '12km'
 reframe/bin/reframe -c apps/wrf/ --run --performance-report --tag '2.5km'
 ```
 
+### Setting the number of threads and MPI processes
+
+By default, these benchmarks will use
+
+* [`num_cpus_per_task`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_cpus_per_task):
+  2
+* [`num_tasks`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks):
+  `current_partition.processor.num_cpus // min(1, current_partition.processor.num_cpus_per_core) // num_cpus_per_task`
+* [`num_tasks_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node): `current_partition.processor.num_cpus // num_cpus_per_task`
+
+You can override the values of these variables from the command line with the
+[`--setvar`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S)
+option, for example
+
+```sh
+reframe -c apps/wrf -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
 ```
+
+_**Note**_: you're responsible for overriding these variables in a consistent
+way, so that, for example, `num_tasks_per_node` doesn't exceed the number of
+total tasks runnable on each node.
