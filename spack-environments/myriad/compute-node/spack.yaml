@@ -231,16 +231,18 @@ spack:
       externals:
       - spec: openmpi@3.1.4%intel@18.0.3
         prefix: /shared/ucl/apps/openmpi/3.1.4/intel-2018
+      - spec: openmpi@3.1.4%gcc@7.3.0
+        prefix: /shared/ucl/apps/openmpi/3.1.4/gnu-7.3.0
+      - spec: openmpi@3.1.5%gcc@9.2.0
+        prefix: /shared/ucl/apps/openmpi/3.1.5/gnu-9.2.0
       - spec: openmpi@3.1.6%gcc@4.9.2
         prefix: /shared/ucl/apps/openmpi/3.1.6/gnu-4.9.2
       - spec: openmpi@4.0.3%gcc@4.9.2
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
+      - spec: openmpi@4.0.5%gcc@10.2.0
+        prefix: /shared/ucl/apps/openmpi/4.0.5/gnu-10.2.0
       - spec: openmpi@4.1.1%gcc@4.9.2
         prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
-      # Unfortunately system OpenMPI was built with a very old version of GCC,
-      # if we sticked to `buildable: false` it would be impossible to compile
-      # Fortran software which requires newer versions of GCC.
-      buildable: true
     openssh:
       externals:
       - spec: openssh@7.4p1
