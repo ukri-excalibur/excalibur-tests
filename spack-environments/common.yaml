@@ -3,3 +3,5 @@ concretizer:
 packages:
   mpi:
     buildable: false
+repos:
+- repo
