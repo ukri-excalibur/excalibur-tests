@@ -17,6 +17,15 @@ more details, or see the examples of the existing systems.  Note: you likely do
 not need to customise the programming environment in ReFrame, as we will use
 Spack as build system, which will deal with that.
 
+If available, the command `lscpu`, run on a compute node, is typically useful to
+get information about the CPUs, to be used in the `processor` item of the system
+configuration.  The numbers you need to watch out for are:
+
+* "CPU(s)", (`num_cpus` in ReFrame configuration),
+* "Thread(s) per core", (`num_cpus_per_core`),
+* "Socket(s)", (`num_sockets`),
+* "Core(s) per socket", (`num_cpus_per_socket`).
+
 ### Spack configuration
 
 When using Spack as build system, ReFrame needs a [Spack

@@ -177,6 +177,29 @@ site_configuration = {
             ]
         },  # end Isambard A64FX
         {
+            # https://gw4-isambard.github.io/docs/user-guide/XCI.html
+            'name': 'isambard-xci',
+            'descr': 'XCI - Marvell Thunder X2 nodes of Isambard 2',
+            'hostnames': ['xcil0[0-1]'],
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'XCI computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'alps',
+                    'access': ['-q arm'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 4,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 128,
+                    },
+                },
+            ]
+        },  # end Isambard A64FX
+        {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
             'descr': 'COSMA',
