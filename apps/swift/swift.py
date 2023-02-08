@@ -21,12 +21,7 @@ class SwiftBenchmark(SpackTest):
     num_cpus_per_task = 8
     sourcesdir = path.join(path.dirname(__file__), 'input')
     executable = 'swift_mpi'
-    executable_opts = ['--hydro', f'--threads={num_cpus_per_task}',
-                       'sodShock.yml']
     time_limit = '20m'
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
     reference = {
         'cosma8': {
             'duration': (50, None, 0.2, 'seconds'),
@@ -50,6 +45,11 @@ class SwiftBenchmark(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
+        self.executable_opts = ['--hydro', f'--threads={self.num_cpus_per_task}',
+                                'sodShock.yml']
+        self.extra_resources = {
+            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
+        }
         self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('compile')
