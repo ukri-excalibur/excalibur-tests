@@ -7,37 +7,39 @@ These benchmarks are based on a similar project by
 
 _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
+## Before you start
+
+If you are using spack for other projects, you might have to clear the cache if it exists:
+`rm -rf ~/.spack/cache`
+
 ## Requirements
 
 ### Spack
 
-_**Note**: we require Spack 0.18.  In some HPC facilities there may be already a
-central Spack installation available.  In principle you should be able to use a
-system installation of Spack (you only need to have `spack` in the `PATH`), but
-you need to make sure the version is recent enough to install the required
-packages and understand the provided environments.  Instructions below show you
-how to install Spack locally._
+_**Note**: In some HPC facilities there may be already a central Spack installation available.
+However, the version installed is most likely too old to support all the features
+used by this package. Therefore we recommend you install the latest version locally, 
+following the instructions below._
 
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
-facilities.  Follow the [official
+facilities.  The [official
 instructions](https://spack.readthedocs.io/en/latest/getting_started.html) to
-install the latest version of Spack.
+install the latest version of Spack are summarised here for convenience.
+- git clone spack:
+`git clone -c feature.manyFiles=true https://github.com/spack/spack.git`
+- run spack setup script: `source ./spack/share/spack/setup-env.sh`
+- check spack is in `$PATH`, for example `spack --version`
 
 In order to use Spack in ReFrame, the framework we use to run the benchmarks
 (see below), the directory where the `spack` program is installed needs to be in
-the `PATH` environment variable.  This can be achieved for instance by running
-the commands to get shell support described in Spack documentation, which you
-can also add to your shell init script to do it automatically in every session.
-For example, if you use a shell of the family bash/zsh/sh you can add to your
-init script:
-
+the `PATH` environment variable. You can have your shell init script (e.g. `.bashrc`)
+do that automatically in every session, by adding the following lines to it:
 ```sh
 export SPACK_ROOT="/path/to/spack"
 if [ -f "${SPACK_ROOT}/share/spack/setup-env.sh" ]; then
     source "${SPACK_ROOT}/share/spack/setup-env.sh"
 fi
 ```
-
 replacing `/path/to/spack` with the actual path to your Spack installation.
 
 ReFrame requires a [Spack
