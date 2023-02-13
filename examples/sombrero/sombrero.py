@@ -8,9 +8,6 @@ import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 
-# Add top-level directory to `sys.path` so we can easily import extra modules
-# from any directory.
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.

@@ -8,7 +8,6 @@ import re
 import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-sys.path.append('.')
 import modules
 from modules.omb import read_omb_out
 from modules.utils import SpackTest

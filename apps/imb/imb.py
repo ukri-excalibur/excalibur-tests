@@ -15,7 +15,6 @@ import os
 import reframe as rfm
 import reframe.utility.sanity as sn
 from collections import namedtuple
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from modules.imb import read_imb_out
 from modules.utils import SpackTest
 

@@ -7,8 +7,6 @@ import os.path as path
 import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 from modules.utils import SpackTest
 
 @rfm.simple_test
