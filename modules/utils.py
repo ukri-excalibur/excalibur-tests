@@ -261,7 +261,7 @@ class SpackTest(rfm.RegressionTest):
             # Copy Spack environment (only specific YAML files) to the stage
             # directory.
             f'mkdir -p {dest}',
-            f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
+            f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" -o -name "repo.yaml" -o -name "package.py" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt/spack"',
         ]
 
