@@ -159,8 +159,9 @@ the "generic" system, a new empty Spack environment will be automatically create
 different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
 described above.
 
-## Contributing new systems or benchmarks
+## Contributing new systems or benchmarks and other information
 
 Feel free to add new benchmark apps or support new systems that are part of the
 ExCALIBUR benchmarking collaboration.  Read
 [`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
+The file [`SYSTEMS.md`](./SYSTEMS.md) contains information about the use of this framework on specific systems.
