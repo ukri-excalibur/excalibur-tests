@@ -21,13 +21,17 @@ jobs:
           # In README.md we claim compatibility with v0.18.0
           - v0.18.0
           - develop
-        reframe_version:
-          # In README.md we claim compatibility with v3.11.0
-          - v3.11.0
-          # Our ReFrame config files are currently not compatible with `master`
-          # - master
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.16'
+          cache: 'pip'
+      - name: Pip install
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
       - name: Install Spack
         shell: bash
         working-directory: ${{runner.workspace}}
@@ -40,15 +44,6 @@ jobs:
       - name: Spack version number
         shell: bash
         run: spack --version
-      - name: Install Reframe
-        shell: bash
-        working-directory: ${{runner.workspace}}
-        run: |
-          git clone https://github.com/eth-cscs/reframe.git
-          cd reframe
-          git checkout ${{ matrix.reframe_version }}
-          ./bootstrap.sh
-          echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
       # Make sure `reframe` command works
       - name: ReFrame version number
         shell: bash
