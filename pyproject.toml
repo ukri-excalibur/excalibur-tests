@@ -22,7 +22,9 @@ license = {text = "Apache-2.0"}
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["reframe-hpc==3.11.0"]
+dependencies = [
+    "reframe-hpc >= 3.11.0, < 4.0.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["modules"]
