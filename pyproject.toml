@@ -14,7 +14,10 @@ authors = [
 description = "Framework for building and running HPC benchmarks"
 readme = "README.md"
 requires-python = ">=3.6"
-keywords = ["benchmark", "hpc"]
+keywords = [
+    "benchmark",
+    "hpc"
+]
 license = {text = "Apache-2.0"}
 classifiers = [
     "Programming Language :: Python :: 3",
