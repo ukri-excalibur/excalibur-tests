@@ -165,7 +165,7 @@ described above.
 
 You can use the framework to run tests on a local system without a scheduler. After spack has
 been installed following the instructions given above, it needs to be told about the software
-installed on the system. On supported HPC systems this is handled by the environment. By default an
+installed on the system. On supported HPC systems this is handled by the spack environment. By default an
 empty spack environment will be created in `spack_environments/generic/default` when you run
 ReFrame for the first time .To find locally installed
 compilers run `spack compiler find`. To find locally installed packages run `spack external find`. This
@@ -175,9 +175,9 @@ installation is added to the environment. If no MPI package has been added in `~
 add
 ```
   packages:
-    openmpi:
+    <your installed MPI implementation, e.g. openmpi>:
       externals:
-      - spec: <your installed MPI, e.g. openmpi@4.1.2>
+      - spec: <your installed MPI implementation@version, e.g. openmpi@4.1.2>
         prefix: <path to MPI installation, e.g. /usr>
 ```
 To either `spack_environments/generic/default/spack.yaml` or `~/.spack/packages.yaml`. The name,
