@@ -4,18 +4,22 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from modules.utils import SpackTest
+
 #--------------------------------------------------------------------------
 # Define base class for Trove.
 # This class will be used for all 3 cases namely 12N, 14N and 16N.
 #--------------------------------------------------------------------------
-class Trove(rfm.RunOnlyRegressionTest):
+class Trove(SpackTest):
     def __init__(self):
         self.descr = 'Base class for Trove'
         self.time_limit = '0d2h0m0s'
         self.exclusive_access=True
         self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
-        self.executable = './j-trove.x'
+        self.spack_spec = 'trove@v1.0.0%intel^intel-mpi'
+        self.executable = 'j-trove.x'
         self.postrun_cmds = ['tail -n 100 output.txt']
 
         reference = {
@@ -23,6 +27,11 @@ class Trove(rfm.RunOnlyRegressionTest):
              'Total elapsed time:':  (5000, None, None, 'seconds'),
                              }
                      }
+
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.specs = [self.spack_spec]
+
 
     @run_before('sanity')
     def run_complete_pattern(self):
