@@ -4,17 +4,24 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from modules.utils import SpackTest
+
 #------------------------------------------------------------------------------------------------------------------------------------
 # Define base class for Sphng.
 #------------------------------------------------------------------------------------------------------------------------------------
-class SphngBase(rfm.RunOnlyRegressionTest):
+class SphngBase(SpackTest):
     def __init__(self):
         self.descr = 'Base class for Sphng'
         self.time_limit = '0d0h10m0s'
         self.exclusive_access=True
         self.valid_systems = ['*']
         self.valid_prog_environs = ['*']
-        self.executable = './sph_tree_rk_gradh'
+        self.spack_spec = 'sphng@v1.0.0%intel^intel-mpi'
+        self.executable = 'sph_tree_rk_gradh'
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.specs = [self.spack_spec]
 
 #------------------------------------------------------------------------------------------------------------------------------------
 # End of base class.
@@ -118,7 +125,7 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
 
     # Define the fixture here. It also acts a test on which the current test depends.
     # By defining the fixture, we can access the properties associates with the respective test such as num_tasks.
-    Ifile_fixture = fixture(Sphng_Single_Node_ifile, scope = 'session')
+    Ifile_fixture = fixture(Sphng_Single_Node_ifile)
 
     def __init__(self):
         super().__init__()
@@ -184,7 +191,7 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
 
     # Define the fixture here. It also acts a test on which the current test depends.
     # By defining the fixture, we can access the properties associates with the respective test such as num_tasks.
-    Ifile_fixture = fixture(Sphng_Strong_Scaling_ifile, scope = 'session')
+    Ifile_fixture = fixture(Sphng_Strong_Scaling_ifile)
 
     def __init__(self):
         super().__init__()
@@ -249,7 +256,7 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
 
     # Define the fixture here. It also acts a test on which the current test depends.
     # By defining the fixture, we can access the properties associates with the respective test such as num_tasks.
-    Ifile_fixture = fixture(Sphng_Weak_Scaling_ifile, scope = 'session')
+    Ifile_fixture = fixture(Sphng_Weak_Scaling_ifile)
 
     def __init__(self):
         super().__init__()
