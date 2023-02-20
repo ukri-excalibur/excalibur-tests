@@ -17,6 +17,15 @@ more details, or see the examples of the existing systems.  Note: you likely do
 not need to customise the programming environment in ReFrame, as we will use
 Spack as build system, which will deal with that.
 
+If available, the command `lscpu`, run on a compute node, is typically useful to
+get information about the CPUs, to be used in the `processor` item of the system
+configuration.  The numbers you need to watch out for are:
+
+* "CPU(s)", (`num_cpus` in ReFrame configuration),
+* "Thread(s) per core", (`num_cpus_per_core`),
+* "Socket(s)", (`num_sockets`),
+* "Core(s) per socket", (`num_cpus_per_socket`).
+
 ### Spack configuration
 
 When using Spack as build system, ReFrame needs a [Spack
@@ -43,7 +52,7 @@ Here are the steps to create a Spack environment for a new system:
 * set the
   [`install_tree`](https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree):
   ```
-  spack config add 'config:install_tree:root:opt/spack'
+  spack config add 'config:install_tree:root:$env/opt/spack'
   ```
 * make sure the compilers you want to add are in the `PATH` (e.g., load the
   relevant modules), then add them to the Spack environment with:

@@ -30,14 +30,14 @@ class HpgmgTest(SpackTest):
             'l_2': (1e8, -0.9, 0.6, 'DOF/s'),
         }
     }
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
 
     @run_after('setup')
     def setup_variables(self):
         self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.variables['OMP_PLACES'] = 'cores'
+        self.extra_resources = {
+            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
+        }
 
     @run_before('compile')
     def setup_build_system(self):

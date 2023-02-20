@@ -86,6 +86,9 @@ class SombreroBenchmark(SpackTest):
         'github-actions': {
             'flops': (0.9, None, None, 'Gflops/seconds'),
         },
+        'isambard-xci': {
+            'flops': (0.6, -0.2, None, 'Gflops/seconds'),
+        },
         'myriad': {
             'flops': (1, -0.2, None, 'Gflops/seconds'),
         },

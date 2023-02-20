@@ -3,5 +3,8 @@ concretizer:
 packages:
   mpi:
     buildable: false
+config:
+  install_tree:
+    root: $env/opt/spack
 repos:
 - $env/../../repo
