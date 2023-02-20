@@ -180,7 +180,7 @@ are added to the `packages.yaml` of your local spack cache), add
       - spec: <your installed MPI implementation@version, e.g. openmpi@4.1.2>
         prefix: <path to MPI installation, e.g. /usr>
 ```
-To either `spack_environments/generic/default/spack.yaml` or `packages.yaml`. The name,
+To either `spack-environments/generic/default/spack.yaml` or `packages.yaml`. The name,
 version, and prefix may vary depending on your local operating system. The examples given above
 are the defaults on Ubuntu 22.04.
 
