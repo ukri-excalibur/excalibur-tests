@@ -52,7 +52,7 @@ Here are the steps to create a Spack environment for a new system:
 * set the
   [`install_tree`](https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree):
   ```
-  spack config add 'config:install_tree:root:opt/spack'
+  spack config add 'config:install_tree:root:$env/opt/spack'
   ```
 * make sure the compilers you want to add are in the `PATH` (e.g., load the
   relevant modules), then add them to the Spack environment with:
