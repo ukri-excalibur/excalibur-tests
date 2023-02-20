@@ -161,6 +161,29 @@ the "generic" system, a new empty Spack environment will be automatically create
 different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
 described above.
 
+### Local usage
+
+You can use the framework to run tests on a local system without a scheduler. After spack has
+been installed following the instructions given above, it needs to be told about the software
+installed on the system. On supported HPC systems this is handled by the environment. By default an
+empty spack environment will be created in `spack_environments/generic/default` when you run
+ReFrame for the first time .To find locally installed
+compilers run `spack compiler find`. To find locally installed packages run `spack external find`. This
+does not necessarily find everything and some packages may have to be added manually, in particular it is 
+worth making sure that a local MPI
+installation is added to the environment. If no MPI package has been added in `~/.spack/packages.yaml`,
+add
+```
+  packages:
+    openmpi:
+      externals:
+      - spec: <your installed MPI, e.g. openmpi@4.1.2>
+        prefix: <path to MPI installation, e.g. /usr>
+```
+To either `spack_environments/generic/default/spack.yaml` or `~/.spack/packages.yaml`. The name,
+version, and prefix may vary depending on your local operating system. The examples given above
+are the defaults on Ubuntu 22.04.
+
 ## Contributing new systems or benchmarks
 
 Feel free to add new benchmark apps or support new systems that are part of the
