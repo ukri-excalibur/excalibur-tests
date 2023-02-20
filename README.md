@@ -18,7 +18,7 @@ If you are using spack for other projects, you might have to clear the cache if 
 
 _**Note**: In some HPC facilities there may be already a central Spack installation available.
 However, the version installed is most likely too old to support all the features
-used by this package. Therefore we recommend you install the latest version locally, 
+used by this package. Therefore we recommend you install the latest version locally,
 following the instructions below._
 
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
@@ -165,22 +165,22 @@ described above.
 
 You can use the framework to run tests on a local system without a scheduler. After spack has
 been installed following the instructions given above, it needs to be told about the software
-installed on the system. On supported HPC systems this is handled by the spack environment. By default an
-empty spack environment will be created in `spack_environments/generic/default` when you run
-ReFrame for the first time .To find locally installed
-compilers run `spack compiler find`. To find locally installed packages run `spack external find`. This
-does not necessarily find everything and some packages may have to be added manually, in particular it is 
-worth making sure that a local MPI
-installation is added to the environment. If no MPI package has been added in `~/.spack/packages.yaml`,
-add
-```
+installed on the system. On supported HPC systems this is handled by the spack environment.
+By default an empty spack environment will be created in `spack-environments/generic/default`
+when you run ReFrame for the first time. To find locally installed compilers run
+`spack compiler find`. To find locally installed packages run `spack external find`. This
+does not necessarily find everything and some packages may have to be added manually,
+in particular it is worth making sure that a local MPI installation is added to the environment
+to avoid lengthy recompilation of the MPI library. If no MPI package is found (found packages
+are added to the `packages.yaml` of your local spack cache), add
+```yaml
   packages:
     <your installed MPI implementation, e.g. openmpi>:
       externals:
       - spec: <your installed MPI implementation@version, e.g. openmpi@4.1.2>
         prefix: <path to MPI installation, e.g. /usr>
 ```
-To either `spack_environments/generic/default/spack.yaml` or `~/.spack/packages.yaml`. The name,
+To either `spack_environments/generic/default/spack.yaml` or `packages.yaml`. The name,
 version, and prefix may vary depending on your local operating system. The examples given above
 are the defaults on Ubuntu 22.04.
 
