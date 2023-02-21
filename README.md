@@ -164,28 +164,14 @@ described above.
 ### Local usage
 
 You can use the framework to run tests on a local system without a scheduler. After spack has
-been installed following the instructions given above, it needs to be told about the software
-installed on the system. On supported HPC systems this is handled by the spack environment.
+been installed following the instructions given above, it needs to be aware of the software
+installed on the system. On supported HPC systems this is pre-set in the spack environment.
 By default an empty spack environment will be created in `spack-environments/generic/default`
-when you run ReFrame for the first time. To find locally installed compilers run
-`spack compiler find`. To find locally installed packages run `spack external find`. This
-does not necessarily find everything and some packages may have to be added manually,
-in particular it is worth making sure that a local MPI installation is added to the environment
-to avoid lengthy recompilation of the MPI library. If no MPI package is found (found packages
-are added to the `packages.yaml` of your local spack cache), add
-```yaml
-  packages:
-    <your installed MPI implementation, e.g. openmpi>:
-      externals:
-      - spec: <your installed MPI implementation@version, e.g. openmpi@4.1.2>
-        prefix: <path to MPI installation, e.g. /usr>
-```
-To either `spack-environments/generic/default/spack.yaml` or `packages.yaml`. The name,
-version, and prefix may vary depending on your local operating system. The examples given above
-are the defaults on Ubuntu 22.04.
+when you run ReFrame for the first time. See the *Spack configuration* section of 
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) for instructions on how to set up the local environment.
+In particular, make sure that a compiler and MPI are added in either the spack environment.
 
 ## Contributing new systems or benchmarks
 
 Feel free to add new benchmark apps or support new systems that are part of the
-ExCALIBUR benchmarking collaboration.  Read
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
+ExCALIBUR benchmarking collaboration.  Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
