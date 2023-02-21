@@ -123,7 +123,9 @@ reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08
 Note that the `-S` option can be used to set from the command line on a per-job
 basis the built-in fields of ReFrame regressions classes, e.g.
 [`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables),
-which controls the environment variables used in a job.  For example
+which controls the environment variables used in a job.
+The syntax to set dictionary items, like for `variables`, is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`.
+For example
 
 ```
 reframe -c apps/sombrero -r --performance-report -S variables=OMP_PLACES:threads
@@ -159,9 +161,13 @@ the "generic" system, a new empty Spack environment will be automatically create
 different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
 described above.
 
-## Contributing new systems or benchmarks and other information
+### System-specific flags
+
+While the aim is to automate as much system-specific configuration as possible, there are some options that have to be provided by the user, such as accounting details, and unfortunately the syntax can vary.
+The file [`SYSTEMS.md`](./SYSTEMS.md) contains information about the use of this framework on specific systems.
+
+## Contributing new systems or benchmarks
 
 Feel free to add new benchmark apps or support new systems that are part of the
 ExCALIBUR benchmarking collaboration.  Read
 [`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
-The file [`SYSTEMS.md`](./SYSTEMS.md) contains information about the use of this framework on specific systems.

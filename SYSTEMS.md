@@ -22,13 +22,10 @@ reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=s
 reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=short' -J'--account=t01'
 ```
 
-Note that jobs run on specific queues, like `serial` and `lowpriority`, do not charge the corresponding project, but you need to have at least 1 [Computing Resource (CU)](https://docs.archer2.ac.uk/user-guide/scheduler/#cus) in budget to access them.
-
 ### Controlling CPU frequency
 
 ARCHER2 allows [choosing the CPU frequency](https://docs.archer2.ac.uk/user-guide/energy/#controlling-cpu-frequency) during jobs by setting the environment variable `SLURM_CPU_FREQ_REQ` to specific values.
 In ReFrame v3 the list of environment variables set by the framework is hold by the dictionary attribute called `variables`, and you can initialise it on the command line when running a benchmark with `-S`/`--setvar`.
-The syntax to set dictionary items is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use
 
 ```
@@ -57,7 +54,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=<ACCOUNT>'
+reframe -c examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
