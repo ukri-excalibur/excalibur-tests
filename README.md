@@ -7,23 +7,21 @@ These benchmarks are based on a similar project by
 
 _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
-## Before you start
-
-If you are using spack for other projects, you might have to clear the cache if it exists:
-`rm -rf ~/.spack/cache`
-
 ## Requirements
 
 ### Spack
 
-_**Note**: In some HPC facilities there may be already a central Spack installation available.
-However, the version installed is most likely too old to support all the features
-used by this package. Therefore we recommend you install the latest version locally,
-following the instructions below._
-
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
-facilities.  The [official
-instructions](https://spack.readthedocs.io/en/latest/getting_started.html) to
+facilities. In some HPC facilities there may be already a central Spack installation available.
+However, the version installed is most likely too old to support all the features
+used by this package. Therefore we recommend you install the latest version locally, 
+following the instructions below.
+
+_**Note**: if you have already installed spack locally and you want to upgrade to 
+a newer version, you might first have to clear the cache to avoid conflicts: 
+`spack clean -m`_
+
+The [official instructions](https://spack.readthedocs.io/en/latest/getting_started.html) to
 install the latest version of Spack are summarised here for convenience.
 - git clone spack:
 `git clone -c feature.manyFiles=true https://github.com/spack/spack.git`
