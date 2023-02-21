@@ -42,30 +42,28 @@ spack:
   - compiler:
       spec: gcc@8.1.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/gcc/8.1.0/bin/gcc
+        cxx: /opt/gcc/8.1.0/bin/g++
+        f77: /opt/gcc/8.1.0/bin/gfortran
+        fc: /opt/gcc/8.1.0/bin/gfortran
       flags: {}
       operating_system: rhel8
       target: any
       modules:
-      - PrgEnv-gnu
       - gcc/8.1.0
       environment: {}
       extra_rpaths: []
   - compiler:
       spec: gcc@9.2.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /cm/local/apps/gcc/9.2.0/bin/gcc
+        cxx: /cm/local/apps/gcc/9.2.0/bin/g++
+        f77: /cm/local/apps/gcc/9.2.0/bin/gfortran
+        fc: /cm/local/apps/gcc/9.2.0/bin/gfortran
       flags: {}
       operating_system: rhel8
       target: any
       modules:
-      - PrgEnv-gnu
       - gcc/9.2.0
       environment: {}
       extra_rpaths: []
