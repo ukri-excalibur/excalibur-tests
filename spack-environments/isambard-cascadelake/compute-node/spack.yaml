@@ -42,30 +42,28 @@ spack:
   - compiler:
       spec: gcc@8.1.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /opt/gcc/8.1.0/bin/gcc
+        cxx: /opt/gcc/8.1.0/bin/g++
+        f77: /opt/gcc/8.1.0/bin/gfortran
+        fc: /opt/gcc/8.1.0/bin/gfortran
       flags: {}
       operating_system: rhel8
       target: any
       modules:
-      - PrgEnv-gnu
       - gcc/8.1.0
       environment: {}
       extra_rpaths: []
   - compiler:
       spec: gcc@9.2.0
       paths:
-        cc: cc
-        cxx: CC
-        f77: ftn
-        fc: ftn
+        cc: /cm/local/apps/gcc/9.2.0/bin/gcc
+        cxx: /cm/local/apps/gcc/9.2.0/bin/g++
+        f77: /cm/local/apps/gcc/9.2.0/bin/gfortran
+        fc: /cm/local/apps/gcc/9.2.0/bin/gfortran
       flags: {}
       operating_system: rhel8
       target: any
       modules:
-      - PrgEnv-gnu
       - gcc/9.2.0
       environment: {}
       extra_rpaths: []
@@ -86,7 +84,7 @@ spack:
       extra_rpaths: []
   packages:
     all:
-      target: [cascadelake]
+      require: 'target=cascadelake'
     autoconf:
       externals:
       - spec: autoconf@2.69
@@ -98,10 +96,6 @@ spack:
     bison:
       externals:
       - spec: bison@3.0.4
-        prefix: /usr
-    bzip2:
-      externals:
-      - spec: bzip2@1.0.6
         prefix: /usr
     cmake:
       externals:
@@ -151,10 +145,6 @@ spack:
     openssl:
       externals:
       - spec: openssl@1.1.1c
-        prefix: /usr
-    perl:
-      externals:
-      - spec: perl@5.26.3~cpanm+shared+threads
         prefix: /usr
     pkgconf:
       externals:
