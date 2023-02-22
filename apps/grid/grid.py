@@ -13,8 +13,6 @@ The relevant options can make big changes to delivered performance.
 
 from functools import reduce
 from operator import mul
-import os.path as path
-import sys
 
 import reframe as rfm
 import reframe.utility.sanity as sn

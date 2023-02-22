@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import os.path as path
-import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 from modules.utils import SpackTest

@@ -10,8 +10,6 @@
         reframe/bin/reframe -C reframe_config.py -c apps/imb/ --run --performance-report
 """
 
-import sys
-import os
 import reframe as rfm
 import reframe.utility.sanity as sn
 from collections import namedtuple
