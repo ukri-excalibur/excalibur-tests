@@ -9,11 +9,29 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 ## Installation
 
-You can install the **excalibur-tests** package with `pip` by
+It is recommended to install the **excalibur-tests** package with `pip` by
 
 ```sh
 pip install .
 ```
+
+On most systems, it is recommended to install the package in a virtual environment.
+For example, using the python3 [built-in virtual environment tool `venv`](https://docs.python.org/3/library/venv.html),
+create an environment called `my_environment` with
+
+```sh
+python3 -m venv ./my_environment
+```
+
+and activate it with
+
+```sh
+source ./my_environment/bin/activate
+```
+
+For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
+pass the `-e/--editable` flag to `pip` to link the installed package to the files in the local
+directory, instead of copying, to be able to make changes to the installed package.
 
 ## Requirements
 
