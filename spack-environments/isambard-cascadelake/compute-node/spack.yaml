@@ -150,10 +150,6 @@ spack:
       externals:
       - spec: openssl@1.1.1c
         prefix: /usr
-    perl:
-      externals:
-      - spec: perl@5.26.3~cpanm+shared+threads
-        prefix: /usr
     pkgconf:
       externals:
       - spec: pkgconf@1.4.2
