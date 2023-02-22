@@ -8,6 +8,9 @@ spack:
   view: true
   include:
   - ../../common.yaml
+  concretizer:
+    targets:
+      host_compatible: False
   compilers:
   - compiler:
       spec: cce@10.0.3
@@ -81,6 +84,8 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    all:
+      require: 'target=a64fx'
     autoconf:
       externals:
       - spec: autoconf@2.69
