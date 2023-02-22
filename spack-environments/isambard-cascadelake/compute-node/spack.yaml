@@ -84,7 +84,7 @@ spack:
       extra_rpaths: []
   packages:
     all:
-      target: [cascadelake]
+      require: 'target=cascadelake'
     autoconf:
       externals:
       - spec: autoconf@2.69
