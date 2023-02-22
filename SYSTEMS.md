@@ -59,6 +59,19 @@ reframe -c examples/sombrero -r --performance-report --system dial3:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
+## Isambard 2
+
+### Cascadelake partition
+
+#### Compilation on compute node
+
+There is no Cascadelake login node on Isambard 2.
+To run compilation on the compute node, you have to set the attribute [`build_locally`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally) to `false` with `-S build_locally=false`:
+
+```
+reframe -c examples/sombrero -r --performance-report --system isambard-cascadelake:compute-node -S build_locally=false
+```
+
 ## Myriad
 
 ### Python3 module
