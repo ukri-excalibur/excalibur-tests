@@ -24,10 +24,11 @@ classifiers = [
 ]
 dependencies = [
     "reframe-hpc >= 3.11.0, < 4.0.0",
+    "matplotlib >= 3.0.0",
 ]
 
 [tool.setuptools.packages.find]
-where = ["modules"]
-include = ["*"]
+where = ["."]
+include = ["modules"]
 exclude = []
 namespaces = false
