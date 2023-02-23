@@ -55,4 +55,4 @@ jobs:
         shell: bash
         run: |
           export RFM_CONFIG_FILE="${PWD}/excalibur_tests/reframe_config.py"
-          reframe -v -c examples/sombrero --run --performance-report --system github-actions:default
+          reframe -v -c excalibur_tests/examples/sombrero --run --performance-report --system github-actions:default

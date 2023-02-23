@@ -9,7 +9,7 @@ import reframe.utility.sanity as sn
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
-from modules.utils import SpackTest
+from excalibur_tests.modules.utils import SpackTest
 
 # See ReFrame documentation about writing tests for more details.  In
 # particular:
