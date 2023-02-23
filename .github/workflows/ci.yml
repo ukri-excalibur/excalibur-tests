@@ -54,5 +54,5 @@ jobs:
       - name: Run sample benchmark
         shell: bash
         run: |
-          export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
+          export RFM_CONFIG_FILE="${PWD}/excalibur_tests/reframe_config.py"
           reframe -v -c examples/sombrero --run --performance-report --system github-actions:default
