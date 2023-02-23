@@ -29,6 +29,6 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["modules","apps","examples","spack-environments","perflogs"]
+include = ["modules","apps","examples","envs","perflogs"]
 exclude = []
 namespaces = false

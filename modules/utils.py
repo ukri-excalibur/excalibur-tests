@@ -226,7 +226,7 @@ def identify_build_environment(current_partition):
     else:
         system, partition = current_partition.fullname.split(':')
         cp_dir = os.path.realpath(
-            os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
+            os.path.join(os.path.dirname(__file__), '..', 'envs',
                          system))
         subdir = partition
         env_dir = os.path.join(cp_dir, partition)
@@ -253,7 +253,7 @@ class SpackTest(rfm.RegressionTest):
         # Base name and full path of common settings file.
         common_base = 'common.yaml'
         common = os.path.realpath(os.path.join(os.path.dirname(__file__),
-                                               '..', 'spack-environments', common_base))
+                                               '..', 'envs', common_base))
         self.prebuild_cmds = [
             # Copy over the common file.  It should be two levels up compared
             # to the Spack environment, which is the stage directory.
