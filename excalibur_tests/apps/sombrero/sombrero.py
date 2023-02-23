@@ -7,10 +7,9 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from apps.sombrero import case_filter
-from modules.reframe_extras import scaling_config
-from modules.utils import SpackTest
+from excalibur_tests.apps.sombrero import case_filter
+from excalibur_tests.modules.reframe_extras import scaling_config
+from excalibur_tests.modules.utils import SpackTest
 
 
 @rfm.simple_test

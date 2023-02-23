@@ -7,7 +7,7 @@ import string
 import urllib
 import reframe as rfm
 import reframe.utility.sanity as sn
-from modules.utils import SpackTest
+from excalibur_tests.modules.utils import SpackTest
 
 
 @sn.deferrable

@@ -7,9 +7,9 @@ from collections import namedtuple
 import re
 import reframe as rfm
 import reframe.utility.sanity as sn
-import modules
-from modules.omb import read_omb_out
-from modules.utils import SpackTest
+import excalibur_tests.modules
+from excalibur_tests.modules.omb import read_omb_out
+from excalibur_tests.modules.utils import SpackTest
 
 Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 
