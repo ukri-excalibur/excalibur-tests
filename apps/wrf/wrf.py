@@ -1,6 +1,7 @@
 # TODO: Add docs
 # TODO: Currently must set WRF_DIR in environment's variables (to parent of /RUN directory) - would be better to use a module?
 
+import os
 import re
 import string
 import urllib
