@@ -98,6 +98,7 @@ class HPCGBenchmark(SpackTest):
         }
     }
 
+   
 #    @run_after('run')
 #    @run_before('sanity')
 #    def clean_text_and_set_output(self):
@@ -146,3 +147,9 @@ class HPCGBenchmark(SpackTest):
                 r'VALID with a GFLOP/s rating of=(\S+)',
                 self.output_data, 1, float),
         }
+
+@rfm.simple_test
+class HPCG_LFRic(HPCGBenchmark):
+    # As above but with the LFRic style stencil
+    spack_version = 'hpcg_lfric'
+
