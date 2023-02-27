@@ -39,7 +39,7 @@ ARCHER2 is a Cray system, and they [recommend using a cray optimised python vers
 
 ### Spack install path
 
-Spack has a limitation of 128 characters on the length of the path of the install tree. Because the path to the work directory on Archer2 is fairly long, and pip by default installs into `<path/to/virtual/environment>/pythonx.x/site-packages/`we may exceed the limit when installing to the default directory. If you see an error in ReFrame beginning with
+Spack has a limitation of 127 characters on the length of the path of the install tree. Because the path to the work directory on Archer2 is fairly long, and pip by default installs into `<path/to/virtual/environment>/pythonx.x/site-packages/`we may exceed the limit when installing to the default directory. If you see an error in ReFrame beginning with
 
 ```
 ==> Error: SbangPathError: Install tree root is too long.
