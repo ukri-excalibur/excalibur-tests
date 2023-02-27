@@ -1,2 +1,0 @@
-2020-08-19T16:22:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_Uniband_16 on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=4941|max_bandwidth=3063.47|Mbytes/sec|ref=0 (l=None, u=None)|procs_per_node=8,uniband
-2020-09-11T15:06:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_Uniband_16 on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=6592|max_bandwidth=3063.5|Mbytes/sec|ref=0 (l=None, u=None)|uniband,procs_per_node=8

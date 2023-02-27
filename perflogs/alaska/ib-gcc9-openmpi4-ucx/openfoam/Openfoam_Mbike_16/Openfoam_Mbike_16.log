@@ -1,3 +1,0 @@
-2020-09-03T14:38:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_16 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5110|ExecutionTime=10.04|s|ref=0 (l=None, u=None)|num_procs=512,num_nodes=16
-2020-09-03T14:38:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_16 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5110|ClockTime=10.0|s|ref=0 (l=None, u=None)|num_procs=512,num_nodes=16
-2020-09-03T14:38:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_16 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5110|runtime_real=19.375|s|ref=0 (l=None, u=None)|num_procs=512,num_nodes=16
