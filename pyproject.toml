@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -27,8 +27,9 @@ dependencies = [
     "matplotlib >= 3.0.0",
 ]
 
+[tool.setuptools_scm]
+
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["modules","apps","examples","spack-environments","perflogs"]
-exclude = []
-namespaces = false
