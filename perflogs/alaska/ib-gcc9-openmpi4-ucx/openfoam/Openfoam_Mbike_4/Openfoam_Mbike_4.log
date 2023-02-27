@@ -1,6 +1,0 @@
-2020-08-19T22:23:06+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5072|ExecutionTime=20.91|s|ref=0 (l=None, u=None)|num_procs=128,num_nodes=4
-2020-08-19T22:23:06+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5072|ClockTime=21.0|s|ref=0 (l=None, u=None)|num_procs=128,num_nodes=4
-2020-08-19T22:23:06+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=5072|runtime_real=27.402|s|ref=0 (l=None, u=None)|num_procs=128,num_nodes=4
-2020-09-11T10:27:15+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=6491|ExecutionTime=19.73|s|ref=0 (l=None, u=None)|num_nodes=4,num_procs=128
-2020-09-11T10:27:15+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=6491|ClockTime=20.0|s|ref=0 (l=None, u=None)|num_nodes=4,num_procs=128
-2020-09-11T10:27:15+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Openfoam_Mbike_4 on alaska:ib-gcc9-openmpi4-ucx using openfoam|jobid=6491|runtime_real=25.879|s|ref=0 (l=None, u=None)|num_nodes=4,num_procs=128

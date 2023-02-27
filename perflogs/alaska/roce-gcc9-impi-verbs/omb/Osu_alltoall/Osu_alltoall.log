@@ -1,3 +1,0 @@
-2020-08-19T16:35:40+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:roce-gcc9-impi-verbs using omb|jobid=4975|min_av_latency=45.49|us|ref=0 (l=None, u=None)|procs_per_node=32,alltoall
-2020-09-11T15:56:52+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:roce-gcc9-impi-verbs using omb|jobid=6626|min_av_latency=53.77|us|ref=0 (l=None, u=None)|alltoall,procs_per_node=32
-2020-10-06T17:11:49+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:roce-gcc9-impi-verbs using omb|jobid=8239|min_av_latency=50.15|us|ref=0 (l=None, u=None)|alltoall,procs_per_node=32

@@ -1,2 +1,0 @@
-2020-10-01T16:20:20+01:00|reframe 3.2-dev1 (rev: 774134ee)|IMB_PingPong on csd3:cclake-roce-icc19-impi19-ucx using imb|jobid=29537139|max_bandwidth=5738.79|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
-2020-10-01T16:20:20+01:00|reframe 3.2-dev1 (rev: 774134ee)|IMB_PingPong on csd3:cclake-roce-icc19-impi19-ucx using imb|jobid=29537139|min_latency=1.48|t[usec]|ref=0 (l=None, u=None)|pingpong

@@ -1,8 +1,0 @@
-2020-09-30T16:48:01+01:00|reframe 3.2-dev1 (rev: 774134ee)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=29516512|total_time=507.35|s|ref=0 (l=None, u=None)|num_procs=8,num_nodes=1,TiN
-2020-09-30T16:48:01+01:00|reframe 3.2-dev1 (rev: 774134ee)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=29516512|peak_mem=3652408.0|kB|ref=0 (l=None, u=None)|num_procs=8,num_nodes=1,TiN
-2020-09-30T16:48:01+01:00|reframe 3.2-dev1 (rev: 774134ee)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=29516512|parallel_efficiency=98.0|%|ref=0 (l=None, u=None)|num_procs=8,num_nodes=1,TiN
-2020-09-30T16:48:01+01:00|reframe 3.2-dev1 (rev: 774134ee)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=29516512|runtime_real=510.439|s|ref=0 (l=None, u=None)|num_procs=8,num_nodes=1,TiN
-2020-10-15T11:37:44+01:00|reframe 3.3-dev0 (rev: 3b375092)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=30046395|total_time=509.36|s|ref=0 (l=None, u=None)|TiN,num_nodes=1,num_procs=8
-2020-10-15T11:37:44+01:00|reframe 3.3-dev0 (rev: 3b375092)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=30046395|peak_mem=3657412.0|kB|ref=0 (l=None, u=None)|TiN,num_nodes=1,num_procs=8
-2020-10-15T11:37:44+01:00|reframe 3.3-dev0 (rev: 3b375092)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=30046395|parallel_efficiency=97.0|%|ref=0 (l=None, u=None)|TiN,num_nodes=1,num_procs=8
-2020-10-15T11:37:44+01:00|reframe 3.3-dev0 (rev: 3b375092)|Castep_TiN on csd3:cclake-ib-icc19-impi19-ucx using castep|jobid=30046395|runtime_real=511.597|s|ref=0 (l=None, u=None)|TiN,num_nodes=1,num_procs=8
