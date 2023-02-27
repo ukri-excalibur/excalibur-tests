@@ -25,7 +25,8 @@ reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=s
 ### Controlling CPU frequency
 
 ARCHER2 allows [choosing the CPU frequency](https://docs.archer2.ac.uk/user-guide/energy/#controlling-cpu-frequency) during jobs by setting the environment variable `SLURM_CPU_FREQ_REQ` to specific values.
-In ReFrame v3 the list of environment variables set by the framework is hold by the dictionary attribute called `variables`, and you can initialise it on the command line when running a benchmark with `-S`/`--setvar`.
+In ReFrame v3 the list of environment variables set by the framework is held by the dictionary attribute called `variables`, and you can initialise it on the command line when running a benchmark with `-S`/`--setvar`.
+For more details, see Setting environment variables in [`README.md`](./README.md).
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use
 
 ```
