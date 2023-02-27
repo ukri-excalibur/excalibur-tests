@@ -1,1 +1,0 @@
-2020-10-01T16:44:03+01:00|reframe 3.2-dev1 (rev: 774134ee)|Osu_allgather on csd3:cclake-roce-gcc9-ompi3-ucx using omb|jobid=29537444|min_av_latency=9.13|us|ref=0 (l=None, u=None)|allgather,procs_per_node=32

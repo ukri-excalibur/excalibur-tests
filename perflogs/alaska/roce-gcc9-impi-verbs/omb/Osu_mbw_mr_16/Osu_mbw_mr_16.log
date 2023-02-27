@@ -1,4 +1,0 @@
-2020-08-19T16:40:01+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_16 on alaska:roce-gcc9-impi-verbs using omb|jobid=5017|max_bandwidth=3066.78|MB/s|ref=0 (l=None, u=None)|procs_per_node=8,mbw_mr
-2020-08-19T16:40:01+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_16 on alaska:roce-gcc9-impi-verbs using omb|jobid=5017|max_message_rate=10676819.73|Messages/s|ref=0 (l=None, u=None)|procs_per_node=8,mbw_mr
-2020-09-11T16:00:45+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_16 on alaska:roce-gcc9-impi-verbs using omb|jobid=6669|max_bandwidth=3066.47|MB/s|ref=0 (l=None, u=None)|procs_per_node=8,mbw_mr
-2020-09-11T16:00:45+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr_16 on alaska:roce-gcc9-impi-verbs using omb|jobid=6669|max_message_rate=10599057.58|Messages/s|ref=0 (l=None, u=None)|procs_per_node=8,mbw_mr

@@ -1,2 +1,0 @@
-2020-09-10T20:06:03+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_16 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=6436|cp2k_time=123.128|s|ref=0 (l=None, u=None)|num_procs=512,num_nodes=16
-2020-09-10T20:06:03+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Cp2k_H2O_256_16 on alaska:ib-gcc9-openmpi4-ucx using cp2k|jobid=6436|runtime_real=130.18|s|ref=0 (l=None, u=None)|num_procs=512,num_nodes=16

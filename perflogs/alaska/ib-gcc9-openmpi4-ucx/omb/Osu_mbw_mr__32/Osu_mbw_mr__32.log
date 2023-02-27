@@ -1,2 +1,0 @@
-2020-10-06T17:17:14+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr__32 on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=8264|max_bandwidth=12368.38|MB/s|ref=0 (l=None, u=None)|mbw_mr,num_procs=64,procs_per_node=32,num_nodes=2
-2020-10-06T17:17:14+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr__32 on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=8264|max_message_rate=83632871.25|Messages/s|ref=0 (l=None, u=None)|mbw_mr,num_procs=64,procs_per_node=32,num_nodes=2
