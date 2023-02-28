@@ -159,7 +159,7 @@ generic`, or using your own ReFrame configuration.  Note, however, that if you u
 "generic" system, ReFrame will not know anything about the queue manager of your system, if
 any, or the MPI launcher.  For the benchmarks using the Spack build system, if you choose
 the "generic" system, a new empty Spack environment will be automatically created in
-`spack-environments/generic`.  In any case, you can always make the benchmarks use a
+`spack/generic`.  In any case, you can always make the benchmarks use a
 different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
 described above.
 
