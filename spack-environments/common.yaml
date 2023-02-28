@@ -5,4 +5,4 @@ packages:
     buildable: false
 config:
   install_tree:
-    root: $env/opt/spack
+    root: $env/opt
