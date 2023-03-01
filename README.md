@@ -42,10 +42,12 @@ fi
 ```
 replacing `/path/to/spack` with the actual path to your Spack installation.
 
-ReFrame requires a [Spack
+ReFrame also requires a [Spack
 Environment](https://spack.readthedocs.io/en/latest/environments.html).  We
 provide Spack environments for some of the systems that are part of the
-ExCALIBUR and DiRac projects.  If you want to use a different Spack environment,
+ExCALIBUR and DiRac projects in 
+[https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack/](https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack). 
+If you want to use a different Spack environment,
 set the environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory
 where the environment is.  If this is not set, ReFrame will try to use the
 environment for the current system, if known, otherwise it will automatically
@@ -151,10 +153,9 @@ The configuration provided in [`reframe_config.py`](./reframe_config.py) lets yo
 benchmarks on pre-configured HPC systems.  However you
 can use this framework on any system by choosing the "generic" system with `--system
 generic`, or by using your own ReFrame configuration.  You can use the "generic" system to run 
-benchmarks in ReFrame without using a queue manager or an MPI launcher 
-(e.g. on a personal workstation).
+benchmarks in ReFrame without using a queue manager (e.g. on a personal workstation).
 
-If you choose the "generic" system, and a benchmark using the Spack build system,
+If you choose the "generic" system and a benchmark using the Spack build system,
 a new empty Spack environment will be automatically created in
 `spack-environments/generic` when ReFrame is launched for the first time. 
 You should populate the environment with the packages already installed on your system
