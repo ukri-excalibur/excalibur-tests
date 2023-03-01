@@ -1,3 +1,0 @@
-2020-10-14T09:33:34+01:00|reframe 3.3-dev0 (rev: 3b375092)|IntelHpl_single on csd3:cclake-ib-icc19-impi19-ucx using intel-hpl|jobid=30016193|Gflops=66.139|Gflops|ref=None (l=None, u=None)|git=c86e0cd-dirty,num_nodes=1,single,num_procs=2
-2020-10-14T10:07:38+01:00|reframe 3.3-dev0 (rev: 3b375092)|IntelHpl_single on csd3:cclake-ib-icc19-impi19-ucx using intel-hpl|jobid=30016206|Gflops=1098.87|Gflops|ref=None (l=None, u=None)|num_nodes=1,single,num_procs=2,git=c86e0cd-dirty
-2020-10-20T15:10:13+01:00|reframe 3.3-dev0 (rev: 3b375092)|IntelHpl_single on csd3:cclake-ib-icc19-impi19-ucx using intel-hpl|jobid=30150597|Gflops=2510.37|Gflops|ref=None (l=None, u=None)|num_nodes=1,git=d438e03-dirty,num_procs=1,single

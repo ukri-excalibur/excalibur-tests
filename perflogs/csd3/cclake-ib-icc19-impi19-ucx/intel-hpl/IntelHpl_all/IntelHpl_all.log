@@ -1,2 +1,0 @@
-2020-10-21T15:56:34+01:00|reframe 3.3-dev0 (rev: 3b375092)|IntelHpl_all on csd3:cclake-ib-icc19-impi19-ucx using intel-hpl|jobid=30170679|Gflops=1349.89|Gflops|ref=None (l=None, u=None)|all,num_nodes=56,git=4cada1b-dirty,num_procs=56
-2020-10-21T15:58:00+01:00|reframe 3.3-dev0 (rev: 3b375092)|IntelHpl_all on csd3:cclake-ib-icc19-impi19-ucx using intel-hpl|jobid=30170683|Gflops=36358.8|Gflops|ref=None (l=None, u=None)|git=4cada1b-dirty,num_procs=56,all,num_nodes=56

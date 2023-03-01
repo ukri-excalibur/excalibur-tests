@@ -1,0 +1,8 @@
+concretizer:
+  unify: false
+packages:
+  mpi:
+    buildable: false
+config:
+  install_tree:
+    root: $env/opt

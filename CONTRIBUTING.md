@@ -31,14 +31,14 @@ configuration.  The numbers you need to watch out for are:
 When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
 its tests.  We provide already configured Spack environments in the
-[`spack-environments`](./spack-environments) directory, for each system in the
+[`spack`](./spack) directory, for each system in the
 ReFrame configuration.
 
 Here are the steps to create a Spack environment for a new system:
 
 * create the environment:
   ```
-  spack env create --without-view -d spack-environments/SYSTEM-NAME
+  spack env create --without-view -d spack/SYSTEM-NAME
   ```
   where `SYSTEM-NAME` is the same name as the ReFrame system name.  Remember to
   [disable
@@ -47,12 +47,12 @@ Here are the steps to create a Spack environment for a new system:
   in the same environment
 * activate it:
   ```
-  spack env activate -d spack-environments/SYSTEM-NAME
+  spack env activate -d spack/SYSTEM-NAME
   ```
 * set the
   [`install_tree`](https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree):
   ```
-  spack config add 'config:install_tree:root:opt/spack'
+  spack config add 'config:install_tree:root:$env/opt/spack'
   ```
 * make sure the compilers you want to add are in the `PATH` (e.g., load the
   relevant modules), then add them to the Spack environment with:

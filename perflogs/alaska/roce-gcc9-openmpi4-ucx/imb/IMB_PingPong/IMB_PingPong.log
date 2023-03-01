@@ -1,6 +1,0 @@
-2020-08-19T16:20:21+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=4925|max_bandwidth=3041.25|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
-2020-08-19T16:20:21+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=4925|min_latency=2.05|t[usec]|ref=0 (l=None, u=None)|pingpong
-2020-09-09T10:30:12+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=5244|max_bandwidth=3039.31|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
-2020-09-09T10:30:12+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=5244|min_latency=2.07|t[usec]|ref=0 (l=None, u=None)|pingpong
-2020-09-11T15:04:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=6576|max_bandwidth=3043.13|Mbytes/sec|ref=0 (l=None, u=None)|pingpong
-2020-09-11T15:04:23+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|IMB_PingPong on alaska:roce-gcc9-openmpi4-ucx using imb|jobid=6576|min_latency=2.06|t[usec]|ref=0 (l=None, u=None)|pingpong
