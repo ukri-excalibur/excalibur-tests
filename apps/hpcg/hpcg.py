@@ -151,5 +151,6 @@ class HPCGBenchmark(SpackTest):
 @rfm.simple_test
 class HPCG_LFRic(HPCGBenchmark):
     # As above but with the LFRic style stencil
-    spack_version = 'hpcg_lfric@hpcg_lfric'
+#    spack_version = 'hpcg_lfric@hpcg_lfric'
+    spack_version = 'hpcg_excalibur@hpcg_lfric'
 
