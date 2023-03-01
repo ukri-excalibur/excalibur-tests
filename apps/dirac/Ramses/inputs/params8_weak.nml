@@ -19,11 +19,11 @@ aout=0.08
 
 &INIT_PARAMS
 filetype='grafic'
-initfile(1)='../../../../../../Additional_Input_Data/IC_256/'
+initfile(1)='./data/IC_512'
 /
 
 &AMR_PARAMS
-levelmin=8
+levelmin=9
 levelmax=18
 ngridmax=700000
 npartmax=1400000

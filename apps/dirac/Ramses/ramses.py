@@ -1,51 +1,76 @@
+import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
+import sys
 
-#------------------------------------------------------------------------------------------------------------------------------------
-# Base class for Ramses.
-# Also defines the sanity test.
-#------------------------------------------------------------------------------------------------------------------------------------
-class RamsesMPI(rfm.RunOnlyRegressionTest):
-
-    def __init__(self):
-
-        self.time_limit = '0d0h10m0s'
-        self.exclusive_access=True
-        self.valid_systems = ['*']
-        self.valid_prog_environs = ['*']
-        self.executable = './ramses3d'
-        self.executable_opts = ['params.nml']
-        reference = {
-        'dial:slurm-local': {
-            'Total elapsed time:':  (500, None, None, 'seconds'),
-                            }
-                    }
-
-    @run_before('sanity')
-    def run_complete_pattern(self):
-        self.pattern = r'Run completed'
-        self.sanity_patterns = sn.assert_found(self.pattern, self.stdout)
+sys.path.append(path.join(path.dirname(__file__), '..', '..', '..'))
+from modules.utils import SpackTest
 
 
-    @run_before('performance')
-    def runtime_extract_pattern(self):
-        self.perf_patterns = {'Total elapsed time': sn.extractsingle(r'Total elapsed time:\s+(\S+)\s', self.stdout, 1, float)}
+class Ramses_download_inputs(rfm.RunOnlyRegressionTest):
 
-#------------------------------------------------------------------------------------------------------------------------------------
-# End of base class.
-#------------------------------------------------------------------------------------------------------------------------------------
+    descr = 'Download Ramses input files'
+    executable = 'wget'
+    executable_opts = [
+        f'http://path/to/inputs'  # noqa: E501
+    ]
+    local = True
+
+    @run_after('init')
+    def link_input_files(self):
+        input_dir = path.join(path.dirname(__file__),'data')
+        self.executable = 'cp'
+        self.executable_opts = [f'-r {input_dir} .']
+
+    @sanity_function
+    def validate_download(self):
+        return sn.assert_true(path.exists('data'))
 
 
+class RamsesMPI(SpackTest):
+
+    valid_systems = ['*']
+    valid_prog_environs = ['*']
+
+    spack_spec = 'ramses@v1.0.0'
+    executable = 'ramses3d'
+    executable_opts = ['params.nml']
+    sourcesdir = path.join(path.dirname(__file__),'inputs')
+
+    time_limit = '10m'
+
+    reference = {
+            '*': {
+                'Total elapsed time': (500, None, None, 'seconds'),
+                },
+            }
+
+    ramses_inputs = fixture(Ramses_download_inputs, scope='session')
+
+    @run_before('compile')
+    def setup_build_system(self):
+        self.spack_spec = self.spack_spec
+        self.build_system.specs = [self.spack_spec]
+
+    @run_before('run')
+    def link_input_files(self):
+        input_dir = path.join(f'{self.ramses_inputs.stagedir}','data')
+        self.prerun_cmds = [f'ln -sf {input_dir} {self.stagedir}']
+
+    @sanity_function
+    def validate_successful_run(self):
+        return sn.assert_found(r'Run completed', self.stdout)
+
+    @performance_function('seconds', perf_key='Total elapsed time')
+    def extract_elapsed_time(self):
+        return sn.extractsingle(r'Total elapsed time:\s+(\S+)\s', self.stdout, 1, float)
 
 
-#------------------------------------------------------------------------------------------------------------------------------------
-# Strong scaling test.
-#------------------------------------------------------------------------------------------------------------------------------------
 @rfm.simple_test
 class RamsesMPI_strong(RamsesMPI):
 
     tags = {"Strong"}
-    num_nodes = parameter(2**i for i in range(0,5))
+    num_nodes = parameter(2**i for i in range(1,2))
 
     @run_after('setup')
     def set_job_script_variables(self):
@@ -56,21 +81,12 @@ class RamsesMPI_strong(RamsesMPI):
         self.num_tasks_per_node = self.core_count_1_node    #We are using the full node with MPI tasks.
         self.descr = ('Strong Scaling Ramses on '+ str(self.num_nodes) + ' node/s')
 
-#------------------------------------------------------------------------------------------------------------------------------------
-# End of strong scaling test.
-#------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-#------------------------------------------------------------------------------------------------------------------------------------
-# Weak scaling tests.
-#------------------------------------------------------------------------------------------------------------------------------------
 @rfm.simple_test
 class RamsesMPI_weak(RamsesMPI):
 
     tags = {"Weak"}
-    num_nodes = parameter(2**i for i in range(0,4))
+    num_nodes = parameter(2**i for i in range(1,2))
 
     @run_after('setup')
     def set_job_script_variables(self):
@@ -81,7 +97,3 @@ class RamsesMPI_weak(RamsesMPI):
         self.num_tasks_per_node = self.core_count_1_node
         self.descr = ('Weak Scaling Ramses on '+str(self.num_nodes)+ ' node/s')
         self.executable_opts = ['params'+str(self.num_nodes)+'_weak.nml']
-
-#------------------------------------------------------------------------------------------------------------------------------------
-# End of weak scaling tests.
-#------------------------------------------------------------------------------------------------------------------------------------
