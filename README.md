@@ -21,8 +21,9 @@ _**Note**: if you have already installed spack locally and you want to upgrade t
 a newer version, you might first have to clear the cache to avoid conflicts: 
 `spack clean -m`_
 
-The [official instructions](https://spack.readthedocs.io/en/latest/getting_started.html) to
-install the latest version of Spack are summarised here for convenience.
+Follow the [official instructions](https://spack.readthedocs.io/en/latest/getting_started.html) 
+to install the latest version of Spack (summarised here for convenience, but not guaranteed to be 
+up-to-date):
 - git clone spack:
 `git clone -c feature.manyFiles=true https://github.com/spack/spack.git`
 - run spack setup script: `source ./spack/share/spack/setup-env.sh`
@@ -30,7 +31,8 @@ install the latest version of Spack are summarised here for convenience.
 
 In order to use Spack in ReFrame, the framework we use to run the benchmarks
 (see below), the directory where the `spack` program is installed needs to be in
-the `PATH` environment variable. You can have your shell init script (e.g. `.bashrc`)
+the `PATH` environment variable. This is taken care of by the `setup-env.sh` 
+script as above, and you can have your shell init script (e.g. `.bashrc`)
 do that automatically in every session, by adding the following lines to it:
 ```sh
 export SPACK_ROOT="/path/to/spack"
