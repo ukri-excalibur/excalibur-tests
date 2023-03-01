@@ -302,7 +302,7 @@ site_configuration = {
                     'descr': 'Computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'environs': ['default', 'intel-oneapi-openmpi-dial3','intel19-mpi-dial3'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
@@ -368,20 +368,6 @@ site_configuration = {
             'ftn': 'mpiifort'
         },
         {
-            'name':'intel-oneapi-openmpi-dial3',
-            'modules':['intel-oneapi-compilers/2021.2.0','openmpi4/intel/4.0.5'],
-            'cc':'mpicc',
-            'cxx':'mpicxx',
-            'ftn':'mpif90'
-        },
-        {
-            'name': 'intel19-mpi-dial3',
-            'modules':['intel-parallel-studio/cluster.2019.5'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
             'name': 'intel2020-csd3',
             'modules': ["intel/compilers/2020.4",
                         "intel/mkl/2020.4",
@@ -429,6 +415,11 @@ site_configuration = {
                         '%(check_perfvalues)s|'
                         'spack_spec=%(check_spack_spec)s'
                         'variables=%(check_variables)s'
+                    ),
+                    'format_perfvars': (
+                        '%(check_perf_value)s|%(check_perf_unit)s|'
+                        '%(check_perf_ref)s|%(check_perf_lower)s|'
+                        '%(check_perf_upper)s|'
                     ),
                     'format_perfvars': (
                         '%(check_perf_value)s|%(check_perf_unit)s|'
