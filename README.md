@@ -45,13 +45,13 @@ replacing `/path/to/spack` with the actual path to your Spack installation.
 ReFrame also requires a [Spack
 Environment](https://spack.readthedocs.io/en/latest/environments.html).  We
 provide Spack environments for some of the systems that are part of the
-ExCALIBUR and DiRac projects in 
+ExCALIBUR and DiRAC projects in 
 [https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack/](https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack). 
 If you want to use a different Spack environment,
 set the environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory
 where the environment is.  If this is not set, ReFrame will try to use the
-environment for the current system, if known, otherwise it will automatically
-create a very basic environment.
+environment for the current system if known, otherwise it will automatically
+create a very basic environment (see "Usage on unsupported systems" section below).
 
 ### ReFrame
 
@@ -63,7 +63,7 @@ install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
 
 We provide a ReFrame configuration file with the settings of some systems that
-are part of the ExCALIBUR project.  You can point ReFrame to this file by
+are part of the ExCALIBUR or DiRAC projects.  You can point ReFrame to this file by
 setting the
 [`RFM_CONFIG_FILE`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_CONFIG_FILE)
 environment variable:
@@ -141,7 +141,7 @@ to `threads`.
 
 The provided ReFrame configuration file contains the settings for multiple systems.  If you
 use it, the automatic detection of the system may fail, as some systems may use clashing
-hostnames.  You can always use the flag [`--system
+hostnames.  To avoid this, you can use the flag [`--system
 NAME:PARTITION`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-system)
 to specify the system (and optionally the partition) to use.
 
@@ -151,7 +151,7 @@ to pass the command line flag
 [`--job-option=...`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-J)
 to `reframe` (e.g., `--job-option='--account=...'`).
 
-### Usage of unsupported systems
+### Usage on unsupported systems
 
 The configuration provided in [`reframe_config.py`](./reframe_config.py) lets you run the
 benchmarks on pre-configured HPC systems.  However you
