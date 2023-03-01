@@ -1,0 +1,109 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  config:
+    install_tree:
+      root: opt/spack
+  include:
+  - ../../common.yaml
+  packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+      buildable: false
+    automake:
+      externals:
+      - spec: automake@1.16.1
+        prefix: /usr
+      buildable: false
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+      buildable: false
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+      buildable: false
+    cmake:
+      externals:
+      - spec: cmake@3.21.3
+        prefix: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.4.1/cmake-3.21.3-zt24jfeuemvwweacziyho6ccdsdn2w4s
+    curl:
+      externals:
+      buildable: false
+      - spec: curl@7.61.1+gssapi+ldap+nghttp2
+        prefix: /usr
+      buildable: false
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+      buildable: false
+    gmp:
+      externals:
+      - spec: gmp@6.2.1
+        prefix: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gmp-6.2.1-duarubab347ozagvvxb2zez5alexnqiu
+    gsl:
+      externals:
+      - spec: gsl@2.7.1
+        prefix: /cm/shared/apps/gsl/cray/2.7.1
+      buildable: false
+    hdf5:
+      externals:
+      - spec: hdf5@1.10.1
+        prefix: /cm/shared/apps/hdf5/1.10.1
+      buildable: false
+    libtool:
+      externals:
+      buildable: false
+      - spec: libtool@2.4.6
+        prefix: /usr
+      buildable: false
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+      buildable: false
+    openssh:
+      externals:
+      - spec: openssh@8.0p1
+        prefix: /usr
+      buildable: false
+    openssl:
+      externals:
+      - spec: openssl@1.1.1k
+        prefix: /usr
+      buildable: false
+    perl:
+      externals:
+      - spec: perl@5.26.3~cpanm+shared+threads
+        prefix: /usr
+      buildable: false
+    pkgconf:
+      externals:
+      - spec: pkgconf@1.4.2
+        prefix: /usr
+      buildable: false
+    sqlite:
+      externals:
+      - spec: sqlite@3.26.0+fts~functions+rtree
+        prefix: /usr
+      buildable: false
+    tar:
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+      buildable: false
+    xz:
+      externals:
+      - spec: xz@5.2.4
+        prefix: /usr
+      buildable: false
