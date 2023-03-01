@@ -36,9 +36,9 @@ spack:
       externals:
       - spec: cmake@3.21.3
         prefix: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.4.1/cmake-3.21.3-zt24jfeuemvwweacziyho6ccdsdn2w4s
+      buildable: false
     curl:
       externals:
-      buildable: false
       - spec: curl@7.61.1+gssapi+ldap+nghttp2
         prefix: /usr
       buildable: false
@@ -51,6 +51,7 @@ spack:
       externals:
       - spec: gmp@6.2.1
         prefix: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/gmp-6.2.1-duarubab347ozagvvxb2zez5alexnqiu
+      buildable: false
     gsl:
       externals:
       - spec: gsl@2.7.1
@@ -63,7 +64,6 @@ spack:
       buildable: false
     libtool:
       externals:
-      buildable: false
       - spec: libtool@2.4.6
         prefix: /usr
       buildable: false
