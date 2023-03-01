@@ -145,21 +145,27 @@ to pass the command line flag
 [`--job-option=...`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-J)
 to `reframe` (e.g., `--job-option='--account=...'`).
 
-### Unsupported systems
+### Usage of unsupported systems
 
 The configuration provided in [`reframe_config.py`](./reframe_config.py) lets you run the
-benchmarks on systems for which the configuration has been already contributed.  However you
-can still use this framework on any system by choosing the "generic" system with `--system
-generic`, or using your own ReFrame configuration.  Note, however, that if you use the
-"generic" system, ReFrame will not know anything about the queue manager of your system, if
-any, or the MPI launcher.  For the benchmarks using the Spack build system, if you choose
-the "generic" system, a new empty Spack environment will be automatically created in
-`spack-environments/generic`.  In any case, you can always make the benchmarks use a
-different Spack environment by setting the environment variable `EXCALIBUR_SPACK_ENV`
-described above.
+benchmarks on pre-configured HPC systems.  However you
+can use this framework on any system by choosing the "generic" system with `--system
+generic`, or by using your own ReFrame configuration.  You can use the "generic" system to run 
+benchmarks in ReFrame without using a queue manager or an MPI launcher 
+(e.g. on a personal workstation).
+
+If you choose the "generic" system, and a benchmark using the Spack build system,
+a new empty Spack environment will be automatically created in
+`spack-environments/generic` when ReFrame is launched for the first time. 
+You should populate the environment with the packages already installed on your system
+before running Spack to avoid excessively rebuilding system packages. See the 
+*Spack configuration* section of [`CONTRIBUTING.md`](./CONTRIBUTING.md) for instructions on how 
+to set up a Spack environment.
+In particular, make sure that at least a compiler and an MPI library are added into the environment. 
+After the Spack environment is set up, tell ReFrame to use it by setting the environment 
+variable `EXCALIBUR_SPACK_ENV`, as described above.
 
 ## Contributing new systems or benchmarks
 
 Feel free to add new benchmark apps or support new systems that are part of the
-ExCALIBUR benchmarking collaboration.  Read
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
+ExCALIBUR benchmarking collaboration.  Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) for more details.
