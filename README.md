@@ -75,24 +75,20 @@ you use a different system, you can set this environment variable to the path of
 that file.
 
 **Note**: in order to use the Spack build system in ReFrame, the `spack`
-executable must be in the `PATH`, also on the computing nodes of a cluster, if
-you want to run your benchmarks on them.  Note that by default ReFrame uses
+executable must be in the `PATH` also on the compute nodes of a cluster, if
+you want to run your benchmarks on them. This is taken care of by adding it 
+to your init file (see spack section above).
 
-```sh
-!#/bin/bash
-```
-
-as [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)), which would not load
-the user's init script.  If you have added Spack to your `PATH` within your init
-script, you may want to set the
+However, you will also need to set the
 [`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
-environment variable in order to make ReFrame use
+environment variable (`export RFM_USE_LOGIN_SHELL="On"`) in order to make ReFrame use
 
 ```sh
 !#/bin/bash -l
 ```
 
-as shebang line, instead.
+as [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line, which would load
+the user's init script.
 
 ## Usage
 
@@ -104,15 +100,16 @@ reframe -c apps/BENCH_NAME -r --performance-report
 
 where `apps/BENCH_NAME` is the directory where the benchmark is.  The command
 above supposes you have the program `reframe` in your PATH, if it is not the
-case you can also call `reframe` with its relative or absolute path.  For
-example, to run the Sombrero benchmark in the `apps/sombrero` directory you can
+case you can also call `reframe` with its relative or absolute path.  
+
+For example, to run the Sombrero benchmark in the `apps/sombrero` directory you can
 use
 
 ```sh
 reframe -c apps/sombrero -r --performance-report
 ```
 
-For benchmark using the Spack build system, the tests define a default Spack specification
+For benchmarks that use the Spack build system, the tests define a default Spack specification
 to be installed in the environment, but users can change it when invoking ReFrame on the
 command line with the
 [`-S`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S) option to set
@@ -123,8 +120,8 @@ reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08
 ```
 
 Note that the `-S` option can be used to set from the command line on a per-job
-basis the built-in fields of ReFrame regressions classes, e.g.
-[`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables),
+basis all the built-in fields of ReFrame regressions classes. One useful such field is 
+[`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables), 
 which controls the environment variables used in a job.  For example
 
 ```
