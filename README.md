@@ -7,7 +7,37 @@ These benchmarks are based on a similar project by
 
 _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
+## Installation
+
+It is recommended to install the **excalibur-tests** package with `pip` by
+
+```sh
+pip install .
+```
+
+On most systems, it is recommended to install the package in a virtual environment.
+For example, using the python3 [built-in virtual environment tool `venv`](https://docs.python.org/3/library/venv.html),
+create an environment called `my_environment` with
+
+```sh
+python3 -m venv ./my_environment
+```
+
+and activate it with
+
+```sh
+source ./my_environment/bin/activate
+```
+
+For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
+pass the `-e/--editable` flag to `pip` to link the installed package to the files in the local
+directory, instead of copying, to be able to make changes to the installed package.
+
 ## Requirements
+
+The pip install will install a compatible version of **ReFrame** from
+[PyPi](https://pypi.org/project/ReFrame-HPC/). However, you will have to
+manually provide an installation of **Spack**.
 
 ### Spack
 
@@ -53,7 +83,10 @@ create a very basic environment.
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.11.0.  Follow the [official
+require ReFrame 3 version 3.11.0, or later. We are currently not compatible
+with ReFrame 4.
+
+If you need to manually install ReFrame, follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
