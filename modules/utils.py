@@ -251,13 +251,16 @@ class SpackTest(rfm.RegressionTest):
         dest = os.path.join(self.stagedir, 'spack_env')
         self.build_system.environment = os.path.join(dest, subdir)
         # Base name and full path of common settings file.
+        spack_envs = os.path.realpath(os.path.join(os.path.dirname(__file__),
+                                               '..', 'spack-environments'))
         common_base = 'common.yaml'
-        common = os.path.realpath(os.path.join(os.path.dirname(__file__),
-                                               '..', 'spack-environments', common_base))
+        common = os.path.realpath(os.path.join(spack_envs, common_base))
         self.prebuild_cmds = [
             # Copy over the common file.  It should be two levels up compared
             # to the Spack environment, which is the stage directory.
             f'cp {common} {self.stagedir}/{common_base}',
+            # Copy over our custom Spack repo.
+            f'cp -r {spack_envs}/repo {self.stagedir}/repo',
             # Copy Spack environment (only specific YAML files) to the stage
             # directory.
             f'mkdir -p {dest}',

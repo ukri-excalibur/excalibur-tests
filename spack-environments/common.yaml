@@ -4,4 +4,4 @@ packages:
   mpi:
     buildable: false
 repos:
-- repo
+- $env/../../repo
