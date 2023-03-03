@@ -1,5 +1,7 @@
 # python
 __pycache__
+build/
+*.egg-info
 
 # reframe
 reframe/
