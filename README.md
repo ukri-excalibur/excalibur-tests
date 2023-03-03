@@ -83,7 +83,7 @@ to your init file (see spack section above).
 
 However, you will also need to set the
 [`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
-environment variable (`export RFM_USE_LOGIN_SHELL="On"`) in order to make ReFrame use
+environment variable (`export RFM_USE_LOGIN_SHELL="Yes"`) in order to make ReFrame use
 
 ```sh
 !#/bin/bash -l
