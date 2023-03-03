@@ -123,8 +123,8 @@ reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08
 
 ### Setting environment variables
 
-The `-S` option can be used to set from the command line on a per-job
-basis all the built-in fields of ReFrame regressions classes. One useful such field is 
+All the built-in fields of ReFrame regression classes can be set on a per-job basis using the 
+`-S` command-line option. One useful such field is 
 [`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables),
 which controls the environment variables used in a job.
 The syntax to set dictionary items, like for `variables`, is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`.
