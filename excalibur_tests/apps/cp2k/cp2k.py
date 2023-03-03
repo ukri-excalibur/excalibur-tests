@@ -3,13 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import os.path as path
-import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import SpackTest
+from excalibur_tests.modules.utils import SpackTest
 
 class Cp2kBaseBenchmark(SpackTest):
     valid_systems = ['*']
