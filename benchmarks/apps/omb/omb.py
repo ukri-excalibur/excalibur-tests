@@ -8,8 +8,8 @@ import re
 import reframe as rfm
 import reframe.utility.sanity as sn
 import modules
-from excalibur_tests.modules.omb import read_omb_out
-from excalibur_tests.modules.utils import SpackTest
+from benchmarks.modules.omb import read_omb_out
+from benchmarks.modules.utils import SpackTest
 
 Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 

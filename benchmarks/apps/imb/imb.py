@@ -13,8 +13,8 @@
 import reframe as rfm
 import reframe.utility.sanity as sn
 from collections import namedtuple
-from excalibur_tests.modules.imb import read_imb_out
-from excalibur_tests.modules.utils import SpackTest
+from benchmarks.modules.imb import read_imb_out
+from benchmarks.modules.utils import SpackTest
 
 Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 

@@ -5,7 +5,7 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-from excalibur_tests.modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 
 @rfm.simple_test

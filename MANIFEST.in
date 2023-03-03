@@ -1,5 +1,5 @@
-include excalibur_tests/reframe_config.py *
-recursive-include excalibur_tests/apps *
-recursive-include excalibur_tests/examples *
-recursive-include excalibur_tests/modules *
-recursive-include excalibur_tests/spack *
+include benchmarks/reframe_config.py
+recursive-include benchmarks/apps *
+recursive-include benchmarks/examples *
+recursive-include benchmarks/modules *
+recursive-include benchmarks/spack *

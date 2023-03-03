@@ -15,7 +15,7 @@ from functools import reduce
 from operator import mul
 import reframe as rfm
 import reframe.utility.sanity as sn
-from excalibur_tests.modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 class GridBenchmark(SpackTest):
     valid_systems = ['*']
