@@ -431,7 +431,8 @@ site_configuration = {
                         'lower=%(check_perf_lower_thres)s|'
                         'upper=%(check_perf_upper_thres)s|'
                         'units=%(check_perf_unit)s|'
-                        'spack_spec=%(check_spack_spec)s'
+                        'spack_spec=%(check_spack_spec)s|'
+                        'variables=%(check_variables)s'
                     ),
                     'append': True
                 }
