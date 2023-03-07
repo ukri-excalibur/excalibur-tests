@@ -226,7 +226,7 @@ def identify_build_environment(current_partition):
     else:
         system, partition = current_partition.fullname.split(':')
         cp_dir = os.path.realpath(
-            os.path.join(os.path.dirname(__file__), '..', 'spack-environments',
+            os.path.join(os.path.dirname(__file__), '..', 'spack',
                          system))
         subdir = partition
         env_dir = os.path.join(cp_dir, partition)
@@ -252,7 +252,7 @@ class SpackTest(rfm.RegressionTest):
         self.build_system.environment = os.path.join(dest, subdir)
         # Base name and full path of common settings file.
         spack_envs = os.path.realpath(os.path.join(os.path.dirname(__file__),
-                                               '..', 'spack-environments'))
+                                                   '..', 'spack'))
         common_base = 'common.yaml'
         common = os.path.realpath(os.path.join(spack_envs, common_base))
         self.prebuild_cmds = [

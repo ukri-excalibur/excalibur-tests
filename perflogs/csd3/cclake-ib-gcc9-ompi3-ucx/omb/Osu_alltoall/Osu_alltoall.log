@@ -1,1 +1,0 @@
-2020-10-01T16:43:58+01:00|reframe 3.2-dev1 (rev: 774134ee)|Osu_alltoall on csd3:cclake-ib-gcc9-ompi3-ucx using omb|jobid=29537440|min_av_latency=19.63|us|ref=0 (l=None, u=None)|procs_per_node=32,alltoall

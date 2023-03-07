@@ -98,7 +98,10 @@ Runs both Uniband and Biband benchmarks on 2^1 ... 2^8 tasks. Uses the default s
 which (hopefully) is to fill up nodes one by one. Should use 8 nodes at 256 tasks.
     """
     METRICS = [
-        Metric('Mbytes/sec', max, 'Mbytes/sec', 'max_bandwidth')
+        # 'column_number' 'function', 'unit', 'label'
+        # Columns in the output of the benchmarks are:
+        #   #bytes | #repetitions | Mbytes/sec | Msg/sec
+        Metric(2, max, 'Mbytes/sec', 'max_bandwidth')
     ]
 
     tasks = parameter([ 2 ** x for x in range(1,9)])

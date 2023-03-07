@@ -1,2 +1,0 @@
-2020-10-06T17:14:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr__16 on alaska:ib-gcc9-impi-verbs using omb|jobid=8258|max_bandwidth=12413.78|MB/s|ref=0 (l=None, u=None)|mbw_mr,num_procs=32,procs_per_node=16,num_nodes=2
-2020-10-06T17:14:35+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_mbw_mr__16 on alaska:ib-gcc9-impi-verbs using omb|jobid=8258|max_message_rate=21352231.61|Messages/s|ref=0 (l=None, u=None)|mbw_mr,num_procs=32,procs_per_node=16,num_nodes=2
