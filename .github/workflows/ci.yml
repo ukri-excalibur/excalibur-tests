@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Reframe ${{ matrix.reframe_version }}
+    name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Reframe ${{ matrix.reframe_version }} - Spack spec ${{ matrix.spack_spec }}
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
@@ -21,6 +21,11 @@ jobs:
           # In README.md we claim compatibility with v0.18.0
           - v0.18.0
           - develop
+        spack_spec:
+          # `example` is a package in our custom Spack repo, ensure we can build
+          # packages in it.
+          - sombrero@2021-08-16
+          - example@2021-08-16
         reframe_version:
           # In README.md we claim compatibility with v3.11.0
           - v3.11.0
@@ -60,4 +65,4 @@ jobs:
         shell: bash
         run: |
           export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
-          reframe -v -c examples/sombrero --run --performance-report --system github-actions:default
+          reframe -v -c examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'
