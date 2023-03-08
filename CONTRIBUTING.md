@@ -82,6 +82,10 @@ not, you can read the [Spack Package Creation
 Tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html)
 to contribute a new recipe to build the application.
 
+While we encourage users to contribute all Spack recipes upstream, we have a custom repo for packages not yet ready to be contributed to the main Spack repository.
+This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages` with the name of the package you want to add, and place into it the `package.py` Spack recipe.
+On supported HPC systems, this repo is automatically added to the provided Spack environments.
+
 ### ReFrame benchmark
 
 New benchmarks should be added in the `apps/` directory, under the specific
