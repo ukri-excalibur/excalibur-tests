@@ -17,31 +17,17 @@ sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 # attribute.
 from modules.utils import SpackTest
 
-# See ReFrame documentation about writing tests for more details.  In
-# particular:
-# * https://reframe-hpc.readthedocs.io/en/stable/tutorials.html (this is a
-#   walkthrough guide for writing your first tests)
-# * https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html
-#   (reference about the regression tests API)
-
 # Class to define the benchmark.  See
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
 # for more information about the API of ReFrame tests.
-@rfm.simple_test
+#@rfm.simple_test
 class HPCGBenchmark(SpackTest):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
     # constraints.
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    # Spack specification with default value.  A different value can be set
-    # from the command line with `-S spack_spec='...'`:
-    # https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S
-    spack_spec = 'hpcg_excalibur'
-    # Number of (MPI) tasks and CPUs per task.  Here we hard-code 1, but in
-    # other cases you may want to use something different.  Note: ReFrame will
-    # automatically launch MPI with the given number of tasks, using the
-    # launcher specificed in the config for the current system.
+#    spack_spec = 'hpcg_excalibur'
     num_tasks = 1
     num_tasks_per_node = 1
     num_cpus_per_task = 1
@@ -149,8 +135,15 @@ class HPCGBenchmark(SpackTest):
         }
 
 @rfm.simple_test
+class HPCG_Stencil(HPCGBenchmark):
+    spack_spec = 'hpcg_excalibur'        
+
+@rfm.simple_test
+class HPCG_Original(HPCGBenchmark):
+    spack_spec = 'hpcg_excalibur@hpcg_original'
+
+@rfm.simple_test
 class HPCG_LFRic(HPCGBenchmark):
     # As above but with the LFRic style stencil
-#    spack_version = 'hpcg_lfric@hpcg_lfric'
     spack_version = 'hpcg_excalibur@hpcg_lfric'
 
