@@ -34,7 +34,7 @@ site_configuration = {
                     'descr': 'ARCHER2 compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'srun',
-                    'variables': [
+                    'env_vars': [
                         # Propagate PATH to compute nodes, including `spack` bindir
                         ['PATH', spack_root_to_path()],
                         # Work around for Spack erroring out on non-existing home directory:
@@ -213,6 +213,9 @@ site_configuration = {
                     'launcher': 'mpiexec',
                     'access': ['--partition=cosma8'],
                     'environs': ['default', 'intel20-mpi-durham', 'intel20_u2-mpi-durham', 'intel19-mpi-durham', 'intel19_u3-mpi-durham'],
+                    'sched_options': {
+                        'use_nodes_option': True,
+                    },
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
@@ -271,6 +274,9 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'access': ['--partition=cpu', '--qos=standard'],
                     'environs': ['default'],
+                    'sched_options': {
+                        'use_nodes_option': True,
+                    },
                     'max_jobs': 16,
                     'processor': {
                         'num_cpus': 64,
@@ -432,18 +438,11 @@ site_configuration = {
                         'upper=%(check_perf_upper_thres)s|'
                         'units=%(check_perf_unit)s|'
                         'spack_spec=%(check_spack_spec)s|'
-                        'variables=%(check_variables)s'
+                        'env_vars=%(check_env_vars)s'
                     ),
                     'append': True
                 }
             ]
         }
-    ],
-    'schedulers': [
-        {
-            'name': 'slurm',
-            'target_systems': ['tursa', 'cosma8'],
-            'use_nodes_option': True,
-        },
     ],
 }

@@ -87,8 +87,7 @@ create a very basic environment (see "Usage on unsupported systems" section belo
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3 version 3.11.0, or later. We are currently not compatible
-with ReFrame 4.
+require ReFrame v4.1.0.
 
 If you need to manually install ReFrame, follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
@@ -159,13 +158,13 @@ reframe -c benchmarks/apps/sombrero -r --performance-report -S spack_spec='sombr
 
 All the built-in fields of ReFrame regression classes can be set on a per-job basis using the 
 `-S` command-line option. One useful such field is 
-[`variables`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.variables),
+[`env_vars`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.env_vars),
 which controls the environment variables used in a job.
-The syntax to set dictionary items, like for `variables`, is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`.
+The syntax to set dictionary items, like for `env_vars`, is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`.
 For example
 
 ```
-reframe -c benchmarks/apps/sombrero -r --performance-report -S variables=OMP_PLACES:threads
+reframe -c benchmarks/apps/sombrero -r --performance-report -S env_vars=OMP_PLACES:threads
 ```
 
 runs the `benchmarks/apps/sombrero` benchmark setting the environment variable `OMP_PLACES`

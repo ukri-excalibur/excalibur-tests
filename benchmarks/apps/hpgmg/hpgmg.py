@@ -29,8 +29,8 @@ class HpgmgTest(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-        self.variables['OMP_PLACES'] = 'cores'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_PLACES'] = 'cores'
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }

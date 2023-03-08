@@ -70,7 +70,7 @@ class TROVE_12N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
@@ -102,7 +102,7 @@ class TROVE_14N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
@@ -134,7 +134,7 @@ class TROVE_16N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
