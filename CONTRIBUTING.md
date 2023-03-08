@@ -72,7 +72,7 @@ Here are the steps to create a Spack environment for a new system:
   or [add its install trees as
   upstreams](https://spack.readthedocs.io/en/latest/chain.html).
   
-* If you are using a custom repo for spack package recipes (see *Spack package* below). Add
+* If you are using a custom repo for spack package recipes (see *Spack package* below), add
   it to the spack environment with
   ```
   spack -e /path/to/environment repo add /path/to/repo
