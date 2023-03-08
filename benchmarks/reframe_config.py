@@ -429,16 +429,19 @@ site_configuration = {
                         'reframe %(version)s|'
                         '%(check_info)s|'
                         'jobid=%(check_jobid)s|'
-                        '%(check_perf_var)s=%(check_perf_value)s|'
                         'num_tasks=%(check_num_tasks)s|'
                         'num_cpus_per_task=%(check_num_cpus_per_task)s|'
                         'num_tasks_per_node=%(check_num_tasks_per_node)s|'
-                        'ref=%(check_perf_ref)s|'
-                        'lower=%(check_perf_lower_thres)s|'
-                        'upper=%(check_perf_upper_thres)s|'
-                        'units=%(check_perf_unit)s|'
+                        '%(check_perfvalues)s|'
                         'spack_spec=%(check_spack_spec)s|'
                         'env_vars=%(check_env_vars)s'
+                    ),
+                    'format_perfvars': (
+                        '%(check_perf_var)s=%(check_perf_value)s|'
+                        'ref=%(check_perf_ref)s|'
+                        'lower=%(check_perf_lower)s|'
+                        'upper=%(check_perf_upper)s|'
+                        'units=%(check_perf_unit)s|'
                     ),
                     'append': True
                 }
