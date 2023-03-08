@@ -104,10 +104,8 @@ class Sphng_Single_Node_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
                        self.thread_count +  ' threads per node')
 
-        self.env_vars= {
-            'OMP_NUM_THREADS':self.thread_count,
-            'OMP_PLACES':'cores'
-        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
 
 # This class runs the evolution stage of the Sphng.
@@ -132,10 +130,8 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
                        self.thread_count +  ' threads per node')
 
-        self.env_vars= {
-            'OMP_NUM_THREADS':self.thread_count,
-            'OMP_PLACES':'cores'
-        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
         self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
 
@@ -170,10 +166,8 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count + ' threads per node')
 
-        self.env_vars= {
-                        'OMP_NUM_THREADS':self.thread_count,
-                        'OMP_PLACES':'cores'
-                        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
 
 # This class runs the evolution stage of the Sphng.
@@ -198,10 +192,8 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.env_vars= {
-            'OMP_NUM_THREADS':self.thread_count,
-            'OMP_PLACES':'cores'
-        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
         self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
 #------------------------------------------------------------------------------------------------------------------------------------
@@ -233,10 +225,8 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.env_vars= {
-                        'OMP_NUM_THREADS':self.thread_count,
-                        'OMP_PLACES':'cores'
-                        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
         self.prerun_cmds = ['cp weak_n' + str(self.num_nodes) +'/inspho .', 'cp weak_n'+ str(self.num_nodes) + '/setup.txt .']
 
@@ -262,10 +252,8 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.env_vars= {
-            'OMP_NUM_THREADS':self.thread_count,
-            'OMP_PLACES':'cores'
-        }
+        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.env_vars['OMP_PLACES'] = 'cores'
 
         self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
 #------------------------------------------------------------------------------------------------------------------------------------

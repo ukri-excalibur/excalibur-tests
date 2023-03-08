@@ -67,10 +67,8 @@ class PDSYEV_15K(Pdsyev):
         self.num_tasks_per_node = self.num_tasks    #Since we are using only one node.
         self.descr = ('Running PDSYEV (15K) on '+ str(self.num_omp_cores) + ' node/s')
 
-        self.env_vars= {
-            'OMP_NUM_THREADS':str(self.num_omp_cores),
-            'OMP_PLACES':'cores'
-        }
+        self.env_vars['OMP_NUM_THREADS'] = str(self.num_omp_cores)
+        self.env_vars['OMP_PLACES'] = 'cores'
 
 #--------------------------------------------------------------------------
 # End of code for file named 15K.
