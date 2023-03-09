@@ -37,7 +37,7 @@ class RamsesMPI(SpackTest):
     executable_opts = ['params.nml']
     sourcesdir = path.join(path.dirname(__file__),'inputs')
 
-    time_limit = '10m'
+    time_limit = '5m'
 
     reference = {
             '*': {
@@ -55,7 +55,7 @@ class RamsesMPI(SpackTest):
     @run_before('run')
     def link_input_files(self):
         input_dir = path.join(f'{self.ramses_inputs.stagedir}','data')
-        self.prerun_cmds = [f'ln -sf {input_dir} {self.stagedir}']
+        self.prerun_cmds = [f'cp -r {input_dir} {self.stagedir}']
 
     @sanity_function
     def validate_successful_run(self):
@@ -70,7 +70,7 @@ class RamsesMPI(SpackTest):
 class RamsesMPI_strong(RamsesMPI):
 
     tags = {"Strong"}
-    num_nodes = parameter(2**i for i in range(1,2))
+    num_nodes = parameter(2**i for i in range(0,5))
 
     @run_after('setup')
     def set_job_script_variables(self):
@@ -86,7 +86,7 @@ class RamsesMPI_strong(RamsesMPI):
 class RamsesMPI_weak(RamsesMPI):
 
     tags = {"Weak"}
-    num_nodes = parameter(2**i for i in range(1,2))
+    num_nodes = parameter(2**i for i in range(0,4))
 
     @run_after('setup')
     def set_job_script_variables(self):
