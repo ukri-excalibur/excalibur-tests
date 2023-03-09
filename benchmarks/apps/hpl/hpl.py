@@ -1,6 +1,7 @@
 import reframe as rfm
 import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
+import os.path as path
 
 @rfm.simple_test
 class Hpl(SpackTest):

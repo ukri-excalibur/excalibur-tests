@@ -6,6 +6,7 @@
 import reframe as rfm
 import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
+import os.path as path
 
 class Cp2kBaseBenchmark(SpackTest):
     valid_systems = ['*']
