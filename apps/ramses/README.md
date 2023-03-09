@@ -2,6 +2,9 @@
 
 ## Prerequisites
 
+This code is currently hosted on a private GitHub repo for the benchmarking purposes. If you want to run this benchmark you will
+first need to request access. Please speak to the RSE team at Leicester for access.
+
 To run this test you will need to first download the necessary inputs
 
 * `cosmo3d-IC-256.tar.gz`
@@ -46,6 +49,6 @@ By default all benchmarks will be run. You can run individual benchmarks with th
 Examples:
 
 ```sh
-reframe -c apps/ramses -r --performance-report --tag Weak
-reframe -c apps/ramses -r --performance-report --tag Strong
+reframe -c apps/ramses -r --performance-report --tag weak
+reframe -c apps/ramses -r --performance-report --tag strong
 ```
