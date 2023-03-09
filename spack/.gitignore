@@ -1,0 +1,4 @@
+# Ignore some files and directories in the environments
+/*/*/opt
+/*/*/spack.lock
+/*/*/.spack-env

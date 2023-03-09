@@ -1,3 +1,0 @@
-2020-08-19T16:34:53+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=4976|min_av_latency=31.13|us|ref=0 (l=None, u=None)|procs_per_node=32,alltoall
-2020-09-11T15:55:42+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=6627|min_av_latency=31.26|us|ref=0 (l=None, u=None)|alltoall,procs_per_node=32
-2020-10-06T17:10:41+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Osu_alltoall on alaska:ib-gcc9-openmpi4-ucx using omb|jobid=8240|min_av_latency=32.54|us|ref=0 (l=None, u=None)|alltoall,procs_per_node=32

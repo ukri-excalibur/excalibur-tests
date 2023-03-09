@@ -1,0 +1,270 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  include:
+  - ../../common.yaml
+  compilers:
+  - compiler:
+      spec: intel@18.0.3
+      paths:
+        cc: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/icc
+        cxx: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/icpc
+        f77: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/ifort
+        fc: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.1.0.166
+      paths:
+        cc: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icc
+        cxx: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icpc
+        f77: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+        fc: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.8.5
+      paths:
+        cc: /usr/bin/gcc
+        cxx: null
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.9.2
+      paths:
+        cc: /shared/ucl/apps/gcc/4.9.2/bin/gcc
+        cxx: /shared/ucl/apps/gcc/4.9.2/bin/g++
+        f77: /shared/ucl/apps/gcc/4.9.2/bin/gfortran
+        fc: /shared/ucl/apps/gcc/4.9.2/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@7.3.0
+      paths:
+        cc: /shared/ucl/apps/gcc/7.3.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/7.3.0/bin/g++
+        f77: /shared/ucl/apps/gcc/7.3.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/7.3.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.3.0
+      paths:
+        cc: /shared/ucl/apps/gcc/8.3.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/8.3.0/bin/g++
+        f77: /shared/ucl/apps/gcc/8.3.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/8.3.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.2.0
+      paths:
+        cc: /shared/ucl/apps/gcc/9.2.0/bin/gcc
+        cxx: /shared/ucl/apps/gcc/9.2.0/bin/g++
+        f77: /shared/ucl/apps/gcc/9.2.0/bin/gfortran
+        fc: /shared/ucl/apps/gcc/9.2.0/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@10.2.0
+      paths:
+        cc: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gcc
+        cxx: /shared/ucl/apps/gcc/10.2.0-p95889/bin/g++
+        f77: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gfortran
+        fc: /shared/ucl/apps/gcc/10.2.0-p95889/bin/gfortran
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/10.2.0-p95889/lib64
+      extra_rpaths: []
+  packages:
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.13.4
+        prefix: /usr
+    binutils:
+      externals:
+      - spec: binutils@2.27.43
+        prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+      - spec: cmake@3.2.1
+        prefix: /shared/ucl/apps/cmake/3.2.1/gnu-4.9.2
+      - spec: cmake@3.7.2
+        prefix: /shared/ucl/apps/cmake/3.7.2/gnu-4.9.2
+      - spec: cmake@3.13.3
+        prefix: /shared/ucl/apps/cmake/3.13.3/gnu-4.9.2
+      - spec: cmake@3.19.1
+        prefix: /shared/ucl/apps/cmake/3.19.1/gnu-4.9.2
+      - spec: cmake@3.21.1
+        prefix: /shared/ucl/apps/cmake/3.21.1/gnu-4.9.2
+    coreutils:
+      externals:
+      - spec: coreutils@8.22
+        prefix: /usr
+    curl:
+      externals:
+      - spec: curl@7.29.0+ldap
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.3
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.5.11
+        prefix: /usr
+    flex:
+      externals:
+      - spec: flex@2.5.39~lex
+        prefix: /shared/ucl/apps/flex/2.5.39/gnu-4.9.2
+    gawk:
+      externals:
+      - spec: gawk@4.0.2
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@2.32.0+tcltk
+        prefix: /shared/ucl/apps/git/2.32.0/gnu-4.9.2
+      - spec: git@1.8.3.1~tcltk
+        prefix: /usr
+    gmake:
+      externals:
+      - spec: gmake@3.82
+        prefix: /usr
+    groff:
+      externals:
+      - spec: groff@1.22.2
+        prefix: /usr
+    hwloc:
+      externals:
+      - spec: hwloc@1.11.12
+        prefix: /shared/ucl/apps/hwloc/1.11.12
+    intel-mkl:
+      externals:
+      - spec: intel-mkl@2018.3.222
+        prefix: /shared/ucl/apps/intel/2018.Update3/compilers_and_libraries_2018.3.222/linux/mkl
+      - spec: intel-mkl@2020.0.166
+        prefix: /shared/ucl/apps/intel/2020/compilers_and_libraries_2020.0.166/linux/mkl
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2018.3.222
+        prefix: /shared/ucl/apps/intel/2018.Update3
+      - spec: intel-mpi@2020.0.166
+        prefix: /shared/ucl/apps/intel/2020
+    libtool:
+      externals:
+      - spec: libtool@2.4.3
+        prefix: /usr
+    libxml2:
+      externals:
+      - spec: libxml2@2.9.4
+        prefix: /shared/ucl/apps/libxml2/2.9.4/gnu-4.9.2
+    libxsmm:
+      externals:
+      - spec: libxsmm@1.16.1
+        prefix: /shared/ucl/apps/cp2k/8.2/cp2k-8.2/tools/toolchain/install/libxsmm-1.16.1
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
+    ninja:
+      externals:
+      - spec: ninja@1.10.2.git.kitware.jobserver-1
+        prefix: /shared/ucl/apps/python/bundles/python39-6.0.0/venv
+    numactl:
+      externals:
+      - spec: numactl@2.0.12
+        prefix: /shared/ucl/apps/numactl/2.0.12
+    openmpi:
+      externals:
+      - spec: openmpi@3.1.4%intel@18.0.3
+        prefix: /shared/ucl/apps/openmpi/3.1.4/intel-2018
+      - spec: openmpi@3.1.4%gcc@7.3.0
+        prefix: /shared/ucl/apps/openmpi/3.1.4/gnu-7.3.0
+      - spec: openmpi@3.1.5%gcc@9.2.0
+        prefix: /shared/ucl/apps/openmpi/3.1.5/gnu-9.2.0
+      - spec: openmpi@3.1.6%gcc@4.9.2
+        prefix: /shared/ucl/apps/openmpi/3.1.6/gnu-4.9.2
+      - spec: openmpi@4.0.3%gcc@4.9.2
+        prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
+      - spec: openmpi@4.0.5%gcc@10.2.0
+        prefix: /shared/ucl/apps/openmpi/4.0.5/gnu-10.2.0
+      - spec: openmpi@4.1.1%gcc@4.9.2
+        prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
+    openssh:
+      externals:
+      - spec: openssh@7.4p1
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.0.2k-fips
+        prefix: /usr
+    perl:
+      externals:
+      - spec: perl@5.16.3~cpanm+shared+threads
+        prefix: /usr
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.27.1
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@2.7.5+bz2+crypt+ctypes+dbm+nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+    subversion:
+      externals:
+      - spec: subversion@1.14.1
+        prefix: /shared/ucl/apps/subversion/1.14.1
+    tar:
+      externals:
+      - spec: tar@1.26
+        prefix: /usr

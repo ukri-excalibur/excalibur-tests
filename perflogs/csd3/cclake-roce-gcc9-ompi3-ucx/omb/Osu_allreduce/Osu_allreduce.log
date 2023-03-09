@@ -1,1 +1,0 @@
-2020-10-01T16:43:50+01:00|reframe 3.2-dev1 (rev: 774134ee)|Osu_allreduce on csd3:cclake-roce-gcc9-ompi3-ucx using omb|jobid=29537446|min_av_latency=8.66|us|ref=0 (l=None, u=None)|allreduce,procs_per_node=32

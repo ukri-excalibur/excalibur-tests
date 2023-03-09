@@ -1,0 +1,166 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  include:
+  - ../../common.yaml
+  compilers:
+  - compiler:
+      spec: cce@11.0.2
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-cray
+      - cce/11.0.2
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: cce@11.0.4
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-cray
+      - cce/11.0.4
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.1.0
+      paths:
+        cc: /opt/gcc/8.1.0/bin/gcc
+        cxx: /opt/gcc/8.1.0/bin/g++
+        f77: /opt/gcc/8.1.0/bin/gfortran
+        fc: /opt/gcc/8.1.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/8.1.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.2.0
+      paths:
+        cc: /cm/local/apps/gcc/9.2.0/bin/gcc
+        cxx: /cm/local/apps/gcc/9.2.0/bin/g++
+        f77: /cm/local/apps/gcc/9.2.0/bin/gfortran
+        fc: /cm/local/apps/gcc/9.2.0/bin/gfortran
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - gcc/9.2.0
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: pgi@64
+      paths:
+        cc: cc
+        cxx: CC
+        f77: ftn
+        fc: ftn
+      flags: {}
+      operating_system: rhel8
+      target: any
+      modules:
+      - PrgEnv-pgi
+      - pgi/64
+      environment: {}
+      extra_rpaths: []
+  packages:
+    all:
+      require: 'target=cascadelake'
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.16.1
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@3.11.4
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.6.0
+        prefix: /usr
+    gettext:
+      externals:
+      - spec: gettext@0.19.8.1
+        prefix: /usr
+    intel-mkl:
+      externals:
+        - spec: intel-mkl@2019.5.281
+          prefix: /cm/shared/apps/intel/compilers_and_libraries/2019.5.281/linux/mkl
+        - spec: intel-mkl@2020.4.304
+          prefix: /cm/shared/apps/intel/compilers_and_libraries/2020.4.304/linux/mkl
+    intel-mpi:
+      externals:
+        - spec: intel-mpi@2019.5.281
+          prefix: /cm/shared/apps/intel/compilers_and_libraries/2019.5.281
+        - spec: intel-mpi@2020.4.304
+          prefix: /cm/shared/apps/intel/compilers_and_libraries/2020.4.304
+    libtool:
+      externals:
+      - spec: libtool@2.4.6
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+    openmpi:
+      externals:
+      - spec: openmpi@4.0.3rc4~cuda~cxx~cxx_exceptions~java~memchecker+pmi~static~wrapper-rpath
+          fabrics=ucx schedulers=slurm
+        prefix: /usr/mpi/gcc/openmpi-4.0.3rc4
+    openssh:
+      externals:
+      - spec: openssh@8.0p1
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1c
+        prefix: /usr
+    pkgconf:
+      externals:
+      - spec: pkgconf@1.4.2
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@2.7.17+bz2+ctypes+dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+    xz:
+      externals:
+      - spec: xz@5.2.4
+        prefix: /usr

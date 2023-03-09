@@ -31,14 +31,14 @@ configuration.  The numbers you need to watch out for are:
 When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
 its tests.  We provide already configured Spack environments in the
-[`spack-environments`](./spack-environments) directory, for each system in the
+[`spack`](./spack) directory, for each system in the
 ReFrame configuration.
 
 Here are the steps to create a Spack environment for a new system:
 
 * create the environment:
   ```
-  spack env create --without-view -d spack-environments/SYSTEM-NAME
+  spack env create --without-view -d spack/SYSTEM-NAME
   ```
   where `SYSTEM-NAME` is the same name as the ReFrame system name.  Remember to
   [disable
@@ -47,12 +47,12 @@ Here are the steps to create a Spack environment for a new system:
   in the same environment
 * activate it:
   ```
-  spack env activate -d spack-environments/SYSTEM-NAME
+  spack env activate -d spack/SYSTEM-NAME
   ```
 * set the
   [`install_tree`](https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree):
   ```
-  spack config add 'config:install_tree:root:opt/spack'
+  spack config add 'config:install_tree:root:$env/opt/spack'
   ```
 * make sure the compilers you want to add are in the `PATH` (e.g., load the
   relevant modules), then add them to the Spack environment with:
@@ -81,6 +81,10 @@ Before adding a new benchmark, make sure the application is available in
 not, you can read the [Spack Package Creation
 Tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html)
 to contribute a new recipe to build the application.
+
+While we encourage users to contribute all Spack recipes upstream, we have a custom repo for packages not yet ready to be contributed to the main Spack repository.
+This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages` with the name of the package you want to add, and place into it the `package.py` Spack recipe.
+On supported HPC systems, this repo is automatically added to the provided Spack environments.
 
 ### ReFrame benchmark
 
