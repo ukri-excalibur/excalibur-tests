@@ -435,11 +435,6 @@ site_configuration = {
                         '%(check_perf_ref)s|%(check_perf_lower)s|'
                         '%(check_perf_upper)s|'
                     ),
-                    'format_perfvars': (
-                        '%(check_perf_value)s|%(check_perf_unit)s|'
-                        '%(check_perf_ref)s|%(check_perf_lower)s|'
-                        '%(check_perf_upper)s|'
-                    ),
                     'append': True
                 }
             ]
