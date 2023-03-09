@@ -69,7 +69,7 @@ class RamsesMPI(SpackTest):
 @rfm.simple_test
 class RamsesMPI_strong(RamsesMPI):
 
-    tags = {"Strong"}
+    tags = {"strong"}
     num_nodes = parameter(2**i for i in range(0,5))
 
     @run_after('setup')
@@ -85,7 +85,7 @@ class RamsesMPI_strong(RamsesMPI):
 @rfm.simple_test
 class RamsesMPI_weak(RamsesMPI):
 
-    tags = {"Weak"}
+    tags = {"weak"}
     num_nodes = parameter(2**i for i in range(0,4))
 
     @run_after('setup')
