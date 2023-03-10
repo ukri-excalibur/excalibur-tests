@@ -180,6 +180,12 @@ spack:
       externals:
       - spec: hwloc@1.11.11rc3-git
         prefix: /cm/shared/apps/hwloc/1.11.11
+    intel-parallel-studio:
+      externals:
+      - spec: intel-parallel-studio@cluster.2019.5
+        prefix: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-parallel-studio-cluster.2019.5-aveeftdagxn7vvwrtw3r7u6pmr6yv4je
+        modules:
+        - intel-parallel-studio/cluster.2019.5/aveeft
     krb5:
       externals:
       - spec: krb5@1.18.2

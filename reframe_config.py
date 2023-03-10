@@ -422,13 +422,13 @@ site_configuration = {
                         '%(check_job_completion_time)s|'
                         'reframe %(version)s|'
                         '%(check_info)s|'
-                        'jobid=%(check_jobid)s|'
+                        '%(check_jobid)s|'
                         '%(check_num_tasks)s|'
                         '%(check_num_cpus_per_task)s|'
                         '%(check_num_tasks_per_node)s|'
                         '%(check_perfvalues)s|'
-                        'spack_spec=%(check_spack_spec)s'
-                        'variables=%(check_variables)s'
+                        '%(check_spack_spec)s|'
+                        '%(check_variables)s'
                     ),
                     'format_perfvars': (
                         '%(check_perf_value)s|%(check_perf_unit)s|'
