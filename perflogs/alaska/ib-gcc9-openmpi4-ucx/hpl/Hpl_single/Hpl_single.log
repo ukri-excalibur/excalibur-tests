@@ -1,3 +1,0 @@
-2020-08-20T10:12:24+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Hpl_single on alaska:ib-gcc9-openmpi4-ucx using hpl|jobid=5089|Gflops=503.64|Gflops|ref=None (l=None, u=None)|single,git=7c5ac0c-dirty,num_procs=32,num_nodes=1
-2020-09-15T08:35:13+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Hpl_single on alaska:ib-gcc9-openmpi4-ucx using hpl|jobid=6828|Gflops=835.24|Gflops|ref=None (l=None, u=None)|num_procs=32,num_nodes=1,single,git=7aebe04-dirty
-2020-09-15T10:16:10+01:00|reframe 3.0-dev6 (rev: 3f0c45d4)|Hpl_single on alaska:ib-gcc9-openmpi4-ucx using hpl|jobid=6838|Gflops=832.95|Gflops|ref=None (l=None, u=None)|single,num_nodes=1,num_procs=32,git=05aafd2-dirty
