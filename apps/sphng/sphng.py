@@ -11,14 +11,15 @@ from modules.utils import SpackTest
 # Define base class for Sphng.
 #------------------------------------------------------------------------------------------------------------------------------------
 class SphngBase(SpackTest):
-    def __init__(self):
-        self.descr = 'Base class for Sphng'
-        self.time_limit = '0d0h10m0s'
-        self.exclusive_access=True
-        self.valid_systems = ['*']
-        self.valid_prog_environs = ['*']
-        self.spack_spec = 'sphng@v1.0.0%intel^intel-mpi'
-        self.executable = 'sph_tree_rk_gradh'
+
+    descr               = 'Base class for Sphng'
+    valid_systems       = ['*']
+    valid_prog_environs = ['*']
+    spack_spec          = 'sphng@v1.0.0'
+    executable          = 'sph_tree_rk_gradh'
+    time_limit          = '0d0h10m0s'
+    exclusive_access    = True
+
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
@@ -111,7 +112,7 @@ class Sphng_Single_Node_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
                        self.thread_count +  ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':self.thread_count,
             'OMP_PLACES':'cores'
         }
@@ -139,7 +140,7 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
                        self.thread_count +  ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':self.thread_count,
             'OMP_PLACES':'cores'
         }
@@ -177,7 +178,7 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count + ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
                         'OMP_NUM_THREADS':self.thread_count,
                         'OMP_PLACES':'cores'
                         }
@@ -205,7 +206,7 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':self.thread_count,
             'OMP_PLACES':'cores'
         }
@@ -240,7 +241,7 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
         self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
                         'OMP_NUM_THREADS':self.thread_count,
                         'OMP_PLACES':'cores'
                         }
@@ -269,7 +270,7 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
         self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
                        str(self.num_tasks_per_node) + ' tasks per node and ' + self.thread_count +  ' threads per node')
 
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':self.thread_count,
             'OMP_PLACES':'cores'
         }
