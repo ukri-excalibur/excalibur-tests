@@ -267,6 +267,9 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt/spack"',
         ]
+        self.postrun_cmds = [f"$(spack -e {self.build_system.environment} "
+                             f"build-env {self.spack_spec} | "
+                             "grep -oP '^SPACK_CC=\K.*') --version"]
 
 
 if __name__ == '__main__':

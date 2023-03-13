@@ -411,7 +411,7 @@ site_configuration = {
                     'level': 'debug',
                     'format': '[%(asctime)s] %(levelname)s: %(check_info)s: %(message)s',   # noqa: E501
                     'append': False
-                }
+                },
             ],
             'handlers_perflog': [
                 {
@@ -435,7 +435,25 @@ site_configuration = {
                         'variables=%(check_variables)s'
                     ),
                     'append': True
-                }
+                },
+                {
+                    # Log file with system information, as a single JSON file,
+                    # so not appendable.  Each file is in a directory indexed
+                    # by timestamp _and_ job ID (only job ID isn't sufficient,
+                    # with some schedulers it isn't a unique number)
+                    'type': 'filelog',
+                    'basedir': 'system_info',
+                    'prefix': '%(check_system)s/%(check_partition)s/%(check_job_completion_time)s/%(check_jobid)s',
+                    'level': 'info',
+                    'format': (
+                        '{\n'
+                        '    \"timestamp\": \"%(check_job_completion_time)s\",\n'
+                        '    \"jobid\": \"%(check_jobid)s\",\n'
+                        '    \"compiler_version\": \"%(check_compiler_version)s\"\n'
+                        '}'
+                    ),
+                    'append': False,
+                },
             ]
         }
     ],

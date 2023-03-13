@@ -19,3 +19,4 @@ outdated/
 
 # jupyter checkpoints:
 *-checkpoint.ipynb
+/system_info/
