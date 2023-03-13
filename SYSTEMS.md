@@ -47,6 +47,16 @@ reframe -c examples/sombrero -r --performance-report --system csd3-skylake:compu
 where `<ACCOUNT>` is the project you want to charge.
 You can see the account balance of your projects with the `mybalance` command.
 
+### GPU partition
+
+When submitting jobs to the `ampere` GPU partition, you need to specify how many GPUs your job needs to access, with either the `--exclusive` 
+option for exclusive access to the node, or the `--gres=gpu:X`, where "X" is the number of GPUs per node between 1 and 4 (inclusive). As above, 
+you can use the `-J`/`--job-option` flag to `reframe` to specify the GPU access mode, for example:
+
+```
+reframe -c examples/sombrero -r --performance-report --system csd3-skylake:gpu-node -J'--accout=<ACCOUNT>' -J'--exclusive'
+```
+
 ## DIaL3
 
 ### Queue options
