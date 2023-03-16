@@ -4,25 +4,34 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from modules.utils import SpackTest
+
 #--------------------------------------------------------------------------
 # Define base class for Trove.
 # This class will be used for all 3 cases namely 12N, 14N and 16N.
 #--------------------------------------------------------------------------
-class Trove(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.descr = 'Base class for Trove'
-        self.time_limit = '0d2h0m0s'
-        self.exclusive_access=True
-        self.valid_systems = ['*']
-        self.valid_prog_environs = ['*']
-        self.executable = './j-trove.x'
-        self.postrun_cmds = ['tail -n 100 output.txt']
+class Trove(SpackTest):
 
-        reference = {
-         'dial:slurm-local': {
-             'Total elapsed time:':  (5000, None, None, 'seconds'),
-                             }
-                     }
+    descr               = 'Base class for Trove'
+    valid_systems       = ['*']
+    valid_prog_environs = ['*']
+    spack_spec          = 'trove@v1.0.0'
+    executable          = 'j-trove.x'
+    postrun_cmds        = ['tail -n 100 output.txt']
+    time_limit          = '0d2h0m0s'
+    exclusive_access    = True
+
+    reference = {
+            'dial:slurm-local': {
+                'Total elapsed time': (500, None, None, 'seconds'),
+                },
+            }
+
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.specs = [self.spack_spec]
+
 
     @run_before('sanity')
     def run_complete_pattern(self):
@@ -70,7 +79,7 @@ class TROVE_12N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
@@ -102,7 +111,7 @@ class TROVE_14N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
@@ -134,7 +143,7 @@ class TROVE_16N(Trove):
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.variables= {
+        self.env_vars= {
             'OMP_NUM_THREADS':str(int(self.core_count_1_node/self.num_tasks_per_node)),
             'OMP_PLACES':'cores'
         }
