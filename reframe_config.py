@@ -302,7 +302,7 @@ site_configuration = {
                     'descr': 'Computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'environs': ['default'],
+                    'environs': ['default', 'intel-oneapi-openmpi-dial3','intel19-mpi-dial3'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
