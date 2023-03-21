@@ -22,10 +22,10 @@ reframe -c apps/sphng -r --performance-report
 By default all benchmarks will be run. You can run individual benchmarks with the
 [`--tag`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0) option:
 
-* `Single_node` to run benchmarks on a single node
+* `single-node` to run benchmarks on a single node
 
 Examples:
 
 ```sh
-reframe -c apps/sphng -r --performance-report --tag Single_node
+reframe -c apps/sphng -r --performance-report --tag single-node
 ```
