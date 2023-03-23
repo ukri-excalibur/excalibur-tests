@@ -22,12 +22,12 @@ The following tags are defined:
 Run all tests using e.g.:
 
 ```
-reframe -C reframe_config.py -c apps/omb/ --run --performance-report
+reframe -C reframe_config.py -c benchmarks/apps/omb/ --run --performance-report
 ```
 
 Run only specified benchmark, by choosing the corresponding tag:
 
 ```
-reframe -C reframe_config.py -c apps/omb/ --run --performance-report --tag alltoall
-reframe -C reframe_config.py -c apps/omb/ --run --performance-report --tag bw
+reframe -C reframe_config.py -c benchmarks/apps/omb/ --run --performance-report --tag alltoall
+reframe -C reframe_config.py -c benchmarks/apps/omb/ --run --performance-report --tag bw
 ```

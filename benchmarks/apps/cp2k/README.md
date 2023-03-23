@@ -8,7 +8,7 @@ This directory includes the `H2O-64`, `H20-256`, and `LiH_HFX` CP2K benchmarks b
 From the top-level directory of the repository, you can run the benchmarks with
 
 ```sh
-reframe -c apps/cp2k -r --performance-report
+reframe -c benchmarks/apps/cp2k -r --performance-report
 ```
 
 ### Filtering the benchmarks
@@ -23,9 +23,9 @@ You can run individual benchmarks with the [`--tag`](https://reframe-hpc.readthe
 Examples:
 
 ```sh
-reframe -c apps/cp2k -r --performance-report --tag h2o-64
-reframe -c apps/cp2k -r --performance-report --tag h2o-256
-reframe -c apps/cp2k -r --performance-report --tag lih-hfx
+reframe -c benchmarks/apps/cp2k -r --performance-report --tag h2o-64
+reframe -c benchmarks/apps/cp2k -r --performance-report --tag h2o-256
+reframe -c benchmarks/apps/cp2k -r --performance-report --tag lih-hfx
 ```
 
 ### Setting the number of threads and MPI processes
@@ -43,7 +43,7 @@ You can override the values of these variables from the command line with the
 option, for example
 
 ```sh
-reframe -c apps/cp2k -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
+reframe -c benchmarks/apps/cp2k -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
 ```
 
 _**Note**_: you're responsible for overriding these variables in a consistent

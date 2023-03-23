@@ -18,7 +18,7 @@ The following performance variables are captured:
 Run using e.g.:
 
 ```
-reframe/bin/reframe -C reframe_config.py -c apps/wrf/ --run --performance-report
+reframe/bin/reframe -C reframe_config.py -c benchmarks/apps/wrf/ --run --performance-report
 ```
 
 A precursor task automatically downloads the required benchmark files.
@@ -30,9 +30,9 @@ You can filter the benchmark to run by filtering by tag:
 
 ```sh
 # For the 12km data
-reframe/bin/reframe -c apps/wrf/ --run --performance-report --tag '12km'
+reframe/bin/reframe -c benchmarks/apps/wrf/ --run --performance-report --tag '12km'
 # For the 2.5km data
-reframe/bin/reframe -c apps/wrf/ --run --performance-report --tag '2.5km'
+reframe/bin/reframe -c benchmarks/apps/wrf/ --run --performance-report --tag '2.5km'
 ```
 
 ### Setting the number of threads and MPI processes
@@ -50,7 +50,7 @@ You can override the values of these variables from the command line with the
 option, for example
 
 ```sh
-reframe -c apps/wrf -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
+reframe -c benchmarks/apps/wrf -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
 ```
 
 _**Note**_: you're responsible for overriding these variables in a consistent

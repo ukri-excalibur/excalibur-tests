@@ -17,7 +17,7 @@ As usual, if these packages are available in the system and the Spack environmen
 
 ### `HPL.dat` configuration files
 
-Appropriate `HPL.dat` configuration files must be generated and placed in `<repo_root>/apps/hpl/<sysname>/<number of tasks>`, if not already available.
+Appropriate `HPL.dat` configuration files must be generated and placed in `<repo_root>/benchmarks/apps/hpl/<sysname>/<number of tasks>`, if not already available.
 ReFrame will copy these files into the staging directories before running a test, so changes made to these files will persist and apply to the next run.
 
 Hints:
@@ -35,7 +35,7 @@ If you want to use an `HPL.dat` file in a different directory, you can pass `--s
 Run using e.g.:
 
 ```
-reframe -c apps/hpl --run --performance-report
+reframe -c benchmarks/apps/hpl --run --performance-report
 ```
 
 You can set the number of nodes and tasks per node to use by setting the following variables:
@@ -46,8 +46,8 @@ You can set the number of nodes and tasks per node to use by setting the followi
 For example
 
 ```
-reframe -c apps/hpl --run --performance-report --setvar num_tasks=4 # 4 MPI ranks
-reframe -c apps/hpl --run --performance-report --setvar num_tasks=8 --setvar num_tasks_per_node=2 # 8 MPI ranks, 2 for each node (for a total of 4 nodes)
+reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=4 # 4 MPI ranks
+reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=8 --setvar num_tasks_per_node=2 # 8 MPI ranks, 2 for each node (for a total of 4 nodes)
 ```
 
 ## Outputs
