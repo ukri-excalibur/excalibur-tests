@@ -71,6 +71,12 @@ Here are the steps to create a Spack environment for a new system:
   files](https://spack.readthedocs.io/en/latest/environments.html#included-configurations),
   or [add its install trees as
   upstreams](https://spack.readthedocs.io/en/latest/chain.html).
+  
+* If you are using a custom repo for spack package recipes (see *Spack package* below), add
+  it to the spack environment with
+  ```
+  spack -e /path/to/environment repo add /path/to/repo
+  ```
 
 ## Adding new benchmarks
 
@@ -82,8 +88,10 @@ not, you can read the [Spack Package Creation
 Tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html)
 to contribute a new recipe to build the application.
 
-While we encourage users to contribute all Spack recipes upstream, we have a custom repo for packages not yet ready to be contributed to the main Spack repository.
-This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages` with the name of the package you want to add, and place into it the `package.py` Spack recipe.
+While we encourage users to contribute all Spack recipes upstream, we have a custom 
+repo for packages not yet ready to be contributed to the main Spack repository.
+This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages` 
+with the name of the package you want to add, and place into it the `package.py` Spack recipe.
 On supported HPC systems, this repo is automatically added to the provided Spack environments.
 
 ### ReFrame benchmark
