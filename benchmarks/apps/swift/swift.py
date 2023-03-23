@@ -3,13 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import os.path as path
-import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
+import os.path as path
 
 @rfm.simple_test
 class SwiftBenchmark(SpackTest):

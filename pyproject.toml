@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "excalibur-tests"
+version = "0.0.1"
+authors = [
+    {name = "Mose Giordano", email = "m.giordano@ucl.ac.uk"},
+    {name = "Tuomas Koskela", email = "t.koskela@ucl.ac.uk"},
+    {name = "Ilektra Christidi", email = "ilektra.christidi@ucl.ac.uk"},
+    {name = "Tom Young", email = "t.young@ucl.ac.uk"}
+]
+description = "Framework for building and running HPC benchmarks"
+readme = "README.md"
+requires-python = ">=3.6"
+keywords = [
+    "benchmark",
+    "hpc"
+]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "reframe-hpc >= 3.11.0, < 4.0.0",
+    "matplotlib >= 3.0.0",
+]
+
+[tool.setuptools_scm]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]

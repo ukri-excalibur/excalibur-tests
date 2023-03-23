@@ -7,7 +7,37 @@ These benchmarks are based on a similar project by
 
 _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
+## Installation
+
+It is recommended to install the **excalibur-tests** package with `pip` by
+
+```sh
+pip install .
+```
+
+On most systems, it is recommended to install the package in a virtual environment.
+For example, using the python3 [built-in virtual environment tool `venv`](https://docs.python.org/3/library/venv.html),
+create an environment called `my_environment` with
+
+```sh
+python3 -m venv ./my_environment
+```
+
+and activate it with
+
+```sh
+source ./my_environment/bin/activate
+```
+
+For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
+pass the `-e/--editable` flag to `pip` to link the installed package to the files in the local
+directory, instead of copying, to be able to make changes to the installed package.
+
 ## Requirements
+
+The pip install will install a compatible version of **ReFrame** from
+[PyPi](https://pypi.org/project/ReFrame-HPC/). However, you will have to
+manually provide an installation of **Spack**.
 
 ### Spack
 
@@ -45,8 +75,8 @@ replacing `/path/to/spack` with the actual path to your Spack installation.
 ReFrame also requires a [Spack
 Environment](https://spack.readthedocs.io/en/latest/environments.html).  We
 provide Spack environments for some of the systems that are part of the
-ExCALIBUR and DiRAC projects in 
-[https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack/](https://github.com/ukri-excalibur/excalibur-tests/tree/main/spack). 
+ExCALIBUR and DiRAC projects in
+[https://github.com/ukri-excalibur/excalibur-tests/tree/main/benchmarks/spack/](https://github.com/ukri-excalibur/excalibur-tests/tree/main/benchmarks/spack).
 If you want to use a different Spack environment,
 set the environment variable `EXCALIBUR_SPACK_ENV` to the path of the directory
 where the environment is.  If this is not set, ReFrame will try to use the
@@ -57,7 +87,10 @@ create a very basic environment (see "Usage on unsupported systems" section belo
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame 3.11.0.  Follow the [official
+require ReFrame 3 version 3.11.0, or later. We are currently not compatible
+with ReFrame 4.
+
+If you need to manually install ReFrame, follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
 install this package.  Note that ReFrame requires Python 3.6: in your HPC system
 you may need to load a specific module to have this version of Python available.
@@ -69,7 +102,7 @@ setting the
 environment variable:
 
 ```sh
-export RFM_CONFIG_FILE="${PWD}/reframe_config.py"
+export RFM_CONFIG_FILE="${PWD}/benchmarks/reframe_config.py"
 ```
 
 If you want to use a different ReFrame configuration file, for example because
@@ -97,18 +130,19 @@ the user's init script.
 Once you have set up Spack and ReFrame, you can execute a benchmark with
 
 ```sh
-reframe -c apps/BENCH_NAME -r --performance-report
+reframe -c benchmarks/apps/BENCH_NAME -r --performance-report
 ```
 
-where `apps/BENCH_NAME` is the directory where the benchmark is.  The command
-above supposes you have the program `reframe` in your PATH, if it is not the
-case you can also call `reframe` with its relative or absolute path.  
+where `benchmarks/apps/BENCH_NAME` is the directory where the benchmark is.  The command
+above assumes you have the program `reframe` in your PATH.  If you have followed the instructions
+to install using `pip` into the default directory, it should have been automatically added.
+If it is not the case, call `reframe` with its relative or absolute path.
 
-For example, to run the Sombrero benchmark in the `apps/sombrero` directory you can
+For example, to run the Sombrero benchmark in the `benchmarks/apps/sombrero` directory you can
 use
 
 ```sh
-reframe -c apps/sombrero -r --performance-report
+reframe -c benchmarks/apps/sombrero -r --performance-report
 ```
 
 For benchmarks that use the Spack build system, the tests define a default Spack specification
@@ -118,7 +152,7 @@ command line with the
 the `spack_spec` variable:
 
 ```
-reframe -c apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08-16%intel'
+reframe -c benchmarks/apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08-16%intel'
 ```
 
 ### Setting environment variables
@@ -131,10 +165,10 @@ The syntax to set dictionary items, like for `variables`, is a comma-separated l
 For example
 
 ```
-reframe -c apps/sombrero -r --performance-report -S variables=OMP_PLACES:threads
+reframe -c benchmarks/apps/sombrero -r --performance-report -S variables=OMP_PLACES:threads
 ```
 
-runs the `apps/sombrero` benchmark setting the environment variable `OMP_PLACES`
+runs the `benchmarks/apps/sombrero` benchmark setting the environment variable `OMP_PLACES`
 to `threads`.
 
 ### Selecting system and queue access options

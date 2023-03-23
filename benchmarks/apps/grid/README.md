@@ -8,7 +8,7 @@ parallel C++ mathematical object library.
 From the top-level directory of the repository, you can run the benchmarks with
 
 ```sh
-reframe -c apps/grid -r --performance-report
+reframe -c benchmarks/apps/grid -r --performance-report
 ```
 
 ### Filtering the benchmarks
@@ -22,7 +22,7 @@ option.  At the moment we have the following tags:
 Examples:
 
 ```sh
-reframe -c apps/grid -r --performance-report --tag ITT
+reframe -c benchmarks/apps/grid -r --performance-report --tag ITT
 ```
 
 ### Options (memory, number of threads and MPI processes)
@@ -45,8 +45,8 @@ You can override the values of these variables from the command line with the
 option, for example
 
 ```sh
-reframe -c apps/grid -r --performance-report --setvar=mpi='2.2.1.1' --setvar=num_cpus_per_task=12
-reframe -c apps/grid -r --performance-report --setvar=mpi='4.4.4.4' --setvar=shm=4096
+reframe -c benchmarks/apps/grid -r --performance-report --setvar=mpi='2.2.1.1' --setvar=num_cpus_per_task=12
+reframe -c benchmarks/apps/grid -r --performance-report --setvar=mpi='4.4.4.4' --setvar=shm=4096
 ```
 
 _**Note**_: you're responsible for overriding these variables in a consistent
