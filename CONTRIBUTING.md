@@ -11,7 +11,7 @@ configuration and a Spack environment for the system.
 ### ReFrame configuration
 
 Add a new system to the ReFrame configuration in
-[`reframe_config.py`](./reframe_config.py).  Read [ReFrame documentation about
+[`benchmarks/reframe_config.py`](./benchmarks/reframe_config.py).  Read [ReFrame documentation about
 configuration](https://reframe-hpc.readthedocs.io/en/stable/configure.html) for
 more details, or see the examples of the existing systems.  Note: you likely do
 not need to customise the programming environment in ReFrame, as we will use
@@ -31,7 +31,7 @@ configuration.  The numbers you need to watch out for are:
 When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
 its tests.  We provide already configured Spack environments in the
-[`spack`](./spack) directory, for each system in the
+[`benchmarks/spack`](./benchmarks/spack) directory, for each system in the
 ReFrame configuration.
 
 Here are the steps to create a Spack environment for a new system:
@@ -106,4 +106,4 @@ For writing ReFrame benchmarks you can read the documentation, in particular
 * [Regression Test API](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html)
 
 but you can also have a look at the sample file in
-[`examples/sombrero/sombrero.py`](./examples/sombrero/sombrero.py).
+[`benchmarks/examples/sombrero/sombrero.py`](./benchmarks/examples/sombrero/sombrero.py).
