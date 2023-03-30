@@ -50,6 +50,18 @@ class OpenMMBenchmark(SpackTest):
     num_cpus_per_task = required
     num_gpus_per_node = 1
 
+    reference = {
+        'myriad': {
+            'speed': (5.5, -0.2, None, 'ns/day'),
+        },
+        'tursa': {
+            'speed': (8.7, -0.2, None, 'ns/day'),
+        },
+        '*': {
+            'speed': (1, None, None, 'ns/day'),
+        },
+    }
+
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
@@ -105,3 +117,11 @@ class OpenMMBenchmark(SpackTest):
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('Done!', self.stdout)
+
+    @run_before('performance')
+    def set_perf_patterns(self):
+        self.perf_patterns = {
+            'speed': sn.extractsingle(
+                r'^100\.0%(?:[ \t]+[-\d.]+){5}[ \t]+([-\d.]+)[ \t]+[\d:]+$',
+                self.stdout, 1, float),
+        }
