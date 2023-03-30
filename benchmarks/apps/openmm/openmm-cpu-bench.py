@@ -8,14 +8,14 @@ from openmm import app
 import openmm as mm
 
 
-def ts(msg):
+def time_msg(msg):
+    "Utility function to print some messages with a leading timestamp."
     t = time.localtime(time.time())
-    print(str(t.tm_year) + "/" + str(t.tm_mon) + "/" + str(t.tm_mday) + " " +
-          str(t.tm_hour) + ":" + str(t.tm_min) + ":" + str(t.tm_sec) +
-          " >>> " + msg)
+    print(f"{t.tm_year:02d}-{t.tm_mon:02d}-{t.tm_mday:02d}T{t.tm_hour:02d}:"
+          f"{t.tm_min:02d}:{t.tm_sec:02d} >>> {msg}")
 
 
-ts("Starting up...")
+time_msg("Starting up...")
 
 params = app.CharmmParameterSet('top_all27_prot_lipid.rtf',
                                 'par_all27_prot_lipid.prm')
@@ -45,25 +45,21 @@ system = psf.createSystem(params,
                           constraints=app.HBonds,
                           rigidWater=True,
                           ewaldErrorTolerance=0.0005)
-ts('System creation complete')
+time_msg('System creation complete')
 integrator = mm.LangevinIntegrator(300*unit.kelvin, 1.0/unit.picoseconds,
                                    2.0*unit.femtoseconds)
-ts('Line 46')
 integrator.setConstraintTolerance(0.00001)
-ts('Line 48')
 system.addForce(mm.MonteCarloBarostat(1*unit.atmospheres, 300*unit.kelvin, 25))
-ts('Line 50')
 platform = mm.Platform.getPlatformByName('CPU')
-ts('Line 54')
 simulation = app.Simulation(psf.topology, system, integrator, platform)
 
-ts('Setting positions...')
+time_msg('Setting positions...')
 simulation.context.setPositions(pdb.positions)
 
-ts('Setting velocities...')
+time_msg('Setting velocities...')
 simulation.context.setVelocitiesToTemperature(300*unit.kelvin)
 
-ts('Setting reporters...')
+time_msg('Setting reporters...')
 simulation.reporters.append(
     app.StateDataReporter(stdout, 1000, step=True,
                           potentialEnergy=True, kineticEnergy=True,
@@ -72,6 +68,6 @@ simulation.reporters.append(
                           totalSteps=10000,
                           separator='\t'))
 
-ts('Running Production...')
+time_msg('Running Production...')
 simulation.step(10000)
-ts('Done!')
+time_msg('Done!')
