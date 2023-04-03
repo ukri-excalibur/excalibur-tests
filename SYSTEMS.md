@@ -137,16 +137,3 @@ reframe -c examples/sombrero -r --performance-report --system tesseract:compute-
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
-
-## Tursa
-
-### Queue options
-
-When submitting jobs to compute nodes, you need to specify the job queue, with the `--account` option to the scheduler.
-To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
-
-```
-reframe -c examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=<ACCOUNT>'
-```
-
-where `<ACCOUNT>` is the project you want to charge.

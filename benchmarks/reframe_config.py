@@ -1,4 +1,6 @@
 import os
+import reframe.utility.osext as osext
+
 
 # Some systems, notably some Cray-based ones, don't have access to the home filesystem.
 # This means that if you set up Spack in your bashrc script, this file won't be loaded and
@@ -272,7 +274,11 @@ site_configuration = {
                     'descr': 'CPU computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=cpu', '--qos=standard'],
+                    'access': [
+                        '--partition=cpu',
+                        '--qos=standard',
+                        f'--account={osext.osgroup()}',
+                    ],
                     'environs': ['default'],
                     'sched_options': {
                         'use_nodes_option': True,
