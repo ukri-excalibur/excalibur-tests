@@ -47,9 +47,7 @@ class Hpcg(rfm.RunOnlyRegressionTest, CachedRunTest):
         threads_per_mpiproc = Scheduler_Info().pcores_per_node
         self.num_cpus_per_task = threads_per_mpiproc
         self.num_tasks = num_nodes * self.num_tasks_per_node
-        self.variables = {
-            'OMP_NUM_THREADS': str(threads_per_mpiproc)
-        }
+        self.env_vars['OMP_NUM_THREADS'] = str(threads_per_mpiproc)
         self.exclusive_access = True
         self.executable = '$XHPCG_BIN'
         self.time_limit = None

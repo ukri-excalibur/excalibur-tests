@@ -34,7 +34,7 @@ site_configuration = {
                     'descr': 'ARCHER2 compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'srun',
-                    'variables': [
+                    'env_vars': [
                         # Propagate PATH to compute nodes, including `spack` bindir
                         ['PATH', spack_root_to_path()],
                         # Work around for Spack erroring out on non-existing home directory:
@@ -213,6 +213,9 @@ site_configuration = {
                     'launcher': 'mpiexec',
                     'access': ['--partition=cosma8'],
                     'environs': ['default', 'intel20-mpi-durham', 'intel20_u2-mpi-durham', 'intel19-mpi-durham', 'intel19_u3-mpi-durham'],
+                    'sched_options': {
+                        'use_nodes_option': True,
+                    },
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
@@ -271,6 +274,9 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'access': ['--partition=cpu', '--qos=standard'],
                     'environs': ['default'],
+                    'sched_options': {
+                        'use_nodes_option': True,
+                    },
                     'max_jobs': 16,
                     'processor': {
                         'num_cpus': 64,
@@ -422,28 +428,24 @@ site_configuration = {
                         '%(check_job_completion_time)s|'
                         'reframe %(version)s|'
                         '%(check_info)s|'
-                        'jobid=%(check_jobid)s|'
-                        '%(check_perf_var)s=%(check_perf_value)s|'
-                        'num_tasks=%(check_num_tasks)s|'
-                        'num_cpus_per_task=%(check_num_cpus_per_task)s|'
-                        'num_tasks_per_node=%(check_num_tasks_per_node)s|'
-                        'ref=%(check_perf_ref)s|'
-                        'lower=%(check_perf_lower_thres)s|'
-                        'upper=%(check_perf_upper_thres)s|'
-                        'units=%(check_perf_unit)s|'
-                        'spack_spec=%(check_spack_spec)s|'
-                        'variables=%(check_variables)s'
+                        '%(check_jobid)s|'
+                        '%(check_num_tasks)s|'
+                        '%(check_num_cpus_per_task)s|'
+                        '%(check_num_tasks_per_node)s|'
+                        '%(check_perfvalues)s|'
+                        '%(check_spack_spec)s|'
+                        '%(check_env_vars)s'
+                    ),
+                    'format_perfvars': (
+                        '%(check_perf_value)s|'
+                        '%(check_perf_unit)s|'
+                        '%(check_perf_ref)s|'
+                        '%(check_perf_lower)s|'
+                        '%(check_perf_upper)s|'
                     ),
                     'append': True
                 }
             ]
         }
-    ],
-    'schedulers': [
-        {
-            'name': 'slurm',
-            'target_systems': ['tursa', 'cosma8'],
-            'use_nodes_option': True,
-        },
     ],
 }

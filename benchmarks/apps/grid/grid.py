@@ -76,8 +76,8 @@ class GridBenchmark_ITT(GridBenchmark):
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-        self.variables['OMP_PLACES'] = 'cores'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_PLACES'] = 'cores'
 
     @run_before('sanity')
     def set_sanity_patterns(self):

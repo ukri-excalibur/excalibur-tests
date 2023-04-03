@@ -30,8 +30,8 @@ class Cp2kBaseBenchmark(SpackTest):
         self.extra_resources = {
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-        self.variables['OMP_PLACES'] = 'cores'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_PLACES'] = 'cores'
         # For choosing the executable name, see for reference
         # <https://github.com/cp2k/cp2k/blob/e390d0e8443cbafd3d0c65e9488279ca0b9bafcf/benchmarks/QS/check-release-comparison.py#L33>.
         self.executable = f"cp2k.{'p' if self.num_tasks > 0 else 's'}{'smp' if self.num_cpus_per_task > 0 else 'opt'}"

@@ -102,12 +102,12 @@ class SombreroBenchmark(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
-        # With `variables` you can set environment variables to be used in the
+        # With `env_vars` you can set environment variables to be used in the
         # job.  For example with `OMP_NUM_THREADS` we set the number of OpenMP
         # threads (not actually used in this specific benchmark).  Note that
         # this has to be done after setup because we need to add entries to
-        # ReFrame built-in `variables` variable.
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        # ReFrame built-in `env_vars` variable.
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('compile')
     def setup_build_system(self):
