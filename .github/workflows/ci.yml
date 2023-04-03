@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Reframe ${{ matrix.reframe_version }} - Spack spec ${{ matrix.spack_spec }}
+    name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Spack spec ${{ matrix.spack_spec }}
     timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
