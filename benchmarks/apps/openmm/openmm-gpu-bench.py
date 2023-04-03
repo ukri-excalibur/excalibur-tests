@@ -50,8 +50,10 @@ integrator = mm.LangevinIntegrator(300*unit.kelvin, 1.0/unit.picoseconds,
                                    2.0*unit.femtoseconds)
 integrator.setConstraintTolerance(0.00001)
 system.addForce(mm.MonteCarloBarostat(1*unit.atmospheres, 300*unit.kelvin, 25))
-platform = mm.Platform.getPlatformByName('CPU')
-simulation = app.Simulation(psf.topology, system, integrator, platform)
+platform = mm.Platform.getPlatformByName('CUDA')
+properties = {'CudaPrecision': 'mixed'}
+simulation = app.Simulation(psf.topology, system, integrator, platform,
+                            properties)
 
 time_msg('Setting positions...')
 simulation.context.setPositions(pdb.positions)

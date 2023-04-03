@@ -32,11 +32,11 @@ def download(url, match, dest):
 
 @rfm.simple_test
 class OpenMMBenchmark(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['+gpu']
     valid_prog_environs = ['default']
-    spack_spec = 'openmm@7.7.0'
+    spack_spec = 'openmm@7.7.0 +cuda'
 
-    time_limit = '3h'
+    time_limit = '1h'
 
     executable = 'python3'
 
@@ -47,6 +47,7 @@ class OpenMMBenchmark(SpackTest):
     num_tasks = 1
     num_tasks_per_node = 1
     num_cpus_per_task = required
+    num_gpus_per_node = 1
 
     @run_before('compile')
     def setup_build_system(self):
@@ -54,14 +55,15 @@ class OpenMMBenchmark(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
-        self.executable_opts = [os.path.join(self.prefix, 'openmm-cpu-bench.py')]
+        self.executable_opts = [os.path.join(self.prefix, 'openmm-gpu-bench.py')]
         self.set_var_default(
             'num_cpus_per_task',
             self.current_partition.processor.num_cpus)
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-        self.variables['OMP_PLACES'] = 'cores'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_PLACES'] = 'cores'
         self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
+            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task},
+            'gpu': {'num_gpus_per_node': self.num_gpus_per_node},
         }
 
     # Download input files into the sources directory
