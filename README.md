@@ -87,7 +87,7 @@ create a very basic environment (see "Usage on unsupported systems" section belo
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
-require ReFrame v4.1.0.
+require ReFrame v4.1.3.
 
 If you need to manually install ReFrame, follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
