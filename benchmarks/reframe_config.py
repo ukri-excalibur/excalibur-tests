@@ -434,6 +434,7 @@ site_configuration = {
                         '%(check_num_tasks_per_node)s|'
                         '%(check_perfvalues)s|'
                         '%(check_spack_spec)s|'
+                        '%(check_extra_resources)s|'
                         '%(check_env_vars)s'
                     ),
                     'format_perfvars': (
