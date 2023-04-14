@@ -115,6 +115,7 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,
+                    'features': ['gpu'],
                     'processor': {
                         'num_cpus': 36,
                         'num_cpus_per_core': 1,
@@ -124,11 +125,15 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'mpi',
-                            'options': ['-pe mpi {num_slots}']
+                            'options': ['-pe mpi {num_slots}'],
                         },
-                    ]
+                        {
+                            'name': 'gpu',
+                            'options': ['-l gpu={num_gpus_per_node}'],
+                        },
+                    ],
                 },
-            ]
+            ],
         },  # end Myriad
         {
             # https://gw4-isambard.github.io/docs/user-guide/MACS.html
@@ -268,12 +273,13 @@ site_configuration = {
             'hostnames': ['tursa-login.*'],
             'partitions': [
                 {
-                    'name': 'cpu',
-                    'descr': 'CPU computing nodes',
+                    'name': 'gpu',
+                    'descr': 'GPU computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=cpu', '--qos=standard'],
+                    'access': ['--partition=gpu', '--qos=standard'],
                     'environs': ['default'],
+                    'features': ['gpu'],
                     'sched_options': {
                         'use_nodes_option': True,
                     },
@@ -281,18 +287,15 @@ site_configuration = {
                     'processor': {
                         'num_cpus': 64,
                         'num_cpus_per_core': 2,
-                        'num_sockets': 2,
+                        'num_sockets': 1,
                         'num_cpus_per_socket': 32,
                     },
-                },
-                {
-                    'name': 'gpu',
-                    'descr': 'GPU computing nodes',
-                    'scheduler': 'slurm',
-                    'launcher': 'mpirun',
-                    'access': ['--partition=gpu', '--qos=standard'],
-                    'environs': ['default'],
-                    'max_jobs': 16,
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}']
+                        },
+                    ],
                 },
             ]
         },  # end Tursa
@@ -432,6 +435,7 @@ site_configuration = {
                         '%(check_num_tasks)s|'
                         '%(check_num_cpus_per_task)s|'
                         '%(check_num_tasks_per_node)s|'
+                        '%(check_num_gpus_per_node)s|'
                         '%(check_perfvalues)s|'
                         '%(check_spack_spec)s|'
                         '%(check_env_vars)s'

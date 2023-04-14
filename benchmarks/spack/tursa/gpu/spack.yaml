@@ -27,17 +27,22 @@ spack:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
-      buildable: false
     automake:
       externals:
       - spec: automake@1.16.1
         prefix: /usr
-      buildable: false
+    cuda:
+      externals:
+      - spec: cuda@11.0.2
+        prefix: /mnt/lustre/tursafs1/apps/cuda/11.0.2
+      - spec: cuda@11.0.3
+        prefix: /mnt/lustre/tursafs1/apps/cuda/11.0.3
+      - spec: cuda@11.4.1
+        prefix: /mnt/lustre/tursafs1/apps/cuda/11.4.1
     diffutils:
       externals:
       - spec: diffutils@3.6
         prefix: /usr
-      buildable: false
     gettext:
       externals:
       - spec: gettext@0.19.8.1
@@ -50,12 +55,10 @@ spack:
       externals:
       - spec: m4@1.4.18
         prefix: /usr
-      buildable: false
     ncurses:
       externals:
       - spec: ncurses@6.1.20180224+termlib abi=6
         prefix: /usr
-      buildable: false
     openmpi:
       externals:
       - spec: openmpi@4.1.1%gcc@9.3.0+cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
@@ -66,19 +69,15 @@ spack:
         prefix: /mnt/lustre/tursafs1/apps/basestack/cuda-11.0.2/openmpi/4.1.1
       - spec: openmpi@4.0.4%gcc@8.4.1+cuda~cxx~cxx_exceptions~java~memchecker~pmi~sqlite3~thread_multiple~wrapper-rpath
         prefix: /mnt/lustre/tursafs1/apps/openmpi/4.0.4
-      buildable: false
     perl:
       externals:
-      - spec: perl@5.26.3~cpanm+shared+threads
+      - spec: perl@5.26.3~cpanm~open+shared+threads
         prefix: /usr
-      buildable: false
     tar:
       externals:
       - spec: tar@1.30
         prefix: /usr
-      buildable: false
     xz:
       externals:
       - spec: xz@5.2.4
         prefix: /usr
-      buildable: false
