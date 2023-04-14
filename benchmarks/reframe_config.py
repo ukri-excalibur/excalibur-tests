@@ -203,7 +203,7 @@ site_configuration = {
                     },
                 },
             ]
-        },  # end Isambard A64FX
+        },  # end Isambard XCI
         {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
