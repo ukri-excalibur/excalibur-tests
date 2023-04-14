@@ -54,12 +54,9 @@ class GridBenchmark_ITT(GridBenchmark):
         'myriad': {
             'Performance': (350000, None, None, 'Mflop/s per node')
         },
-        'tesseract': {
-            'Performance': (250000, None, None, 'Mflop/s per node')
-        },
         '*': {
             'Performance': (150000, None, None, 'Mflop/s per node'),
-        }
+        },
     }
 
     @run_after('setup')

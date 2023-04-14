@@ -32,12 +32,9 @@ class SwiftBenchmark(SpackTest):
         'dial3': {
             'duration': (150, None, 0.2, 'seconds'),
         },
-        'tesseract': {
-            'duration': (250, None, 0.2, 'seconds'),
-        },
         '*': {
             'duration': (250, None, None, 'seconds'),
-        }
+        },
     }
 
     @run_after('setup')
