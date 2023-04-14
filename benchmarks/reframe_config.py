@@ -245,28 +245,6 @@ site_configuration = {
             ]
         },  # End GitHub Actions
         {
-            # https://tesseract-dirac.readthedocs.io/en/latest/user-guide/introduction.html
-            'name': 'tesseract',
-            'descr': 'Extreme Scaling Tesseract',
-            'hostnames': ['tesseract-login.*'],
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'descr': 'Computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'environs': ['default'],
-                    'max_jobs': 16,
-                    'processor': {
-                        'num_cpus': 24,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 12,
-                    },
-                },
-            ]
-        },  # end Tesseract
-        {
             # https://epcced.github.io/dirac-docs/tursa-user-guide/scheduler/#partitions
             'name': 'tursa',
             'descr': 'Tursa',

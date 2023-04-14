@@ -92,12 +92,9 @@ class SombreroBenchmark(SpackTest):
         'myriad': {
             'flops': (1, -0.2, None, 'Gflops/seconds'),
         },
-        'tesseract': {
-            'flops': (0.75, -0.2, None, 'Gflops/seconds'),
-        },
         '*': {
             'flops': (1, None, None, 'Gflops/seconds'),
-        }
+        },
     }
 
     @run_after('setup')
