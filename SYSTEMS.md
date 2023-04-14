@@ -125,19 +125,6 @@ You can add the following line to your shell init script (e.g., `~/.bashrc`) to 
 export TMPDIR="${TMPDIR:-${XDG_RUNTIME_DIR:-/tmp}}"
 ```
 
-## Tesseract
-
-### Queue options
-
-When submitting jobs to compute nodes, you need to specify the job queue, with the `--account` option to the scheduler.
-To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
-
-```
-reframe -c examples/sombrero -r --performance-report --system tesseract:compute-node -J'--accout=<ACCOUNT>'
-```
-
-where `<ACCOUNT>` is the project you want to charge.
-
 ## Tursa
 
 ### Queue options

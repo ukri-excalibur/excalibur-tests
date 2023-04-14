@@ -64,12 +64,9 @@ class Cp2kH2O64Benchmark(Cp2kBaseBenchmark):
         'myriad': {
             'Maximum total time': (60, None, 0.2, 'seconds'),
         },
-        'tesseract': {
-            'Maximum total time': (100, None, 0.2, 'seconds'),
-        },
         '*': {
             'Maximum total time': (200, None, None, 'seconds'),
-        }
+        },
     }
 
 
@@ -97,10 +94,7 @@ class Cp2kLiH_HFXBenchmark(Cp2kBaseBenchmark):
         'myriad': {
             'Maximum total time': (225, None, 0.2, 'seconds'),
         },
-        'tesseract': {
-            'Maximum total time': (400, None, 0.2, 'seconds'),
-        },
         '*': {
             'Maximum total time': (200, None, None, 'seconds'),
-        }
+        },
     }
