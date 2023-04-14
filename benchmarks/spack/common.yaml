@@ -1,6 +1,8 @@
 concretizer:
   unify: false
 packages:
+  cuda:
+    buildable: false
   mpi:
     buildable: false
 config:
