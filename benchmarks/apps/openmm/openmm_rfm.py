@@ -10,6 +10,7 @@ import os
 import urllib.request
 import tarfile
 import reframe as rfm
+from reframe.core.backends import getlauncher
 import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
@@ -93,6 +94,13 @@ class OpenMMBenchmark(SpackTest):
                 os.rename(f, os.path.join(self.sourcesdir, os.path.basename(f)))
             os.rmdir(os.path.join(self.sourcesdir, 'namd', '1400k-atoms'))
             os.rmdir(os.path.join(self.sourcesdir, 'namd'))
+
+    @run_before('run')
+    def replace_launcher(self):
+        # For this benchmark we don't use MPI at all, so we always force the
+        # local launcher:
+        # <https://reframe-hpc.readthedocs.io/en/v4.1.3/tutorial_advanced.html#replacing-the-parallel-launcher>.
+        self.job.launcher = getlauncher('local')()
 
     @run_before('sanity')
     def set_sanity_patterns(self):
