@@ -156,6 +156,28 @@ site_configuration = {
                         'num_cpus_per_socket': 20,
                     },
                 },
+                {
+                    'name': 'volta',
+                    'descr': 'Cascadelake computing nodes with Nvidia Volta GPUs',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q voltaq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 40,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 20,
+                    },
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['ngpus={num_gpus_per_node}'],
+                        },
+                    ],
+                },
             ]
         },  # end Isambard Cascadelake
         {
