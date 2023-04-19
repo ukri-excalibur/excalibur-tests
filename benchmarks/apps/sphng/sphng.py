@@ -1,11 +1,7 @@
-import os
-import sys
+import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
-import reframe.utility.udeps as udeps
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 
 class SphngBase(SpackTest):
@@ -30,7 +26,7 @@ class SphngBase_ifile(SphngBase):
 
     @sanity_function
     def validate_ifile_generation(self):
-        return sn.assert_true(os.path.exists('ifile'))
+        return sn.assert_true(path.exists('ifile'))
 
 
 class SphngBase_evolution(SphngBase):
@@ -104,7 +100,7 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
             'OMP_PLACES':'cores'
         }
 
-        self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
+        self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')
 
 
 class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
@@ -152,7 +148,7 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
             'OMP_PLACES':'cores'
         }
 
-        self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
+        self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')
 
 
 class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
@@ -201,4 +197,4 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
             'OMP_PLACES':'cores'
         }
 
-        self.sourcesdir = os.path.join(self.Ifile_fixture.stagedir,'')
+        self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')

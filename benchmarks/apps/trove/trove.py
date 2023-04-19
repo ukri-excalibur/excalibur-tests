@@ -1,11 +1,6 @@
-import os
-import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
-import reframe.utility.udeps as udeps
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 
 class Trove(SpackTest):

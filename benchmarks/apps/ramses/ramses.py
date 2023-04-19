@@ -1,10 +1,7 @@
 import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
-import sys
-
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 
 class Ramses_download_inputs(rfm.RunOnlyRegressionTest):
