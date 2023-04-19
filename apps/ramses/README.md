@@ -5,30 +5,19 @@
 This code is currently hosted on a private GitHub repo for the benchmarking purposes. If you want to run this benchmark you will
 first need to request access. Please speak to the RSE team at Leicester for access.
 
-To run this test you will need to first download the necessary inputs
+This code requires the following input data.
 
 * `cosmo3d-IC-256.tar.gz`
 * `cosmo3d-IC-322.tar.gz`
 * `cosmo3d-IC-406.tar.gz`
 * `cosmo3d-IC-512.tar.gz`
 
-At present, they need to be downloaded manually from University of Edinburgh's [DataSync
-service](https://datasync.ed.ac.uk/index.php/s/ju6knXo5TVchspd)
+They are publicly available on [zenodo](https://zenodo.org/record/7842140/).
 
-The password is `dirac3bm`
-
-**Important** make sure that you move the downloaded data to the `ramses/data/` directory.
-
-This workflow will be fully automated. We are just waiting to setup a centralized server where input data for tests can be
-stored.
-
-The class `Ramses_download_inputs` is setup to use `wget` as soon as the centralized server is ready. Just remove the two lines
-below that manually overwrite the `wget` command.
-
-```python
-self.executable = 'cp'
-self.executable_opts = [f'-r {input_dir} .']
-```
+*NB* They will be automatically downloaded by reframe, but it takes roughly 15 mins at 5MB/s. They will only be downloaded once
+per run, but if you manually re-run tests you may prefer to use the following options
+[`--restore-session`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-restore-session) and
+[`--keep-stage-files`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-keep-stage-files).
 
 ## Usage
 

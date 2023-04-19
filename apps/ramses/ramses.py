@@ -12,19 +12,13 @@ class Ramses_download_inputs(rfm.RunOnlyRegressionTest):
     descr = 'Download Ramses input files'
     executable = 'wget'
     executable_opts = [
-        f'http://path/to/inputs'  # noqa: E501
-    ]
+            f'https://zenodo.org/record/7842140/files/data.tgz'  # noqa: E501
+            ]
     local = True
-
-    @run_after('init')
-    def link_input_files(self):
-        input_dir = path.join(path.dirname(__file__),'data')
-        self.executable = 'cp'
-        self.executable_opts = [f'-r {input_dir} .']
 
     @sanity_function
     def validate_download(self):
-        return sn.assert_true(path.exists('data'))
+        return sn.assert_true(path.exists('data.tgz'))
 
 
 class RamsesMPI(SpackTest):
@@ -53,9 +47,12 @@ class RamsesMPI(SpackTest):
         self.build_system.specs = [self.spack_spec]
 
     @run_before('run')
-    def link_input_files(self):
-        input_dir = path.join(f'{self.ramses_inputs.stagedir}','data')
-        self.prerun_cmds = [f'cp -r {input_dir} {self.stagedir}']
+    def extract_input_data(self):
+        fullpath = path.join(self.ramses_inputs.stagedir, 'data.tgz')
+        self.prerun_cmds = [
+                'mkdir -p data',
+                f'tar xzf {fullpath} -C ./data',
+                ]
 
     @sanity_function
     def validate_successful_run(self):
