@@ -1,75 +1,75 @@
-import os
-import sys
+import os.path as path
 import reframe as rfm
 import reframe.utility.sanity as sn
-import reframe.utility.udeps as udeps
+import sys
+
+sys.path.append(path.join(path.dirname(__file__), '..', '..'))
+from modules.utils import SpackTest
 
 
-#--------------------------------------------------------------------------
-# Define base class for Pdsyev.
-# This class will be used for all 3 cases namely 12N, 14N and 16N.
-#--------------------------------------------------------------------------
-class Pdsyev(rfm.RunOnlyRegressionTest):
-    def __init__(self):
-        self.descr = 'Base class for Pdsyev'
-        self.time_limit = '0d2h0m0s'
-        self.exclusive_access=True
-        self.valid_systems = ['*']
-        self.valid_prog_environs = ['*']
-        self.executable = './diag_pdsyev_darwin.x'
+class PdsyevBase(SpackTest):
 
-        reference = {
-         'dial:slurm-local': {
-             'Total elapsed time:':  (5000, None, None, 'seconds'),
-                             }
-                     }
+    valid_systems = ['*']
+    valid_prog_environs = ['*']
 
-    @run_before('sanity')
-    def run_complete_pattern(self):
-        self.pattern = r'Diagonalization finished successfully'
-        self.sanity_patterns = sn.assert_found(self.pattern, 'output_file.text')
+    spack_spec = 'trove-pdsyev@v1.0.0'
+    executable = 'diag_generic.x'
+    executable_opts = ['< gen_n_15K.inp']
+    sourcesdir = path.join(path.dirname(__file__),'inputs')
 
+    num_tasks = required
+    num_tasks_per_node = required
 
-    @performance_function('seconds')
-    def get_elapsed_time(self):
-        #return sn.extractsingle(r'TROVE\s+(\S+)\s+(\S+)', self.stdout, 2, float)
-        return sn.extractsingle(r'Time to diagonalize matrix is \s+(\S+)\s', 'output_file.text', 1, float)
+    time_limit = '4m'
 
+    reference = {
+            '*': {
+                'diagonlization': (200, None, None, 'seconds'),
+                },
+            }
 
-    @run_before('performance')
-    def runtime_extract_pattern(self):
-        self.perf_variables = {
-                'Total elapsed time':self.get_elapsed_time()
-                }
+    @run_before('compile')
+    def setup_build_system(self):
+        self.spack_spec = self.spack_spec
+        self.build_system.specs = [self.spack_spec]
 
-#--------------------------------------------------------------------------
-# End of Base class.
-#--------------------------------------------------------------------------
+    @sanity_function
+    def validate_successful_run(self):
+        return sn.assert_found(r'Diagonalization finished successfully', self.stdout)
 
-
-
-#--------------------------------------------------------------------------
-# Code to run the benchmark for input file sized 15K.
-#--------------------------------------------------------------------------
-@rfm.simple_test
-class PDSYEV_15K(Pdsyev):
-
-    tags = {"15K"}
-    num_omp_cores = parameter(2**i for i in range(0,2))
+    @performance_function('seconds', perf_key='diagonlization')
+    def extract_elapsed_time(self):
+        return sn.extractsingle(r'Time to diagonalize matrix is \s+(\S+)\s', self.stdout, 1, float)
 
     @run_after('setup')
     def set_job_script_variables(self):
 
-        self.executable_opts = ['< gen_n_15K.inp > output_file.text']
-        self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
+        proc_info = self.current_partition.processor
+        self.set_var_default(
+                'num_tasks',
+                (proc_info.num_cpus // min(1, proc_info.num_cpus_per_core)) // self.num_threads,
+                )
+        self.set_var_default(
+                'num_tasks_per_node',
+                self.num_tasks,
+                )
+        self.env_vars= {
+            'OMP_NUM_THREADS': str(self.num_threads),
+            'OMP_PLACES': 'cores',
+        }
 
-        self.num_tasks = self.core_count_1_node // self.num_omp_cores
-        self.num_tasks_per_node = self.num_tasks    #Since we are using only one node.
-        self.descr = ('Running PDSYEV (15K) on '+ str(self.num_omp_cores) + ' node/s')
 
-        self.env_vars['OMP_NUM_THREADS'] = str(self.num_omp_cores)
-        self.env_vars['OMP_PLACES'] = 'cores'
+@rfm.simple_test
+class PdsyevSingle(PdsyevBase):
 
-#--------------------------------------------------------------------------
-# End of code for file named 15K.
-#--------------------------------------------------------------------------
+    descr = 'trove-pdsyev test: single node'
+    tags = {'single-node'}
+    num_threads = parameter(2**i for i in range(0,2))
+
+
+# @rfm.simple_test
+# class PdsyevSingle(PdsyevBase):
+
+#     descr = 'trove-pdsyev test: single node'
+#     tags = {'single-node'}
+#     num_threads = parameter(2**i for i in range(0,2))
