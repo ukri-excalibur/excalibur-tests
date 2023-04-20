@@ -97,11 +97,11 @@ you may need to load a specific module to have this version of Python available.
 We provide a ReFrame configuration file with the settings of some systems that
 are part of the ExCALIBUR or DiRAC projects.  You can point ReFrame to this file by
 setting the
-[`RFM_CONFIG_FILE`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_CONFIG_FILE)
+[`RFM_CONFIG_FILES`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_CONFIG_FILES)
 environment variable:
 
 ```sh
-export RFM_CONFIG_FILE="${PWD}/benchmarks/reframe_config.py"
+export RFM_CONFIG_FILES="${PWD}/benchmarks/reframe_config.py"
 ```
 
 If you want to use a different ReFrame configuration file, for example because
@@ -115,7 +115,7 @@ to your init file (see spack section above).
 
 However, you will also need to set the
 [`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
-environment variable (`export RFM_USE_LOGIN_SHELL="Yes"`) in order to make ReFrame use
+environment variable (`export RFM_USE_LOGIN_SHELL="true"`) in order to make ReFrame use
 
 ```sh
 !#/bin/bash -l
