@@ -158,7 +158,7 @@ spack:
       externals:
       - spec: coreutils@8.22
         prefix: /usr
-    curl:
+    cuda:
       externals:
       - spec: cuda@7.5.18
         prefix: /shared/ucl/apps/cuda/7.5.18/gnu-4.9.2
