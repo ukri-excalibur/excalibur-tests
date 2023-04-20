@@ -204,6 +204,37 @@ site_configuration = {
             ]
         },  # end Isambard A64FX
         {
+            # https://gw4-isambard.github.io/docs/user-guide/PHASE3.html
+            'name': 'isambard-phase3',
+            'descr': 'Isambard 2 Phase 3 system',
+            'hostnames': ['p3-login'],
+            'partitions': [
+                {
+                    'name': 'ampere',
+                    'descr': 'AMD Milan computing nodes with Nvidia Ampere GPUs',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q ampereq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 64,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 32,
+                    },
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                             # TODO: memory should be a separate resource.
+                            'options': ['ngpus={num_gpus_per_node}:mem=20G'],
+                        },
+                    ],
+                },
+            ]
+        },  # end Isambard Phase3
+        {
             # https://gw4-isambard.github.io/docs/user-guide/XCI.html
             'name': 'isambard-xci',
             'descr': 'XCI - Marvell Thunder X2 nodes of Isambard 2',
