@@ -10,3 +10,8 @@ spack:
   - ../../common.yaml
   - ../compilers.yaml
   - ../packages.yaml
+  packages:
+    cuda:
+      externals:
+      - spec: cuda@11.5.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_x86_64/21.11/cuda/11.5

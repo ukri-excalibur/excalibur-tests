@@ -51,6 +51,12 @@ class OpenMMBenchmark(SpackTest):
     num_gpus_per_node = 1
 
     reference = {
+        'isambard-cascadelake:volta': {
+            'speed': (6.5, -0.2, None, 'ns/day'),
+        },
+        'isambard-phase3:ampere': {
+            'speed': (10.5, -0.2, None, 'ns/day'),
+        },
         'myriad': {
             'speed': (5.5, -0.2, None, 'ns/day'),
         },
