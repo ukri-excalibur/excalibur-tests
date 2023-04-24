@@ -364,9 +364,12 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'gpu',
-                             # TODO: memory should be a separate resource.
-                            'options': ['ngpus={num_gpus_per_node}:mem=20G'],
+                            'options': ['ngpus={num_gpus_per_node}'],
                         },
+                        {
+                            'name': 'memory',
+                            'options': ['mem={memory}'],
+                        }
                     ],
                 },
                 {
