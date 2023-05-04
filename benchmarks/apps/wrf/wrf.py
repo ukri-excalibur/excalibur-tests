@@ -73,10 +73,6 @@ class WRFBaseBenchmark(SpackTest):
     num_tasks = required
     num_tasks_per_node = required
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_after('setup')
     def setup_num_tasks(self):
         self.set_var_default(

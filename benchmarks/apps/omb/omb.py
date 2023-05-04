@@ -32,10 +32,6 @@ class OSU_Micro_Benchmarks(SpackTest):
             self.perf_patterns[metric.label] = reduce(self.stdout, metric.column_number, metric.function)
             self.reference[metric.label] = (0, None, None, metric.unit) # oddly we don't have to supply the "*" scope key??
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
 
 @sn.deferrable
 def reduce(path, column_number, function):

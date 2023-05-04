@@ -106,10 +106,6 @@ class SombreroBenchmark(SpackTest):
         # ReFrame built-in `env_vars` variable.
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     # Function defining a sanity check.  See
     # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html
     # for the API of ReFrame tests, including performance ones.
