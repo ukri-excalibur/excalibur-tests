@@ -30,10 +30,6 @@ class IMB_base(SpackTest):
     spack_spec = 'intel-mpi-benchmarks@2019.6'
     time_limit = '59m'
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_before('performance')
     def add_metrics(self):
         """ Create `self.perf_patterns` and units only in `self.reference`.

@@ -35,10 +35,6 @@ class HpgmgTest(SpackTest):
             'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
         }
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found(r'HPGMG-FV Benchmark',
