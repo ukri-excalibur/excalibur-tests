@@ -68,10 +68,6 @@ class OpenMMBenchmark(SpackTest):
         },
     }
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_after('setup')
     def setup_variables(self):
         self.executable_opts = [os.path.join(self.prefix, 'openmm-gpu-bench.py')]
