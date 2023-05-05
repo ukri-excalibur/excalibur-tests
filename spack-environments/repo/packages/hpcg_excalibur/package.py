@@ -13,15 +13,17 @@ class HpcgExcalibur(MakefilePackage):
     "A next-generation conjugate gradient benchmark from computational particle physics"
 
     homepage = "https://github.com/NCAS-CMS/hpcg_27ptStencil"
-    url = "https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/1.0.tar.gz"
+    url = "https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/1.1.tar.gz"
 
     version(
-        "1.0", sha256= "60dbd50e81cb284e9ab3f1b5564f2a9cb89bf438f5a56f33c4300afbc1df8780"
+#        "1.0", sha256= "60dbd50e81cb284e9ab3f1b5564f2a9cb89bf438f5a56f33c4300afbc1df8780"
+        "1.1"#, sha256= "60dbd50e81cb284e9ab3f1b5564f2a9cb89bf438f5a56f33c4300afbc1df8780"
     )
 
     version(
-        "hpcg_lfric", url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/temp240223.tar.gz",
-        sha256="493b37a673ddc59a0d0f9c6dd80e8ad371433f1ca70567be8c7c5cc5a9330bcf"
+        "hpcg_lfric",
+        url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/lfric_latest.tar.gz",
+        sha256="433f412a6fbc6d1648aa4254576c07c9b2371a4787682de9273b6a87abd58ed9"
     )        
 
     version(
@@ -48,5 +50,8 @@ class HpcgExcalibur(MakefilePackage):
     def install(self, spec, prefix):
         ''' Makefile has no install '''
         mkdirp(prefix.bin)
-        import os;print("CHECK THAT ", os.getcwd(), "/bin/xhpcg exists")
+        # add input file for the lfric case - can possibly copy to cwd if always using reframe?
+        if self.spec.satisfies("@hpcg_lfric"):
+            import shutil
+            shutil.copyfile('dinodump.dat', prefix.bin + '/dinodump.dat')
         install('bin/xhpcg', prefix.bin)
