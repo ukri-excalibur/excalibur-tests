@@ -71,6 +71,19 @@ reframe -c examples/sombrero -r --performance-report --system csd3-skylake:compu
 where `<ACCOUNT>` is the project you want to charge.
 You can see the account balance of your projects with the `mybalance` command.
 
+## DIaL2
+
+### Queue options
+
+When submitting jobs to compute nodes, you need to specify the job queue, with the `--account` option to the scheduler.
+To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
+
+```
+reframe -c examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=<ACCOUNT>'
+```
+
+where `<ACCOUNT>` is the project you want to charge.
+
 ## DIaL3
 
 ### Queue options

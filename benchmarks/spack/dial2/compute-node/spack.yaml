@@ -1,0 +1,167 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  include:
+  - ../../common.yaml
+  compilers:
+  - compiler:
+      spec: gcc@4.8.5
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@6.4.0
+      paths:
+        cc: /cm/shared/apps/gcc/6.4/bin/gcc
+        cxx: /cm/shared/apps/gcc/6.4/bin/g++
+        f77: /cm/shared/apps/gcc/6.4/bin/gfortran
+        fc: /cm/shared/apps/gcc/6.4/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@19.0.3.199
+      paths:
+        cc: /cm/shared/apps/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64/icc
+        cxx: /cm/shared/apps/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64/icpc
+        f77: /cm/shared/apps/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+        fc: /cm/shared/apps/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: [intel/compilers/19.0.3]
+      environment: {}
+      extra_rpaths: []
+  packages:
+    gawk:
+      externals:
+      - spec: gawk@4.0.2
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.3
+        prefix: /usr
+    coreutils:
+      externals:
+      - spec: coreutils@8.22
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.0.2k-fips
+        prefix: /usr
+    texinfo:
+      externals:
+      - spec: texinfo@5.1
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@1.8.3.1~tcltk
+        prefix: /usr
+    libtool:
+      externals:
+      - spec: libtool@2.4.2
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.5.11
+        prefix: /usr
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    groff:
+      externals:
+      - spec: groff@1.22.2
+        prefix: /usr
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.27.1
+        prefix: /usr
+    flex:
+      externals:
+      - spec: flex@2.5.37+lex
+        prefix: /usr
+    subversion:
+      externals:
+      - spec: subversion@1.7.14
+        prefix: /usr
+    gmake:
+      externals:
+      - spec: gmake@3.82
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.26
+        prefix: /usr
+    openssh:
+      externals:
+      - spec: openssh@7.4p1
+        prefix: /usr
+    doxygen:
+      externals:
+      - spec: doxygen@1.8.5+graphviz~mscgen
+        prefix: /usr
+    curl:
+      externals:
+      - spec: curl@7.29.0+ldap
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    swig:
+      externals:
+      - spec: swig@3.0.12
+        prefix: /usr/local
+    automake:
+      externals:
+      - spec: automake@1.13.4
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.16
+        prefix: /usr
+    binutils:
+      externals:
+      - spec: binutils@2.27.44
+        prefix: /usr
+    cpio:
+      externals:
+      - spec: cpio@2.11
+        prefix: /usr
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@19.0.3
+        modules:
+        - intel/mpi/19.0.3
+    intel-mkl:
+      externals:
+      - spec: intel-mkl@19.0.3
+        modules:
+        - intel/compilers/19.0.3
+    intel-tbb:
+      externals:
+      - spec: intel-tbb@19.0.3
+        modules:
+        - intel/compilers/19.0.3
+    intel-ipp:
+      externals:
+      - spec: intel-ipp@19.0.3
+        modules:
+        - intel/compilers/19.0.3

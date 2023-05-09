@@ -331,6 +331,29 @@ site_configuration = {
             ]
         },  # end Tursa
         {
+            # https://dial3-docs.dirac.ac.uk/DIaL2.5/Architecture/
+            'name': 'dial2',
+            'descr': 'Dirac Data Intensive @ Leicester',
+            'hostnames': ['dirac0*'],
+            'modules_system': 'lmod',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'torque',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                },
+            ]
+        },  # end DiaL2
+        {
             # https://dial3-docs.dirac.ac.uk/About_dial3/architecture/
             'name': 'dial3',
             'descr': 'Dirac Data Intensive @ Leicester',
