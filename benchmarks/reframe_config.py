@@ -1,4 +1,14 @@
 import os
+import reframe.core.launchers.mpi as rfmmpi
+
+
+# OpenMPI Launcher on COSMA7 Rockport network:
+# <https://www.dur.ac.uk/icc/cosma/support/rockport/>.
+@rfmmpi.register_launcher('rockport_openmpi_mpirun')
+class RockportOpenmpiLauncher(rfmmpi.MpirunLauncher):
+    def command(self, job):
+        return ['mpirun', '$RP_OPENMPI_ARGS']
+
 
 # Some systems, notably some Cray-based ones, don't have access to the home filesystem.
 # This means that if you set up Spack in your bashrc script, this file won't be loaded and
@@ -18,6 +28,7 @@ def spack_root_to_path():
                 return path
             else:
                 return spack_bindir * os.path.pathsep * path
+
 
 site_configuration = {
     'systems': [
@@ -258,10 +269,68 @@ site_configuration = {
             ]
         },  # end Isambard XCI
         {
+            'name': 'cosma7',
+            'descr': 'COSMA',
+            'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
+            'modules_system': 'tmod4',
+            'partitions': [
+                # https://www.dur.ac.uk/icc/cosma/cosma7/
+                {
+                    'name': 'compute-node',
+                    'descr': 'Compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=cosma7'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'rockport-intelmpi-compute-node',
+                    'descr': 'Rockport compute nodes using Intel MPI',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'modules': ['rockport-settings', 'ucx'],
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'rockport-openmpi-compute-node',
+                    'descr': 'Rockport compute nodes using OpenMPI',
+                    'scheduler': 'slurm',
+                    'launcher': 'rockport_openmpi_mpirun',
+                    'modules': ['rockport-settings', 'ucx'],
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+            ]
+        },  # end cosma7
+        {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
             'descr': 'COSMA',
-            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
+            'hostnames': ['login8[a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'tmod4',
             'partitions': [
                 {
