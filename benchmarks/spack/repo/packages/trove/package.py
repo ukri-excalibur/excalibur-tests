@@ -44,7 +44,7 @@ class Trove(MakefilePackage):
                 )
 
         elif self.compiler.name == "gcc":
-            fflags = " -ffree-line-length-none -march=native -O3 " "-fcray-pointer -g3"
+            fflags = " -ffree-line-length-none -O3 " "-fcray-pointer -g3"
 
             if "openmpi" in spec:
                 lapack = (
