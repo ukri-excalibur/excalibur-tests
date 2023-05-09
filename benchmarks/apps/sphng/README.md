@@ -14,7 +14,7 @@ This is because we need to be able to verify that the version we run is the same
 From the top-level directory of the repository, you can run the benchmarks with
 
 ```sh
-reframe -c apps/sphng -r --performance-report
+reframe -c benchmarks/apps/sphng -r --performance-report
 ```
 
 ### Filtering the benchmarks
@@ -27,5 +27,5 @@ By default all benchmarks will be run. You can run individual benchmarks with th
 Examples:
 
 ```sh
-reframe -c apps/sphng -r --performance-report --tag single-node
+reframe -c benchmarks/apps/sphng -r --performance-report --tag single-node
 ```

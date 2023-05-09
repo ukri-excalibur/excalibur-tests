@@ -24,7 +24,7 @@ per run, but if you manually re-run tests you may prefer to use the following op
 From the top-level directory of the repository, you can run the benchmarks with
 
 ```sh
-reframe -c apps/ramses -r --performance-report
+reframe -c benchmarks/apps/ramses -r --performance-report
 ```
 
 ### Filtering the benchmarks
@@ -33,11 +33,11 @@ By default all benchmarks will be run. You can run individual benchmarks with th
 [`--tag`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0) option:
 
 * `weak` to run the weak scaling benchmarks
-* `strong` to run the weak scaling benchmarks
+* `strong` to run the strong scaling benchmarks
 
 Examples:
 
 ```sh
-reframe -c apps/ramses -r --performance-report --tag weak
-reframe -c apps/ramses -r --performance-report --tag strong
+reframe -c benchmarks/apps/ramses -r --performance-report --tag weak
+reframe -c benchmarks/apps/ramses -r --performance-report --tag strong
 ```
