@@ -11,11 +11,5 @@ spack:
   - ../compilers.yaml
   - ../packages.yaml
   packages:
-    cuda:
-      externals:
-      - spec: cuda@10.2.89
-        prefix: /cm/shared/apps/cuda10.2/toolkit/10.2.89
-      - spec: cuda@11.1.1
-        prefix: /cm/shared/apps/cuda11.1/toolkit/11.1.1
-      - spec: cuda@11.2.0
-        prefix: /cm/shared/apps/cuda11.2/toolkit/11.2.0
+    all:
+      require: 'target=zen2'

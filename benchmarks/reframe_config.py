@@ -148,13 +148,13 @@ site_configuration = {
         },  # end Myriad
         {
             # https://gw4-isambard.github.io/docs/user-guide/MACS.html
-            'name': 'isambard-cascadelake',
-            'descr': 'Cascade Lake nodes of Isambard 2',
+            'name': 'isambard-macs',
+            'descr': 'Isambard 2 - Multi-Architecture Comparison System',
             'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Cascadelake computing nodes',
+                    'name': 'cascadelake',
+                    'descr': 'Intel Xeon Gold 6230 Cascade Lake Cascadelake computing nodes',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
                     'access': ['-q clxq'],
@@ -165,6 +165,21 @@ site_configuration = {
                         'num_cpus_per_core': 1,
                         'num_sockets': 2,
                         'num_cpus_per_socket': 20,
+                    },
+                },
+                {
+                    'name': 'rome',
+                    'descr': 'AMD Epyc 7742 Rome computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q romeq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
                     },
                 },
                 {
