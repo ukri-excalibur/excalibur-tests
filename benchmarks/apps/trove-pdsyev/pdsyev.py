@@ -50,10 +50,8 @@ class PdsyevBase(SpackTest):
                 'num_tasks_per_node',
                 self.num_tasks,
                 )
-        self.env_vars= {
-            'OMP_NUM_THREADS': str(self.num_threads),
-            'OMP_PLACES': 'cores',
-        }
+        self.env_vars['OMP_NUM_THREADS'] =  str(self.num_threads)
+        self.env_vars['OMP_PLACES'] = 'cores'
 
 
 @rfm.simple_test
