@@ -22,10 +22,6 @@ class GridBenchmark(SpackTest):
     valid_prog_environs = ['default']
     spack_spec = 'grid@develop'
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
 
 @rfm.simple_test
 class GridBenchmark_ITT(GridBenchmark):

@@ -268,6 +268,10 @@ class SpackTest(rfm.RegressionTest):
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
 
+    @run_before('compile')
+    def setup_build_system(self):
+        self.build_system.specs = [self.spack_spec]
+
 
 if __name__ == '__main__':
 

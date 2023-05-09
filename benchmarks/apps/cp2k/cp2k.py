@@ -36,10 +36,6 @@ class Cp2kBaseBenchmark(SpackTest):
         # <https://github.com/cp2k/cp2k/blob/e390d0e8443cbafd3d0c65e9488279ca0b9bafcf/benchmarks/QS/check-release-comparison.py#L33>.
         self.executable = f"cp2k.{'p' if self.num_tasks > 0 else 's'}{'smp' if self.num_cpus_per_task > 0 else 'opt'}"
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found(r'T I M I N G', self.stdout)
