@@ -10,3 +10,6 @@ spack:
   - ../../common.yaml
   - ../compilers.yaml
   - ../packages.yaml
+  packages:
+    all:
+      require: 'target=cascadelake'

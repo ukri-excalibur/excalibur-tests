@@ -1,6 +1,4 @@
 packages:
-  all:
-    require: 'target=cascadelake'
   autoconf:
     externals:
     - spec: autoconf@2.69

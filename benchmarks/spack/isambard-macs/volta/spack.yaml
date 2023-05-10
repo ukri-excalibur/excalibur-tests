@@ -1,0 +1,23 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  include:
+  - ../../common.yaml
+  - ../compilers.yaml
+  - ../packages.yaml
+  packages:
+    all:
+      require: 'target=cascadelake'
+    cuda:
+      externals:
+      - spec: cuda@10.2.89
+        prefix: /cm/shared/apps/cuda10.2/toolkit/10.2.89
+      - spec: cuda@11.1.1
+        prefix: /cm/shared/apps/cuda11.1/toolkit/11.1.1
+      - spec: cuda@11.2.0
+        prefix: /cm/shared/apps/cuda11.2/toolkit/11.2.0
