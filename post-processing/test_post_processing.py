@@ -2,6 +2,7 @@ import fileinput
 import os
 from pathlib import Path
 import post_processing as post
+import re
 import shutil
 import subprocess as sp
 
@@ -60,22 +61,33 @@ def test_read_perflog():
     # resolve relative path from post-processing directory to access sombrero benchmark
     sombrero_bench_path = str((post_processing_dir / "../benchmarks/examples/sombrero/sombrero.py").resolve())
 
-    # resolve test log file paths
-    sombrero_log = "SombreroBenchmark.log"
-    sombrero_imcomplete_log = "SombreroBenchmarkIncomplete.log"
+    # get test log file paths
     perflog_path = os.path.join(os.getcwd(),"perflogs/default/default/")
-    sombrero_log_path = os.path.join(perflog_path, sombrero_log)
-    sombrero_incomplete_log_path = os.path.join(perflog_path, sombrero_imcomplete_log)
+    sombrero_incomplete_log = "SombreroBenchmarkIncomplete.log"
+    sombrero_incomplete_log_path = os.path.join(perflog_path, sombrero_incomplete_log)
+
+    # look for existing log files
+    sombrero_logs = []
+    sombrero_log_re = re.compile(r"^SombreroBenchmark\_\w{8}\.log$")
+    for subdirs, dirs, files in os.walk(perflog_path):
+        sombrero_logs = list(filter(sombrero_log_re.match, files))
 
     try:
-        # to save time don't re-generate test log file if it already exists
-        if not os.path.exists(sombrero_log_path):
+        # to save time don't re-generate test log files if they already exist
+        if not sombrero_logs:
             # use sombrero example to generate new test perflog file
             run_benchmark(sombrero_bench_path)
             benchmark_run = True
-            # if the log file hasn't been created, something went wrong
-            if not os.path.exists(sombrero_log_path):
-                assert False
+            # look for log files again
+            for subdirs, dirs, files in os.walk(perflog_path):
+                sombrero_logs = list(filter(sombrero_log_re.match, files))
+        # check that the log files exist
+        if sombrero_logs:
+            # arbitrarily pick one of the log file names
+            sombrero_log_path = os.path.join(perflog_path, sombrero_logs[0])
+        # if the log files haven't been created, something went wrong
+        else:
+            assert False
 
         # as above, only re-generate log file if it doesn't exist
         if not os.path.exists(sombrero_incomplete_log_path):
@@ -91,9 +103,9 @@ def test_read_perflog():
                 new_line = remove_field_from_perflog(line, required_field_index)
                 # inline replacement
                 print(new_line, end="\n")
-            # if the log file hasn't been created, something went wrong
-            if not os.path.exists(sombrero_incomplete_log_path):
-                assert False
+        # if the log file hasn't been created, something went wrong
+        if not os.path.exists(sombrero_incomplete_log_path):
+            assert False
 
         # check incomplete log is missing required fields
         try:
@@ -113,5 +125,8 @@ def test_read_perflog():
 
     # check example perflog file is read appropriately
     assert df.columns.tolist() == EXPECTED_FIELDS
-    assert df["display_name"][0] == "SombreroBenchmark"
-    assert df["tags"][0] == ""
+    # check display name matches
+    assert re.compile(r"SombreroBenchmark %tasks=\d %cpus_per_task=\d").match(df["display_name"][0])
+    # check tags match
+    tag_matches = [len(list(filter(re.compile(rexpr).match, df["tags"][0].split(",")))) > 0 for rexpr in ["example", r"test\d"]]
+    assert not (False in tag_matches)

@@ -42,7 +42,7 @@ def read_perflog(path):
                 if fileinput.isfirstline():
                     LOG_FIELDS = columns
                     # look for field names that match required columns
-                    required_field_matches = [len([match for match in filter(re.compile(rexpr).match, LOG_FIELDS)]) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+                    required_field_matches = [len(list(filter(re.compile(rexpr).match, LOG_FIELDS))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
                     # check all required columns are present
                     if False in required_field_matches:
                         raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
