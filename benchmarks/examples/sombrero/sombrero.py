@@ -79,6 +79,12 @@ class SombreroBenchmark(SpackTest):
         'github-actions': {
             'flops': (0.9, None, None, 'Gflops/seconds'),
         },
+        'isambard-macs:cascadelake': {
+            'flops': (1.5, -0.2, None, 'Gflops/seconds'),
+        },
+        'isambard-macs:rome': {
+            'flops': (1.2, -0.2, None, 'Gflops/seconds'),
+        },
         'isambard-xci': {
             'flops': (0.6, -0.2, None, 'Gflops/seconds'),
         },
