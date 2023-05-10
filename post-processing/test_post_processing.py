@@ -22,18 +22,14 @@ def benchmark_cleanup(benchmark_run, remove_test_logs):
         shutil.rmtree("perflogs", ignore_errors=True)
 
 # Remove given field from perflog line
-def remove_field_from_perflog(line, field):
+def remove_field_from_perflog(line, field_index):
 
     # parse line
     columns = line.strip().split("|")
-    LOG_FIELDS = [c.split("=")[0] for c in columns]
-    # convert to dictionary for easy manipulation
-    record = dict(zip(LOG_FIELDS, (c.split("=")[-1] for c in columns)))
-
     # remove given field
-    record.pop(field)
+    columns.pop(field_index)
     # convert back to string
-    line = "|".join(["=".join([key, value]) for key, value in record.items()])
+    line = "|".join(columns)
 
     return line
 
@@ -48,8 +44,8 @@ def test_display_name_parsing():
 
 def test_read_perflog():
 
-    REQUIRED_FIELD = "completion_time"
-    EXPECTED_FIELDS = ["completion_time", "reframe", "jobid", "perf_var", "perf_val", "units", "num_tasks", "num_cpus_per_task", "num_tasks_per_node", "ref", "lower", "upper", "spack_spec", "display_name", "system", "partition", "environ", "env_vars", "variables", "tags"]
+    REQUIRED_FIELD = "flops_value"
+    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks", "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node", "flops_value", "flops_unit", "flops_ref", "flops_lower_thres", "flops_upper_thres", "spack_spec", "display_name", "system", "partition", "environ", "extra_resources", "env_vars", "tags"]
 
     # set True to remove test log files at the end of the test
     remove_test_logs = True
@@ -67,7 +63,7 @@ def test_read_perflog():
     # resolve test log file paths
     sombrero_log = "SombreroBenchmark.log"
     sombrero_imcomplete_log = "SombreroBenchmarkIncomplete.log"
-    perflog_path = os.path.join(os.getcwd(),"perflogs/generic/default/")
+    perflog_path = os.path.join(os.getcwd(),"perflogs/default/default/")
     sombrero_log_path = os.path.join(perflog_path, sombrero_log)
     sombrero_incomplete_log_path = os.path.join(perflog_path, sombrero_imcomplete_log)
 
@@ -85,9 +81,14 @@ def test_read_perflog():
         if not os.path.exists(sombrero_incomplete_log_path):
             # copy and modify regular log file
             shutil.copyfile(sombrero_log_path, sombrero_incomplete_log_path)
+            required_field_index = 0
             for line in fileinput.input(sombrero_incomplete_log_path, inplace=True):
+                # find index of column to be removed
+                if fileinput.isfirstline():
+                    LOG_FIELDS = line.strip().split("|")
+                    required_field_index = LOG_FIELDS.index(REQUIRED_FIELD)
                 # remove a required field
-                new_line = remove_field_from_perflog(line, REQUIRED_FIELD)
+                new_line = remove_field_from_perflog(line, required_field_index)
                 # inline replacement
                 print(new_line, end="\n")
             # if the log file hasn't been created, something went wrong

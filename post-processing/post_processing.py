@@ -1,4 +1,6 @@
+import fileinput
 import pandas as pd
+import re
 
 def get_params_from_name(display_name):
     """ Return a dictionary of parameters and their values from the given input string, if present.
@@ -24,10 +26,10 @@ def read_perflog(path):
         The returned dataframe will have columns for all fields in a performance log record.
     """
 
-    REQUIRED_LOG_FIELDS = ["completion_time", "perf_var", "perf_val", "units"]
+    REQUIRED_LOG_FIELDS = ["job_completion_time", r"\w+_value$", r"\w+_unit$"]
     records = []
 
-    with open(path) as f:
+    with fileinput.input(path) as f:
 
         try:
 
@@ -37,16 +39,17 @@ def read_perflog(path):
                 columns = line.strip().split("|")
 
                 # find all column names
-                LOG_FIELDS = [c.split("=")[0] for c in columns]
-
-                # check all required columns are present
-                if not set(REQUIRED_LOG_FIELDS).issubset(LOG_FIELDS):
-                    raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
-
-                # store as dictionary
-                record = dict(zip(LOG_FIELDS, (c.split("=")[-1] for c in columns)))
-
-                records.append(record)
+                if fileinput.isfirstline():
+                    LOG_FIELDS = columns
+                    # look for field names that match required columns
+                    required_field_matches = [len([match for match in filter(re.compile(rexpr).match, LOG_FIELDS)]) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+                    # check all required columns are present
+                    if False in required_field_matches:
+                        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
+                else:
+                    # store as dictionary
+                    record = dict(zip(LOG_FIELDS, columns))
+                    records.append(record)
 
         except Exception as e:
             e.args = (e.args[0] + ": during processing %s" % path,) + e.args[1:]
