@@ -47,6 +47,9 @@ class GridBenchmark_ITT(GridBenchmark):
         'dial3': {
             'Performance': (28000, None, None, 'Mflop/s per node')
         },
+        'isambard-macs:knl': {
+            'Performance': (6500, None, None, 'Mflop/s per node')
+        },
         'myriad': {
             'Performance': (350000, None, None, 'Mflop/s per node')
         },
