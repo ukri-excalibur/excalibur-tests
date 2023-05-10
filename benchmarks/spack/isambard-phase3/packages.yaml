@@ -11,10 +11,13 @@ packages:
     externals:
     - spec: cmake@3.11.4
       prefix: /usr
-  # cray-mpich:
-  #   externals:
-  #   - spec: cray-mpich@8.1.0%gcc
-  #     prefix: /opt/cray/pe/mpich/8.1.11/ofi/gnu/9.1
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@8.1.11%gcc +wrappers
+      prefix: /opt/cray/pe/mpich/8.1.11/ofi/gnu/9.1
+      modules:
+      - libfabric/1.11.0.4.95
+      - cray-mpich/8.1.11
   diffutils:
     externals:
     - spec: diffutils@3.6
@@ -31,6 +34,10 @@ packages:
     externals:
     - spec: gmake@4.2.1
       prefix: /usr
+  libfabric:
+    externals:
+    - spec: libfabric@1.11.0 fabrics=sockets,verbs
+      prefix: /opt/cray/libfabric/1.11.0.4.95
   libtool:
     externals:
     - spec: libtool@2.4.6
@@ -53,12 +60,12 @@ packages:
       prefix: /usr
   python:
     externals:
-    - spec: python@3.9.4+bz2+crypt+ctypes+dbm+lzma+nis+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
-      prefix: /lustre/home/ri-mgiordano/repo/excalibur-tests/excal-p3
     - spec: python@2.7.17+bz2+crypt+ctypes+dbm~lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
       prefix: /usr
     - spec: python@3.6.8+bz2+crypt+ctypes+dbm+lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
       prefix: /usr
+    - spec: python@3.9.4+bz2+crypt+ctypes+dbm+lzma+nis+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      prefix: /opt/cray/pe/python/3.9.4.2
   tar:
     externals:
     - spec: tar@1.30

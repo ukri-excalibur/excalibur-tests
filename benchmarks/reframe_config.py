@@ -271,6 +271,7 @@ site_configuration = {
             'name': 'isambard-phase3',
             'descr': 'Isambard 2 Phase 3 system',
             'hostnames': ['p3-login'],
+            'modules_system': 'lmod',
             'partitions': [
                 {
                     'name': 'ampere',
@@ -309,6 +310,22 @@ site_configuration = {
                         'num_cpus_per_core': 2,
                         'num_sockets': 1,
                         'num_cpus_per_socket': 32,
+                    }
+                },
+                {
+                    'name': 'milan',
+                    'descr': 'AMD EPYC 7713 64-Core Processor "Milan" compute nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpiexec',
+                    'modules': ['cray-pals'],
+                    'access': ['-q milanq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
                     },
                 },
             ]
