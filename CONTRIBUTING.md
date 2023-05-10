@@ -107,3 +107,11 @@ For writing ReFrame benchmarks you can read the documentation, in particular
 
 but you can also have a look at the sample file in
 [`benchmarks/examples/sombrero/sombrero.py`](./benchmarks/examples/sombrero/sombrero.py).
+
+For GPU benchmarks you need to
+
+* set [`valid_systems = ['+gpu']`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.valid_systems)
+* set the [`num_gpus_per_node`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_gpus_per_node) attribute,
+* and add the key `gpu` to the [`extra_resources`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.extra_resources) dictionary to request the appropriate number of GPUs.
+
+For an example of a GPU benchmark take a look at [OpenMM](benchmarks/apps/openmm/openmm_rfm.py).
