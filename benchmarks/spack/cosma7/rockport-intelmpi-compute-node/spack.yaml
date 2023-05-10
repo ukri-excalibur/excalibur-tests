@@ -1,0 +1,25 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  concretizer:
+    unify: false
+  config:
+    install_tree:
+      root: opt/spack
+  include:
+  - ../compilers.yaml
+  - ../packages.yaml
+  packages:
+    intel-mpi:
+      externals:
+      - spec: intel-mpi@2018.1.199
+        prefix: /cosma/local/Intel/Parallel_Studio_XE_2018
+    intel-oneapi-mpi:
+      externals:
+      - spec: intel-oneapi-mpi@2021.5.1
+        prefix: /cosma/local/intel/oneAPI_2022.1.2

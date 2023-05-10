@@ -1,4 +1,14 @@
 import os
+import reframe.core.launchers.mpi as rfmmpi
+
+
+# OpenMPI Launcher on COSMA7 Rockport network:
+# <https://www.dur.ac.uk/icc/cosma/support/rockport/>.
+@rfmmpi.register_launcher('rockport_openmpi_mpirun')
+class RockportOpenmpiLauncher(rfmmpi.MpirunLauncher):
+    def command(self, job):
+        return ['mpirun', '$RP_OPENMPI_ARGS']
+
 
 # Some systems, notably some Cray-based ones, don't have access to the home filesystem.
 # This means that if you set up Spack in your bashrc script, this file won't be loaded and
@@ -18,6 +28,7 @@ def spack_root_to_path():
                 return path
             else:
                 return spack_bindir * os.path.pathsep * path
+
 
 site_configuration = {
     'systems': [
@@ -137,13 +148,13 @@ site_configuration = {
         },  # end Myriad
         {
             # https://gw4-isambard.github.io/docs/user-guide/MACS.html
-            'name': 'isambard-cascadelake',
-            'descr': 'Cascade Lake nodes of Isambard 2',
+            'name': 'isambard-macs',
+            'descr': 'Isambard 2 - Multi-Architecture Comparison System',
             'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Cascadelake computing nodes',
+                    'name': 'cascadelake',
+                    'descr': 'Intel Xeon Gold 6230 Cascade Lake Cascadelake computing nodes',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
                     'access': ['-q clxq'],
@@ -155,6 +166,43 @@ site_configuration = {
                         'num_sockets': 2,
                         'num_cpus_per_socket': 20,
                     },
+                },
+                {
+                    'name': 'rome',
+                    'descr': 'AMD Epyc 7742 Rome computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q romeq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
+                    },
+                },
+                {
+                    'name': 'pascal',
+                    'descr': 'Broadwell computing nodes with Nvidia Pascal GPUs',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q pascalq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['ngpus={num_gpus_per_node}'],
+                        },
+                    ],
                 },
                 {
                     'name': 'volta',
@@ -179,7 +227,7 @@ site_configuration = {
                     ],
                 },
             ]
-        },  # end Isambard Cascadelake
+        },  # end Isambard MACS
         {
             # https://gw4-isambard.github.io/docs/user-guide/A64FX.html
             'name': 'isambard-a64fx',
@@ -258,10 +306,68 @@ site_configuration = {
             ]
         },  # end Isambard XCI
         {
+            'name': 'cosma7',
+            'descr': 'COSMA',
+            'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
+            'modules_system': 'tmod4',
+            'partitions': [
+                # https://www.dur.ac.uk/icc/cosma/cosma7/
+                {
+                    'name': 'compute-node',
+                    'descr': 'Compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=cosma7'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'rockport-intelmpi-compute-node',
+                    'descr': 'Rockport compute nodes using Intel MPI',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'modules': ['rockport-settings', 'ucx'],
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+                # https://www.dur.ac.uk/icc/cosma/support/rockport/
+                {
+                    'name': 'rockport-openmpi-compute-node',
+                    'descr': 'Rockport compute nodes using OpenMPI',
+                    'scheduler': 'slurm',
+                    'launcher': 'rockport_openmpi_mpirun',
+                    'modules': ['rockport-settings', 'ucx'],
+                    'access': ['--partition=cosma7-rp'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 28,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 28,
+                    },
+                },
+            ]
+        },  # end cosma7
+        {
             # https://www.dur.ac.uk/icc/cosma/support/cosma8/
             'name': 'cosma8',
             'descr': 'COSMA',
-            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
+            'hostnames': ['login8[a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'tmod4',
             'partitions': [
                 {
@@ -354,19 +460,18 @@ site_configuration = {
             ]
         },  # end DiaL3
         {
-            'name': 'generic',
-            'descr': 'generic',
+            'name': 'default',
+            'descr': 'Default system',
             'hostnames': ['.*'],
             'partitions': [
                 {
                     'name': 'default',
-                    'descr': 'Default system',
                     'scheduler': 'local',
                     'launcher': 'mpirun',
                     'environs': ['default'],
                 },
             ]
-        },  # end generic
+        },  # end default
         # < insert new systems here >
     ],
     'environments': [
@@ -469,6 +574,7 @@ site_configuration = {
                         '%(check_num_gpus_per_node)s|'
                         '%(check_perfvalues)s|'
                         '%(check_spack_spec)s|'
+                        '%(check_extra_resources)s|'
                         '%(check_env_vars)s'
                     ),
                     'format_perfvars': (

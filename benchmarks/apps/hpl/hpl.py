@@ -44,12 +44,6 @@ class Hpl(SpackTest):
         else:
             self.sourcesdir = path.join(path.dirname(__file__), self.current_system.name, str(self.num_tasks))
 
-
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
-
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.all([

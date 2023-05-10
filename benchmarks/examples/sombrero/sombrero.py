@@ -8,13 +8,10 @@ import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 
-# Add top-level directory to `sys.path` so we can easily import extra modules
-# from any directory.
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 # See ReFrame documentation about writing tests for more details.  In
 # particular:
@@ -86,6 +83,12 @@ class SombreroBenchmark(SpackTest):
         'github-actions': {
             'flops': (0.9, None, None, 'Gflops/seconds'),
         },
+        'isambard-macs:cascadelake': {
+            'flops': (1.5, -0.2, None, 'Gflops/seconds'),
+        },
+        'isambard-macs:rome': {
+            'flops': (1.2, -0.2, None, 'Gflops/seconds'),
+        },
         'isambard-xci': {
             'flops': (0.6, -0.2, None, 'Gflops/seconds'),
         },
@@ -105,10 +108,6 @@ class SombreroBenchmark(SpackTest):
         # this has to be done after setup because we need to add entries to
         # ReFrame built-in `env_vars` variable.
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
 
     # Function defining a sanity check.  See
     # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html

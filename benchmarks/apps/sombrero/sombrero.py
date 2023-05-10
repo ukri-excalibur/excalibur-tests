@@ -19,10 +19,6 @@ class SombreroBuild(SpackTest, rfm.CompileOnlyRegressionTest):
     valid_prog_environs = ['default']
     spack_spec = 'sombrero@2021-08-16'
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_not_found("error", self.stderr)
@@ -39,7 +35,6 @@ class SombreroBenchmarkBase(SpackTest, rfm.RunOnlyRegressionTest):
     @run_after('init')
     def inject_dependencies(self):
         self.depends_on("SombreroBuild", udeps.fully)
-        self.build_system.specs = [self.spack_spec]
 
     @run_after('init')
     def set_executable(self):

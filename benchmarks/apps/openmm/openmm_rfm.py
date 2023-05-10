@@ -51,7 +51,10 @@ class OpenMMBenchmark(SpackTest):
     num_gpus_per_node = 1
 
     reference = {
-        'isambard-cascadelake:volta': {
+        'isambard-macs:pascal': {
+            'speed': (3.6, -0.2, None, 'ns/day'),
+        },
+        'isambard-macs:volta': {
             'speed': (6.5, -0.2, None, 'ns/day'),
         },
         'isambard-phase3:ampere': {
@@ -67,10 +70,6 @@ class OpenMMBenchmark(SpackTest):
             'speed': (1, None, None, 'ns/day'),
         },
     }
-
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
 
     @run_after('setup')
     def setup_variables(self):
