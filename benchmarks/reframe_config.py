@@ -183,6 +183,28 @@ site_configuration = {
                     },
                 },
                 {
+                    'name': 'pascal',
+                    'descr': 'Broadwell computing nodes with Nvidia Pascal GPUs',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q pascalq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['ngpus={num_gpus_per_node}'],
+                        },
+                    ],
+                },
+                {
                     'name': 'volta',
                     'descr': 'Cascadelake computing nodes with Nvidia Volta GPUs',
                     'scheduler': 'pbs',
@@ -205,7 +227,7 @@ site_configuration = {
                     ],
                 },
             ]
-        },  # end Isambard Cascadelake
+        },  # end Isambard MACS
         {
             # https://gw4-isambard.github.io/docs/user-guide/A64FX.html
             'name': 'isambard-a64fx',
