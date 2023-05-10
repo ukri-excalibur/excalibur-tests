@@ -21,3 +21,6 @@ outdated/
 
 # jupyter checkpoints:
 *-checkpoint.ipynb
+
+#ignore virtual environment
+myvenv2/
