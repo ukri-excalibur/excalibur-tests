@@ -86,6 +86,9 @@ class SombreroBenchmark(SpackTest):
         'isambard-macs:cascadelake': {
             'flops': (1.5, -0.2, None, 'Gflops/seconds'),
         },
+        'isambard-macs:knlcascadelake': {
+            'flops': (0.15, -0.2, None, 'Gflops/seconds'),
+        },
         'isambard-macs:rome': {
             'flops': (1.2, -0.2, None, 'Gflops/seconds'),
         },

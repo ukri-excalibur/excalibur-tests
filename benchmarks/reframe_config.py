@@ -154,7 +154,7 @@ site_configuration = {
             'partitions': [
                 {
                     'name': 'cascadelake',
-                    'descr': 'Intel Xeon Gold 6230 Cascade Lake Cascadelake computing nodes',
+                    'descr': 'Intel Xeon Gold 6230 Cascade Lake computing nodes',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
                     'access': ['-q clxq'],
@@ -165,6 +165,21 @@ site_configuration = {
                         'num_cpus_per_core': 1,
                         'num_sockets': 2,
                         'num_cpus_per_socket': 20,
+                    },
+                },
+                {
+                    'name': 'knl',
+                    'descr': 'Intel Xeon Phi “Knights Landing” 7210 computing nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q knlq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 64,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 64,
                     },
                 },
                 {
