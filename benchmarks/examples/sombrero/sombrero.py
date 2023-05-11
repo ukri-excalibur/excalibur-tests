@@ -47,10 +47,6 @@ class SombreroBenchmark(SpackTest):
     executable_opts = ['-w', '-s', 'small']
     # Time limit of the job, automatically set in the job script.
     time_limit = '2m'
-    # These extra resources are needed for when using the SGE scheduler.
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
     # Reference values for the performance benchmarks, see the
     # `set_perf_patterns` function below.
     reference = {

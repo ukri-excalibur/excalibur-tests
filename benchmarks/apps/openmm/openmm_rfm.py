@@ -80,8 +80,6 @@ class OpenMMBenchmark(SpackTest):
             self.current_partition.processor.num_cpus)
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
-        # Needed for the SGE scheduler
-        self.extra_resources['mpi'] = {'num_slots': self.num_tasks * self.num_cpus_per_task}
         # Request the GPU resources necessary to run this job.
         self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node}
 

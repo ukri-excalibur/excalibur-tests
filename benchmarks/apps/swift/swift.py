@@ -41,9 +41,6 @@ class SwiftBenchmark(SpackTest):
     def setup_variables(self):
         self.executable_opts = ['--hydro', f'--threads={self.num_cpus_per_task}',
                                 'sodShock.yml']
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
-        }
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('sanity')
