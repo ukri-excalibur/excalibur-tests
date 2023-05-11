@@ -194,17 +194,33 @@ spack:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
+    autogen:
+      externals:
+      - spec: autogen@5.18.12
+        prefix: /usr
     automake:
       externals:
       - spec: automake@1.15.1
+        prefix: /usr
+    binutils:
+      externals:
+      - spec: binutils@2.37
         prefix: /usr
     bison:
       externals:
       - spec: bison@3.0.4
         prefix: /usr
+    bzip2:
+      externals:
+      - spec: bzip2@1.0.6
+        prefix: /usr
     cmake:
       externals:
       - spec: cmake@3.10.2
+        prefix: /usr
+    cpio:
+      externals:
+      - spec: cpio@2.12
         prefix: /usr
     cray-fftw:
       externals:
@@ -212,31 +228,74 @@ spack:
         prefix: /opt/cray/pe/fftw/3.3.8.9/x86_rome
         modules:
         - cray-fftw/3.3.8.9
+      - spec: cray-fftw@3.3.10.3
+        prefix: /opt/cray/pe/fftw/3.3.10.3/x86_rome
+        modules:
+        - cray-fftw/3.3.10.3
+      - spec: cray-fftw@3.3.10.3
+        prefix: /opt/cray/pe/fftw/3.3.10.3/x86_rome
+        modules:
+        - cray-fftw/3.3.10.3
     cray-libsci:
       externals:
       - spec: cray-libsci@21.04.1.1
         prefix: /opt/cray/pe/libsci/21.04.1.1/CRAY/9.0/x86_64
         modules:
         - cray-libsci/21.04.1.1
+      - spec: cray-libsci@22.08.1.1%aocc
+        prefix: /opt/cray/pe/libsci/22.12.1.1/aocc/2.0/x86_64
+        modules:
+        - cray-libsci/22.12.1.1
+      - spec: cray-libsci@21.08.1.2%cce
+        prefix: /opt/cray/pe/libsci/22.12.1.1/cray/9.0/x86_64
+        modules:
+        - cray-libsci/22.12.1.1
+      - spec: cray-libsci@22.12.1.1%gcc
+        prefix: /opt/cray/pe/libsci/22.12.1.1/gnu/9.1/x86_64
+        modules:
+        - cray-libsci/22.12.1.1
     cray-mpich:
       externals:
+      - spec: cray-mpich@8.1.23%aocc
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/aocc/3.0
+        modules:
+        - craype-network-ofi
+        - cray-mpich/8.1.23
       - spec: cray-mpich@8.1.15%cce
         prefix: /opt/cray/pe/mpich/8.1.15/ofi/crayclang/10.0
         modules:
-        - libfabric/1.11.0.4.71
+        - craype-network-ofi
         - cray-mpich/8.1.15
+      - spec: cray-mpich@8.1.23%cce
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/cray/10.0
+        modules:
+        - craype-network-ofi
+        - cray-mpich/8.1.23
       - spec: cray-mpich@8.1.15%gcc
         prefix: /opt/cray/pe/mpich/8.1.15/ofi/gnu/9.1
         modules:
-        - libfabric/1.11.0.4.71
+        - craype-network-ofi
         - cray-mpich/8.1.15
+      - spec: cray-mpich@8.1.23%gcc
+        prefix: /opt/cray/pe/mpich/8.1.23/ofi/gnu/9.1
+        modules:
+        - craype-network-ofi
+        - cray-mpich/8.1.23
     cray-pmi:
       externals:
       - spec: cray-pmi@6.1.1
         prefix: /opt/cray/pe/pmi/6.1.1
+    curl:
+      externals:
+      - spec: curl@7.66.0
+        prefix: /usr
     diffutils:
       externals:
       - spec: diffutils@3.6
+        prefix: /usr
+    elfutils:
+      externals:
+      - spec: elfutils@0.168
         prefix: /usr
     fftw-api:
       require: cray-fftw
@@ -252,9 +311,17 @@ spack:
       externals:
       - spec: flex@2.6.4+lex
         prefix: /usr
+    gawk:
+      externals:
+      - spec: gawk@4.2.1
+        prefix: /usr
     gettext:
       externals:
       - spec: gettext@0.19.8.1
+        prefix: /usr
+    ghostscript:
+      externals:
+      - spec: ghostscript@9.52
         prefix: /usr
     git:
       externals:
@@ -270,6 +337,10 @@ spack:
         prefix: /work/y07/shared/libs/core/gmp/6.2.1/CRAYCLANG/10.0
       - spec: gmp@6.2.1%gcc
         prefix: /work/y07/shared/libs/core/gmp/6.2.1/GNU/9.1
+    groff:
+      externals:
+      - spec: groff@1.22.3
+        prefix: /usr
     hdf5:
       externals:
       - spec: hdf5@1.12.0+cxx~mpi%cce
@@ -288,17 +359,65 @@ spack:
         prefix: /opt/cray/pe/hdf5-parallel/1.12.0.3/gnu/9.1
         modules:
         - cray-hdf5-parallel/1.12.0.3
+    hwloc:
+      externals:
+      - spec: hwloc@2.5.0
+        prefix: /usr
+    libelf:
+      externals:
+      - spec: libelf@0.168
+        prefix: /usr
     libfabric:
       externals:
       - spec: libfabric@1.11.0
         prefix: /opt/cray/libfabric/1.11.0.4.71
+      - spec: libfabric@1.12.1.2.2.0.0
+        prefix: /opt/cray/libfabric/1.11.0.4.128
+        modules:
+        - libfabric/1.12.1.2.2.0.0
+    libffi:
+      externals:
+      - spec: libffi@3.2.1
+        prefix: /usr
+    libfuse:
+      externals:
+      - spec: libfuse@2.9.7
+        prefix: /usr
+    libpciaccess:
+      externals:
+      - spec: libpciaccess@0.14
+        prefix: /usr
     libtool:
       externals:
       - spec: libtool@2.4.6
         prefix: /usr
+    libxml2:
+      externals:
+      - spec: libxml2@2.9.7
+        prefix: /usr
+    libxpm:
+      externals:
+      - spec: libxpm@3.5.12
+        prefix: /usr
+    lustre:
+      externals:
+      - spec: lustre@2.15.0.2_rc2_cray_113_g62287d0
+        prefix: /usr
+    lz4:
+      externals:
+      - spec: lz4@1.9.2
+        prefix: /usr
     m4:
       externals:
       - spec: m4@1.4.18
+        prefix: /usr
+    ninja:
+      externals:
+      - spec: ninja@1.10.0
+        prefix: /usr
+    numactl:
+      externals:
+      - spec: numactl@2.0.14
         prefix: /usr
     openssh:
       externals:
@@ -322,6 +441,10 @@ spack:
         prefix: /usr
       - spec: python@3.8.5+bz2+ctypes+dbm+lzma~nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /opt/cray/pe/python/3.8.5.0
+    rsync:
+      externals:
+      - spec: rsync@3.1.3
+        prefix: /usr
     sed:
       externals:
       - spec: sed@4.4
@@ -330,6 +453,10 @@ spack:
       externals:
       - spec: slurm@21.08.8
         prefix: /usr
+    sqlite:
+      externals:
+      - spec: sqlite@3.36.0
+        prefix: /usr
     tar:
       externals:
       - spec: tar@1.30
@@ -337,4 +464,12 @@ spack:
     xz:
       externals:
       - spec: xz@5.2.3
+        prefix: /usr
+    wget:
+      externals:
+      - spec: wget@1.20.3
+        prefix: /usr
+    zstd:
+      externals:
+      - spec: zstd@1.4.4
         prefix: /usr
