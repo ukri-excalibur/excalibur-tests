@@ -18,7 +18,7 @@ class Trove(MakefilePackage):
     homepage = "https://github.com/UniOfLeicester/benchmark-trove"
     git = "ssh://git@github.com/UniOfLeicester/benchmark-trove.git"
 
-    maintainers = ["TomMelt"]
+    maintainers = ["RSE Team @ UoL"]
 
     version("v1.0.0", tag="v1.0.0")
 

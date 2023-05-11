@@ -18,7 +18,7 @@ class TrovePdsyev(MakefilePackage):
     homepage = "https://github.com/UniOfLeicester/benchmark-trove-pdsyev"
     git = "ssh://git@github.com/UniOfLeicester/benchmark-trove-pdsyev.git"
 
-    maintainers = ["TomMelt"]
+    maintainers = ["RSE Team @ UoL"]
 
     version("v1.0.0", tag="v1.0.0")
 
