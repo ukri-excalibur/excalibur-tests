@@ -270,7 +270,16 @@ class SpackTest(rfm.RegressionTest):
 
     @run_before('compile')
     def setup_build_system(self):
+        # The `self.spack_spec` attribute is the user-facing and loggable
+        # variable we use for setting the Spack spec, but then we need to
+        # forward its value to `self.build_system.specs`, which is the way to
+        # inform ReFrame which Spack specs to use.
         self.build_system.specs = [self.spack_spec]
+
+    @run_before('compile')
+    def set_sge_num_slots(self):
+        # Set the total number of CPUs to be requested for the SGE scheduler.
+        self.extra_resources['mpi']: {'num_slots': self.num_tasks * self.num_cpus_per_task}
 
 
 if __name__ == '__main__':
