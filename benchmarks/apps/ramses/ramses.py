@@ -28,7 +28,7 @@ class RamsesMPI(SpackTest):
     executable_opts = ['params.nml']
     sourcesdir = path.join(path.dirname(__file__),'inputs')
 
-    time_limit = '5m'
+    time_limit = '10m'
 
     reference = {
             '*': {
@@ -70,7 +70,6 @@ class RamsesMPI_strong(RamsesMPI):
     def set_job_script_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-
         self.num_tasks = self.num_nodes * self.core_count_1_node
         self.num_tasks_per_node = self.core_count_1_node    #We are using the full node with MPI tasks.
         self.descr = ('Strong Scaling Ramses on '+ str(self.num_nodes) + ' node/s')
@@ -86,8 +85,8 @@ class RamsesMPI_weak(RamsesMPI):
     def set_job_script_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-
         self.num_tasks = self.num_nodes * self.core_count_1_node
         self.num_tasks_per_node = self.core_count_1_node
         self.descr = ('Weak Scaling Ramses on '+str(self.num_nodes)+ ' node/s')
+
         self.executable_opts = ['params'+str(self.num_nodes)+'_weak.nml']

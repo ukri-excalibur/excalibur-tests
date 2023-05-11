@@ -84,6 +84,13 @@ reframe -c examples/sombrero -r --performance-report --system dial2:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
+As the platform possess pbs/torque scheduler so in order to obtain and use the correct `#PBS -l nodes=?:ppn=?` header option one 
+require to enable the reframe feature `num_cpus_per_task` and also use the following additional flags appropriatelly (tested with sphng, 
+trove, trove-pdsyev mpi/openmp hybrid apps).
+
+`-S executable='-perhost $NUM_TASKS_PER_NODE <NAME-of-EXECUTABLE>'`
+`-S env_vars=I_MPI_JOB_RESPECT_PROCESS_PLACEMENT:off`
+
 ## DIaL3
 
 ### Queue options
@@ -96,6 +103,12 @@ reframe -c examples/sombrero -r --performance-report --system dial3:compute-node
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
+
+A useful flag for the stable and improved performnce w.r.t. IntelMPI as the reframe feature `num_cpus_per_task` is enabled.
+
+`-S env_vars=I_MPI_PIN_RESPECT_CPUSET:0`
+
+Further cpu/core pinning could be verified with the help of an additional flag `-S env_vars=I_MPI_DEBUG:4`.
 
 ## Isambard 2
 

@@ -11,8 +11,11 @@ class Trove(SpackTest):
     spack_spec = 'trove@v1.0.0'
     executable = 'j-trove.x'
     postrun_cmds = ['tail -n 100 output.txt']
-    time_limit = '0d2h0m0s'
-    exclusive_access = True
+    time_limit = '0d2h30m0s'
+
+    num_tasks = required
+    num_tasks_per_node = required
+    num_cpus_per_task = required
 
     reference = {
             'dial:slurm-local': {
@@ -55,12 +58,17 @@ class TROVE_12N(Trove):
     def set_job_script_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
-        self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
-        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
+
+        self.descr = ('Running Trove on ' +\
+                      str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per node')
+
+        self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
+        self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
         self.env_vars['OMP_PLACES'] = 'cores'
 
 
@@ -79,12 +87,17 @@ class TROVE_14N(Trove):
     def set_job_script_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-
         self.num_tasks = self.num_mpi_tasks[self.param_value]
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
-        self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
-        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
+
+        self.descr = ('Running Trove on ' +\
+                      str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
+
+        self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
+        self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
         self.env_vars['OMP_PLACES'] = 'cores'
 
 
@@ -103,10 +116,15 @@ class TROVE_16N(Trove):
     def set_job_script_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-
-        self.num_tasks = self.num_mpi_tasks[self.param_value]
+        self.num_tasks = int(self.num_mpi_tasks[self.param_value])
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
-        self.descr = ('Running Trove on ' + str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' + str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.num_cpus_per_task) +  ' threads per node')
-        self.thread_count = str(int(self.core_count_1_node/self.num_tasks_per_node))
-        self.env_vars['OMP_NUM_THREADS'] = self.thread_count
+        self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
+
+        self.descr = ('Running Trove on ' +\
+                      str(self.num_nodes_current_run[self.param_value]) + ' nodes with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
+
+        self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
+        self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
         self.env_vars['OMP_PLACES'] = 'cores'

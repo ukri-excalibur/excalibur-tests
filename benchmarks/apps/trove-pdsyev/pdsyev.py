@@ -16,8 +16,9 @@ class PdsyevBase(SpackTest):
 
     num_tasks = required
     num_tasks_per_node = required
+    num_cpus_per_task = required
 
-    time_limit = '4m'
+    time_limit = '5m'
 
     reference = {
             '*': {
@@ -50,7 +51,13 @@ class PdsyevBase(SpackTest):
                 'num_tasks_per_node',
                 self.num_tasks,
                 )
-        self.env_vars['OMP_NUM_THREADS'] =  str(self.num_threads)
+        self.set_var_default(
+                'num_cpus_per_task',
+                self.num_threads,
+                )
+
+        self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
+        self.env_vars['OMP_NUM_THREADS'] =  self.num_cpus_per_task
         self.env_vars['OMP_PLACES'] = 'cores'
 
 
@@ -60,11 +67,3 @@ class PdsyevSingle(PdsyevBase):
     descr = 'trove-pdsyev test: single node'
     tags = {'single-node'}
     num_threads = parameter(2**i for i in range(0,2))
-
-
-# @rfm.simple_test
-# class PdsyevSingle(PdsyevBase):
-
-#     descr = 'trove-pdsyev test: single node'
-#     tags = {'single-node'}
-#     num_threads = parameter(2**i for i in range(0,2))
