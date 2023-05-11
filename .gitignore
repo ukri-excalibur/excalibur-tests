@@ -23,4 +23,5 @@ outdated/
 *-checkpoint.ipynb
 
 #ignore virtual environment
-myvenv2/
+myvenv/
+perflogs/
