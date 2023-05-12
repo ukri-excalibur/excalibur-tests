@@ -61,5 +61,5 @@ jobs:
       - name: Run sample benchmark
         shell: bash
         run: |
-          export RFM_CONFIG_FILE="${{runner.workspace}}/pip/benchmarks/reframe_config.py"
+          export RFM_CONFIG_FILES="${{runner.workspace}}/pip/benchmarks/reframe_config.py"
           reframe -v -c ${{runner.workspace}}/pip/benchmarks/examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'

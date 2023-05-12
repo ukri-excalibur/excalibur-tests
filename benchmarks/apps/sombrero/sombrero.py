@@ -96,7 +96,6 @@ class SombreroBenchmarkMini(SombreroBenchmarkBase):
     def set_up_from_parameters(self):
         self.executable_opts = ['-l', '8x4x4x4', '-p', '2x1x1x1']
         self.num_tasks = 2
-        self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
 
 
 @rfm.simple_test
@@ -112,7 +111,6 @@ class SombreroBenchmarkScaling(SombreroBenchmarkBase):
             self.executable_opts.append('-w')
         self.executable_opts += ['-s', self.params[case_filter.Idx.size]]
         self.num_tasks = self.params[case_filter.Idx.nprocesses]
-        self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
 
 
 @rfm.simple_test
@@ -127,7 +125,6 @@ class SombreroITTsn(SombreroBenchmarkBase):
     @run_after('setup')
     def setup_num_tasks(self):
         self.num_tasks = self.current_partition.processor.num_cores
-        self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
 
 
 @rfm.simple_test
@@ -142,4 +139,3 @@ class SombreroITT64n(SombreroBenchmarkBase):
     @run_after('setup')
     def setup_num_tasks(self):
         self.num_tasks = self.current_partition.processor.num_cores * 64
-        self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}

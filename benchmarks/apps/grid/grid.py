@@ -69,9 +69,6 @@ class GridBenchmark_ITT(GridBenchmark):
                              self.current_partition.processor.num_cpus //
                              self.num_cpus_per_task)
         self.executable_opts = [f'--mpi {self.mpi}', f'--shm {self.shm}', '--shm-hugetlb']
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
-        }
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 
