@@ -71,8 +71,10 @@ class Sphng_Single_Node_ifile(SphngBase_ifile):
         self.thread_count = int(self.core_count_1_node/self.num_tasks_per_node)
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Ifile) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
-                       str(self.thread_count) +  ' threads per node')
+        self.descr = ('Running Sphng (Ifile) on ' +\
+                      ' single node with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
@@ -94,8 +96,10 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
         self.thread_count = self.Ifile_fixture.thread_count
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Evolution) on ' + str(self.num_tasks_per_node) +' tasks and ' + \
-                       str(self.thread_count) +  ' threads per node')
+        self.descr = ('Running Sphng (Evolution) on ' +\
+                      ' single node with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
@@ -117,8 +121,10 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
         self.thread_count = int(self.core_count_1_node/self.num_tasks_per_node)
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
-                       str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.thread_count) + ' threads per node')
+        self.descr = ('Running Sphng (Ifile) on ' +\
+                      str(self.num_nodes) + ' node(s) with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
@@ -140,8 +146,10 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
         self.thread_count = self.Ifile_fixture.thread_count
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
-                       str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.thread_count) +  ' threads per node')
+        self.descr = ('Running Sphng (Evolution) on ' +\
+                      str(self.Ifile_fixture.num_nodes) + ' node(s) with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
@@ -163,8 +171,10 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
         self.thread_count = int(self.core_count_1_node/self.num_tasks_per_node)
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Ifile) on ' + str(self.num_nodes) + ' nodes with ' + \
-                       str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.thread_count) +  ' threads per node')
+        self.descr = ('Running Sphng (Ifile) on ' +\
+                      str(self.num_nodes) + ' node(s) with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
@@ -188,8 +198,10 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
         self.thread_count = self.Ifile_fixture.thread_count
         self.num_cpus_per_task = self.thread_count
 
-        self.descr = ('Running Sphng (Evolution) on ' + str(self.Ifile_fixture.num_nodes) + ' nodes with ' +\
-                       str(self.num_tasks_per_node) + ' tasks per node and ' + str(self.thread_count) +  ' threads per node')
+        self.descr = ('Running Sphng (Evolution) on ' +\
+                      str(self.Ifile_fixture.num_nodes) + ' node(s) with ' +\
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+                      str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
