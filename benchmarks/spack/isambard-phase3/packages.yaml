@@ -34,6 +34,12 @@ packages:
     externals:
     - spec: gmake@4.2.1
       prefix: /usr
+  intel-oneapi-mpi:
+    externals:
+    - spec: intel-oneapi-mpi@2021.4.0 +generic-names
+      prefix: /lustre/software/x86/tools/oneapi-2021.4.0
+      modules:
+      - IntelOneApi/mpi/2021.4.0
   libfabric:
     externals:
     - spec: libfabric@1.11.0 fabrics=sockets,verbs
