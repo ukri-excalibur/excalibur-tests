@@ -107,10 +107,6 @@ class SombreroBenchmark(SpackTest):
         # Tags are useful for categorizing tests and quickly selecting those of interest.
         self.tags.add("example")
         self.tags.add("test" + str(self.tasks - 2 + self.cpus_per_task * 2))
-        # These extra resources are needed for when using the SGE scheduler.
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
-        }
 
     @run_after('setup')
     def setup_variables(self):
