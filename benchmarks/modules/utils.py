@@ -285,10 +285,11 @@ class SpackTest(rfm.RegressionTest):
     def setup_build_job_num_cpus(self):
         # When running a build on a compute node, ReFrame by default uses only a
         # single CPU, which is a large waste of time and resources.  With this,
-        # we force the build job to always use all available CPUs on the target
-        # partition.
+        # we force the build job to always use 16 CPUs or all available CPUs on
+        # the target partition, whichever is smaller, because on some systems
+        # using full partitions may have lower priority.
         if not self.build_locally:
-            self.build_job.num_cpus_per_task = self.current_partition.processor.num_cpus
+            self.build_job.num_cpus_per_task = min(16, self.current_partition.processor.num_cpus)
 
 
 if __name__ == '__main__':
