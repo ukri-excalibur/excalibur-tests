@@ -49,6 +49,7 @@ class Sphng(MakefilePackage):
             env["ENDIANFLAGLITTLE"] = "-convert little_endian"
         else:
             msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 
         env["FFLAGS"] = fflags

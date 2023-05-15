@@ -84,12 +84,11 @@ reframe -c examples/sombrero -r --performance-report --system dial2:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
-As the platform possess pbs/torque scheduler so in order to obtain and use the correct `#PBS -l nodes=?:ppn=?` header option one 
-require to enable the reframe feature `num_cpus_per_task` and also use the following additional flags appropriatelly (tested with sphng, 
-trove, trove-pdsyev mpi/openmp hybrid apps).
+This platform possesses the pbs/torque scheduler. In order to obtain and use the correct header option (`#PBS -l nodes=?:ppn=?`)
+the following additional flags are required (tested with sphng, trove, trove-pdsyev mpi/openmp hybrid apps):
 
-`-S executable='-perhost $NUM_TASKS_PER_NODE <NAME-of-EXECUTABLE>'`
-`-S env_vars=I_MPI_JOB_RESPECT_PROCESS_PLACEMENT:off`
+* `-S executable='-perhost $NUM_TASKS_PER_NODE <NAME-OF-EXECUTABLE>'`
+* `-S env_vars=I_MPI_JOB_RESPECT_PROCESS_PLACEMENT:off`
 
 ## DIaL3
 
@@ -104,7 +103,9 @@ reframe -c examples/sombrero -r --performance-report --system dial3:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
-A useful flag for the stable and improved performnce w.r.t. IntelMPI as the reframe feature `num_cpus_per_task` is enabled.
+Tests where `num_tasks = num_cpus_per_socket` appear to fail when using IntelMPI with slurm. As a result, we set the environment
+variable `I_MPI_PIN_RESPECT_CPUSET=0` for tests where this is the case. It can be passed as a command line argument to reframe
+using the following command.
 
 `-S env_vars=I_MPI_PIN_RESPECT_CPUSET:0`
 

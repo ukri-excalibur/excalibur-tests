@@ -21,6 +21,19 @@ class SphngBase(SpackTest):
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
 
+    @run_before('run')
+    def check_num_tasks(self):
+        """
+        When num_tasks = num_cpus_per_socket the intel mpi fails to correctly
+        map threads. If this occurs then we need to set an additional
+        environment variable
+        """
+
+        num_cpus_per_socket = self.current_partition.processor.num_cpus_per_socket
+        if(self.num_tasks_per_node == num_cpus_per_socket):
+            self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
+        pass
+
 
 class SphngBase_ifile(SphngBase):
 

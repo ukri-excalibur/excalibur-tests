@@ -38,13 +38,9 @@ class Ramses(MakefilePackage):
             env["I_MPI_F90"] = spack_fc
             fc = spec["mpi"].mpifc
             makefile.filter(r"^F90 = .*", f"F90 = {fc}")
-        elif self.compiler.name == "gcc":
-            makefile.filter(
-                r"^\s*FFLAGS\s*= .*",
-                "FFLAGS = -O3 -cpp -march=core-avx2 -fomit-frame-pointer -ffree-line-length-none",
-            )
         else:
             msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 
     def build(self, spec, prefix):

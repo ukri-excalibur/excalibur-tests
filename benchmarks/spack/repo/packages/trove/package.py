@@ -42,17 +42,9 @@ class Trove(MakefilePackage):
                 lapack = (
                     "-mkl=parallel -lmkl_scalapack_lp64 -lmkl_blacs_openmpi_lp64 -lmkl_intel_lp64"
                 )
-
-        elif self.compiler.name == "gcc":
-            fflags = " -ffree-line-length-none -O3 " "-fcray-pointer -g3"
-
-            if "openmpi" in spec:
-                lapack = (
-                    "-lmkl_scalapack_lp64 -lmkl_blacs_openmpi_lp64 -lmkl_gf_lp64 -lmkl_gnu_thread "
-                    "-lmkl_core"
-                )
         else:
             msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 
         env["FFLAGS"] = self.compiler.openmp_flag + fflags

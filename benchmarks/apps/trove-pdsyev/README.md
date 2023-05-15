@@ -29,3 +29,7 @@ Examples:
 ```sh
 reframe -c benchmarks/apps/trove-pdsyev -r --performance-report --tag single-node
 ```
+
+## Compiler support
+
+Currently, only the intel compiler is supported for this program.

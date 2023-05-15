@@ -42,6 +42,19 @@ class Trove(SpackTest):
                 'Total elapsed time':self.get_elapsed_time()
                 }
 
+    @run_before('run')
+    def check_num_tasks(self):
+        """
+        When num_tasks = num_cpus_per_socket the intel mpi fails to correctly
+        map threads. If this occurs then we need to set an additional
+        environment variable
+        """
+
+        num_cpus_per_socket = self.current_partition.processor.num_cpus_per_socket
+        if(self.num_tasks_per_node == num_cpus_per_socket):
+            self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
+        pass
+
 
 @rfm.simple_test
 class TROVE_12N(Trove):

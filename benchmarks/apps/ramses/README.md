@@ -41,3 +41,7 @@ Examples:
 reframe -c benchmarks/apps/ramses -r --performance-report --tag weak
 reframe -c benchmarks/apps/ramses -r --performance-report --tag strong
 ```
+
+## Compiler support
+
+Currently, only the intel compiler is supported for this program.

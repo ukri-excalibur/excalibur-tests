@@ -29,3 +29,7 @@ Examples:
 ```sh
 reframe -c benchmarks/apps/trove -r --performance-report --tag 12N
 ```
+
+## Compiler support
+
+Currently, only the intel compiler is supported for this program.
