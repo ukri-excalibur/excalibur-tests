@@ -295,6 +295,22 @@ site_configuration = {
                         },
                     ],
                 },
+                {
+                    'name': 'instict',
+                    'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q instinctq', '-l place=excl'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 64,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 32,
+                    },
+                },
             ]
         },  # end Isambard Phase3
         {
