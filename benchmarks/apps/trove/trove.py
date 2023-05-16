@@ -75,9 +75,9 @@ class TROVE_12N(Trove):
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
 
-        self.descr = ('Running Trove on ' +\
-                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +\
-                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+        self.descr = ('Running Trove on ' +
+                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +
                       str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
@@ -104,9 +104,9 @@ class TROVE_14N(Trove):
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
 
-        self.descr = ('Running Trove on ' +\
-                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +\
-                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+        self.descr = ('Running Trove on ' +
+                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +
                       str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
@@ -133,9 +133,9 @@ class TROVE_16N(Trove):
         self.num_tasks_per_node = int(self.num_tasks/self.num_nodes_current_run[self.param_value])
         self.num_cpus_per_task = int(self.core_count_1_node/self.num_tasks_per_node)
 
-        self.descr = ('Running Trove on ' +\
-                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +\
-                      str(self.num_tasks_per_node) + ' tasks per node and ' +\
+        self.descr = ('Running Trove on ' +
+                      str(self.num_nodes_current_run[self.param_value]) + ' node(s) with ' +
+                      str(self.num_tasks_per_node) + ' tasks per node and ' +
                       str(self.num_cpus_per_task) +  ' threads per task')
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
