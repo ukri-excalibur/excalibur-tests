@@ -107,3 +107,9 @@ class KOKKOSBenchmark_GPU(BabelstreamBenchmarkBase):
     tags = {"kokkos"}
     executable = "kokkos-stream"
     num_gpus_per_node = 1
+
+@rfm.simple_test
+class TBBBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"tbb"}
+    executable = "tbb-stream"
