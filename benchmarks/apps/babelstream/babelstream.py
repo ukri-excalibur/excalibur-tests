@@ -2,7 +2,7 @@
 # ReFrame Project Developers. See the top-level LICENSE file for details.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-
+import os
 import os.path as path
 import sys
 import reframe as rfm
@@ -24,17 +24,10 @@ class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
     valid_systems = ['*']
     valid_prog_environs = ['default'] 
-    # executable = 'babelstream'
-    # executable_opts = ['--help']
-    spack_spec = 'babelstream@develop'
-    # spack_env = variable(str, value='/default/dir')
+    # impl = variable(str, value='d', loggable=True)
+    # impl =required
+    print(impl)
     
-        
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec] 
-        # print(self.build_system.environment)
-        # self.build_system.environment = self.spack_env
 
     @run_before('run')
     def replace_launcher(self):
@@ -94,7 +87,9 @@ class BabelstreamBenchmarkBase(SpackTest):
 class ACCBenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['*']
     tags = {"acc"}
+    
     executable = "acc-stream"
+    num_gpus_per_node = 1
     # modules=['cudatoolkit']
     # environment = "~/excalibur-tests/benchmarks/spack/isambard-macs/cascadelake/"
 
@@ -107,6 +102,21 @@ class CUDABenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['+gpu']
     num_gpus_per_node = 1
     # environment = "~/excalibur-tests/benchmarks/spack/isambard-macs/volta"
+
+@rfm.simple_test
+class OCLBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['*']
+    tags = {"ocl"}
+    executable = "ocl-stream"
+    valid_systems = ['+gpu']
+    num_gpus_per_node = 1
+# @rfm.simple_test
+# class CUDABenchmark(BabelstreamBenchmarkBase):
+#     valid_systems = ['*']
+#     tags = {"cuda"}
+#     executable = "cuda-stream"
+#     valid_systems = ['+gpu']
+#     num_gpus_per_node = 1
 
 #     @run_after('init')
 #     def set_up_from_parameters(self):
