@@ -409,6 +409,7 @@ site_configuration = {
             'name': 'github-actions',
             'descr': 'GitHub Actions runner',
             'hostnames': ['fv-az.*'],  # Just to not have '.*'
+            'max_local_jobs': 1,  # Limit number of parallel jobs
             'partitions': [
                 {
                     'name': 'default',
