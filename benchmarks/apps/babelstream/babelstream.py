@@ -24,9 +24,6 @@ class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
     valid_systems = ['*']
     valid_prog_environs = ['default'] 
-    # impl = variable(str, value='d', loggable=True)
-    # impl =required
-    # print(impl)
     
 
     @run_before('run')
@@ -38,14 +35,6 @@ class BabelstreamBenchmarkBase(SpackTest):
     
     @run_after('setup')
     def setup_variables(self):
-        # self.executable_opts = [os.path.join(self.prefix, 'openmm-gpu-bench.py')]
-        # self.set_var_default(
-        #     'num_cpus_per_task',
-        #     self.current_partition.processor.num_cpus)
-        # self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
-        # self.env_vars['OMP_PLACES'] = 'cores'
-        # # Needed for the SGE scheduler
-        # self.extra_resources['mpi'] = {'num_slots': self.num_tasks * self.num_cpus_per_task}
         # Request the GPU resources necessary to run this job.
         self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node}
 
@@ -53,13 +42,7 @@ class BabelstreamBenchmarkBase(SpackTest):
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('Running kernels 100 times', self.stdout)
 
-#    @run_before('performance')
-#     def set_perf_patterns(self):
-#         self.perf_patterns = {
-#             'speed': sn.extractsingle(
-#                 r'^100\.0%(?:[ \t]+[-\d.]+){5}[ \t]+([-\d.]+)[ \t]+[\d:]+$',
-#                 self.stdout, 1, float),
-#         }
+
 
 # Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython).
 # If you need more precision, get NumPy and use its numpy.float128.
@@ -87,11 +70,8 @@ class BabelstreamBenchmarkBase(SpackTest):
 class ACCBenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['*']
     tags = {"acc"}
-    
     executable = "acc-stream"
     num_gpus_per_node = 1
-    # modules=['cudatoolkit']
-    # environment = "~/excalibur-tests/benchmarks/spack/isambard-macs/cascadelake/"
 
 
 @rfm.simple_test
@@ -109,28 +89,9 @@ class OCLBenchmark_CPU(BabelstreamBenchmarkBase):
     tags = {"ocl"}
     executable = "ocl-stream"
 
-
 @rfm.simple_test
 class OCLBenchmark_GPU(BabelstreamBenchmarkBase):
     valid_systems = ['+gpu']
     tags = {"ocl"}
     executable = "ocl-stream"
     num_gpus_per_node = 1
-# @rfm.simple_test
-# class CUDABenchmark(BabelstreamBenchmarkBase):
-#     valid_systems = ['*']
-#     tags = {"cuda"}
-#     executable = "cuda-stream"
-#     valid_systems = ['+gpu']
-#     num_gpus_per_node = 1
-
-#     @run_after('init')
-#     def set_up_from_parameters(self):
-#         # self.executable_opts = ['-l', '8x4x4x4', '-p', '2x1x1x1']
-#         # self.num_tasks = 2
-#         # self.extra_resources = {'mpi': {'num_slots': self.num_tasks}}
-
-    
-
-
-
