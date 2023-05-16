@@ -81,7 +81,6 @@ class CUDABenchmark(BabelstreamBenchmarkBase):
     executable = "cuda-stream"
     valid_systems = ['+gpu']
     num_gpus_per_node = 1
-    # environment = "~/excalibur-tests/benchmarks/spack/isambard-macs/volta"
 
 @rfm.simple_test
 class OCLBenchmark_CPU(BabelstreamBenchmarkBase):
@@ -94,4 +93,17 @@ class OCLBenchmark_GPU(BabelstreamBenchmarkBase):
     valid_systems = ['+gpu']
     tags = {"ocl"}
     executable = "ocl-stream"
+    num_gpus_per_node = 1
+
+@rfm.simple_test
+class KOKKOSBenchmark_CPU(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"kokkos"}
+    executable = "kokkos-stream"
+
+@rfm.simple_test
+class KOKKOSBenchmark_GPU(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu']
+    tags = {"kokkos"}
+    executable = "kokkos-stream"
     num_gpus_per_node = 1
