@@ -303,7 +303,7 @@ site_configuration = {
                     'access': ['-q instinctq', '-l place=excl'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'rocm'],
                     'processor': {
                         'num_cpus': 64,
                         'num_cpus_per_core': 2,
