@@ -281,6 +281,16 @@ class SpackTest(rfm.RegressionTest):
         # Set the total number of CPUs to be requested for the SGE scheduler.
         self.extra_resources['mpi']: {'num_slots': self.num_tasks * self.num_cpus_per_task}
 
+    @run_after('setup')
+    def setup_build_job_num_cpus(self):
+        # When running a build on a compute node, ReFrame by default uses only a
+        # single CPU, which is a large waste of time and resources.  With this,
+        # we force the build job to always use 16 CPUs or all available CPUs on
+        # the target partition, whichever is smaller, because on some systems
+        # using full partitions may have lower priority.
+        if not self.build_locally:
+            self.build_job.num_cpus_per_task = min(16, self.current_partition.processor.num_cpus)
+
 
 if __name__ == '__main__':
 

@@ -33,8 +33,8 @@ def download(url, match, dest):
 
 @rfm.simple_test
 class OpenMMBenchmark(SpackTest):
-    # This can be run only on GPU-equipped systems.
-    valid_systems = ['+gpu']
+    # This can be run only on systems with Nvidia GPUs.
+    valid_systems = ['+gpu +cuda']
     valid_prog_environs = ['default']
     spack_spec = 'openmm@7.7.0 +cuda'
 
