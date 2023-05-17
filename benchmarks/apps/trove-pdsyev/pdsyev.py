@@ -7,7 +7,7 @@ from benchmarks.modules.utils import SpackTest
 class PdsyevBase(SpackTest):
 
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
 
     spack_spec = 'trove-pdsyev@v1.0.0'
     executable = 'diag_generic.x'

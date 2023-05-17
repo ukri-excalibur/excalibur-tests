@@ -21,7 +21,7 @@ class Ramses_download_inputs(rfm.RunOnlyRegressionTest):
 class RamsesMPI(SpackTest):
 
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
 
     spack_spec = 'ramses@v1.0.0'
     executable = 'ramses3d'

@@ -8,7 +8,7 @@ class SphngBase(SpackTest):
 
     descr = 'Base class for Sphng'
     valid_systems = ['*']
-    valid_prog_environs = ['*']
+    valid_prog_environs = ['default']
     spack_spec = 'sphng@v1.0.0'
     executable = 'sph_tree_rk_gradh'
     time_limit = '0d0h30m0s'
