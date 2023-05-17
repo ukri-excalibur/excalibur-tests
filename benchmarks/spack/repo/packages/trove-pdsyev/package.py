@@ -34,7 +34,7 @@ class TrovePdsyev(MakefilePackage):
 
     def edit(self, spec, prefix):
         if self.compiler.name != "intel":
-            msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg = f"The compiler [{self.compiler.name}] is not supported yet."
             msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 

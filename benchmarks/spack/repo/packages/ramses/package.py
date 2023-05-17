@@ -39,7 +39,7 @@ class Ramses(MakefilePackage):
             fc = spec["mpi"].mpifc
             makefile.filter(r"^F90 = .*", f"F90 = {fc}")
         else:
-            msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg = f"The compiler [{self.compiler.name}] is not supported yet."
             msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 

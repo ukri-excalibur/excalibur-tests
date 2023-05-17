@@ -43,7 +43,7 @@ class Trove(MakefilePackage):
                     "-mkl=parallel -lmkl_scalapack_lp64 -lmkl_blacs_openmpi_lp64 -lmkl_intel_lp64"
                 )
         else:
-            msg = "The compiler [{self.compiler.name}] is not supported yet."
+            msg = f"The compiler [{self.compiler.name}] is not supported yet."
             msg += "\nThis test only works with the intel compiler."
             raise InstallError(msg)
 
