@@ -42,10 +42,12 @@ class BabelstreamBenchmarkBase(SpackTest):
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('Running kernels 100 times', self.stdout)
 
+    #--------------------------------------------------
+    #-- Figure of Merit Export
+    #--------------------------------------------------
 
-
-# Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython).
-# If you need more precision, get NumPy and use its numpy.float128.
+    # Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython).
+    # If you need more precision, get NumPy and use its numpy.float128.
     @performance_function('MBytes/sec', perf_key='Copy')
     def extract_copy_perf(self):
         return sn.extractsingle(r'Copy \s+(\S+)\s+.', self.stdout, 1, float)
@@ -65,23 +67,33 @@ class BabelstreamBenchmarkBase(SpackTest):
     def extract_dot_perf(self):
         return sn.extractsingle(r'Dot \s+(\S+)\s+.', self.stdout, 1, float)
 
+#--------------------------------------------------
+#-- ACC
+#--------------------------------------------------
+@rfm.simple_test
+class ACCBenchmark_CPU(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"acc"}
+    executable = "acc-stream"
 
 @rfm.simple_test
-class ACCBenchmark(BabelstreamBenchmarkBase):
-    valid_systems = ['*']
+class ACCBenchmark_GPU(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu +cuda']
     tags = {"acc"}
     executable = "acc-stream"
     num_gpus_per_node = 1
-
-
+#--------------------------------------------------
+#-- CUDA
+#--------------------------------------------------
 @rfm.simple_test
 class CUDABenchmark(BabelstreamBenchmarkBase):
-    valid_systems = ['*']
+    valid_systems = ['+gpu +cuda']
     tags = {"cuda"}
     executable = "cuda-stream"
-    valid_systems = ['+gpu']
     num_gpus_per_node = 1
-
+#--------------------------------------------------
+#-- OpenCL
+#--------------------------------------------------
 @rfm.simple_test
 class OCLBenchmark_CPU(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
@@ -94,7 +106,9 @@ class OCLBenchmark_GPU(BabelstreamBenchmarkBase):
     tags = {"ocl"}
     executable = "ocl-stream"
     num_gpus_per_node = 1
-
+#--------------------------------------------------
+#-- Kokkos
+#--------------------------------------------------
 @rfm.simple_test
 class KOKKOSBenchmark_CPU(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
@@ -107,9 +121,100 @@ class KOKKOSBenchmark_GPU(BabelstreamBenchmarkBase):
     tags = {"kokkos"}
     executable = "kokkos-stream"
     num_gpus_per_node = 1
-
+#--------------------------------------------------
+#-- TBB
+#--------------------------------------------------
 @rfm.simple_test
 class TBBBenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
     tags = {"tbb"}
     executable = "tbb-stream"
+#--------------------------------------------------
+#-- Thrust
+#--------------------------------------------------
+@rfm.simple_test
+class THRUSTBenchmark_NVIDIA(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu +cuda']
+    tags = {"thrust"}
+    executable = "thrust-stream"
+    num_gpus_per_node = 1
+
+@rfm.simple_test
+class THRUSTBenchmark_AMD(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu']
+    tags = {"thrust"}
+    executable = "thrust-stream"
+    num_gpus_per_node = 1
+#--------------------------------------------------
+#-- RAJA
+#--------------------------------------------------
+@rfm.simple_test
+class RAJABenchmark_CPU(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"raja"}
+    executable = "kokkos-stream"
+
+@rfm.simple_test
+class RAJABenchmark_GPU(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu']
+    tags = {"raja"}
+    executable = "kokkos-stream"
+    num_gpus_per_node = 1
+#--------------------------------------------------
+#-- OpenMP
+#--------------------------------------------------
+@rfm.simple_test
+class OMPBenchmark_CPU(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"omp"}
+    executable = "omp-stream"
+
+@rfm.simple_test
+class OMPBenchmark_NVIDIA(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu +cuda']
+    tags = {"omp"}
+    executable = "omp-stream"
+    num_gpus_per_node = 1
+
+@rfm.simple_test
+class OMPBenchmark_AMD(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu']
+    tags = {"omp"}
+    executable = "omp-stream"
+    num_gpus_per_node = 1
+
+#--------------------------------------------------
+#-- std-data,ranges,indices
+#--------------------------------------------------
+@rfm.simple_test
+class STDBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"std"}
+    executable = "std-stream"
+
+#--------------------------------------------------
+#-- SYCL2020
+#--------------------------------------------------
+@rfm.simple_test
+class SYCL2020Benchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"sycl2020"}
+    executable = "sycl2020-stream"
+
+#--------------------------------------------------
+#-- SYCL
+#--------------------------------------------------
+@rfm.simple_test
+class SYCLBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"sycl"}
+    executable = "sycl-stream"
+
+#--------------------------------------------------
+#-- HIP(ROCm)
+#--------------------------------------------------
+@rfm.simple_test
+class HIPBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['+gpu']
+    tags = {"hip"}
+    executable = "hip-stream"
