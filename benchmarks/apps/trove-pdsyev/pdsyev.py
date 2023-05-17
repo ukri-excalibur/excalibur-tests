@@ -9,7 +9,7 @@ class PdsyevBase(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'trove-pdsyev@v1.0.0'
+    spack_spec = 'trove-pdsyev@v1.0.0%intel'
     executable = 'diag_generic.x'
     executable_opts = ['< gen_n_15K.inp']
     sourcesdir = path.join(path.dirname(__file__),'inputs')

@@ -23,7 +23,7 @@ class RamsesMPI(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'ramses@v1.0.0'
+    spack_spec = 'ramses@v1.0.0%intel'
     executable = 'ramses3d'
     executable_opts = ['params.nml']
     sourcesdir = path.join(path.dirname(__file__),'inputs')

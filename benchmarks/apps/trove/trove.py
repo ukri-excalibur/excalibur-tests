@@ -8,7 +8,7 @@ class Trove(SpackTest):
     descr = 'Base class for Trove'
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    spack_spec = 'trove@v1.0.0'
+    spack_spec = 'trove@v1.0.0%intel'
     executable = 'j-trove.x'
     postrun_cmds = ['tail -n 100 output.txt']
     time_limit = '0d2h30m0s'
