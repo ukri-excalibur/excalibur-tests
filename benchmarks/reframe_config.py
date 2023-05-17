@@ -126,7 +126,7 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 36,
                         'num_cpus_per_core': 1,
@@ -205,7 +205,7 @@ site_configuration = {
                     'access': ['-q pascalq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 36,
                         'num_cpus_per_core': 1,
@@ -227,7 +227,7 @@ site_configuration = {
                     'access': ['-q voltaq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 40,
                         'num_cpus_per_core': 1,
@@ -280,7 +280,7 @@ site_configuration = {
                     'access': ['-q ampereq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 64,
                         'num_cpus_per_core': 2,
@@ -431,7 +431,7 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'access': ['--partition=gpu', '--qos=standard'],
                     'environs': ['default'],
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'sched_options': {
                         'use_nodes_option': True,
                     },
