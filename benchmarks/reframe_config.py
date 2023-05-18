@@ -342,6 +342,9 @@ site_configuration = {
                     'descr': 'Computing nodes',
                     'scheduler': 'torque',
                     'launcher': 'mpirun',
+                    'env_vars': [
+                        ['I_MPI_JOB_RESPECT_PROCESS_PLACEMENT', 'off'],
+                    ],
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {

@@ -84,11 +84,10 @@ reframe -c examples/sombrero -r --performance-report --system dial2:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
-This platform possesses the pbs/torque scheduler. In order to obtain and use the correct header option (`#PBS -l nodes=?:ppn=?`)
-the following additional flags are required (tested with sphng, trove, trove-pdsyev mpi/openmp hybrid apps):
+This platform possesses the pbs/torque scheduler. In order to run mpi/openMP hybrid jobs correctly,
+the following additional flag is required (tested with sphng, trove, trove-pdsyev mpi/openMP hybrid apps):
 
 * `-S executable='-perhost $NUM_TASKS_PER_NODE <NAME-OF-EXECUTABLE>'`
-* `-S env_vars=I_MPI_JOB_RESPECT_PROCESS_PLACEMENT:off`
 
 ## DIaL3
 
