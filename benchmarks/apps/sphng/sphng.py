@@ -17,22 +17,20 @@ class SphngBase(SpackTest):
     num_tasks_per_node = required
     num_cpus_per_task = required
 
+    def set_common_env_variables(self):
+        self.env_vars['OMP_PLACES'] = 'cores'
+
+        # pre-requisite IntelMPI's mpirun launcher so far...
+        if(self.current_partition.scheduler.registered_name == 'slurm'):
+            if(self.num_tasks_per_node == current_partition.processor.num_cpus_per_socket):
+                self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
+        elif(self.current_partition.scheduler.registered_name == 'torque'):
+            self.env_vars['I_MPI_JOB_RESPECT_PROCESS_PLACEMENT'] = 'off'
+            self.executable = '-perhost $NUM_TASKS_PER_NODE ' + self.executable
+
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
-
-    @run_before('run')
-    def check_num_tasks(self):
-        """
-        When num_tasks = num_cpus_per_socket the intel mpi fails to correctly
-        map threads. If this occurs then we need to set an additional
-        environment variable
-        """
-
-        num_cpus_per_socket = self.current_partition.processor.num_cpus_per_socket
-        if(self.num_tasks_per_node == num_cpus_per_socket):
-            self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
-        pass
 
 
 class SphngBase_ifile(SphngBase):
@@ -91,7 +89,7 @@ class Sphng_Single_Node_ifile(SphngBase_ifile):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
 
 @rfm.simple_test
@@ -116,7 +114,7 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
         self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')
 
@@ -141,7 +139,7 @@ class Sphng_Strong_Scaling_ifile(SphngBase_ifile):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
 
 @rfm.simple_test
@@ -166,7 +164,7 @@ class Sphng_Strong_Scaling_evolution(SphngBase_evolution):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
         self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')
 
@@ -191,7 +189,7 @@ class Sphng_Weak_Scaling_ifile(SphngBase_ifile):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
         self.prerun_cmds = ['cp weak_n' + str(self.num_nodes) +'/inspho .', 'cp weak_n'+ str(self.num_nodes) + '/setup.txt .']
 
@@ -218,6 +216,6 @@ class Sphng_Weak_Scaling_evolution(SphngBase_evolution):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
         self.sourcesdir = path.join(self.Ifile_fixture.stagedir,'')

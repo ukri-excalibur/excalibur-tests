@@ -23,6 +23,17 @@ class Trove(SpackTest):
                 },
             }
 
+    def set_common_env_variables(self):
+        self.env_vars['OMP_PLACES'] = 'cores'
+
+        # pre-requisite IntelMPI's mpirun launcher so far...
+        if(self.current_partition.scheduler.registered_name == 'slurm'):
+            if(self.num_tasks_per_node == current_partition.processor.num_cpus_per_socket):
+                self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
+        elif(self.current_partition.scheduler.registered_name == 'torque'):
+            self.env_vars['I_MPI_JOB_RESPECT_PROCESS_PLACEMENT'] = 'off'
+            self.executable = '-perhost $NUM_TASKS_PER_NODE ' + self.executable
+
     @run_before('compile')
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
@@ -41,19 +52,6 @@ class Trove(SpackTest):
         self.perf_variables = {
                 'Total elapsed time':self.get_elapsed_time()
                 }
-
-    @run_before('run')
-    def check_num_tasks(self):
-        """
-        When num_tasks = num_cpus_per_socket the intel mpi fails to correctly
-        map threads. If this occurs then we need to set an additional
-        environment variable
-        """
-
-        num_cpus_per_socket = self.current_partition.processor.num_cpus_per_socket
-        if(self.num_tasks_per_node == num_cpus_per_socket):
-            self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
-        pass
 
 
 @rfm.simple_test
@@ -82,7 +80,7 @@ class TROVE_12N(Trove):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
 
 @rfm.simple_test
@@ -111,7 +109,7 @@ class TROVE_14N(Trove):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()
 
 
 @rfm.simple_test
@@ -140,4 +138,4 @@ class TROVE_16N(Trove):
 
         self.env_vars['NUM_TASKS_PER_NODE'] = self.num_tasks_per_node
         self.env_vars['OMP_NUM_THREADS'] = self.num_cpus_per_task
-        self.env_vars['OMP_PLACES'] = 'cores'
+        self.set_common_env_variables()

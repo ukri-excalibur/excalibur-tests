@@ -84,11 +84,6 @@ reframe -c examples/sombrero -r --performance-report --system dial2:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
-This platform possesses the pbs/torque scheduler. In order to run mpi/openMP hybrid jobs correctly,
-the following additional flag is required (tested with sphng, trove, trove-pdsyev mpi/openMP hybrid apps):
-
-* `-S executable='-perhost $NUM_TASKS_PER_NODE <NAME-OF-EXECUTABLE>'`
-
 ## DIaL3
 
 ### Queue options
@@ -101,14 +96,6 @@ reframe -c examples/sombrero -r --performance-report --system dial3:compute-node
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
-
-Tests where `num_tasks = num_cpus_per_socket` appear to fail when using IntelMPI with slurm. As a result, we set the environment
-variable `I_MPI_PIN_RESPECT_CPUSET=0` for tests where this is the case. It can be passed as a command line argument to reframe
-using the following command.
-
-`-S env_vars=I_MPI_PIN_RESPECT_CPUSET:0`
-
-Further cpu/core pinning could be verified with the help of an additional flag `-S env_vars=I_MPI_DEBUG:4`.
 
 ## Isambard 2
 
