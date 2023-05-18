@@ -16,14 +16,13 @@ class HpcgExcalibur(MakefilePackage):
     url = "https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/1.1.tar.gz"
 
     version(
-#        "1.0", sha256= "60dbd50e81cb284e9ab3f1b5564f2a9cb89bf438f5a56f33c4300afbc1df8780"
-        "1.1"#, sha256= "60dbd50e81cb284e9ab3f1b5564f2a9cb89bf438f5a56f33c4300afbc1df8780"
+        "1.1", sha256= "795eda6f5007e01cd8008feb17b9665585359989de86fc1e831ceb2a4672997d"
     )
 
     version(
         "hpcg_lfric",
-        url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/lfric_latest.tar.gz",
-        sha256="433f412a6fbc6d1648aa4254576c07c9b2371a4787682de9273b6a87abd58ed9"
+        url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/lfric_180523.tar.gz",
+        sha256="fb3dec7c7c0727922fac91ec487dd42b8a62f56d9bbda61b97e351aee52e45ed"
     )        
 
     version(
@@ -38,7 +37,8 @@ class HpcgExcalibur(MakefilePackage):
     @property
     def build_targets(self):
         ''' Makefile has no install, but spack seems to want one for this package, so do build instead of install here (or inherit something else??) '''
-        return ['arch=Linux_MPI', "CXXFLAGS='-DHPCG_NO_OPENMP'"]#, 'install']
+#        return ['arch=Linux_MPI']
+        return ['arch=Linux_MPI',  "CXXFLAGS=$(HPCG_DEFS) -O3"]
 
 #    @property
 #    def install_targets(self):
@@ -50,7 +50,7 @@ class HpcgExcalibur(MakefilePackage):
     def install(self, spec, prefix):
         ''' Makefile has no install '''
         mkdirp(prefix.bin)
-        # add input file for the lfric case - can possibly copy to cwd if always using reframe?
+        # copy dinodump.dat to the bin dir (same place as bin as easy to find with reframe)
         if self.spec.satisfies("@hpcg_lfric"):
             import shutil
             shutil.copyfile('dinodump.dat', prefix.bin + '/dinodump.dat')
