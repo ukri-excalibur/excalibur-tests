@@ -6,19 +6,20 @@ from benchmarks.modules.utils import SpackTest
 
 class PdsyevBase(SpackTest):
 
+    descr = 'Base class for Trove-Pdsyev'
     valid_systems = ['*']
     valid_prog_environs = ['default']
-
+    time_limit = '0d0h5m0s'
+    exclusive_access = True
     spack_spec = 'trove-pdsyev@v1.0.0%intel'
     executable = 'diag_generic.x'
     executable_opts = ['< gen_n_15K.inp']
+
     sourcesdir = path.join(path.dirname(__file__),'inputs')
 
     num_tasks = required
     num_tasks_per_node = required
     num_cpus_per_task = required
-
-    time_limit = '5m'
 
     reference = {
             '*': {

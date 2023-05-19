@@ -3,15 +3,16 @@ import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
 
-class Trove(SpackTest):
+class TroveBase(SpackTest):
 
     descr = 'Base class for Trove'
     valid_systems = ['*']
     valid_prog_environs = ['default']
+    time_limit = '0d2h30m0s'
+    exclusive_access = True
     spack_spec = 'trove@v1.0.0%intel'
     executable = 'j-trove.x'
     postrun_cmds = ['tail -n 100 output.txt']
-    time_limit = '0d2h30m0s'
 
     num_tasks = required
     num_tasks_per_node = required
@@ -55,7 +56,7 @@ class Trove(SpackTest):
 
 
 @rfm.simple_test
-class TROVE_12N(Trove):
+class TROVE_12N(TroveBase):
 
     descr = 'trove test: 12N'
     tags = {'12N'}
@@ -84,7 +85,7 @@ class TROVE_12N(Trove):
 
 
 @rfm.simple_test
-class TROVE_14N(Trove):
+class TROVE_14N(TroveBase):
 
     descr = 'trove test: 14N'
     tags = {'14N'}
@@ -113,7 +114,7 @@ class TROVE_14N(Trove):
 
 
 @rfm.simple_test
-class TROVE_16N(Trove):
+class TROVE_16N(TroveBase):
 
     descr = 'trove test: 16N'
     tags = {'16N'}

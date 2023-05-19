@@ -9,9 +9,10 @@ class SphngBase(SpackTest):
     descr = 'Base class for Sphng'
     valid_systems = ['*']
     valid_prog_environs = ['default']
+    time_limit = '0d0h30m0s'
+    exclusive_access = True
     spack_spec = 'sphng@v1.0.0%intel'
     executable = 'sph_tree_rk_gradh'
-    time_limit = '0d0h30m0s'
 
     num_tasks = required
     num_tasks_per_node = required

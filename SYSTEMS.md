@@ -84,6 +84,8 @@ reframe -c examples/sombrero -r --performance-report --system dial2:compute-node
 
 where `<ACCOUNT>` is the project you want to charge.
 
+Note: for exclusive access require to pass -J='-l naccesspolicy=SINGLEJOB -n'
+
 ## DIaL3
 
 ### Queue options

@@ -20,15 +20,16 @@ class Ramses_download_inputs(rfm.RunOnlyRegressionTest):
 
 class RamsesMPI(SpackTest):
 
+    descr = 'Base class for Ramses'
     valid_systems = ['*']
     valid_prog_environs = ['default']
-
+    time_limit = '0d0h10m0s'
+    exclusive_access = True
     spack_spec = 'ramses@v1.0.0%intel'
     executable = 'ramses3d'
     executable_opts = ['params.nml']
-    sourcesdir = path.join(path.dirname(__file__),'inputs')
 
-    time_limit = '10m'
+    sourcesdir = path.join(path.dirname(__file__),'inputs')
 
     reference = {
             '*': {
