@@ -28,7 +28,7 @@ class Trove(SpackTest):
 
         # pre-requisite IntelMPI's mpirun launcher so far...
         if(self.current_partition.scheduler.registered_name == 'slurm'):
-            if(self.num_tasks_per_node == current_partition.processor.num_cpus_per_socket):
+            if(self.num_tasks_per_node == self.current_partition.processor.num_cpus_per_socket):
                 self.env_vars['I_MPI_PIN_RESPECT_CPUSET'] = '0'
         elif(self.current_partition.scheduler.registered_name == 'torque'):
             self.env_vars['I_MPI_JOB_RESPECT_PROCESS_PLACEMENT'] = 'off'
