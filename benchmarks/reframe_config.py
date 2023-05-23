@@ -126,7 +126,7 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 36,
                         'num_cpus_per_core': 1,
@@ -205,7 +205,7 @@ site_configuration = {
                     'access': ['-q pascalq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 36,
                         'num_cpus_per_core': 1,
@@ -227,7 +227,7 @@ site_configuration = {
                     'access': ['-q voltaq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 40,
                         'num_cpus_per_core': 1,
@@ -271,6 +271,7 @@ site_configuration = {
             'name': 'isambard-phase3',
             'descr': 'Isambard 2 Phase 3 system',
             'hostnames': ['p3-login'],
+            'modules_system': 'lmod',
             'partitions': [
                 {
                     'name': 'ampere',
@@ -280,7 +281,7 @@ site_configuration = {
                     'access': ['-q ampereq'],
                     'environs': ['default'],
                     'max_jobs': 20,
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 64,
                         'num_cpus_per_core': 2,
@@ -294,6 +295,38 @@ site_configuration = {
                             'options': ['ngpus={num_gpus_per_node}:mem=20G'],
                         },
                     ],
+                },
+                {
+                    'name': 'instict',
+                    'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpirun',
+                    'access': ['-q instinctq', '-l place=excl'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'features': ['gpu', 'rocm'],
+                    'processor': {
+                        'num_cpus': 64,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 32,
+                    }
+                },
+                {
+                    'name': 'milan',
+                    'descr': 'AMD EPYC 7713 64-Core Processor "Milan" compute nodes',
+                    'scheduler': 'pbs',
+                    'launcher': 'mpiexec',
+                    'modules': ['cray-pals'],
+                    'access': ['-q milanq'],
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 256,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 64,
+                    },
                 },
             ]
         },  # end Isambard Phase3
@@ -432,7 +465,7 @@ site_configuration = {
                     'launcher': 'mpirun',
                     'access': ['--partition=gpu', '--qos=standard'],
                     'environs': ['default'],
-                    'features': ['gpu'],
+                    'features': ['gpu', 'cuda'],
                     'sched_options': {
                         'use_nodes_option': True,
                     },
