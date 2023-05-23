@@ -106,7 +106,6 @@ class SombreroBenchmark(SpackTest):
         self.num_cpus_per_task = self.cpus_per_task
         # Tags are useful for categorizing tests and quickly selecting those of interest.
         self.tags.add("example")
-        self.tags.add("test" + str(self.tasks - 2 + self.cpus_per_task * 2))
 
     @run_after('setup')
     def setup_variables(self):
