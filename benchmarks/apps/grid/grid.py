@@ -47,6 +47,9 @@ class GridBenchmark_ITT(GridBenchmark):
         'dial3': {
             'Performance': (28000, None, None, 'Mflop/s per node')
         },
+        'isambard-macs:knl': {
+            'Performance': (6500, None, None, 'Mflop/s per node')
+        },
         'myriad': {
             'Performance': (350000, None, None, 'Mflop/s per node')
         },
@@ -66,9 +69,6 @@ class GridBenchmark_ITT(GridBenchmark):
                              self.current_partition.processor.num_cpus //
                              self.num_cpus_per_task)
         self.executable_opts = [f'--mpi {self.mpi}', f'--shm {self.shm}', '--shm-hugetlb']
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
-        }
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 

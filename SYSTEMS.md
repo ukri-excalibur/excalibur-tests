@@ -101,16 +101,19 @@ where `<ACCOUNT>` is the project you want to charge.
 
 ## Isambard 2
 
-### Cascadelake partition
+### Multi-Architecture Comparison System (MACS) partition
 
-#### Compilation on compute node
+#### Compilation on compute nodes
 
-There is no Cascadelake login node on Isambard 2.
-To run compilation on the compute node, you have to set the attribute [`build_locally`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally) to `false` with `-S build_locally=false`:
+Login nodes on the Isambard 2 MACS partition have Intel "Broadwell" CPUs, but most of the compute nodes use CPUs of different microarchitecture, which means that you cannot directly compile optimised code for the compute nodes with Spack while on the login nodes.
+To run compilation on the compute node, you have to set the attribute [`build_locally`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally) to `false` with `-S build_locally=false`, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system isambard-cascadelake:compute-node -S build_locally=false
+reframe -c examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
+reframe -c examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
 ```
+
+You may also need to compile GPU applications on the compute nodes, as the login node does not have any GPUs (this really depends on the build system of the application at hand, whether it needs access to a GPU during the build or it is sufficient to have the GPU toolkit available).
 
 ## Myriad
 

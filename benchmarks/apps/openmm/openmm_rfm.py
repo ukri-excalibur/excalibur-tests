@@ -33,7 +33,8 @@ def download(url, match, dest):
 
 @rfm.simple_test
 class OpenMMBenchmark(SpackTest):
-    valid_systems = ['+gpu']
+    # This can be run only on systems with Nvidia GPUs.
+    valid_systems = ['+gpu +cuda']
     valid_prog_environs = ['default']
     spack_spec = 'openmm@7.7.0 +cuda'
 
@@ -51,7 +52,10 @@ class OpenMMBenchmark(SpackTest):
     num_gpus_per_node = 1
 
     reference = {
-        'isambard-cascadelake:volta': {
+        'isambard-macs:pascal': {
+            'speed': (3.6, -0.2, None, 'ns/day'),
+        },
+        'isambard-macs:volta': {
             'speed': (6.5, -0.2, None, 'ns/day'),
         },
         'isambard-phase3:ampere': {
@@ -76,10 +80,8 @@ class OpenMMBenchmark(SpackTest):
             self.current_partition.processor.num_cpus)
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task},
-            'gpu': {'num_gpus_per_node': self.num_gpus_per_node},
-        }
+        # Request the GPU resources necessary to run this job.
+        self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node}
 
     # Download input files into the sources directory
     @run_after('setup')

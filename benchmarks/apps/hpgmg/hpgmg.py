@@ -31,9 +31,6 @@ class HpgmgTest(SpackTest):
     def setup_variables(self):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
-        self.extra_resources = {
-            'mpi': {'num_slots': self.num_tasks * self.num_cpus_per_task}
-        }
 
     @run_before('sanity')
     def set_sanity_patterns(self):
