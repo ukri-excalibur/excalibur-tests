@@ -67,9 +67,9 @@ def run_sombrero():
     if os.path.exists("perflogs"):
         shutil.rmtree("perflogs", ignore_errors=True)
     # get test log location path
-    perflog_path = os.path.join(os.getcwd(),"perflogs/default/default/")
+    perflog_path = os.path.join(post_processing_dir, "perflogs/default/default/")
     # resolve relative path from post-processing directory to access sombrero benchmark
-    sombrero_bench_path = str((post_processing_dir / "../benchmarks/examples/sombrero/sombrero.py").resolve())
+    sombrero_bench_path = os.path.join(post_processing_dir.parent / "benchmarks/examples/sombrero/sombrero.py")
 
     # use sombrero example to generate new test perflog file
     run_benchmark(sombrero_bench_path)
