@@ -47,9 +47,11 @@ jobs:
           cd spack
           git checkout ${{ matrix.spack_version }}
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
-      - name: Install Pytest
+      - name: Install Pytest + Pandas
         shell: bash
-        run: pip install pytest
+        run: |
+          pip install pytest
+          pip install pandas
       # Make sure `spack` command works
       - name: Spack version number
         shell: bash
