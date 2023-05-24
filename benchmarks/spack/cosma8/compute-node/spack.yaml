@@ -370,8 +370,11 @@ spack:
       operating_system: centos7
       target: x86_64
       modules: []
-      environment: {}
-      extra_rpaths: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
   - compiler:
       spec: oneapi@2021.1
       paths:
