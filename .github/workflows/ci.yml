@@ -47,11 +47,6 @@ jobs:
           cd spack
           git checkout ${{ matrix.spack_version }}
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
-      - name: Install Pytest + Pandas
-        shell: bash
-        run: |
-          pip install pytest
-          pip install pandas
       # Make sure `spack` command works
       - name: Spack version number
         shell: bash
@@ -60,6 +55,11 @@ jobs:
       - name: ReFrame version number
         shell: bash
         run: reframe -V
+      - name: Install Pytest + Pandas
+        shell: bash
+        run: |
+          pip install pytest
+          pip install pandas
       - name: Install OpenMPI, CMake and extra Python packages
         shell: bash
         run: sudo apt-get install openmpi-bin libopenmpi-dev cmake

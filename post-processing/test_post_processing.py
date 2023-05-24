@@ -67,7 +67,7 @@ def run_sombrero():
     if os.path.exists("perflogs"):
         shutil.rmtree("perflogs", ignore_errors=True)
     # get test log location path
-    perflog_path = os.path.join(post_processing_dir, "perflogs/default/default/")
+    perflog_path = os.path.join(post_processing_dir, "perflogs")
     # resolve relative path from post-processing directory to access sombrero benchmark
     sombrero_bench_path = os.path.join(post_processing_dir.parent / "benchmarks/examples/sombrero/sombrero.py")
 
@@ -77,8 +77,12 @@ def run_sombrero():
     sombrero_logs = []
     sombrero_log_re = re.compile(r"^SombreroBenchmark\_\w{8}\.log$")
     # look for newly generated log files
-    for subdirs, dirs, files in os.walk(perflog_path):
+    for root, dirs, files in os.walk(perflog_path):
         sombrero_logs = list(filter(sombrero_log_re.match, files))
+        # if files are found, get file dir path
+        if sombrero_logs:
+            # perflog path with <system>/<partition>
+            perflog_path = root
 
     sombrero_log_path = ""
     # check the log files exist
