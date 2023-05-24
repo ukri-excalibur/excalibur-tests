@@ -38,11 +38,17 @@ def remove_field_from_perflog(line, field_index):
 def test_display_name_parsing():
 
     display_name = "TestName %param1=one %param2=two %param3=three"
-    params = post.get_params_from_name(display_name)
+    params = post.get_display_name_params(display_name)
 
     # check param length, names, and values
     assert len(params) == 3
     assert (params["param1"] == "one") & (params["param2"] == "two") & (params["param3"] == "three")
+
+    display_name = "TestName"
+    params = post.get_display_name_params(display_name)
+
+    # no params expected
+    assert len(params) == 0
 
 @pytest.fixture()
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
@@ -137,14 +143,14 @@ def test_read_perflog(run_sombrero):
     # get dataframe from complete perflog
     df = post.read_perflog(sombrero_log_path)
 
-    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks", "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node", "flops_value", "flops_unit", "flops_ref", "flops_lower_thres", "flops_upper_thres", "spack_spec", "display_name", "system", "partition", "environ", "extra_resources", "env_vars", "tags"]
+    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks", "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node", "flops_value", "flops_unit", "flops_ref", "flops_lower_thres", "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task", "system", "partition", "environ", "extra_resources", "env_vars", "tags"]
 
     # check example perflog file is read appropriately
     # check all expected columns are present
     assert df.columns.tolist() == EXPECTED_FIELDS
     # check all cells in first row contain something
     assert all(df[column][0] != "" for column in df)
-    # check display name matches
-    assert re.compile(r"SombreroBenchmark %tasks=\d %cpus_per_task=\d").match(df["display_name"][0])
+    # check test name matches
+    assert df["test_name"][0] == "SombreroBenchmark"
     # check tags match
     assert df["tags"][0] == "example"
