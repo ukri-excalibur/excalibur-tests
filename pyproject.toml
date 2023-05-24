@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
     "reframe-hpc >= 4.1.3, < 5.0.0",
     "matplotlib >= 3.0.0",
+    "pandas >= 2.0.1",
 ]
 
 [tool.setuptools_scm]
