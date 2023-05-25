@@ -45,7 +45,7 @@ class HPCGBenchmark(SpackTest):
     @run_after('setup')
     def setup_variables(self):
         # Strictly HPCG is only intended to run for 1 OMP thread, except in original version
-        self.variables['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
     @run_before('compile')
     def setup_build_system(self):
@@ -78,7 +78,6 @@ class HPCGBenchmark(SpackTest):
         self.set_var_default('num_tasks_per_node', 
                              self.current_partition.processor.num_cpus // 
                              self.num_cpus_per_task) 
-        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         
         
 @rfm.simple_test
