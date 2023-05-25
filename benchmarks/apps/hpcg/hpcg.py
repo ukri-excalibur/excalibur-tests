@@ -9,13 +9,10 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import glob
 
-# Add top-level directory to `sys.path` so we can easily import extra modules
-# from any directory.
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
-from modules.utils import SpackTest
+from benchmarks.modules.utils import SpackTest
 
 # Class to define the benchmark.  See
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
@@ -34,10 +31,6 @@ class HPCGBenchmark(SpackTest):
     executable_opts = []
     # Time limit of the job, automatically set in the job script.
     time_limit = '3m'
-    # These extra resources are needed for when using the SGE scheduler.
-    extra_resources = {
-        'mpi': {'num_slots': num_tasks * num_cpus_per_task}
-    }
 
     reference = {
         # flops? Gflops/s ?
@@ -74,27 +67,35 @@ class HPCGBenchmark(SpackTest):
                 r'VALID with a GFLOP/s rating of=(\S+)',
                 self.output_data, 1, float),
         }
-
+        
+    @run_after('setup') 
+    def setup_num_tasks(self): 
+        self.set_var_default( 
+            'num_tasks', 
+            self.current_partition.processor.num_cpus // 
+            min(1, self.current_partition.processor.num_cpus_per_core) // 
+            self.num_cpus_per_task) 
+        self.set_var_default('num_tasks_per_node', 
+                             self.current_partition.processor.num_cpus // 
+                             self.num_cpus_per_task) 
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        
+        
 @rfm.simple_test
 class HPCG_Stencil(HPCGBenchmark):
     spack_spec = 'hpcg_excalibur'        
-    num_tasks = 40
-    num_tasks_per_node = 40
 
 @rfm.simple_test
 class HPCG_Original(HPCGBenchmark):
     spack_spec = 'hpcg_excalibur@hpcg_original'
-    num_tasks = 40 # get this from cascade lake?
-    num_tasks_per_node = 40
     
 @rfm.simple_test
 class HPCG_LFRic(HPCGBenchmark):
     # As above but with the LFRic style stencil
     spack_spec = 'hpcg_excalibur@hpcg_lfric'
-    num_tasks = 40
-    num_tasks_per_node = 40
 
     @run_after('compile')
     def copy_input_file(self):
-        # during install a file will be copied to the spack env bin - get it and put it in stagedir
-        self.prerun_cmds = ["python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"dinodump.dat\"), os.getcwd()+\"/dinodump.dat\")'"]
+        # during install data files will be copied to the spack env bin - put them in stagedir to run with
+        self.prerun_cmds = ["python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"dinodump.dat\"), os.getcwd()+\"/dinodump.dat\")'",
+                            "python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"hpcg.dat\"), os.getcwd()+\"/hpcg.dat\")'"]
