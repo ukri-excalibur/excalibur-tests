@@ -2,4 +2,6 @@ include benchmarks/reframe_config.py
 recursive-include benchmarks/apps *
 recursive-include benchmarks/examples *
 recursive-include benchmarks/modules *
-recursive-include benchmarks/spack *
+recursive-include benchmarks/spack *.yaml
+recursive-include benchmarks/spack/repo *
+prune __pycache__
