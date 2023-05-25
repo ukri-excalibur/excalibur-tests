@@ -297,7 +297,7 @@ site_configuration = {
                     ],
                 },
                 {
-                    'name': 'instict',
+                    'name': 'instinct',
                     'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
