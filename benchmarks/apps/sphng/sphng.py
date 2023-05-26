@@ -1,7 +1,17 @@
 import os.path as path
 import reframe as rfm
+import reframe.core.runtime as rt
 import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
+
+
+def threads_per_part():
+    for p in rt.runtime().system.partitions:
+        nthr = 1
+        while nthr < p.processor.num_cores:
+            yield (p.fullname, nthr)
+            nthr <<= 1
+        yield (p.fullname, p.processor.num_cores)
 
 
 class SphngBase(SpackTest):
@@ -72,14 +82,17 @@ class SphngBase_evolution(SphngBase):
 
 class Sphng_Single_Node_ifile(SphngBase_ifile):
 
-    mpi_tasks = parameter(2**i for i in range(0,8))
+    mpi_tasks = parameter(threads_per_part(), fmt=lambda x: x[1])
+
+    @run_after('init')
+    def setup_thread_config(self):
+        self.valid_systems = [self.mpi_tasks[0]]
 
     @run_after('setup')
     def set_env_variables(self):
 
         self.core_count_1_node = self.current_partition.processor.num_cpus // min(1, self.current_partition.processor.num_cpus_per_core)
-        self.num_tasks = self.mpi_tasks
-        self.num_tasks_per_node = self.mpi_tasks
+        self.num_tasks = self.num_tasks_per_node = int(self.mpi_tasks[1])
         self.thread_count = int(self.core_count_1_node/self.num_tasks_per_node)
         self.num_cpus_per_task = self.thread_count
 
@@ -100,11 +113,14 @@ class Sphng_Single_Node_evolution(SphngBase_evolution):
     tags = {'single-node'}
     Ifile_fixture = fixture(Sphng_Single_Node_ifile)
 
+    @run_after('init')
+    def setup_thread_config(self):
+        self.valid_systems = [self.Ifile_fixture.mpi_tasks[0]]
+
     @run_after('setup')
     def set_sourcedir_and_job_params(self):
 
-        self.num_tasks = self.Ifile_fixture.mpi_tasks
-        self.num_tasks_per_node = self.Ifile_fixture.mpi_tasks
+        self.num_tasks = self.num_tasks_per_node = self.Ifile_fixture.num_tasks
         self.thread_count = self.Ifile_fixture.thread_count
         self.num_cpus_per_task = self.thread_count
 
