@@ -61,7 +61,7 @@ class HPCGBenchmark(SpackTest):
         # If other outputfiles in stage directory before running, ensure use latest one
         possible_outfiles = glob.glob(self.stagedir + "/HPCG*.txt") 
         if (len(possible_outfiles) >= 1):
-            ordered_outfiles = sorted(files, key=lambda t: os.stat(t).st_mtime)
+            ordered_outfiles = sorted(possible_outfiles, key=lambda t: os.stat(t).st_mtime)
             self.output_data  = ordered_outfiles[-1]  
         else:
             self.output_data = '' #no data
