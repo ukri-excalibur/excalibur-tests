@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os.path as path
+import os
 import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
@@ -17,7 +18,7 @@ from benchmarks.modules.utils import SpackTest
 # Class to define the benchmark.  See
 # https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
 # for more information about the API of ReFrame tests.
-#@rfm.simple_test
+
 class HPCGBenchmark(SpackTest):
     # Systems and programming environments where to run this benchmark.  We
     # typically run them on all systems ('*'), unless there are particular
@@ -25,6 +26,9 @@ class HPCGBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
     num_cpus_per_task = 1
+    num_tasks = required
+    num_tasks_per_node = required
+
     # The program for running the benchmarks.
     executable = 'xhpcg'
     # Arguments to pass to the program above to run the benchmarks.
@@ -51,17 +55,26 @@ class HPCGBenchmark(SpackTest):
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
 
+        
+    @run_after('run')
+    def set_output_datafile(self):
+        # If other outputfiles in stage directory before running, ensure use latest one
+        possible_outfiles = glob.glob(self.stagedir + "/HPCG*.txt") 
+        if (len(possible_outfiles) >= 1):
+            ordered_outfiles = sorted(files, key=lambda t: os.stat(t).st_mtime)
+            self.output_data  = ordered_outfiles[-1]  
+        else:
+            self.output_data = '' #no data
+        
     @run_before('sanity')
     def set_sanity_patterns(self):
-        # Should probably check that it's a valid run
-        self.sanity_patterns = sn.assert_found(r'', self.stdout)
+        # Check that it's a valid run
+        self.sanity_patterns = sn.assert_found(r'VALID with a GFLOP/s rating of=', self.output_data) 
 
     @run_before('performance')
     def set_perf_patterns(self):
         # This performance pattern parses the output of the program to extract
         # the desired figure of merit.
-        possible_outfiles = glob.glob(self.stagedir + "/HPCG*.txt") 
-        self.output_data  = possible_outfiles[0] 
         self.perf_patterns = {
             'flops': sn.extractsingle(
                 r'VALID with a GFLOP/s rating of=(\S+)',
@@ -74,16 +87,15 @@ class HPCGBenchmark(SpackTest):
             'num_tasks', 
             self.current_partition.processor.num_cpus // 
             min(1, self.current_partition.processor.num_cpus_per_core) // 
-            self.num_cpus_per_task) 
+            self.num_cpus_per_task)
         self.set_var_default('num_tasks_per_node', 
                              self.current_partition.processor.num_cpus // 
                              self.num_cpus_per_task) 
         
-        
 @rfm.simple_test
 class HPCG_Stencil(HPCGBenchmark):
-    spack_spec = 'hpcg_excalibur'        
-
+    spack_spec = 'hpcg_excalibur@hpcg_stencil'
+    
 @rfm.simple_test
 class HPCG_Original(HPCGBenchmark):
     spack_spec = 'hpcg_excalibur@hpcg_original'

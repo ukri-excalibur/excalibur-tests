@@ -12,7 +12,7 @@ class HpcgExcalibur(MakefilePackage):
     url = "https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/stencil_180523.tar.gz"
 
     version(
-        "stencil_180523",
+        "hpcg_stencil",
         url = "https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/stencil_180523.tar.gz",
         sha256= "b82517ade50c7ef2d92176b411328ac705a42c3b1d954a5ec3e998a1694481dc"
     )
