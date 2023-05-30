@@ -8,15 +8,11 @@ import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 from reframe.core.backends import getlauncher
-# Add top-level directory to `sys.path` so we can easily import extra modules
-# from any directory.
-sys.path.append(path.join(path.dirname(__file__), '..', '..'))
+
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
 from modules.utils import SpackTest
-
-
 
 # spack install --add babelstream%gcc@9.2.0 +thrust backend=cuda cuda_arch=70
 @rfm.simple_test
