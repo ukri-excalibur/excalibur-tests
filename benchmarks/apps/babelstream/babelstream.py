@@ -24,6 +24,8 @@ class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
     valid_systems = ['*']
     valid_prog_environs = ['default'] 
+
+
     
 
     @run_before('run')
@@ -91,6 +93,50 @@ class CUDABenchmark(BabelstreamBenchmarkBase):
     tags = {"cuda"}
     executable = "cuda-stream"
     num_gpus_per_node = 1
+    def __init__(self):
+        self.reference = {
+            'isambard-macs:pascal': {
+                'Copy':  (0, None, 732000, 'MBytes/sec'),
+                'Mul': (0, None, 732000, 'MBytes/sec'),
+                'Add':   (0, None, 732000, 'MBytes/sec'),
+                'Triad': (0, None, 732000, 'MBytes/sec'),
+                'Dot': (0, None, 732000, 'MBytes/sec')
+            },
+            'isambard-macs:volta': {
+                'Copy':  (0, None, 897000, 'MBytes/sec'),
+                'Mul':  (0, None, 897000, 'MBytes/sec'),
+                'Add':  (0, None, 897000, 'MBytes/sec'),
+                'Triad':  (0, None, 897000, 'MBytes/sec'),
+                'Dot':  (0, None, 897000, 'MBytes/sec')
+                
+            },      
+            'isambard-phase3:ampere': {
+                'Copy':  (0, None, 1555000, 'MBytes/sec'),
+                'Mul':  (0, None, 1555000, 'MBytes/sec'),
+                'Add':  (0, None, 1555000, 'MBytes/sec'),
+                'Triad':  (0, None, 1555000, 'MBytes/sec'),
+                'Dot':  (0, None, 1555000, 'MBytes/sec')
+            },
+#             Myriad has four types of GPU nodes: E, F, J and L.
+# L-type nodes each have four NVIDIA 40G A100s. (Compute Capability 80)
+# F-type and E-type nodes each have two NVIDIA Tesla V100s. The CPUs are 
+# slightly different on the different letters, see above. (Compute Capability 70)
+# J-type nodes each have two NVIDIA Tesla P100s. (Compute Capability 60)
+            ################################################
+            # 'myriad': {
+            #     'Copy':  (25200, -0.05, 0.05, 'MB/s'),
+            #     'Scale': (16800, -0.05, 0.05, 'MB/s'),
+            #     'Add':   (18500, -0.05, 0.05, 'MB/s'),
+            #     'Triad': (18800, -0.05, 0.05, 'MB/s')
+            # },
+            #################################################
+            'tursa': {
+                'Copy':  (0, None, 600000, 'MB/s'),
+                'Scale': (0, None, 600000, 'MB/s'),
+                'Add':   (0, None, 600000, 'MB/s'),
+                'Triad': (0, None, 600000, 'MB/s')
+            },
+        }
 #--------------------------------------------------
 #-- OpenCL
 #--------------------------------------------------
@@ -129,6 +175,17 @@ class TBBBenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
     tags = {"tbb"}
     executable = "tbb-stream"
+    def __init__(self):
+        self.reference = {
+            'isambard-macs:cascadelake': { # https://en.wikichip.org/wiki/intel/xeon_gold/6230https://en.wikichip.org/wiki/intel/xeon_gold/6230 (SINGLE)
+                'Copy':  (0, None, 231860, 'MBytes/sec'),
+                'Mul': (0, None, 231860, 'MBytes/sec'),
+                'Add':   (0, None, 231860, 'MBytes/sec'),
+                'Triad': (0, None, 231860, 'MBytes/sec'),
+                'Dot': (0, None, 231860, 'MBytes/sec')
+            },
+
+        }
 #--------------------------------------------------
 #-- Thrust
 #--------------------------------------------------
