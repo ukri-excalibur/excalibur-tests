@@ -47,7 +47,7 @@ class SphngBase(SpackTest):
 class SphngBase_ifile(SphngBase):
 
     prerun_cmds = ['rm -rf fort* TEST* notify ifile sphng_setup.o']
-    executable_opts = ['initial ifile < ./setup.txt &> sphng_setup.o']
+    executable_opts = ['initial ifile < setup.txt &> sphng_setup.o']
 
     @sanity_function
     def validate_ifile_generation(self):
@@ -57,6 +57,7 @@ class SphngBase_ifile(SphngBase):
 class SphngBase_evolution(SphngBase):
 
     executable_opts = ['evolution ifile']
+    postrun_cmds = ['cat test01']
 
     reference = {
         'dial:slurm-local': {
@@ -64,20 +65,13 @@ class SphngBase_evolution(SphngBase):
             },
         }
 
-    @run_before('sanity')
-    def run_complete_pattern(self):
-        self.pattern = r'ended on'
-        self.sanity_patterns = sn.assert_found(self.pattern, 'test01')
+    @sanity_function
+    def validate_successful_run(self):
+        return sn.assert_found(r'ended on', self.stdout)
 
-    @performance_function('minutes')
-    def get_elapsed_time(self):
-        return sn.extractsingle(r'cpu time used for this run :\s+(\S+)\s', 'test01', 1, float)
-
-    @run_before('performance')
-    def runtime_extract_pattern(self):
-        self.perf_variables = {
-                'Total elapsed time':self.get_elapsed_time()
-                }
+    @performance_function('minutes', perf_key='Total elapsed time')
+    def extract_elapsed_time(self):
+        return sn.extractsingle(r'cpu time used for this run :\s+(\S+)\s', self.stdout, 1, float)
 
 
 class Sphng_Single_Node_ifile(SphngBase_ifile):

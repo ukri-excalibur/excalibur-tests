@@ -12,7 +12,6 @@ class TroveBase(SpackTest):
     exclusive_access = True
     spack_spec = 'trove@v1.0.0%intel'
     executable = 'j-trove.x'
-    postrun_cmds = ['tail -n 100 output.txt']
 
     num_tasks = required
     num_tasks_per_node = required
@@ -39,20 +38,13 @@ class TroveBase(SpackTest):
     def setup_build_system(self):
         self.build_system.specs = [self.spack_spec]
 
-    @run_before('sanity')
-    def run_complete_pattern(self):
-        self.pattern = r'End of TROVE'
-        self.sanity_patterns = sn.assert_found(self.pattern, 'output.txt')
+    @sanity_function
+    def validate_successful_run(self):
+        return sn.assert_found(r'End of TROVE', self.stdout)
 
-    @performance_function('seconds')
-    def get_elapsed_time(self):
-        return sn.extractsingle(r'TROVE\s+(\S+)\s+(\S+)', self.stdout, 2, float)
-
-    @run_before('performance')
-    def runtime_extract_pattern(self):
-        self.perf_variables = {
-                'Total elapsed time':self.get_elapsed_time()
-                }
+    @performance_function('seconds', perf_key='Total elapsed time')
+    def extract_elapsed_time(self):
+        return sn.extractsingle(r'TROVE\s{30}\s+(\S+)\s+(\S+)', self.stdout, 2, float)
 
 
 @rfm.simple_test
@@ -60,7 +52,7 @@ class TROVE_12N(TroveBase):
 
     descr = 'trove test: 12N'
     tags = {'12N'}
-    executable_opts = ['N12.inp > output.txt']
+    executable_opts = ['N12.inp']
 
     param_value = parameter(i for i in range(0,3))
     num_nodes_current_run =  [1,  2,  4]
@@ -89,7 +81,7 @@ class TROVE_14N(TroveBase):
 
     descr = 'trove test: 14N'
     tags = {'14N'}
-    executable_opts = ['N14.inp > output.txt']
+    executable_opts = ['N14.inp']
 
     param_value = parameter(i for i in range(0,5))
     num_nodes_current_run = [1,  2,  4,  8,  16]
@@ -118,7 +110,7 @@ class TROVE_16N(TroveBase):
 
     descr = 'trove test: 16N'
     tags = {'16N'}
-    executable_opts = ['N16.inp > output.txt']
+    executable_opts = ['N16.inp']
 
     param_value = parameter(i for i in range(0,5))
     num_nodes_current_run = [1,  2,  4,  8,   16]
