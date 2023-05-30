@@ -347,19 +347,6 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: oneapi@2021.1
-      paths:
-        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icx
-        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icpx
-        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
-        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
-      flags: {}
-      operating_system: centos7
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
       spec: intel@2021.3.0
       paths:
         cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/intel64/icc
@@ -373,12 +360,86 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
+      spec: intel@2021.7.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
+  - compiler:
+      spec: oneapi@2021.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/compiler/lib/intel64_lin
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/compiler/lib/intel64_lin
+  - compiler:
       spec: oneapi@2021.3.0
       paths:
         cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icx
         cxx: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icpx
         f77: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
         fc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/compiler/lib/intel64_lin
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/compiler/lib/intel64_lin
+  - compiler:
+      spec: oneapi@2022.2.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: dpcpp@2021.3.0
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/dpcpp
+        f77: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: dpcpp@2022.2.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/dpcpp
+        f77: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
       flags: {}
       operating_system: centos7
       target: x86_64
@@ -494,26 +555,34 @@ spack:
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/mkl
     intel-mpi:
       externals:
-      - spec: intel-mpi@2017.1.132
+      - spec: intel-mpi@2017.1.132%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1
-      - spec: intel-mpi@2017.2.174
+      - spec: intel-mpi@2017.2.174%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1
-      - spec: intel-mpi@2018.2.199
+      - spec: intel-mpi@2018.2.199%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2018
-      - spec: intel-mpi@2019.1.144
+      - spec: intel-mpi@2019.1.144%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2019
-      - spec: intel-mpi@2019.2.187
+      - spec: intel-mpi@2019.2.187%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2019
-      - spec: intel-mpi@2019.3.199
+      - spec: intel-mpi@2019.3.199%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2019
-      - spec: intel-mpi@2019.4.243
+      - spec: intel-mpi@2019.4.243%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2019
-      - spec: intel-mpi@2020.0.166
+      - spec: intel-mpi@2020.0.166%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020
-      - spec: intel-mpi@2020.1.217
+      - spec: intel-mpi@2020.1.217%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020
-      - spec: intel-mpi@2020.2.254
+      - spec: intel-mpi@2020.2.254%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020
+    intel-oneapi-mpi:
+      externals:
+      - spec: intel-oneapi-mpi@2021.1.1+generic-names%oneapi@2021.1
+        prefix: /cosma/local/intel/oneAPI_2021.1.0
+      - spec: intel-oneapi-mpi@2021.3.0+generic-names%oneapi@2021.3.0
+        prefix: /cosma/local/intel/oneAPI_2021.3.0
+      - spec: intel-oneapi-mpi@2021.7.1+generic-names%oneapi@2022.2.1
+        prefix: /cosma/local/intel/oneAPI_2022.3.0
     libfuse:
       externals:
       - spec: libfuse@2.9.2
@@ -551,36 +620,36 @@ spack:
         prefix: /usr
     openmpi:
       externals:
-      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%intel
           schedulers=slurm
         prefix: /cosma/local/openmpi/intel_2018/3.0.1
-      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
-          schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
-      - spec: openmpi@3.0.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
-          schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_10.2.0/3.0.1
-      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
-          fabrics=ucx schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_9.3.0/4.1.1
-      - spec: openmpi@4.0.3~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
-          schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_9.3.0/4.0.3
-      - spec: openmpi@4.1.0a1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
-          fabrics=ucx schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_7.3.0/20190429
-      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%gcc@7.3.0
           schedulers=slurm
         prefix: /cosma/local/openmpi/gnu_7.3.0/3.0.1
-      - spec: openmpi@4.0.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
-          fabrics=ucx schedulers=slurm
-        prefix: /cosma/local/openmpi/aocc_2.2.0/4.0.5
-      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+      - spec: openmpi@3.0.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@10.2.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/aocc_2.0.0/4.0.1
-      - spec: openmpi@4.0.1%aocc@1.3.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+        prefix: /cosma/local/openmpi/gnu_10.2.0/3.0.1
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%aocc@1.3.0
           schedulers=slurm
         prefix: /cosma/local/openmpi/aocc_1.3.0/4.0.1
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%aocc@2.0.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/aocc_2.0.0/4.0.1
+      - spec: openmpi@4.0.3~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@9.3.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_9.3.0/4.0.3
+      - spec: openmpi@4.0.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%aocc@2.2.0
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/aocc_2.2.0/4.0.5
+      - spec: openmpi@4.1.0a1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%gcc@7.3.0
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_7.3.0/20190429
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@9.3.0
+          fabrics=ucx schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_9.3.0/4.1.1
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@11.1.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
     openssh:
       externals:
       - spec: openssh@7.4p1
