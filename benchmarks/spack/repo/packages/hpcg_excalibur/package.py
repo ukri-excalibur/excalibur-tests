@@ -41,9 +41,9 @@ class HpcgExcalibur(MakefilePackage):
     def install(self, spec, prefix):
         ''' Makefile has no install - can just copy things which are required '''
         mkdirp(prefix.bin)
-        # copy dinodump.dat and hpcg.dat to the spack bin
+        # copy dinodump.dat (optional - lfric app only) and hpcg.dat to the spack bin
+        import shutil
+        shutil.copyfile('bin/hpcg.dat', prefix.bin + '/hpcg.dat')
         if self.spec.satisfies("@hpcg_lfric"):
-            import shutil
             shutil.copyfile('dinodump.dat', prefix.bin + '/dinodump.dat')
-            shutil.copyfile('bin/hpcg.dat', prefix.bin + '/hpcg.dat')
         install('bin/xhpcg', prefix.bin)

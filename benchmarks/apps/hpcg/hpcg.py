@@ -91,6 +91,12 @@ class HPCGBenchmark(SpackTest):
         self.set_var_default('num_tasks_per_node', 
                              self.current_partition.processor.num_cpus // 
                              self.num_cpus_per_task) 
+
+    @run_after('compile')
+    def copy_input_file(self):
+        # during install data files will be copied to the spack env bin - put them in stagedir to run with
+        # hpcg.dat sets grid size for the run - 104x104x104
+        self.prerun_cmds = ["python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"hpcg.dat\"), os.getcwd()+\"/hpcg.dat\")'"]
         
 @rfm.simple_test
 class HPCG_Stencil(HPCGBenchmark):
@@ -105,8 +111,7 @@ class HPCG_LFRic(HPCGBenchmark):
     # As above but with the LFRic style stencil
     spack_spec = 'hpcg_excalibur@hpcg_lfric'
 
-    @run_after('compile')
-    def copy_input_file(self):
-        # during install data files will be copied to the spack env bin - put them in stagedir to run with
-        self.prerun_cmds = ["python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"dinodump.dat\"), os.getcwd()+\"/dinodump.dat\")'",
-                            "python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"hpcg.dat\"), os.getcwd()+\"/hpcg.dat\")'"]
+    @run_before('run')
+    def copy_lfric_input_file(self):
+        # lfric app requires extra data - dinodump.dat
+        self.prerun_cmds += ["python -c 'import shutil;import os;shutil.copyfile(shutil.which(\"xhpcg\").replace(\"xhpcg\",\"dinodump.dat\"), os.getcwd()+\"/dinodump.dat\")'"]
