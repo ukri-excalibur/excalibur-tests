@@ -19,7 +19,7 @@ aout=0.08
 
 &INIT_PARAMS
 filetype='grafic'
-initfile(1)='../../../../../../Additional_Input_Data/IC_256'
+initfile(1)='./data/IC_406'
 /
 
 &AMR_PARAMS
