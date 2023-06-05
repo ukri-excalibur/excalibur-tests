@@ -258,8 +258,11 @@ spack:
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
       - spec: openmpi@4.0.5%gcc@10.2.0
         prefix: /shared/ucl/apps/openmpi/4.0.5/gnu-10.2.0
-      - spec: openmpi@4.1.1%gcc@4.9.2
-        prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
+      # # This is a newer version of OpenMPI but with an older version of GCC,
+      # # so that by default Spack prefers this over above versions, let's hide
+      # # it so that we can use GCC 10.2 out-of-the-box.
+      # - spec: openmpi@4.1.1%gcc@4.9.2
+      #   prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
     openssh:
       externals:
       - spec: openssh@7.4p1
