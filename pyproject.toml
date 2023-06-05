@@ -28,9 +28,20 @@ dependencies = [
     "pandas >= 2.0.1",
 ]
 
+[project.optional-dependencies]
+test = [
+  'pytest >= 6.0',
+]
+
 [tool.setuptools_scm]
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.packages.find]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "post-processing",
+]
