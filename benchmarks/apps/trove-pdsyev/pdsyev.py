@@ -7,7 +7,7 @@ from benchmarks.modules.utils import SpackTest
 class PdsyevBase(SpackTest):
 
     descr = 'Base class for Trove-Pdsyev'
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     time_limit = '0d0h5m0s'
     exclusive_access = True

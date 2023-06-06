@@ -10,7 +10,7 @@ import os.path as path
 
 @rfm.simple_test
 class SwiftBenchmark(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'swiftsim@0.9.0'
     num_tasks = 4

@@ -10,7 +10,7 @@ from benchmarks.modules.utils import SpackTest
 
 @rfm.simple_test
 class HpgmgTest(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'hpgmg@0.4'
     executable = 'hpgmg-fv'

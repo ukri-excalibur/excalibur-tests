@@ -33,7 +33,7 @@ class Hpcg(rfm.RunOnlyRegressionTest, CachedRunTest):
     
     def __init__(self, size):
         
-        self.valid_systems = ['*']
+        self.valid_systems = ['-gpu']
         self.valid_prog_environs = ['intel-hpcg']
 
         self.size = size

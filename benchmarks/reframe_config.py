@@ -120,8 +120,28 @@ site_configuration = {
             'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Computing nodes',
+                    'name': 'cpu',
+                    'descr': 'Computing nodes with CPUs only',
+                    'scheduler': 'sge',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'gpu',
+                    'descr': 'Computing nodes with Nvidia GPUs',
                     'scheduler': 'sge',
                     'launcher': 'mpirun',
                     'environs': ['default'],

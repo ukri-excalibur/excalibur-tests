@@ -7,7 +7,7 @@ import os.path as path
 class Hpl(SpackTest):
     """High Performance Linpack - Intel optimised version."""
 
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     # self.prefix so relative to test dir, not pwd The `xhpl_intel64_dynamic` binary
     # dynamically links to Intel MPI, so we always have to specify the Intel MPI

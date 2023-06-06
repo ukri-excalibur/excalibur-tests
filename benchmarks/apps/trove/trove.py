@@ -6,7 +6,7 @@ from benchmarks.modules.utils import SpackTest
 class TroveBase(SpackTest):
 
     descr = 'Base class for Trove'
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     time_limit = '0d2h30m0s'
     exclusive_access = True
