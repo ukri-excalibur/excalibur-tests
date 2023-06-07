@@ -34,13 +34,13 @@ class SombreroBenchmark(SpackTest):
     # from the command line with `-S spack_spec='...'`:
     # https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S
     spack_spec = 'sombrero@2021-08-16'
-    # Number of (MPI) tasks and CPUs per task.  Here we hard-code 1, but in
-    # other cases you may want to use something different.  Note: ReFrame will
-    # automatically launch MPI with the given number of tasks, using the
-    # launcher specificed in the config for the current system.
-    num_tasks = 1
+    # Number of (MPI) tasks and CPUs per task.  Here we parametrise them to be
+    # either 1 or 2, but in other cases you may want to use something different.
+    # Note: ReFrame will automatically launch MPI with the given number of tasks,
+    # using the launcher specificed in the config for the current system.
+    tasks = parameter([1, 2])  # Used to set `num_tasks` in `__init__`.
     num_tasks_per_node = 1
-    num_cpus_per_task = 1
+    cpus_per_task = parameter([1, 2])  # Used to set `num_cpus_per_task` in `__init__`.
     # The program for running the benchmarks.
     executable = 'sombrero1'
     # Arguments to pass to the program above to run the benchmarks.
@@ -102,6 +102,14 @@ class SombreroBenchmark(SpackTest):
         },
     }
 
+    def __init__(self):
+        # The number of tasks and CPUs per task need to be set here because
+        # accessing a test parameter from the class body is not allowed.
+        self.num_tasks = self.tasks
+        self.num_cpus_per_task = self.cpus_per_task
+        # Tags are useful for categorizing tests and quickly selecting those of interest.
+        self.tags.add("example")
+
     @run_after('setup')
     def setup_variables(self):
         # With `env_vars` you can set environment variables to be used in the
@@ -116,7 +124,7 @@ class SombreroBenchmark(SpackTest):
     # for the API of ReFrame tests, including performance ones.
     @run_before('sanity')
     def set_sanity_patterns(self):
-        # Check that the string `[RESULT][0]` appears in the standard outout of
+        # Check that the string `[RESULT][0]` appears in the standard output of
         # the program.
         self.sanity_patterns = sn.assert_found(r'\[RESULT\]\[0\]', self.stdout)
 

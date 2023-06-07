@@ -442,6 +442,7 @@ site_configuration = {
             'name': 'github-actions',
             'descr': 'GitHub Actions runner',
             'hostnames': ['fv-az.*'],  # Just to not have '.*'
+            'max_local_jobs': 1,  # Limit number of parallel jobs
             'partitions': [
                 {
                     'name': 'default',
@@ -645,8 +646,13 @@ site_configuration = {
                         '%(check_num_gpus_per_node)s|'
                         '%(check_perfvalues)s|'
                         '%(check_spack_spec)s|'
+                        '%(check_display_name)s|'
+                        '%(check_system)s|'
+                        '%(check_partition)s|'
+                        '%(check_environ)s|'
                         '%(check_extra_resources)s|'
-                        '%(check_env_vars)s'
+                        '%(check_env_vars)s|'
+                        '%(check_tags)s'
                     ),
                     'format_perfvars': (
                         '%(check_perf_value)s|'
