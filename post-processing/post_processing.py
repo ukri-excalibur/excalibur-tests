@@ -16,10 +16,10 @@ def get_display_name_params(display_name):
 
 def prepare_columns(columns, dni):
     """
-        Return a list of modified column values after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
+        Return a list of modified column values for a single perflog entry, after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
 
         Args:
-            columns: str list, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
+            columns: str list, containing the column values for the whole perflog line, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
             dni: int, a display name index that identifies the display name column.
     """
 
