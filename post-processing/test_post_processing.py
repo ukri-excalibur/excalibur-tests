@@ -77,7 +77,7 @@ def run_sombrero():
     sombrero_logs = []
     sombrero_log_re = re.compile(r"^SombreroBenchmark\_\w{8}\.log$")
     # look for newly generated log files
-    for root, dirs, files in os.walk(perflog_path):
+    for root, _, files in os.walk(perflog_path):
         sombrero_logs = list(filter(sombrero_log_re.match, files))
         # if files are found, get file dir path
         if sombrero_logs:
@@ -122,18 +122,13 @@ def test_read_perflog(run_sombrero):
     sombrero_logs, sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
 
     # check the log files exist
-    if sombrero_logs:
-        # check the sombrero log path is valid
-        assert os.path.exists(sombrero_log_path)
-        # check the expected number of log files has been generated
-        assert len(sombrero_logs) ==  4
-    # if the log files haven't been created, something went wrong
-    else:
-        assert False
-
+    assert sombrero_logs
+    # check the expected number of log files has been generated
+    assert len(sombrero_logs) ==  4
+    # check the sombrero log path is valid
+    assert os.path.exists(sombrero_log_path)
     # if the incomplete log file hasn't been created, something went wrong
-    if not os.path.exists(sombrero_incomplete_log_path):
-        assert False
+    assert os.path.exists(sombrero_incomplete_log_path)
 
     # check incomplete log is missing required fields
     try:
