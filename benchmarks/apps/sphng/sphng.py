@@ -17,7 +17,7 @@ def threads_per_part():
 class SphngBase(SpackTest):
 
     descr = 'Base class for Sphng'
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     time_limit = '0d0h30m0s'
     exclusive_access = True

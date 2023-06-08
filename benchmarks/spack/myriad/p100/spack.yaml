@@ -1,0 +1,25 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: []
+  view: false
+  include:
+  - ../../common.yaml
+  - ../compilers.yaml
+  - ../packages.yaml
+  packages:
+    cuda:
+      externals:
+      - spec: cuda@7.5.18
+        prefix: /shared/ucl/apps/cuda/7.5.18/gnu-4.9.2
+      - spec: cuda@8.0.61
+        prefix: /shared/ucl/apps/cuda/8.0.61/gnu-4.9.2
+      - spec: cuda@9.0.176
+        prefix: /shared/ucl/apps/cuda/9.0.176/gnu-4.9.2
+      - spec: cuda@10.0.130
+        prefix: /shared/ucl/apps/cuda/10.0.130/gnu-4.9.2
+      - spec: cuda@10.1.243
+        prefix: /shared/ucl/apps/cuda/10.1.243/gnu-4.9.2

@@ -21,7 +21,7 @@ class Openfoam_Mbike(rfm.RegressionTest):
 
     def __init__(self, part, n_tasks, n_tasks_per_node):
 
-        self.valid_systems = ['*']
+        self.valid_systems = ['-gpu']
         self.valid_prog_environs = ['*']
         self.build_system = 'Spack'
 

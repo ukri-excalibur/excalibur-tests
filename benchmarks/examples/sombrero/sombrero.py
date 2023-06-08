@@ -25,10 +25,12 @@ from benchmarks.modules.utils import SpackTest
 # for more information about the API of ReFrame tests.
 @rfm.simple_test
 class SombreroBenchmark(SpackTest):
-    # Systems and programming environments where to run this benchmark.  We
-    # typically run them on all systems ('*'), unless there are particular
-    # constraints.
-    valid_systems = ['*']
+    # Systems and programming environments where to run this benchmark.
+    # Systems/partitions can be identified by their features, `+feature` is a
+    # partition which has the named feature, `-feature` is a partition which
+    # does not have the named feature.  This is a CPU-only benchmark, so we use
+    # `-gpu` to exclude GPU partitions.
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     # Spack specification with default value.  A different value can be set
     # from the command line with `-S spack_spec='...'`:
