@@ -2,17 +2,19 @@ import fileinput
 import pandas as pd
 import re
 
-def get_display_name_params(display_name):
+def get_display_name_info(display_name):
     """
-        Return a dictionary of parameter names and their values from the given input string, if present.
+        Return a tuple containing the test name and a dictionary of parameter names and their values from the given input string. The parameter dictionary may be empty if no parameters are present.
 
         Args:
             display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
     """
 
-    params = display_name.split(" %")
+    split_display_name = display_name.split(" %")
+    test_name = split_display_name[0]
+    params = [p.split("=") for p in split_display_name[1:]]
 
-    return dict(zip((p.split("=")[0] for p in params[1:]), (p.split("=")[1] for p in params[1:])))
+    return test_name, dict(params)
 
 def prepare_columns(columns, dni):
     """
@@ -26,8 +28,7 @@ def prepare_columns(columns, dni):
     # get display name
     display_name = columns[dni]
     # get test name and parameters
-    test_name = display_name.split(" %")[0]
-    params = get_display_name_params(display_name)
+    test_name, params = get_display_name_info(display_name)
 
     # remove display name from columns
     columns.pop(dni)
@@ -83,7 +84,7 @@ def read_perflog(path):
                     display_name_index = COLUMN_NAMES.index("display_name")
                     # break up display name into test name and parameters
                     display_name = columns[display_name_index]
-                    params = get_display_name_params(display_name)
+                    _, params = get_display_name_info(display_name)
 
                     # remove display name
                     COLUMN_NAMES.pop(display_name_index)

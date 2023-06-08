@@ -38,14 +38,15 @@ def remove_field_from_perflog(line, field_index):
 def test_display_name_parsing():
 
     display_name = "TestName %param1=one %param2=two %param3=three"
-    params = post.get_display_name_params(display_name)
+    test_name, params = post.get_display_name_info(display_name)
 
     # check param length, names, and values
+    assert test_name == "TestName"
     assert len(params) == 3
     assert (params["param1"] == "one") & (params["param2"] == "two") & (params["param3"] == "three")
 
     display_name = "TestName"
-    params = post.get_display_name_params(display_name)
+    _, params = post.get_display_name_info(display_name)
 
     # no params expected
     assert len(params) == 0
