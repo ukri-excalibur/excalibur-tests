@@ -53,10 +53,6 @@ class HPCGBenchmark(SpackTest):
         # Strictly HPCG is only intended to run for 1 OMP thread, except in original version
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
-    @run_before('compile')
-    def setup_build_system(self):
-        self.build_system.specs = [self.spack_spec]
-
         
     @run_after('run')
     def set_output_datafile(self):
