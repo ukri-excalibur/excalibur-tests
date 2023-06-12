@@ -1,3 +1,4 @@
+import argparse
 import fileinput
 import pandas as pd
 import re
@@ -102,7 +103,27 @@ def read_perflog(path):
                     records.append(record)
 
         except Exception as e:
-            e.args = (e.args[0] + ": during processing %s" % path,) + e.args[1:]
+            e.args = (e.args[0] + " in file \'%s\':" % path,) + e.args[1:]
             raise
 
     return pd.DataFrame.from_records(records)
+
+def read_args():
+    """
+        Return parsed command line arguments.
+    """
+
+    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog and figure of merit must be supplied.")
+
+    # required positional arguments (log path, figures of merit)
+    parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
+    parser.add_argument("figure_of_merit", type=str, nargs='+', help="name of figure of merit to include in plot")
+
+    # optional argument (plot type)
+    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: \'generic\')")
+
+    # info dump flags
+    parser.add_argument("-d", "--debug", action="store_true", help="debug flag for printing additional information")
+    parser.add_argument("-v", "--verbose", action="store_true", help="verbose flag for printing more debug information (must be used in conjunction with the debug flag)")
+
+    return parser.parse_args()
