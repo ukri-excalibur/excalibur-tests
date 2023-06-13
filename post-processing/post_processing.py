@@ -1,7 +1,75 @@
 import argparse
+import errno
 import fileinput
+import os
 import pandas as pd
 import re
+
+class PostProcessing:
+
+    def __init__(self, debug=False, verbose=False):
+        self.debug = debug
+        self.verbose = verbose
+
+    def run_post_processing(self, path, figures_of_merit):
+        """
+            Return a dataframe containing the information passed to a plotting script and produce relevant graphs.
+
+            Args:
+                path: str, path to a log file or a directory containing log files.
+                figures_of_merit: str list, names of figures of merit to plot.
+        """
+
+        log_files = []
+        # look for perflogs
+        if os.path.isfile(path):
+            log_files = [path]
+        elif os.path.isdir(path):
+            log_files = [os.path.join(root, file) for root, _, files in os.walk(path) for file in files]
+        else:
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
+
+        if self.debug:
+            print("Found log files:")
+            for log in log_files:
+                print("-", log)
+
+        df = pd.DataFrame()
+        # put all perflog information in one dataframe
+        for file in log_files:
+            try:
+                temp = read_perflog(file)
+                df = pd.concat([df, temp], ignore_index=True)
+            except KeyError as e:
+                if self.debug:
+                    print("Discarding %s:" %os.path.basename(file), type(e).__name__ + ":", e.args[0], e.args[1])
+
+        if df.empty:
+            raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", path)
+
+        # identify a relevant subset of the dataframe to pass on
+        # TODO
+        columns = ["test_name", "system", "partition", "environ"]
+        for fom in figures_of_merit:
+            value = fom + "_value"
+            unit = fom + "_unit"
+            if (value in df.columns) & (unit in df.columns):
+                columns.extend([value, unit])
+            else:
+                if self.debug:
+                    print("KeyError: Could not find columns \'" + value + "\' and \'" + unit + "\'. Excluding figure of merit.")
+
+        print("Selected dataframe:")
+        print(df[columns])
+
+        # call a plotting script
+        # TODO
+
+        if self.debug & self.verbose:
+            print("Full dataframe:")
+            print(df.to_json(orient="columns", indent=2))
+
+        return df[columns]
 
 def get_display_name_info(display_name):
     """
@@ -127,3 +195,14 @@ def read_args():
     parser.add_argument("-v", "--verbose", action="store_true", help="verbose flag for printing more debug information (must be used in conjunction with the debug flag)")
 
     return parser.parse_args()
+
+def main():
+    args = read_args()
+    post = PostProcessing(args.debug, args.verbose)
+    try:
+        post.run_post_processing(args.log_path, args.figure_of_merit)
+    except Exception as e:
+        print("Post-processing stopped:", type(e).__name__ + ":", e)
+
+if __name__ == "__main__":
+    main()
