@@ -51,7 +51,7 @@ def test_display_name_parsing():
     # no params expected
     assert len(params) == 0
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
 def run_sombrero():
 
@@ -154,3 +154,26 @@ def test_read_perflog(run_sombrero):
     assert df["test_name"][0] == "SombreroBenchmark"
     # check tags match
     assert df["tags"][0] == "example"
+
+# Test that high-level control script works as expected
+def test_high_level_script(run_sombrero):
+
+    _, sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    post_ = post.PostProcessing()
+
+    # check expected failure upon lack of data to plot
+    try:
+        post_.run_post_processing(sombrero_incomplete_log_path, ["flops"])
+    except FileNotFoundError:
+        assert True
+    else:
+        assert False
+
+    # get collated dataframe subset
+    df = post_.run_post_processing(Path(sombrero_log_path).parent, ["flops", "nonexistent_fom"])
+
+    EXPECTED_FIELDS = ["test_name", "system", "partition", "environ", "flops_value", "flops_unit"]
+
+    # check returned subset is as expected
+    assert df.columns.tolist() == EXPECTED_FIELDS
+    assert len(df) == 4
