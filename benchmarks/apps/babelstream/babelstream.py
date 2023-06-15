@@ -2,8 +2,6 @@
 # ReFrame Project Developers. See the top-level LICENSE file for details.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-import os.path as path
-import sys
 import reframe as rfm
 import reframe.utility.sanity as sn
 from reframe.core.backends import getlauncher
@@ -13,15 +11,12 @@ from reframe.core.backends import getlauncher
 # attribute.
 from benchmarks.modules.utils import SpackTest
 
-# spack install --add babelstream%gcc@9.2.0 +thrust backend=cuda cuda_arch=70
+
 @rfm.simple_test
 class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
     valid_systems = ['*']
     valid_prog_environs = ['default'] 
-
-
-    
 
     @run_before('run')
     def replace_launcher(self):
@@ -230,7 +225,7 @@ class OMPBenchmark_NVIDIA(BabelstreamBenchmarkBase):
 
 @rfm.simple_test
 class OMPBenchmark_AMD(BabelstreamBenchmarkBase):
-    valid_systems = ['+gpu']
+    valid_systems = ['+gpu -cuda']
     tags = {"omp"}
     executable = "omp-stream"
     num_gpus_per_node = 1
