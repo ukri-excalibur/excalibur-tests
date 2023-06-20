@@ -15,15 +15,8 @@ import glob
 # attribute.
 from benchmarks.modules.utils import SpackTest
 
-# Class to define the benchmark.  See
-# https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#the-reframe-module
-# for more information about the API of ReFrame tests.
-
 class HPCGBenchmark(SpackTest):
-    # Systems and programming environments where to run this benchmark.  We
-    # typically run them on all systems ('*'), unless there are particular
-    # constraints.
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     num_cpus_per_task = 1
     num_tasks = required
@@ -37,9 +30,8 @@ class HPCGBenchmark(SpackTest):
     time_limit = '3m'
     # hpcg.dat sets size of grid
     prerun_cmds.append('cp "$(dirname $(which xhpcg))/hpcg.dat" .')
-    
+
     reference = {
-        # flops? Gflops/s ?
         'archer2': {
             'flops': (1000.0, -0.2, None, 'Gflops/seconds'),
         },
@@ -53,21 +45,21 @@ class HPCGBenchmark(SpackTest):
         # Strictly HPCG is only intended to run for 1 OMP thread, except in original version
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
-        
+
     @run_after('run')
     def set_output_datafile(self):
         # If other outputfiles in stage directory before running, ensure use latest one
-        possible_outfiles = glob.glob(self.stagedir + "/HPCG*.txt") 
+        possible_outfiles = glob.glob(self.stagedir + "/HPCG*.txt")
         if (len(possible_outfiles) >= 1):
             ordered_outfiles = sorted(possible_outfiles, key=lambda t: os.stat(t).st_mtime)
-            self.output_data  = ordered_outfiles[-1]  
+            self.output_data  = ordered_outfiles[-1]
         else:
             self.output_data = '' #no data
-        
+
     @run_before('sanity')
     def set_sanity_patterns(self):
         # Check that it's a valid run
-        self.sanity_patterns = sn.assert_found(r'VALID with a GFLOP/s rating of=', self.output_data) 
+        self.sanity_patterns = sn.assert_found(r'VALID with a GFLOP/s rating of=', self.output_data)
 
     @run_before('performance')
     def set_perf_patterns(self):
@@ -78,29 +70,29 @@ class HPCGBenchmark(SpackTest):
                 r'VALID with a GFLOP/s rating of=(\S+)',
                 self.output_data, 1, float),
         }
-        
-    @run_after('setup') 
-    def setup_num_tasks(self): 
-        self.set_var_default( 
-            'num_tasks', 
-            self.current_partition.processor.num_cpus // 
-            min(1, self.current_partition.processor.num_cpus_per_core) // 
-            self.num_cpus_per_task)
-        self.set_var_default('num_tasks_per_node', 
-                             self.current_partition.processor.num_cpus // 
-                             self.num_cpus_per_task) 
 
-        
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.set_var_default(
+            'num_tasks',
+            self.current_partition.processor.num_cpus //
+            min(1, self.current_partition.processor.num_cpus_per_core) //
+            self.num_cpus_per_task)
+        self.set_var_default('num_tasks_per_node',
+                             self.current_partition.processor.num_cpus //
+                             self.num_cpus_per_task)
+
+
 @rfm.simple_test
 class HPCG_Stencil(HPCGBenchmark):
     spack_spec = 'hpcg_excalibur@hpcg_stencil'
     tags = {"27pt_stencil"}
-    
+
 @rfm.simple_test
 class HPCG_Original(HPCGBenchmark):
     spack_spec = 'hpcg_excalibur@hpcg_original'
     tags = {"27pt_stencil"}
-    
+
 @rfm.simple_test
 class HPCG_LFRic(HPCGBenchmark):
     # As above but with the LFRic style stencil
