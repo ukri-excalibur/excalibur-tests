@@ -1,0 +1,23 @@
+# Plot title
+title: "Example Plot"
+
+# All columns relevant to plot
+# Minimum required columns: figure of merit value, figure of merit unit, something to plot against
+columns: ["flops_value", "flops_unit", "tasks"]
+
+# Optional row filters (specify an empty list [] if none are required)
+filters: [["flops_value", "<=", 1.25], ["cpus_per_task", "==", 2]]
+
+# Axes must have a value specified with a column name
+# Units can either be specified with a column name
+# or a custom label (including null (i.e. None) if units are not applicable)
+
+x_axis:
+  value: "flops_value"
+  units:
+    column: "flops_unit"
+
+y_axis:
+  value: "tasks"
+  units:
+    custom: null
