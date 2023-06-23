@@ -1,9 +1,13 @@
 import argparse
 import errno
 import fileinput
+from functools import reduce
+import operator as op
 import os
 import pandas as pd
 import re
+import traceback
+import yaml
 
 class PostProcessing:
 
@@ -11,28 +15,30 @@ class PostProcessing:
         self.debug = debug
         self.verbose = verbose
 
-    def run_post_processing(self, path, figures_of_merit):
+    def run_post_processing(self, log_path, config):
         """
             Return a dataframe containing the information passed to a plotting script and produce relevant graphs.
 
             Args:
-                path: str, path to a log file or a directory containing log files.
-                figures_of_merit: str list, names of figures of merit to plot.
+                log_path: str, path to a log file or a directory containing log files.
+                config: dict, configuration information for plotting.
         """
 
         log_files = []
         # look for perflogs
-        if os.path.isfile(path):
-            log_files = [path]
-        elif os.path.isdir(path):
-            log_files = [os.path.join(root, file) for root, _, files in os.walk(path) for file in files]
+        if os.path.isfile(log_path):
+            log_files = [log_path]
+        elif os.path.isdir(log_path):
+            log_files = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
         else:
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), path)
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
 
         if self.debug:
+            print("")
             print("Found log files:")
             for log in log_files:
                 print("-", log)
+            print("")
 
         df = pd.DataFrame()
         # put all perflog information in one dataframe
@@ -43,33 +49,107 @@ class PostProcessing:
             except KeyError as e:
                 if self.debug:
                     print("Discarding %s:" %os.path.basename(file), type(e).__name__ + ":", e.args[0], e.args[1])
-
         if df.empty:
-            raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", path)
+            raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
 
-        # identify a relevant subset of the dataframe to pass on
-        # TODO
-        columns = ["test_name", "system", "partition", "environ"]
-        for fom in figures_of_merit:
-            value = fom + "_value"
-            unit = fom + "_unit"
-            if (value in df.columns) & (unit in df.columns):
-                columns.extend([value, unit])
-            else:
-                if self.debug:
-                    print("KeyError: Could not find columns \'" + value + "\' and \'" + unit + "\'. Excluding figure of merit.")
+        columns = config["columns"]
+        REQUIRED_COLUMNS = [r"\w+_value$", r"\w+_unit$"]
+        required_column_matches = [len(list(filter(re.compile(rexpr).match, columns))) > 0 for rexpr in REQUIRED_COLUMNS]
+        # check for required columns
+        if (len(columns) < 3) | (False in required_column_matches):
+            raise KeyError("Config must contain at least 3 specified columns: a figure of merit value, a figure of merit unit, and something to plot the figure of merit against", columns)
 
+        invalid_columns = []
+        # check for invalid columns
+        for col in columns:
+            if col not in df.columns:
+                invalid_columns.append(col)
+        if invalid_columns:
+            raise KeyError("Could not find columns", invalid_columns)
+
+        filters = config["filters"]
+        mask = pd.Series(df.index.notnull())
+        # filter rows
+        if filters:
+            mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
+        if df[mask].empty:
+            raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
+
+        print("")
         print("Selected dataframe:")
-        print(df[columns])
+        print(df[columns][mask])
+        print("")
 
         # call a plotting script
-        # TODO
+        # TODO: plot(df, config)
 
         if self.debug & self.verbose:
             print("Full dataframe:")
             print(df.to_json(orient="columns", indent=2))
 
-        return df[columns]
+        return df[columns][mask]
+
+    # operator lookup dictionary
+    op_lookup = {
+        "==":   op.eq,
+        "!=":   op.ne,
+        "<" :   op.lt,
+        ">" :   op.gt,
+        "<=":   op.le,
+        ">=":   op.ge
+    }
+
+    def row_filter(self, filter, df: pd.DataFrame):
+        """
+            Return a dataframe mask based on a filter condition. The filter is a list that contains a column name, an operator, and a value (e.g. ["flops_value", ">=", 1.0]).
+
+            Args:
+                filter: list, a condition based on which a dataframe is filtered.
+                df: dataframe, used to create a mask by having the filter condition applied to it.
+        """
+
+        column, str_op, value = filter
+        if self.debug:
+            print("Applying row filter condition:", column, str_op, value)
+
+        # check column validity
+        if column not in df.columns:
+            raise KeyError("Could not find column", column)
+
+        # check operator validity
+        operator = self.op_lookup.get(str_op)
+        if operator is None:
+            raise KeyError("Unknown comparison operator", str_op)
+
+        # evaluate expression and extract dataframe mask
+        if value is None:
+            if operator == op.eq:
+                mask = df[column].isnull()
+            else:
+                mask = df[column].notnull()
+        else:
+            try:
+                # dataframe column is interpreted as the same type as the supplied value
+                mask = operator(df[column].astype(type(value)), value)
+            except TypeError as e:
+                e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
+                raise
+
+        if self.debug & self.verbose:
+            print(mask)
+
+        return mask
+
+def read_config(path):
+    """
+        Return a dictionary containing configuration information for plotting.
+
+        Args:
+            path: str, path to a config file.
+    """
+
+    with open(path, "r") as file:
+        return yaml.safe_load(file)
 
 def get_display_name_info(display_name):
     """
@@ -127,9 +207,7 @@ def read_perflog(path):
     records = []
 
     with fileinput.input(path) as f:
-
         try:
-
             for line in f:
 
                 # split columns
@@ -183,9 +261,9 @@ def read_args():
 
     parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog and figure of merit must be supplied.")
 
-    # required positional arguments (log path, figures of merit)
+    # required positional arguments (log path, config path)
     parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
-    parser.add_argument("figure_of_merit", type=str, nargs='+', help="name of figure of merit to include in plot")
+    parser.add_argument("config_path", type=str, help="path to a configuration file specifying what to plot")
 
     # optional argument (plot type)
     parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: \'generic\')")
@@ -197,12 +275,19 @@ def read_args():
     return parser.parse_args()
 
 def main():
+
     args = read_args()
     post = PostProcessing(args.debug, args.verbose)
+
     try:
-        post.run_post_processing(args.log_path, args.figure_of_merit)
+        config = read_config(args.config_path)
+        post.run_post_processing(args.log_path, config)
+
     except Exception as e:
-        print("Post-processing stopped:", type(e).__name__ + ":", e)
+        print(type(e).__name__ + ":", e)
+        print("Post-processing stopped")
+        if args.debug:
+            print(traceback.format_exc())
 
 if __name__ == "__main__":
     main()
