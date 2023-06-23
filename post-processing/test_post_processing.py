@@ -156,23 +156,24 @@ def test_read_perflog(run_sombrero):
     assert df["tags"][0] == "example"
 
 # Test that high-level control script works as expected
+# TODO: must be changed to work with new run_post_processing
 def test_high_level_script(run_sombrero):
 
-    _, sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    _, _, sombrero_incomplete_log_path = run_sombrero
     post_ = post.PostProcessing()
 
     # check expected failure upon lack of data to plot
     try:
-        post_.run_post_processing(sombrero_incomplete_log_path, ["flops"])
+        post_.run_post_processing(sombrero_incomplete_log_path, {})
     except FileNotFoundError:
         assert True
     else:
         assert False
 
-    # get collated dataframe subset
-    df = post_.run_post_processing(Path(sombrero_log_path).parent, ["flops", "nonexistent_fom"])
+    EXPECTED_FIELDS = ["flops_value", "flops_unit", "tasks"]
 
-    EXPECTED_FIELDS = ["test_name", "system", "partition", "environ", "flops_value", "flops_unit"]
+    # get collated dataframe subset
+    df = post_.run_post_processing(Path(sombrero_incomplete_log_path).parent, {"columns": EXPECTED_FIELDS, "filters": []})
 
     # check returned subset is as expected
     assert df.columns.tolist() == EXPECTED_FIELDS

@@ -140,6 +140,26 @@ class PostProcessing:
 
         return mask
 
+def read_args():
+    """
+        Return parsed command line arguments.
+    """
+
+    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog and figure of merit must be supplied.")
+
+    # required positional arguments (log path, config path)
+    parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
+    parser.add_argument("config_path", type=str, help="path to a configuration file specifying what to plot")
+
+    # optional argument (plot type)
+    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: \'generic\')")
+
+    # info dump flags
+    parser.add_argument("-d", "--debug", action="store_true", help="debug flag for printing additional information")
+    parser.add_argument("-v", "--verbose", action="store_true", help="verbose flag for printing more debug information (must be used in conjunction with the debug flag)")
+
+    return parser.parse_args()
+
 def read_config(path):
     """
         Return a dictionary containing configuration information for plotting.
@@ -150,42 +170,6 @@ def read_config(path):
 
     with open(path, "r") as file:
         return yaml.safe_load(file)
-
-def get_display_name_info(display_name):
-    """
-        Return a tuple containing the test name and a dictionary of parameter names and their values from the given input string. The parameter dictionary may be empty if no parameters are present.
-
-        Args:
-            display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
-    """
-
-    split_display_name = display_name.split(" %")
-    test_name = split_display_name[0]
-    params = [p.split("=") for p in split_display_name[1:]]
-
-    return test_name, dict(params)
-
-def prepare_columns(columns, dni):
-    """
-        Return a list of modified column values for a single perflog entry, after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
-
-        Args:
-            columns: str list, containing the column values for the whole perflog line, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
-            dni: int, a display name index that identifies the display name column.
-    """
-
-    # get display name
-    display_name = columns[dni]
-    # get test name and parameters
-    test_name, params = get_display_name_info(display_name)
-
-    # remove display name from columns
-    columns.pop(dni)
-    # replace with test name and parameter values
-    columns[dni:dni] = [params[name] for name in params]
-    columns.insert(dni, test_name)
-
-    return columns
 
 # a modified and updated version of the function from perf_logs.py
 def read_perflog(path):
@@ -254,25 +238,41 @@ def read_perflog(path):
 
     return pd.DataFrame.from_records(records)
 
-def read_args():
+def get_display_name_info(display_name):
     """
-        Return parsed command line arguments.
+        Return a tuple containing the test name and a dictionary of parameter names and their values from the given input string. The parameter dictionary may be empty if no parameters are present.
+
+        Args:
+            display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
     """
 
-    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog and figure of merit must be supplied.")
+    split_display_name = display_name.split(" %")
+    test_name = split_display_name[0]
+    params = [p.split("=") for p in split_display_name[1:]]
 
-    # required positional arguments (log path, config path)
-    parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
-    parser.add_argument("config_path", type=str, help="path to a configuration file specifying what to plot")
+    return test_name, dict(params)
 
-    # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: \'generic\')")
+def prepare_columns(columns, dni):
+    """
+        Return a list of modified column values for a single perflog entry, after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
 
-    # info dump flags
-    parser.add_argument("-d", "--debug", action="store_true", help="debug flag for printing additional information")
-    parser.add_argument("-v", "--verbose", action="store_true", help="verbose flag for printing more debug information (must be used in conjunction with the debug flag)")
+        Args:
+            columns: str list, containing the column values for the whole perflog line, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
+            dni: int, a display name index that identifies the display name column.
+    """
 
-    return parser.parse_args()
+    # get display name
+    display_name = columns[dni]
+    # get test name and parameters
+    test_name, params = get_display_name_info(display_name)
+
+    # remove display name from columns
+    columns.pop(dni)
+    # replace with test name and parameter values
+    columns[dni:dni] = [params[name] for name in params]
+    columns.insert(dni, test_name)
+
+    return columns
 
 def main():
 
