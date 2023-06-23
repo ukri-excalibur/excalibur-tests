@@ -29,7 +29,7 @@ class HpcgExcalibur(MakefilePackage):
         sha256="1a1928189828f43b8391258d051887762865ed63e54aaabbe4059c14fa788529"
     )
     
-    depends_on("openmpi")
+    depends_on("mpi")
 
     maintainers = ["dcaseGH"]
 
