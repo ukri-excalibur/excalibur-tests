@@ -6,7 +6,7 @@ title: "Example Plot"
 columns: ["flops_value", "flops_unit", "tasks"]
 
 # Optional row filters (specify an empty list [] if none are required)
-filters: [["flops_value", "<=", 1.25], ["cpus_per_task", "==", 2]]
+filters: [["tasks", ">", 1], ["cpus_per_task", "==", 2]]
 
 # Axes must have a value specified with a column name
 # Units can either be specified with a column name

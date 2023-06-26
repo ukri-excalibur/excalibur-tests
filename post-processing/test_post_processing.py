@@ -1,9 +1,9 @@
 import fileinput
 import os
+from pandas.errors import EmptyDataError
 from pathlib import Path
 import post_processing as post
 import pytest
-import re
 import shutil
 import subprocess as sp
 
@@ -149,13 +149,12 @@ def test_read_perflog(run_sombrero):
     assert df["tags"][0] == "example"
 
 # Test that high-level control script works as expected
-# TODO: must be changed to work with new run_post_processing
 def test_high_level_script(run_sombrero):
 
-    _, _, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
     post_ = post.PostProcessing()
 
-    # check expected failure upon lack of data to plot
+    # check expected failure from invalid log file
     try:
         post_.run_post_processing(sombrero_incomplete_log_path, {})
     except FileNotFoundError:
@@ -163,11 +162,59 @@ def test_high_level_script(run_sombrero):
     else:
         assert False
 
+    # check expected failure from lack of required columns
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": []})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid column
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": ["flops_value", "flops_unit", "fake_column"]})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
     EXPECTED_FIELDS = ["flops_value", "flops_unit", "tasks"]
 
+    # check expected failure from invalid filter column
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["fake_column", "==", 2]]})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid filter operator
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", "!!", 2]]})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid filter value type
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["flops_value", ">", 1]]})
+    except ValueError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from filtering out every row
+    try:
+        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 2]]})
+    except EmptyDataError:
+        assert True
+    else:
+        assert False
+
     # get collated dataframe subset
-    df = post_.run_post_processing(Path(sombrero_incomplete_log_path).parent, {"columns": EXPECTED_FIELDS, "filters": []})
+    df = post_.run_post_processing(Path(sombrero_incomplete_log_path).parent, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]]})
 
     # check returned subset is as expected
     assert df.columns.tolist() == EXPECTED_FIELDS
-    assert len(df) == 4
+    assert len(df) == 1

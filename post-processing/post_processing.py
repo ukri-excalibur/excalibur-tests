@@ -34,7 +34,6 @@ class PostProcessing:
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
 
         if self.debug:
-            print("")
             print("Found log files:")
             for log in log_files:
                 print("-", log)
@@ -49,6 +48,7 @@ class PostProcessing:
             except KeyError as e:
                 if self.debug:
                     print("Discarding %s:" %os.path.basename(file), type(e).__name__ + ":", e.args[0], e.args[1])
+                    print("")
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
 
@@ -75,15 +75,14 @@ class PostProcessing:
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
-        print("")
         print("Selected dataframe:")
         print(df[columns][mask])
-        print("")
 
         # call a plotting script
         # TODO: plot(df, config)
 
         if self.debug & self.verbose:
+            print("")
             print("Full dataframe:")
             print(df.to_json(orient="columns", indent=2))
 
@@ -134,9 +133,14 @@ class PostProcessing:
             except TypeError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
                 raise
+            except ValueError as e:
+                e.args = (e.args[0] + " in column: \'{0}\'".format(column),) + e.args[1:]
+                raise
 
         if self.debug & self.verbose:
             print(mask)
+        if self.debug:
+            print("")
 
         return mask
 
@@ -233,7 +237,7 @@ def read_perflog(path):
                     records.append(record)
 
         except Exception as e:
-            e.args = (e.args[0] + " in file \'%s\':" % path,) + e.args[1:]
+            e.args = (e.args[0] + " in file \'{0}\':".format(path),) + e.args[1:]
             raise
 
     return pd.DataFrame.from_records(records)
