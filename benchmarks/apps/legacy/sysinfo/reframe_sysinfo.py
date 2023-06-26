@@ -20,7 +20,7 @@ class Sysinfo(rfm.RunOnlyRegressionTest, ScalingTest):
 
     def __init__(self):
         
-        self.valid_systems = ['*']
+        self.valid_systems = ['-gpu']
         self.valid_prog_environs = ['sysinfo']
 
         self.partition_fraction = 1.0 # all nodes

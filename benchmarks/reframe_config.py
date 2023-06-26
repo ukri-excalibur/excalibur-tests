@@ -120,9 +120,82 @@ site_configuration = {
             'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Computing nodes',
+                    'name': 'cpu',
+                    'descr': 'Computing nodes with CPUs only',
                     'scheduler': 'sge',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'a100',
+                    'descr': 'Computing nodes with Nvidia A100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=L'],
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'features': ['gpu', 'cuda'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                        {
+                            'name': 'gpu',
+                            'options': ['-l gpu={num_gpus_per_node}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'p100',
+                    'descr': 'Computing nodes with Nvidia P100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=J'],
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'features': ['gpu', 'cuda'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                        {
+                            'name': 'gpu',
+                            'options': ['-l gpu={num_gpus_per_node}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'v100',
+                    'descr': 'Computing nodes with Nvidia V100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=EF'],
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,

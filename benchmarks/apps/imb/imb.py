@@ -21,7 +21,7 @@ Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 class IMB_base(SpackTest):
     METRICS = []
 
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     exclusive_access = True
     perf_patterns = {} # must do this

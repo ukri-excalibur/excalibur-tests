@@ -16,7 +16,7 @@ Metric = namedtuple('Metric', ['column_number', 'function', 'unit', 'label'])
 class OSU_Micro_Benchmarks(SpackTest):
 
     def __init__(self):
-        self.valid_systems = ['*']
+        self.valid_systems = ['-gpu']
         self.valid_prog_environs = ['default']
         self.exclusive_access = True
         self.perf_patterns = {} # something funny about reframe's attr lookup

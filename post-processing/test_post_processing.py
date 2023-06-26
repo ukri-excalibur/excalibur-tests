@@ -75,21 +75,16 @@ def run_sombrero():
     # use sombrero example to generate new test perflog file
     run_benchmark(sombrero_bench_path)
 
-    sombrero_logs = []
-    sombrero_log_re = re.compile(r"^SombreroBenchmark\_\w{8}\.log$")
-    # look for newly generated log files
+    sombrero_log = "SombreroBenchmark.log"
+    # look for newly generated log file
     for root, _, files in os.walk(perflog_path):
-        sombrero_logs = list(filter(sombrero_log_re.match, files))
-        # if files are found, get file dir path
-        if sombrero_logs:
-            # perflog path with <system>/<partition>
-            perflog_path = root
-
-    sombrero_log_path = ""
-    # check the log files exist
-    if sombrero_logs:
-        # arbitrarily pick one of the log file names
-        sombrero_log_path = os.path.join(perflog_path, sombrero_logs[0])
+        if files:
+            # if file is found, get file dir path
+            if sombrero_log in files:
+                # perflog path with <system>/<partition>
+                perflog_path = root
+    # get log file path
+    sombrero_log_path = os.path.join(perflog_path, sombrero_log)
 
     # create an incomplete log file
     sombrero_incomplete_log = "SombreroBenchmarkIncomplete.log"
@@ -111,7 +106,7 @@ def run_sombrero():
             # inline replacement
             print(new_line, end="\n")
 
-    yield sombrero_logs, sombrero_log_path, sombrero_incomplete_log_path
+    yield sombrero_log_path, sombrero_incomplete_log_path
 
     # teardown
     # clean unnecessary files and folders
@@ -120,12 +115,8 @@ def run_sombrero():
 # Test that perflog parsing works and information can be extracted to an appropriate DataFrame
 def test_read_perflog(run_sombrero):
 
-    sombrero_logs, sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
 
-    # check the log files exist
-    assert sombrero_logs
-    # check the expected number of log files has been generated
-    assert len(sombrero_logs) ==  4
     # check the sombrero log path is valid
     assert os.path.exists(sombrero_log_path)
     # if the incomplete log file hasn't been created, something went wrong
@@ -148,6 +139,8 @@ def test_read_perflog(run_sombrero):
     # check example perflog file is read appropriately
     # check all expected columns are present
     assert df.columns.tolist() == EXPECTED_FIELDS
+    # check the expected number of rows is present
+    assert len(df) == 4
     # check all cells in first row contain something
     assert all(df[column][0] != "" for column in df)
     # check test name matches

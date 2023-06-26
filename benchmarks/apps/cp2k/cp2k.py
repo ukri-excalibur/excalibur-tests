@@ -9,7 +9,7 @@ from benchmarks.modules.utils import SpackTest
 import os.path as path
 
 class Cp2kBaseBenchmark(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'cp2k@9.1'
     time_limit = '60m'

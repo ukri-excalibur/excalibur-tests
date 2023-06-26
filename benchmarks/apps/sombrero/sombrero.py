@@ -15,7 +15,7 @@ from benchmarks.modules.utils import SpackTest
 @rfm.simple_test
 class SombreroBuild(SpackTest, rfm.CompileOnlyRegressionTest):
     descr = "Build SOMBRERO"
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'sombrero@2021-08-16'
 
@@ -89,7 +89,7 @@ class SombreroBenchmarkBase(SpackTest, rfm.RunOnlyRegressionTest):
 
 @rfm.simple_test
 class SombreroBenchmarkMini(SombreroBenchmarkBase):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     tags = {"mini"}
 
     @run_after('init')
@@ -101,7 +101,7 @@ class SombreroBenchmarkMini(SombreroBenchmarkBase):
 @rfm.simple_test
 class SombreroBenchmarkScaling(SombreroBenchmarkBase):
     params = parameter(case_filter.generate(scaling_config))
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     tags = {"scaling"}
 
     @run_after('init')
@@ -115,7 +115,7 @@ class SombreroBenchmarkScaling(SombreroBenchmarkBase):
 
 @rfm.simple_test
 class SombreroITTsn(SombreroBenchmarkBase):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     tags = {"ITT-sn"}
 
     @run_after('init')
@@ -129,7 +129,7 @@ class SombreroITTsn(SombreroBenchmarkBase):
 
 @rfm.simple_test
 class SombreroITT64n(SombreroBenchmarkBase):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     tags = {"ITT-64n"}
 
     @run_after('init')
