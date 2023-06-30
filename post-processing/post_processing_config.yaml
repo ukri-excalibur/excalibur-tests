@@ -2,22 +2,30 @@
 title: "Example Plot"
 
 # All columns relevant to plot
-# Minimum required columns: figure of merit value, figure of merit unit, something to plot against
+# Minimum required columns: [figure_of_merit_value, figure_of_merit_unit,
+# something_to_plot_against]
 columns: ["flops_value", "flops_unit", "tasks"]
 
 # Optional row filters (specify an empty list [] if none are required)
+# Filtering may be conducted on columns that are not specified
+# in the list of columns above (so that the column is filtered by but also dropped)
+# Filter format: [column_name, operator, value]
 filters: [["tasks", ">", 1], ["cpus_per_task", "==", 2]]
+
+# Optional setting to display several plots in the same graph
+# Dataset format: [column_name, value]
+datasets: [["system", "default"]]
 
 # Axes must have a value specified with a column name
 # Units can either be specified with a column name
-# or a custom label (including null (i.e. None) if units are not applicable)
+# or a custom label (including null (i.e. None) if units are N/A)
 
 x_axis:
-  value: "flops_value"
-  units:
-    column: "flops_unit"
-
-y_axis:
   value: "tasks"
   units:
     custom: null
+
+y_axis:
+  value: "flops_value"
+  units:
+    column: "flops_unit"
