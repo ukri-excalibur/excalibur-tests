@@ -86,14 +86,30 @@ def run_sombrero():
     # get log file path
     sombrero_log_path = os.path.join(perflog_path, sombrero_log)
 
+    # create a changed log file
+    sombrero_changed_log = "SombreroBenchmarkChanged.log"
+    sombrero_changed_log_path = os.path.join(perflog_path, sombrero_changed_log)
+
     # create an incomplete log file
     sombrero_incomplete_log = "SombreroBenchmarkIncomplete.log"
     sombrero_incomplete_log_path = os.path.join(perflog_path, sombrero_incomplete_log)
 
     if os.path.exists(sombrero_log_path):
         # copy and modify regular log file
+        shutil.copyfile(sombrero_log_path, sombrero_changed_log_path)
         shutil.copyfile(sombrero_log_path, sombrero_incomplete_log_path)
 
+        # add new column to changed log
+        NEW_FIELD = "id"
+        for line in fileinput.input(sombrero_changed_log_path, inplace=True):
+            if fileinput.isfirstline():
+                new_line = "|".join((NEW_FIELD, line.strip()))
+            else:
+                new_line = "|".join((str(fileinput.lineno()-1), line.strip()))
+            # inline replacement
+            print(new_line, end="\n")
+
+        # remove required column from incomplete log
         REQUIRED_FIELD = "flops_value"
         required_field_index = 0
         for line in fileinput.input(sombrero_incomplete_log_path, inplace=True):
@@ -106,7 +122,7 @@ def run_sombrero():
             # inline replacement
             print(new_line, end="\n")
 
-    yield sombrero_log_path, sombrero_incomplete_log_path
+    yield sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path
 
     # teardown
     # clean unnecessary files and folders
@@ -115,7 +131,7 @@ def run_sombrero():
 # Test that perflog parsing works and information can be extracted to an appropriate DataFrame
 def test_read_perflog(run_sombrero):
 
-    sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, _, sombrero_incomplete_log_path = run_sombrero
 
     # check the sombrero log path is valid
     assert os.path.exists(sombrero_log_path)
@@ -151,7 +167,7 @@ def test_read_perflog(run_sombrero):
 # Test that high-level control script works as expected
 def test_high_level_script(run_sombrero):
 
-    sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, _, sombrero_incomplete_log_path = run_sombrero
     post_ = post.PostProcessing()
 
     # check expected failure from invalid log file
@@ -212,9 +228,18 @@ def test_high_level_script(run_sombrero):
     else:
         assert False
 
-    # get collated dataframe subset
-    df = post_.run_post_processing(Path(sombrero_incomplete_log_path).parent, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]]})
+    # get filtered dataframe subset
+    df = post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]]})
 
     # check returned subset is as expected
     assert df.columns.tolist() == EXPECTED_FIELDS
     assert len(df) == 1
+
+    EXTENDED_EXPECTED_FIELDS = ["flops_value", "flops_unit", "tasks", "id"]
+
+    # get collated dataframe subset
+    df = post_.run_post_processing(Path(sombrero_log_path).parent, {"columns": EXTENDED_EXPECTED_FIELDS, "filters": []})
+
+    # check correct concatenation of two dataframes with different columns
+    assert len(df[df["id"].isnull()]) == 4
+    assert len(df) == 8
