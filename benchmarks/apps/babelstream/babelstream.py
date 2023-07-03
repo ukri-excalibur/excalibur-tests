@@ -16,7 +16,9 @@ from benchmarks.modules.utils import SpackTest
 class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
     valid_systems = ['*']
-    valid_prog_environs = ['default'] 
+    valid_prog_environs = ['default']
+    # Time limit of the job, automatically set in the job script.
+    time_limit = '15m'
 
     @run_before('run')
     def replace_launcher(self):
@@ -24,7 +26,6 @@ class BabelstreamBenchmarkBase(SpackTest):
         # local launcher:
         # <https://reframe-hpc.readthedocs.io/en/v4.1.3/tutorial_advanced.html#replacing-the-parallel-launcher>.
         self.job.launcher = getlauncher('local')()
-    
     @run_after('setup')
     def setup_variables(self):
         # Request the GPU resources necessary to run this job.
@@ -98,7 +99,6 @@ class CUDABenchmark(BabelstreamBenchmarkBase):
                 'Add':  (0, None, 897000, 'MBytes/sec'),
                 'Triad':  (0, None, 897000, 'MBytes/sec'),
                 'Dot':  (0, None, 897000, 'MBytes/sec')
-                
             },      
             'isambard-phase3:ampere': {
                 'Copy':  (0, None, 1555000, 'MBytes/sec'),
@@ -107,9 +107,9 @@ class CUDABenchmark(BabelstreamBenchmarkBase):
                 'Triad':  (0, None, 1555000, 'MBytes/sec'),
                 'Dot':  (0, None, 1555000, 'MBytes/sec')
             },
-#             Myriad has four types of GPU nodes: E, F, J and L.
+# Myriad has four types of GPU nodes: E, F, J and L.
 # L-type nodes each have four NVIDIA 40G A100s. (Compute Capability 80)
-# F-type and E-type nodes each have two NVIDIA Tesla V100s. The CPUs are 
+# F-type and E-type nodes each have two NVIDIA Tesla V100s. The CPUs are
 # slightly different on the different letters, see above. (Compute Capability 70)
 # J-type nodes each have two NVIDIA Tesla P100s. (Compute Capability 60)
             ################################################
