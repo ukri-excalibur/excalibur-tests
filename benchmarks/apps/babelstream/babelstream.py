@@ -5,12 +5,10 @@
 import reframe as rfm
 import reframe.utility.sanity as sn
 from reframe.core.backends import getlauncher
-
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
 from benchmarks.modules.utils import SpackTest
-
 
 @rfm.simple_test
 class BabelstreamBenchmarkBase(SpackTest):
@@ -19,7 +17,6 @@ class BabelstreamBenchmarkBase(SpackTest):
     valid_prog_environs = ['default']
     # Time limit of the job, automatically set in the job script.
     time_limit = '15m'
-
     @run_before('run')
     def replace_launcher(self):
         # For this benchmark we don't use MPI at all, so we always force the
@@ -30,15 +27,12 @@ class BabelstreamBenchmarkBase(SpackTest):
     def setup_variables(self):
         # Request the GPU resources necessary to run this job.
         self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node}
-
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('Running kernels 100 times', self.stdout)
-
     #--------------------------------------------------
     #-- Figure of Merit Export
     #--------------------------------------------------
-
     # Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython).
     # If you need more precision, get NumPy and use its numpy.float128.
     @performance_function('MBytes/sec', perf_key='Copy')
