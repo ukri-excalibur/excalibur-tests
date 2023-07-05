@@ -119,7 +119,13 @@ You may also need to compile GPU applications on the compute nodes, as the login
 
 On the nodes with Nvidia Ampere GPUs, memory usage is restricted to 4 GiB by default.
 To request more memory you [have to specify the resource](https://gw4-isambard.github.io/docs/user-guide/PHASE3.html#nvidia-gpu) `mem=...G`, for example by setting the `memory` key of `extra_resources` to the amount of memory you require.
-This can be done on the command line of ReFrame [...]
+This can be done on the command line of ReFrame with, for example
+
+```
+reframe ... -S extra_resources='{"memory": {"memory": "20G"}}'
+```
+
+to request a job with 20 GiB of memory.
 
 ## Myriad
 
