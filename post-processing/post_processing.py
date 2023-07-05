@@ -53,11 +53,16 @@ class PostProcessing:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
 
         columns = config["columns"]
-        REQUIRED_COLUMNS = [r"\w+_value$", r"\w+_unit$"]
-        required_column_matches = [len(list(filter(re.compile(rexpr).match, columns))) > 0 for rexpr in REQUIRED_COLUMNS]
-        # check for required columns
-        if (len(columns) < 3) | (False in required_column_matches):
-            raise KeyError("Config must contain at least 3 specified columns: a figure of merit value, a figure of merit unit, and something to plot the figure of merit against", columns)
+        datasets = config["datasets"]
+        dataset_filters = []
+        # extract dataset columns and filters
+        if datasets:
+            for dataset in datasets:
+                if dataset[0] not in columns:
+                    # add dataset columns to column list
+                    columns.append(dataset[0])
+                # create dataset filters
+                dataset_filters.append([dataset[0], "==", dataset[1]])
 
         invalid_columns = []
         # check for invalid columns
@@ -72,14 +77,27 @@ class PostProcessing:
         # filter rows
         if filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
+        # apply dataset filters
+        if dataset_filters:
+            dataset_mask = reduce(op.or_, (self.row_filter(f, df) for f in dataset_filters))
+            mask = mask & dataset_mask
+        # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
+
+        x_axis = config["x_axis"]["value"]
+        num_filtered_rows = len(df[mask])
+        num_x_data_points = max(1, len(datasets)) * len(set(df[x_axis]))
+        # check expected number of rows
+        if num_filtered_rows != num_x_data_points:
+            # FIXME: not sure what type of error this should be
+            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per dataset ({1})".format(num_filtered_rows, num_x_data_points))
 
         print("Selected dataframe:")
         print(df[columns][mask])
 
         # call a plotting script
-        # TODO: plot(df, config)
+        # TODO: plot(df, ...)
 
         if self.debug & self.verbose:
             print("")
@@ -173,7 +191,17 @@ def read_config(path):
     """
 
     with open(path, "r") as file:
-        return yaml.safe_load(file)
+        config = yaml.safe_load(file)
+
+    columns = config["columns"]
+    REQUIRED_COLUMNS = [r"\w+_value$", r"\w+_unit$"]
+    required_column_matches = [len(list(filter(re.compile(rexpr).match, columns))) > 0 for rexpr in REQUIRED_COLUMNS]
+
+    # check for required columns
+    if (len(columns) < 3) | (False in required_column_matches):
+        raise KeyError("Config must contain at least 3 specified columns: a figure of merit value, a figure of merit unit, and something to plot the figure of merit against", columns)
+
+    return config
 
 # a modified and updated version of the function from perf_logs.py
 def read_perflog(path):
