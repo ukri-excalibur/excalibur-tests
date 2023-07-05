@@ -52,9 +52,15 @@ class PostProcessing:
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
 
-        columns = config["columns"]
-        datasets = config["datasets"]
+        # get axis columns
+        columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
+        if config["x_axis"]["units"].get("column"):
+            columns.insert(1, config["x_axis"]["units"]["column"])
+        if config["y_axis"]["units"].get("column"):
+            columns.append(config["y_axis"]["units"]["column"])
+
         dataset_filters = []
+        datasets = config["datasets"]
         # extract dataset columns and filters
         if datasets:
             for dataset in datasets:
@@ -193,27 +199,24 @@ def read_config(path):
     with open(path, "r") as file:
         config = yaml.safe_load(file)
 
-    columns = config["columns"]
-    REQUIRED_COLUMNS = [r"\w+_value$", r"\w+_unit$"]
-    required_column_matches = [len(list(filter(re.compile(rexpr).match, columns))) > 0 for rexpr in REQUIRED_COLUMNS]
-
-    # check for required columns
-    if (len(columns) < 3) | (False in required_column_matches):
-        raise KeyError("Config must contain at least 3 specified columns: a figure of merit value, a figure of merit unit, and something to plot the figure of merit against", columns)
+    # check x-axis information
+    if not config.get("x_axis"):
+        raise KeyError("Missing x-axis information")
+    if not config.get("x_axis").get("value"):
+        raise KeyError("Missing x-axis value information")
+    if not config.get("x_axis").get("units"):
+        raise KeyError("Missing x-axis units information")
+    # check y-axis information
+    if not config.get("y_axis"):
+        raise KeyError("Missing y-axis information")
+    if not config.get("y_axis").get("value"):
+        raise KeyError("Missing y-axis value information")
+    if not config.get("y_axis").get("units"):
+        raise KeyError("Missing y-axis units information")
 
     # check dataset length
     if len(config["datasets"]) == 1:
-        raise KeyError("Number of datasets must be >= 2. Do not specify a dataset if only a single one is present.")
-
-    axis_columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
-    if config["x_axis"]["units"].get("column"):
-        axis_columns.append(config["x_axis"]["units"]["column"])
-    if config["y_axis"]["units"].get("column"):
-        axis_columns.append(config["y_axis"]["units"]["column"])
-    # check axis columns are present in columns list
-    for col in axis_columns:
-        if col not in columns:
-            raise KeyError("Axis column \'{0}\' not specified in columns".format(col))
+        raise KeyError("Number of datasets must be >= 2; do not specify a dataset if only a single one is present")
 
     return config
 

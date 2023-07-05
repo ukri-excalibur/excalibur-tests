@@ -178,9 +178,9 @@ def test_high_level_script(run_sombrero):
     else:
         assert False
 
-    # check expected failure from lack of required columns
+    # check expected failure from lack of axis information
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": []})
+        post_.run_post_processing(sombrero_log_path, {})
     except KeyError:
         assert True
     else:
@@ -188,17 +188,15 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid column
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": ["flops_value", "flops_unit", "fake_column"]})
+        post_.run_post_processing(sombrero_log_path, {"datasets": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
         assert False
 
-    EXPECTED_FIELDS = ["flops_value", "flops_unit", "tasks"]
-
     # check expected failure from invalid filter column
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["fake_column", "==", 2]], "datasets": []})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
@@ -206,7 +204,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter operator
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", "!!", 2]], "datasets": []})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
@@ -214,7 +212,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["flops_value", ">", 1]], "datasets": []})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", 1]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except ValueError:
         assert True
     else:
@@ -222,29 +220,34 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from filtering out every row
     try:
-        post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 2]], "datasets": []})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except EmptyDataError:
         assert True
     else:
         assert False
 
-    # get filtered dataframe subset
-    df = post_.run_post_processing(sombrero_log_path, {"columns": EXPECTED_FIELDS, "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "datasets": [], "x_axis": {"value": "tasks"}})
+    # check expected failure from row number vs unique x-axis value number mismatch
+    try:
+        df = post_.run_post_processing(sombrero_log_path, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except Exception:
+        assert True
+    else:
+        assert False
 
+    # check correct concatenation of two dataframes with different columns
+    try:
+        # get collated dataframe subset
+        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except Exception as e:
+        # dataframe has records from both files
+        assert len(e.args[1]) == 8
+    else:
+        assert False
+
+    # get filtered dataframe subset
+    df = post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+
+    EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected
     assert df.columns.tolist() == EXPECTED_FIELDS
     assert len(df) == 1
-
-    EXTENDED_EXPECTED_FIELDS = ["flops_value", "flops_unit", "tasks", "id"]
-
-    # check expected failure from row number vs unique x-axis value mismatch
-    try:
-        # get collated dataframe subset
-        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"columns": EXTENDED_EXPECTED_FIELDS, "filters": [], "datasets": [], "x_axis": {"value": "tasks"}})
-    except Exception as e:
-        # check correct concatenation of two dataframes with different columns
-        df = e.args[1]
-        assert len(df[df["id"].isnull()]) == 4
-        assert len(df) == 8
-    else:
-        assert False

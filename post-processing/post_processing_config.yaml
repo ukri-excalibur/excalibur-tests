@@ -1,11 +1,6 @@
 # Plot title
 title: "Example Plot"
 
-# All columns relevant to plot
-# Minimum required columns: [figure_of_merit_value, figure_of_merit_unit,
-# something_to_plot_against]
-columns: ["flops_value", "flops_unit", "tasks"]
-
 # Optional row filters (specify an empty list [] if none are required)
 # Filtering may be conducted on columns that are not specified
 # in the list of columns above (so that the column is filtered by but also dropped)
