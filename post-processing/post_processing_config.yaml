@@ -10,11 +10,11 @@ columns: ["flops_value", "flops_unit", "tasks"]
 # Filtering may be conducted on columns that are not specified
 # in the list of columns above (so that the column is filtered by but also dropped)
 # Filter format: [column_name, operator, value]
-filters: [["tasks", ">", 1], ["cpus_per_task", "==", 2]]
+filters: [["system", "==", "default"]]
 
 # Optional setting to display several plots in the same graph
 # Dataset format: [column_name, value]
-datasets: [["system", "default"]]
+datasets: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]
 
 # Axes must have a value specified with a column name
 # Units can either be specified with a column name
