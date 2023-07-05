@@ -18,7 +18,7 @@ import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
 class GridBenchmark(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'grid@develop'
 

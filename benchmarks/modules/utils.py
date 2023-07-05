@@ -278,8 +278,13 @@ class SpackTest(rfm.RegressionTest):
 
     @run_before('compile')
     def set_sge_num_slots(self):
-        # Set the total number of CPUs to be requested for the SGE scheduler.
-        self.extra_resources['mpi']: {'num_slots': self.num_tasks * self.num_cpus_per_task}
+        if self.current_partition.scheduler.registered_name == 'sge':
+            # `self.num_tasks` or `self.num_cpus_per_task` may be `None`, here
+            # we default to `1` if not set.
+            num_tasks = self.num_tasks or 1
+            num_cpus_per_task = self.num_cpus_per_task or 1
+            # Set the total number of CPUs to be requested for the SGE scheduler.
+            self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
 
     @run_after('setup')
     def setup_build_job_num_cpus(self):

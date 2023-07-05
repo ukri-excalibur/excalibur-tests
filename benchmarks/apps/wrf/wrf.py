@@ -59,7 +59,7 @@ TIMING_CONSTANTS = {
 
 
 class WRFBaseBenchmark(SpackTest):
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     spack_spec = 'wrf@3.9.1.1'
 

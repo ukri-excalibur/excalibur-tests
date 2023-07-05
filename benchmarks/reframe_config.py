@@ -120,9 +120,82 @@ site_configuration = {
             'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Computing nodes',
+                    'name': 'cpu',
+                    'descr': 'Computing nodes with CPUs only',
                     'scheduler': 'sge',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'a100',
+                    'descr': 'Computing nodes with Nvidia A100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=L'],
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'features': ['gpu', 'cuda'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                        {
+                            'name': 'gpu',
+                            'options': ['-l gpu={num_gpus_per_node}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'p100',
+                    'descr': 'Computing nodes with Nvidia P100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=J'],
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'features': ['gpu', 'cuda'],
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                        {
+                            'name': 'gpu',
+                            'options': ['-l gpu={num_gpus_per_node}'],
+                        },
+                    ],
+                },
+                {
+                    'name': 'v100',
+                    'descr': 'Computing nodes with Nvidia V100 GPUs',
+                    'scheduler': 'sge',
+                    'access': ['-ac allow=EF'],
                     'launcher': 'mpirun',
                     'environs': ['default'],
                     'max_jobs': 36,
@@ -442,6 +515,7 @@ site_configuration = {
             'name': 'github-actions',
             'descr': 'GitHub Actions runner',
             'hostnames': ['fv-az.*'],  # Just to not have '.*'
+            'max_local_jobs': 1,  # Limit number of parallel jobs
             'partitions': [
                 {
                     'name': 'default',
@@ -484,6 +558,29 @@ site_configuration = {
                 },
             ]
         },  # end Tursa
+        {
+            # https://dial3-docs.dirac.ac.uk/DIaL2.5/Architecture/
+            'name': 'dial2',
+            'descr': 'Dirac Data Intensive @ Leicester',
+            'hostnames': ['dirac0*'],
+            'modules_system': 'lmod',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Computing nodes',
+                    'scheduler': 'torque',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 36,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 18,
+                    },
+                },
+            ]
+        },  # end DiaL2
         {
             # https://dial3-docs.dirac.ac.uk/About_dial3/architecture/
             'name': 'dial3',
@@ -622,8 +719,13 @@ site_configuration = {
                         '%(check_num_gpus_per_node)s|'
                         '%(check_perfvalues)s|'
                         '%(check_spack_spec)s|'
+                        '%(check_display_name)s|'
+                        '%(check_system)s|'
+                        '%(check_partition)s|'
+                        '%(check_environ)s|'
                         '%(check_extra_resources)s|'
-                        '%(check_env_vars)s'
+                        '%(check_env_vars)s|'
+                        '%(check_tags)s'
                     ),
                     'format_perfvars': (
                         '%(check_perf_value)s|'

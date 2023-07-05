@@ -149,7 +149,7 @@ spack:
       flags: {}
       operating_system: rocky8
       target: x86_64
-      modules: []
+      modules: [ intel/compilers/2020.4 ]
       environment: {}
       extra_rpaths: []
   packages:

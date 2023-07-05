@@ -18,7 +18,7 @@ from modules.reframe_extras import ScalingTest
 class Nxnlatbw(ScalingTest):
     def __init__(self):
 
-        self.valid_systems = ['*']
+        self.valid_systems = ['-gpu']
         self.valid_prog_environs = ['nxnlatbw']
 
         self.build_system = 'SingleSource'
