@@ -205,12 +205,15 @@ def read_config(path):
     if len(config["datasets"]) == 1:
         raise KeyError("Number of datasets must be >= 2. Do not specify a dataset if only a single one is present.")
 
-    x_axis = config["x_axis"]["value"]
-    y_axis = config["y_axis"]["value"]
-    # check axes are present in columns list
-    for axis in [x_axis, y_axis]:
-        if axis not in columns:
-            raise KeyError("Axis \'{0}\' not specified in columns".format(axis))
+    axis_columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
+    if config["x_axis"]["units"].get("column"):
+        axis_columns.append(config["x_axis"]["units"]["column"])
+    if config["y_axis"]["units"].get("column"):
+        axis_columns.append(config["y_axis"]["units"]["column"])
+    # check axis columns are present in columns list
+    for col in axis_columns:
+        if col not in columns:
+            raise KeyError("Axis column \'{0}\' not specified in columns".format(col))
 
     return config
 
