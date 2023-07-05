@@ -256,6 +256,6 @@ class SYCLBenchmark(BabelstreamBenchmarkBase):
 #--------------------------------------------------
 @rfm.simple_test
 class HIPBenchmark(BabelstreamBenchmarkBase):
-    valid_systems = ['+gpu']
+    valid_systems = ['+gpu +rocm']
     tags = {"hip"}
     executable = "hip-stream"
