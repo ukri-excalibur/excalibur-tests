@@ -53,6 +53,9 @@ class BabelstreamBenchmarkBase(SpackTest):
     @performance_function('MBytes/sec', perf_key='Dot')
     def extract_dot_perf(self):
         return sn.extractsingle(r'Dot \s+(\S+)\s+.', self.stdout, 1, float)
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
 #--------------------------------------------------
 #-- ACC
@@ -161,12 +164,12 @@ class TBBBenchmark(BabelstreamBenchmarkBase):
     executable = "tbb-stream"
     def __init__(self):
         self.reference = {
-            'isambard-macs:cascadelake': { # https://en.wikichip.org/wiki/intel/xeon_gold/6230https://en.wikichip.org/wiki/intel/xeon_gold/6230 (SINGLE)
-                'Copy':  (0, None, 231860, 'MBytes/sec'),
-                'Mul': (0, None, 231860, 'MBytes/sec'),
-                'Add':   (0, None, 231860, 'MBytes/sec'),
-                'Triad': (0, None, 231860, 'MBytes/sec'),
-                'Dot': (0, None, 231860, 'MBytes/sec')
+            'isambard-macs:cascadelake': { # https://en.wikichip.org/wiki/intel/xeon_gold/6230 (SINGLE)
+                'Copy':  (231860, None, None, 'MBytes/sec'),
+                'Mul': (231860, None, None, 'MBytes/sec'),
+                'Add':   (231860, None, None, 'MBytes/sec'),
+                'Triad': (231860, None, None, 'MBytes/sec'),
+                'Dot': (231860, None, None, 'MBytes/sec')
             },
 
         }
