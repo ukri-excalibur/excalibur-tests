@@ -87,11 +87,11 @@ class PostProcessing:
 
         x_axis = config["x_axis"]["value"]
         num_filtered_rows = len(df[mask])
-        num_x_data_points = max(1, len(datasets)) * len(set(df[x_axis]))
+        num_x_data_points = max(1, len(datasets)) * len(set(df[x_axis][mask]))
         # check expected number of rows
         if num_filtered_rows != num_x_data_points:
             # FIXME: not sure what type of error this should be
-            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per dataset ({1})".format(num_filtered_rows, num_x_data_points))
+            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per dataset ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -200,6 +200,17 @@ def read_config(path):
     # check for required columns
     if (len(columns) < 3) | (False in required_column_matches):
         raise KeyError("Config must contain at least 3 specified columns: a figure of merit value, a figure of merit unit, and something to plot the figure of merit against", columns)
+
+    # check dataset length
+    if len(config["datasets"]) == 1:
+        raise KeyError("Number of datasets must be >= 2. Do not specify a dataset if only a single one is present.")
+
+    x_axis = config["x_axis"]["value"]
+    y_axis = config["y_axis"]["value"]
+    # check axes are present in columns list
+    for axis in [x_axis, y_axis]:
+        if axis not in columns:
+            raise KeyError("Axis \'{0}\' not specified in columns".format(axis))
 
     return config
 
