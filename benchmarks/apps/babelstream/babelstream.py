@@ -182,7 +182,7 @@ class THRUSTBenchmark_NVIDIA(BabelstreamBenchmarkBase):
 
 @rfm.simple_test
 class THRUSTBenchmark_AMD(BabelstreamBenchmarkBase):
-    valid_systems = ['+gpu']
+    valid_systems = ['+gpu +rocm']
     tags = {"thrust"}
     executable = "thrust-stream"
     num_gpus_per_node = 1
@@ -219,7 +219,7 @@ class OMPBenchmark_NVIDIA(BabelstreamBenchmarkBase):
 
 @rfm.simple_test
 class OMPBenchmark_AMD(BabelstreamBenchmarkBase):
-    valid_systems = ['+gpu -cuda']
+    valid_systems = ['+gpu +rocm']
     tags = {"omp"}
     executable = "omp-stream"
     num_gpus_per_node = 1
