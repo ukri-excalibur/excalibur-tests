@@ -18,8 +18,8 @@ We cannot automatically set these options for you because they are user-specific
 Some examples:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=serial'
-reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=short' -J'--account=t01'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=serial'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=short' -J'--account=t01'
 ```
 
 ### Controlling CPU frequency
@@ -30,7 +30,7 @@ For more details, see Setting environment variables in [`README.md`](./README.md
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use
 
 ```
-reframe -c examples/sombrero -r --performance-report --system archer2 -J'--qos=serial' -S env_vars=SLURM_CPU_FREQ_REQ:1500000
+reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=serial' -S env_vars=SLURM_CPU_FREQ_REQ:1500000
 ```
 
 ### Using python
@@ -65,7 +65,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -79,7 +79,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -94,7 +94,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -109,8 +109,8 @@ Login nodes on the Isambard 2 MACS partition have Intel "Broadwell" CPUs, but mo
 To run compilation on the compute node, you have to set the attribute [`build_locally`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally) to `false` with `-S build_locally=false`, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
-reframe -c examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
+reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
+reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
 ```
 
 You may also need to compile GPU applications on the compute nodes, as the login node does not have any GPUs (this really depends on the build system of the application at hand, whether it needs access to a GPU during the build or it is sufficient to have the GPU toolkit available).
@@ -151,7 +151,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
