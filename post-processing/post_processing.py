@@ -91,9 +91,8 @@ class PostProcessing:
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
-        x_axis = config["x_axis"]["value"]
         num_filtered_rows = len(df[mask])
-        num_x_data_points = max(1, len(datasets)) * len(set(df[x_axis][mask]))
+        num_x_data_points = max(1, len(datasets)) * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows != num_x_data_points:
             # FIXME: not sure what type of error this should be
@@ -173,7 +172,7 @@ def read_args():
         Return parsed command line arguments.
     """
 
-    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog and figure of merit must be supplied.")
+    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog must be supplied.")
 
     # required positional arguments (log path, config path)
     parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
@@ -216,7 +215,15 @@ def read_config(path):
 
     # check dataset length
     if len(config["datasets"]) == 1:
-        raise KeyError("Number of datasets must be >= 2; do not specify a dataset if only a single one is present")
+        raise KeyError("Number of datasets must be >= 2 (specify an empty list [] if there is only one dataset)")
+
+    # check filters are present
+    if not config.get("filters"):
+        raise KeyError("Missing filters information (specify an empty list [] if none are required)")
+
+    # check plot title information
+    if not config.get("title"):
+        raise KeyError("Missing plot title information")
 
     return config
 
