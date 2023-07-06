@@ -1,9 +1,9 @@
 import fileinput
 import os
+from pandas.errors import EmptyDataError
 from pathlib import Path
 import post_processing as post
 import pytest
-import re
 import shutil
 import subprocess as sp
 
@@ -38,19 +38,20 @@ def remove_field_from_perflog(line, field_index):
 def test_display_name_parsing():
 
     display_name = "TestName %param1=one %param2=two %param3=three"
-    params = post.get_display_name_params(display_name)
+    test_name, params = post.get_display_name_info(display_name)
 
     # check param length, names, and values
+    assert test_name == "TestName"
     assert len(params) == 3
     assert (params["param1"] == "one") & (params["param2"] == "two") & (params["param3"] == "three")
 
     display_name = "TestName"
-    params = post.get_display_name_params(display_name)
+    _, params = post.get_display_name_info(display_name)
 
     # no params expected
     assert len(params) == 0
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
 def run_sombrero():
 
@@ -85,14 +86,30 @@ def run_sombrero():
     # get log file path
     sombrero_log_path = os.path.join(perflog_path, sombrero_log)
 
+    # create a changed log file
+    sombrero_changed_log = "SombreroBenchmarkChanged.log"
+    sombrero_changed_log_path = os.path.join(perflog_path, sombrero_changed_log)
+
     # create an incomplete log file
     sombrero_incomplete_log = "SombreroBenchmarkIncomplete.log"
     sombrero_incomplete_log_path = os.path.join(perflog_path, sombrero_incomplete_log)
 
     if os.path.exists(sombrero_log_path):
         # copy and modify regular log file
+        shutil.copyfile(sombrero_log_path, sombrero_changed_log_path)
         shutil.copyfile(sombrero_log_path, sombrero_incomplete_log_path)
 
+        # add new column to changed log
+        NEW_FIELD = "id"
+        for line in fileinput.input(sombrero_changed_log_path, inplace=True):
+            if fileinput.isfirstline():
+                new_line = "|".join((NEW_FIELD, line.strip()))
+            else:
+                new_line = "|".join((str(fileinput.lineno()-1), line.strip()))
+            # inline replacement
+            print(new_line, end="\n")
+
+        # remove required column from incomplete log
         REQUIRED_FIELD = "flops_value"
         required_field_index = 0
         for line in fileinput.input(sombrero_incomplete_log_path, inplace=True):
@@ -105,7 +122,7 @@ def run_sombrero():
             # inline replacement
             print(new_line, end="\n")
 
-    yield sombrero_log_path, sombrero_incomplete_log_path
+    yield sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path
 
     # teardown
     # clean unnecessary files and folders
@@ -114,7 +131,7 @@ def run_sombrero():
 # Test that perflog parsing works and information can be extracted to an appropriate DataFrame
 def test_read_perflog(run_sombrero):
 
-    sombrero_log_path, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, _, sombrero_incomplete_log_path = run_sombrero
 
     # check the sombrero log path is valid
     assert os.path.exists(sombrero_log_path)
@@ -146,3 +163,91 @@ def test_read_perflog(run_sombrero):
     assert df["test_name"][0] == "SombreroBenchmark"
     # check tags match
     assert df["tags"][0] == "example"
+
+# Test that high-level control script works as expected
+def test_high_level_script(run_sombrero):
+
+    sombrero_log_path, _, sombrero_incomplete_log_path = run_sombrero
+    post_ = post.PostProcessing()
+
+    # check expected failure from invalid log file
+    try:
+        post_.run_post_processing(sombrero_incomplete_log_path, {})
+    except FileNotFoundError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from lack of axis information
+    try:
+        post_.run_post_processing(sombrero_log_path, {})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid column
+    try:
+        post_.run_post_processing(sombrero_log_path, {"datasets": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid filter column
+    try:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid filter operator
+    try:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except KeyError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from invalid filter value type
+    try:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", 1]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except ValueError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from filtering out every row
+    try:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except EmptyDataError:
+        assert True
+    else:
+        assert False
+
+    # check expected failure from row number vs unique x-axis value number mismatch
+    try:
+        df = post_.run_post_processing(sombrero_log_path, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except Exception:
+        assert True
+    else:
+        assert False
+
+    # check correct concatenation of two dataframes with different columns
+    try:
+        # get collated dataframe subset
+        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except Exception as e:
+        # dataframe has records from both files
+        assert len(e.args[1]) == 8
+    else:
+        assert False
+
+    # get filtered dataframe subset
+    df = post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+
+    EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
+    # check returned subset is as expected
+    assert df.columns.tolist() == EXPECTED_FIELDS
+    assert len(df) == 1
