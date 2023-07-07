@@ -196,7 +196,7 @@ class THRUSTBenchmark_AMD(BabelstreamBenchmarkBase):
 class RAJABenchmark_CPU(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
     tags = {"raja"}
-    executable = "kokkos-stream"
+    executable = "raja-stream"
 
 @rfm.simple_test
 class RAJABenchmark_GPU(BabelstreamBenchmarkBase):
