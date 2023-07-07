@@ -231,10 +231,26 @@ class OMPBenchmark_AMD(BabelstreamBenchmarkBase):
 #-- std-data,ranges,indices
 #--------------------------------------------------
 @rfm.simple_test
-class STDBenchmark(BabelstreamBenchmarkBase):
+class STDDATABenchmark(BabelstreamBenchmarkBase):
     valid_systems = ['-gpu']
-    tags = {"std"}
-    executable = "std-stream"
+    tags = {"std-data"}
+    executable = "std-data-stream"
+#--------------------------------------------------
+#-- std-data,ranges,indices
+#--------------------------------------------------
+@rfm.simple_test
+class STDRANGESBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"std-ranges"}
+    executable = "std-ranges-stream"
+#--------------------------------------------------
+#-- std-data,ranges,indices
+#--------------------------------------------------
+@rfm.simple_test
+class STDINDICESBenchmark(BabelstreamBenchmarkBase):
+    valid_systems = ['-gpu']
+    tags = {"std-indices"}
+    executable = "std-indices-stream"
 
 #--------------------------------------------------
 #-- SYCL2020
