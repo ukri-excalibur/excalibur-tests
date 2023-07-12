@@ -9,11 +9,21 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 ## Installation
 
-It is recommended to install the **excalibur-tests** package with `pip` by
+We require Python version 3.7 or later. Install the **excalibur-tests** package with `pip` by
 
 ```sh
-pip install .
+pip install -e .
 ```
+
+The `-e/--editable` flag is recommended for two reasons. 
+- Spack installs packages in a `opt` directory under the spack environment. With `-e` the spack
+environment remains in your local directory and `pip` creates symlinks to it. Without `-e` spack 
+will install packages inside your python environment.
+- For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
+the `-e` flag to `pip` links the installed package to the files in the local
+directory, instead of copying, to allow making changes to the installed package.
+
+Note that to use `-e` with a project configured with a `pyproject.toml` you need `pip` version 22 or later.
 
 On most systems, it is recommended to install the package in a virtual environment.
 For example, using the python3 [built-in virtual environment tool `venv`](https://docs.python.org/3/library/venv.html),
@@ -28,10 +38,6 @@ and activate it with
 ```sh
 source ./my_environment/bin/activate
 ```
-
-For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
-pass the `-e/--editable` flag to `pip` to link the installed package to the files in the local
-directory, instead of copying, to be able to make changes to the installed package.
 
 ## Requirements
 
@@ -91,8 +97,7 @@ require ReFrame v4.1.3.
 
 If you need to manually install ReFrame, follow the [official
 instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
-install this package.  Note that ReFrame requires Python 3.6: in your HPC system
-you may need to load a specific module to have this version of Python available.
+install this package. 
 
 We provide a ReFrame configuration file with the settings of some systems that
 are part of the ExCALIBUR or DiRAC projects.  You can point ReFrame to this file by
