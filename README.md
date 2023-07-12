@@ -39,13 +39,11 @@ and activate it with
 source ./my_environment/bin/activate
 ```
 
-## Requirements
+### Spack
 
-The pip install will install a compatible version of **ReFrame** from
+The `pip install` command will install a compatible version of **ReFrame** from
 [PyPi](https://pypi.org/project/ReFrame-HPC/). However, you will have to
 manually provide an installation of **Spack**.
-
-### Spack
 
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
 facilities. In some HPC facilities there may be already a central Spack installation available.
@@ -89,15 +87,13 @@ where the environment is.  If this is not set, ReFrame will try to use the
 environment for the current system if known, otherwise it will automatically
 create a very basic environment (see "Usage on unsupported systems" section below).
 
+## Configuration
+
 ### ReFrame
 
 [ReFrame](https://reframe-hpc.readthedocs.io/en/stable/) is a high-level
 framework for writing regression tests for HPC systems.  For our tests we
 require ReFrame v4.1.3.
-
-If you need to manually install ReFrame, follow the [official
-instructions](https://reframe-hpc.readthedocs.io/en/stable/started.html) to
-install this package. 
 
 We provide a ReFrame configuration file with the settings of some systems that
 are part of the ExCALIBUR or DiRAC projects.  You can point ReFrame to this file by
