@@ -9,7 +9,7 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 ## Installation
 
-Python version 3.7 or later is required to install **excalibur-tests**. Install the **excalibur-tests** package with `pip` by
+We require Python version 3.7 or later. Install the **excalibur-tests** package with `pip` by
 
 ```sh
 pip install -e .
