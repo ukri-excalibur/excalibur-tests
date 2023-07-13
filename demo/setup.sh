@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # Setup
-mkdir benchmark-portability-demo
-cd benchmark-portability-demo
 python3 -m venv demo-env
 source ./demo-env/bin/activate
 git clone git@github.com:ukri-excalibur/excalibur-tests.git
