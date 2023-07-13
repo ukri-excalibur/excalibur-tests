@@ -375,10 +375,6 @@ spack:
         prefix: /opt/cray/libfabric/1.11.0.4.128
         modules:
         - libfabric/1.12.1.2.2.0.0
-    libffi:
-      externals:
-      - spec: libffi@3.2.1
-        prefix: /usr
     libfuse:
       externals:
       - spec: libfuse@2.9.7
