@@ -11,7 +11,7 @@ then
     reframe -c benchmarks/apps/$app -r -J'--account=do006' --system cosma8
 elif [ $system == csd3 ]
 then
-    reframe -c benchmarks/apps/$app -r -J'--account=do006' --system csd3-skylake
+    reframe -c benchmarks/apps/$app -r -J'--account=DIRAC-DO006-CPU' --system csd3-skylake
 elif [ $system == isambard ]
 then
     reframe -c benchmarks/apps/$app -r --system isambard-macs:cascadelake -S build_locally=false
