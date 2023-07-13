@@ -15,8 +15,8 @@ then
     module swap python/3.10.7
 elif [ $system == isambard ]
 then
-    # on isambard we have python 3.7 by default which should be enough
-    true
+    module load python37
+    export PATH=/home/ri-tkoskela/.local/bin:$PATH
 fi
 
 # Setup
@@ -31,5 +31,5 @@ source ./spack/share/spack/setup-env.sh
 export RFM_CONFIG_FILES="$(pwd)/excalibur-tests/benchmarks/reframe_config.py"
 export RFM_USE_LOGIN_SHELL="true"
 pip install --upgrade pip
-pip install ./excalibur-tests
+pip install -e ./excalibur-tests
 
