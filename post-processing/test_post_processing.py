@@ -188,7 +188,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid column
     try:
-        post_.run_post_processing(sombrero_log_path, {"datasets": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"series": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
@@ -196,7 +196,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter column
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
@@ -204,7 +204,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter operator
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError:
         assert True
     else:
@@ -212,7 +212,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", 1]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", 1]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except ValueError:
         assert True
     else:
@@ -220,7 +220,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from filtering out every row
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except EmptyDataError:
         assert True
     else:
@@ -228,7 +228,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from row number vs unique x-axis value number mismatch
     try:
-        df = post_.run_post_processing(sombrero_log_path, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        df = post_.run_post_processing(sombrero_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except Exception:
         assert True
     else:
@@ -237,7 +237,7 @@ def test_high_level_script(run_sombrero):
     # check correct concatenation of two dataframes with different columns
     try:
         # get collated dataframe subset
-        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": [], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except Exception as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
@@ -245,7 +245,7 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # get filtered dataframe subset
-    df = post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "datasets": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    df = post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected

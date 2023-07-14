@@ -59,16 +59,17 @@ class PostProcessing:
         if config["y_axis"]["units"].get("column"):
             columns.append(config["y_axis"]["units"]["column"])
 
-        dataset_filters = []
-        datasets = config["datasets"]
-        # extract dataset columns and filters
-        if datasets:
-            for dataset in datasets:
-                if dataset[0] not in columns:
-                    # add dataset columns to column list
-                    columns.append(dataset[0])
-                # create dataset filters
-                dataset_filters.append([dataset[0], "==", dataset[1]])
+        series_columns = []
+        series_filters = []
+        series = config["series"]
+        # extract series columns and filters
+        if series:
+            series_columns = [s[0] for s in series]
+            series_filters = [[s[0], "==", s[1]] for s in series]
+            for c in series_columns:
+                if c not in columns:
+                    # add series columns to column list
+                    columns.append(c)
 
         invalid_columns = []
         # check for invalid columns
@@ -78,25 +79,30 @@ class PostProcessing:
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
-        filters = config["filters"]
         mask = pd.Series(df.index.notnull())
+        filters = config["filters"]
         # filter rows
         if filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
-        # apply dataset filters
-        if dataset_filters:
-            dataset_mask = reduce(op.or_, (self.row_filter(f, df) for f in dataset_filters))
-            mask = mask & dataset_mask
+        # apply series filters
+        if series_filters:
+            series_mask = reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+            mask = mask & series_mask
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
+        # get number of occurrences of each column
+        series_col_count = {c:series_columns.count(c) for c in series_columns}
+        # get number of column combinations
+        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
+
         num_filtered_rows = len(df[mask])
-        num_x_data_points = max(1, len(datasets)) * len(set(df[config["x_axis"]["value"]][mask]))
+        num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows != num_x_data_points:
             # FIXME: not sure what type of error this should be
-            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per dataset ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
+            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -213,12 +219,14 @@ def read_config(path):
     if not config.get("y_axis").get("units"):
         raise KeyError("Missing y-axis units information")
 
-    # check dataset length
-    if len(config["datasets"]) == 1:
-        raise KeyError("Number of datasets must be >= 2 (specify an empty list [] if there is only one dataset)")
+    # check series length
+    if config.get("series") is None:
+        raise KeyError("Missing series information (specify an empty list [] if there is only one series)")
+    if len(config["series"]) == 1:
+        raise KeyError("Number of series must be >= 2 (specify an empty list [] if there is only one series)")
 
     # check filters are present
-    if not config.get("filters"):
+    if config.get("filters") is None:
         raise KeyError("Missing filters information (specify an empty list [] if none are required)")
 
     # check plot title information
