@@ -23,5 +23,7 @@ filters: [["system", "==", "default"]]
 
 # Optional setting to display several plots in the same graph
 # Number of series, if used, must be >=2 (specify an empty list [] if there is only one series)
+# Do not use more than two distinct columns in this list -
+# bokeh can only handle 3 x-axis groups (2 series columns + 1 x-axis column)
 # Series format: [column_name, value]
 series: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]
