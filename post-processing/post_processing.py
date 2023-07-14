@@ -1,13 +1,16 @@
 import argparse
 import errno
 import fileinput
-from functools import reduce
 import operator as op
 import os
-import pandas as pd
 import re
 import traceback
+from functools import reduce
+from pathlib import Path
+
+import pandas as pd
 import yaml
+from bokeh.plotting import figure, output_file, save
 
 class PostProcessing:
 
@@ -108,7 +111,7 @@ class PostProcessing:
         print(df[columns][mask])
 
         # call a plotting script
-        # TODO: plot(df, ...)
+        self.plot_generic(config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
 
         if self.debug & self.verbose:
             print("")
@@ -116,6 +119,48 @@ class PostProcessing:
             print(df.to_json(orient="columns", indent=2))
 
         return df[columns][mask]
+
+    def plot_generic(self, title, df, x_axis, y_axis, series_filters):
+        """
+            Create a bar chart for the supplied data using bokeh.
+
+            Args:
+                title: str, plot title (read from config).
+                df: dataframe, data to plot.
+                x_axis: dict, x-axis column and units (read from config).
+                y_axis: dict, y-axis column and units (read from config).
+                series_filters: list, x-axis groups used to filter graph data.
+        """
+
+        # get column names of axes
+        x_column = x_axis.get("value")
+        y_column = y_axis.get("value")
+
+        # find x-axis groups (series columns)
+        groups = [x_column]
+        for f in series_filters:
+            if f[0] not in groups:
+                groups.append(f[0])
+        # combine group names for later plotting with groupby
+        index_group_col = "_".join(groups)
+        # group by group names (or just x-axis if no other groups are present)
+        grouped_df = df.groupby(x_column) if len(groups) == 1 else df.groupby(groups)
+
+        if self.debug:
+            print("")
+            print("Plot x-axis groups:")
+            for key, _ in grouped_df:
+                print(grouped_df.get_group(key))
+
+        # FIXME: create html file to store plot in
+        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title)), title=title)
+
+        # create plot
+        plot = figure(x_range=grouped_df, tools="hover")
+        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=grouped_df, line_color="white", fill_color="teal")
+
+        # save to file
+        save(plot)
 
     # operator lookup dictionary
     op_lookup = {
@@ -151,13 +196,10 @@ class PostProcessing:
 
         # evaluate expression and extract dataframe mask
         if value is None:
-            if operator == op.eq:
-                mask = df[column].isnull()
-            else:
-                mask = df[column].notnull()
+            mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
-                # dataframe column is interpreted as the same type as the supplied value
+                # FIXME: dataframe column is interpreted as the same type as the supplied value
                 mask = operator(df[column].astype(type(value)), value)
             except TypeError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
