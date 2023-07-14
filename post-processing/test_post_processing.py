@@ -17,6 +17,9 @@ def benchmark_cleanup(remove_test_logs):
     # remove residual folders
     shutil.rmtree("stage", ignore_errors=True)
     shutil.rmtree("output", ignore_errors=True)
+    # remove graph
+    if os.path.isfile("Title.html"):
+        os.remove("Title.html")
 
     # remove test log files
     if remove_test_logs:
