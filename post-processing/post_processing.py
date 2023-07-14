@@ -135,6 +135,16 @@ class PostProcessing:
         # get column names of axes
         x_column = x_axis.get("value")
         y_column = y_axis.get("value")
+        # get units
+        x_units = df[x_axis["units"]["column"]][0] if x_axis.get("units").get("column") \
+                  else x_axis.get("units").get("custom")
+        y_units = df[y_axis["units"]["column"]][0] if y_axis.get("units").get("column") \
+                  else y_axis.get("units").get("custom")
+        # determine axis labels
+        x_label = "{0}{1}".format(x_column.replace("_", " ").title(),
+                                  " ({0})".format(x_units) if x_units else "")
+        y_label = "{0}{1}".format(y_column.replace("_", " ").title(),
+                                  " ({0})".format(y_units) if y_units else "")
 
         # find x-axis groups (series columns)
         groups = [x_column]
@@ -156,8 +166,11 @@ class PostProcessing:
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title)), title=title)
 
         # create plot
-        plot = figure(x_range=grouped_df, tools="hover")
+        plot = figure(x_range=grouped_df, title=title, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover")
         plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=grouped_df, line_color="white", fill_color="teal")
+        # add labels
+        plot.xaxis.axis_label = x_label
+        plot.yaxis.axis_label = y_label
 
         # save to file
         save(plot)
