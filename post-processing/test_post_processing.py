@@ -245,7 +245,7 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # get filtered dataframe subset
-    df = post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected
