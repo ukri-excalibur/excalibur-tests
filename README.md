@@ -195,7 +195,7 @@ benchmarks in ReFrame without using a queue manager or an MPI launcher (e.g. on 
 
 If you choose the "default" system and a benchmark using the Spack build system,
 a new empty Spack environment will be automatically created in
-`spack-environments/default` when ReFrame is launched for the first time. 
+`benchmarks/spack/default` when ReFrame is launched for the first time. 
 You should populate the environment with the packages already installed on your system
 before running Spack to avoid excessively rebuilding system packages. See the 
 *Spack configuration* section of [`CONTRIBUTING.md`](./CONTRIBUTING.md) for instructions on how 
