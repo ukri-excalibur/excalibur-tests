@@ -16,8 +16,6 @@ y_axis:
     column: "flops_unit"
 
 # Optional row filters (specify an empty list [] if none are required)
-# Filtering may be conducted on columns that are not specified
-# in the list of columns above (so that the column is filtered by but also dropped)
 # Filter format: [column_name, operator, value]
 filters: [["system", "==", "default"]]
 
