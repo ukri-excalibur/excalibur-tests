@@ -96,7 +96,9 @@ compilers:
     operating_system: rhel8
     target: x86_64
     modules: []
-    environment: {}
+    environment: 
+      append_path:
+        LD_LIBRARY_PATH: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/compiler/lib/intel64/
     extra_rpaths: []
 - compiler:
     spec: dpcpp@=2023.1.0
