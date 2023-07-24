@@ -72,3 +72,42 @@ compilers:
     - pgi/64
     environment: {}
     extra_rpaths: []
+- compiler:
+    spec: intel@=2023.1.0
+    paths:
+      cc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/intel64/icc
+      cxx: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/intel64/icpc
+      f77: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/intel64/ifort
+      fc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/intel64/ifort
+    flags: {}
+    operating_system: rhel8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    spec: oneapi@=2023.1.0
+    paths:
+      cc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/icx
+      cxx: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/icpx
+      f77: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/ifx
+      fc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/ifx
+    flags: {}
+    operating_system: rhel8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    spec: dpcpp@=2023.1.0
+    paths:
+      cc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/icx
+      cxx: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/dpcpp
+      f77: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/ifx
+      fc: /projects/bristol/modules/intel-oneapi-2023.1.0/compiler/2023.1.0/linux/bin/ifx
+    flags: {}
+    operating_system: rhel8
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
