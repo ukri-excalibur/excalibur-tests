@@ -10,7 +10,11 @@ from pathlib import Path
 
 import pandas as pd
 import yaml
+from bokeh.models import Legend
+from bokeh.models.sources import ColumnDataSource
+from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
+from bokeh.transform import factor_cmap
 
 class PostProcessing:
 
@@ -104,8 +108,7 @@ class PostProcessing:
         num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows != num_x_data_points:
-            # FIXME: not sure what type of error this should be
-            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
+            raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -136,9 +139,9 @@ class PostProcessing:
         x_column = x_axis.get("value")
         y_column = y_axis.get("value")
         # get units
-        x_units = df[x_axis["units"]["column"]][0] if x_axis.get("units").get("column") \
+        x_units = df[x_axis["units"]["column"]].iloc[0] if x_axis.get("units").get("column") \
                   else x_axis.get("units").get("custom")
-        y_units = df[y_axis["units"]["column"]][0] if y_axis.get("units").get("column") \
+        y_units = df[y_axis["units"]["column"]].iloc[0] if y_axis.get("units").get("column") \
                   else y_axis.get("units").get("custom")
         # determine axis labels
         x_label = "{0}{1}".format(x_column.replace("_", " ").title(),
@@ -165,12 +168,35 @@ class PostProcessing:
         # FIXME: create html file to store plot in
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title)), title=title)
 
+        # FIXME: this needs to come pre-typed (see issue #176)
+        typed_y_column = df[y_column].astype(float)
+        # adjust y-axis range
+        min_y = 0 if min(typed_y_column) >= 0 \
+                else round(min(typed_y_column)*1.2)
+        max_y = 0 if max(typed_y_column) <= 0 \
+                else round(max(typed_y_column)*1.2)
+
         # create plot
-        plot = figure(x_range=grouped_df, title=title, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover")
-        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=grouped_df, line_color="white", fill_color="teal")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover", toolbar_location="above")
+
+        # create legend outside plot
+        plot.add_layout(Legend(), "right")
+        # automatically base bar colouring on last group column
+        colour_factors = sorted(df[groups[-1]].unique())
+        # divide and assign colours
+        index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
+        # add legend labels to data source
+        data_source = ColumnDataSource(grouped_df).data
+        legend_labels = [group[-1] for group in data_source[index_group_col]]
+        data_source["legend_labels"] = legend_labels
+
+        # add bars
+        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
+        # adjust font size
+        plot.title.text_font_size = "15pt"
 
         # save to file
         save(plot)
