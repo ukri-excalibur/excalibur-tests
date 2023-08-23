@@ -5,6 +5,7 @@ import operator as op
 import os
 import re
 import traceback
+import math
 from functools import reduce
 from pathlib import Path
 
@@ -158,6 +159,7 @@ class PostProcessing:
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
         grouped_df = df.groupby(x_column) if len(groups) == 1 else df.groupby(groups)
+        grouped_df.apply(print)
 
         if self.debug:
             print("")
@@ -166,15 +168,15 @@ class PostProcessing:
                 print(grouped_df.get_group(key))
 
         # FIXME: create html file to store plot in
-        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title)), title=title)
+        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
         # FIXME: this needs to come pre-typed (see issue #176)
         typed_y_column = df[y_column].astype(float)
         # adjust y-axis range
         min_y = 0 if min(typed_y_column) >= 0 \
-                else round(min(typed_y_column)*1.2)
+                else math.floor(min(typed_y_column)*1.2)
         max_y = 0 if max(typed_y_column) <= 0 \
-                else round(max(typed_y_column)*1.2)
+                else math.ceil(max(typed_y_column)*1.2)
 
         # create plot
         plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover", toolbar_location="above")
@@ -186,8 +188,10 @@ class PostProcessing:
         # divide and assign colours
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
+        print(index_group_col)
         data_source = ColumnDataSource(grouped_df).data
-        legend_labels = [group[-1] for group in data_source[index_group_col]]
+        print(data_source)
+        legend_labels = ["{0} = {1}".format(groups[-1],group[-1]) for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
         # add bars
