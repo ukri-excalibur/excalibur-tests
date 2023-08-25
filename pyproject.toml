@@ -26,6 +26,7 @@ dependencies = [
     "reframe-hpc >= 4.3.0, < 5.0.0",
     "matplotlib >= 3.0.0",
     "pandas >= 2.0.1",
+    "bokeh >= 3.2.0",
 ]
 
 [project.optional-dependencies]
