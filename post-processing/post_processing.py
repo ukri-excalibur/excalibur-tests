@@ -73,6 +73,8 @@ class PostProcessing:
         # extract series columns and filters
         if series:
             series_columns = [s[0] for s in series]
+            if len(set(series_columns)) > 1:
+                raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
             series_filters = [[s[0], "==", s[1]] for s in series]
             for c in series_columns:
                 if c not in columns:
@@ -159,7 +161,6 @@ class PostProcessing:
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
         grouped_df = df.groupby(x_column) if len(groups) == 1 else df.groupby(groups)
-        grouped_df.apply(print)
 
         if self.debug:
             print("")
@@ -167,7 +168,7 @@ class PostProcessing:
             for key, _ in grouped_df:
                 print(grouped_df.get_group(key))
 
-        # FIXME: create html file to store plot in
+        # create html file to store plot in
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
         # FIXME: this needs to come pre-typed (see issue #176)
@@ -188,9 +189,7 @@ class PostProcessing:
         # divide and assign colours
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
-        print(index_group_col)
         data_source = ColumnDataSource(grouped_df).data
-        print(data_source)
         legend_labels = ["{0} = {1}".format(groups[-1],group[-1]) for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
