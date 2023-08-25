@@ -35,9 +35,16 @@ class PostProcessing:
         log_files = []
         # look for perflogs
         if os.path.isfile(log_path):
+            if os.path.splitext(log_path)[1] != ".log":
+                raise RuntimeError("perflog file name provided should have a .log extension.")
             log_files = [log_path]
         elif os.path.isdir(log_path):
-            log_files = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
+            log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
+            for file in log_files_temp:
+                if os.path.splitext(file)[1] == ".log":
+                    log_files.append(file)
+            if len(log_files) == 0:
+                raise RuntimeError("No perflogs found in this path. Perflogs should have a .log extension.")
         else:
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
 
