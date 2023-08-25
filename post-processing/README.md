@@ -1,8 +1,8 @@
-## Post-Processing Tutorial
+## Benchmark results post-processing
 
 ### Overview
 
-The post-processing scripts provided with the ExCALIBUR tests package are intended to grant users a quick starting point for visualising benchmark results with basic graphs and tables.
+The post-processing scripts provided with the ExCALIBUR tests package are intended to grant users a quick starting point for visualising benchmark results with basic graphs and tables. Their components can also be used inside custom users' scripts.
 
 There are three main post-processing components:
 - **`Perflog parsing:`**
@@ -11,17 +11,17 @@ There are three main post-processing components:
   - If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
   - The DataFrame is then filtered, keeping only relevant rows and columns.
 - **`Plotting:`**
-  - A filtered DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file. (`TODO: Embed graphs in GitHub Pages.`)
-  - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file. (`TODO: Add scaling and regression plots.`)
+  - A filtered DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
+  - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
 
 Before running post-processing, create a config file including all necessary information for graph generation (specify at least plot title, x-axis, and y-axis). See below for an example.
 
 ### Usage
 
->```post_processing.py log_path config_path [-p plot_type]```
+>```python post_processing.py log_path config_path [-p plot_type]```
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
-- `config_path` - Path to a configuration file containing plot specifics.
+- `config_path` - Path to a configuration file containing plot details.
 - `plot_type` - (Optional.) Type of plot to be generated. (`Note: only a generic bar chart is currently implemented.`)
 
 Run `post_processing.py -h` for more information (including debugging flags).
@@ -57,3 +57,9 @@ filters: [["filter_col_1", "<=", "filter_val_1"], ["filter_col_2", "!=", "filter
 
 series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
 ```
+
+### Future development
+
+The post-processing capabilities are stil a work in progress. Some upcoming developments:
+-  Embed graphs in GitHub Pages, instead of a bare html file.
+-  Add scaling and regression plots.
