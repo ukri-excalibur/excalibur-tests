@@ -9,7 +9,7 @@ apps_dir=excalibur-tests/benchmarks/apps
 
 if [ $system == archer2 ]
 then
-    reframe -c $apps_dir/$app -r -J'--qos=short' --system archer2 -S spack_spec=$spec --setvar=num_cpus_per_task=8  --setvar=num_tasks_per_node=2 --setvar=num_tasks=8
+    reframe -c $apps_dir/$app -r -J'--qos=standard' --system archer2 -S spack_spec=$spec --setvar=num_cpus_per_task=8  --setvar=num_tasks_per_node=2 --setvar=num_tasks=8
 elif [ $system == cosma ]
 then
     reframe -c $apps_dir/$app -r -J'--account=do006' --system cosma8 -S spack_spec=$spec --setvar=num_cpus_per_task=8  --setvar=num_tasks_per_node=2 --setvar=num_tasks=8
