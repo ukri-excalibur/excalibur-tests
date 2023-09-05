@@ -1,13 +1,21 @@
 import argparse
 import errno
 import fileinput
-from functools import reduce
 import operator as op
 import os
-import pandas as pd
 import re
 import traceback
+import math
+from functools import reduce
+from pathlib import Path
+
+import pandas as pd
 import yaml
+from bokeh.models import Legend
+from bokeh.models.sources import ColumnDataSource
+from bokeh.palettes import viridis
+from bokeh.plotting import figure, output_file, save
+from bokeh.transform import factor_cmap
 
 class PostProcessing:
 
@@ -27,9 +35,16 @@ class PostProcessing:
         log_files = []
         # look for perflogs
         if os.path.isfile(log_path):
+            if os.path.splitext(log_path)[1] != ".log":
+                raise RuntimeError("perflog file name provided should have a .log extension.")
             log_files = [log_path]
         elif os.path.isdir(log_path):
-            log_files = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
+            log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
+            for file in log_files_temp:
+                if os.path.splitext(file)[1] == ".log":
+                    log_files.append(file)
+            if len(log_files) == 0:
+                raise RuntimeError("No perflogs found in this path. Perflogs should have a .log extension.")
         else:
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
 
@@ -59,16 +74,19 @@ class PostProcessing:
         if config["y_axis"]["units"].get("column"):
             columns.append(config["y_axis"]["units"]["column"])
 
-        dataset_filters = []
-        datasets = config["datasets"]
-        # extract dataset columns and filters
-        if datasets:
-            for dataset in datasets:
-                if dataset[0] not in columns:
-                    # add dataset columns to column list
-                    columns.append(dataset[0])
-                # create dataset filters
-                dataset_filters.append([dataset[0], "==", dataset[1]])
+        series_columns = []
+        series_filters = []
+        series = config["series"]
+        # extract series columns and filters
+        if series:
+            series_columns = [s[0] for s in series]
+            if len(set(series_columns)) > 1:
+                raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
+            series_filters = [[s[0], "==", s[1]] for s in series]
+            for c in series_columns:
+                if c not in columns:
+                    # add series columns to column list
+                    columns.append(c)
 
         invalid_columns = []
         # check for invalid columns
@@ -78,31 +96,35 @@ class PostProcessing:
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
-        filters = config["filters"]
         mask = pd.Series(df.index.notnull())
+        filters = config["filters"]
         # filter rows
         if filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
-        # apply dataset filters
-        if dataset_filters:
-            dataset_mask = reduce(op.or_, (self.row_filter(f, df) for f in dataset_filters))
-            mask = mask & dataset_mask
+        # apply series filters
+        if series_filters:
+            series_mask = reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+            mask = mask & series_mask
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
+        # get number of occurrences of each column
+        series_col_count = {c:series_columns.count(c) for c in series_columns}
+        # get number of column combinations
+        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
+
         num_filtered_rows = len(df[mask])
-        num_x_data_points = max(1, len(datasets)) * len(set(df[config["x_axis"]["value"]][mask]))
+        num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows != num_x_data_points:
-            # FIXME: not sure what type of error this should be
-            raise Exception("Unexpected number of rows ({0}) does not match number of unique x-axis values per dataset ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
+            raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         print("Selected dataframe:")
         print(df[columns][mask])
 
         # call a plotting script
-        # TODO: plot(df, ...)
+        self.plot_generic(config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
 
         if self.debug & self.verbose:
             print("")
@@ -110,6 +132,84 @@ class PostProcessing:
             print(df.to_json(orient="columns", indent=2))
 
         return df[columns][mask]
+
+    def plot_generic(self, title, df, x_axis, y_axis, series_filters):
+        """
+            Create a bar chart for the supplied data using bokeh.
+
+            Args:
+                title: str, plot title (read from config).
+                df: dataframe, data to plot.
+                x_axis: dict, x-axis column and units (read from config).
+                y_axis: dict, y-axis column and units (read from config).
+                series_filters: list, x-axis groups used to filter graph data.
+        """
+
+        # get column names of axes
+        x_column = x_axis.get("value")
+        y_column = y_axis.get("value")
+        # get units
+        x_units = df[x_axis["units"]["column"]].iloc[0] if x_axis.get("units").get("column") \
+                  else x_axis.get("units").get("custom")
+        y_units = df[y_axis["units"]["column"]].iloc[0] if y_axis.get("units").get("column") \
+                  else y_axis.get("units").get("custom")
+        # determine axis labels
+        x_label = "{0}{1}".format(x_column.replace("_", " ").title(),
+                                  " ({0})".format(x_units) if x_units else "")
+        y_label = "{0}{1}".format(y_column.replace("_", " ").title(),
+                                  " ({0})".format(y_units) if y_units else "")
+
+        # find x-axis groups (series columns)
+        groups = [x_column]
+        for f in series_filters:
+            if f[0] not in groups:
+                groups.append(f[0])
+        # combine group names for later plotting with groupby
+        index_group_col = "_".join(groups)
+        # group by group names (or just x-axis if no other groups are present)
+        grouped_df = df.groupby(x_column) if len(groups) == 1 else df.groupby(groups)
+
+        if self.debug:
+            print("")
+            print("Plot x-axis groups:")
+            for key, _ in grouped_df:
+                print(grouped_df.get_group(key))
+
+        # create html file to store plot in
+        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+
+        # FIXME: this needs to come pre-typed (see issue #176)
+        typed_y_column = df[y_column].astype(float)
+        # adjust y-axis range
+        min_y = 0 if min(typed_y_column) >= 0 \
+                else math.floor(min(typed_y_column)*1.2)
+        max_y = 0 if max(typed_y_column) <= 0 \
+                else math.ceil(max(typed_y_column)*1.2)
+
+        # create plot
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover", toolbar_location="above")
+
+        # create legend outside plot
+        plot.add_layout(Legend(), "right")
+        # automatically base bar colouring on last group column
+        colour_factors = sorted(df[groups[-1]].unique())
+        # divide and assign colours
+        index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
+        # add legend labels to data source
+        data_source = ColumnDataSource(grouped_df).data
+        legend_labels = ["{0} = {1}".format(groups[-1],group[-1]) for group in data_source[index_group_col]]
+        data_source["legend_labels"] = legend_labels
+
+        # add bars
+        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
+        # add labels
+        plot.xaxis.axis_label = x_label
+        plot.yaxis.axis_label = y_label
+        # adjust font size
+        plot.title.text_font_size = "15pt"
+
+        # save to file
+        save(plot)
 
     # operator lookup dictionary
     op_lookup = {
@@ -145,13 +245,10 @@ class PostProcessing:
 
         # evaluate expression and extract dataframe mask
         if value is None:
-            if operator == op.eq:
-                mask = df[column].isnull()
-            else:
-                mask = df[column].notnull()
+            mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
-                # dataframe column is interpreted as the same type as the supplied value
+                # FIXME: dataframe column is interpreted as the same type as the supplied value
                 mask = operator(df[column].astype(type(value)), value)
             except TypeError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
@@ -213,12 +310,14 @@ def read_config(path):
     if not config.get("y_axis").get("units"):
         raise KeyError("Missing y-axis units information")
 
-    # check dataset length
-    if len(config["datasets"]) == 1:
-        raise KeyError("Number of datasets must be >= 2 (specify an empty list [] if there is only one dataset)")
+    # check series length
+    if config.get("series") is None:
+        raise KeyError("Missing series information (specify an empty list [] if there is only one series)")
+    if len(config["series"]) == 1:
+        raise KeyError("Number of series must be >= 2 (specify an empty list [] if there is only one series)")
 
     # check filters are present
-    if not config.get("filters"):
+    if config.get("filters") is None:
         raise KeyError("Missing filters information (specify an empty list [] if none are required)")
 
     # check plot title information
