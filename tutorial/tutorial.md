@@ -12,6 +12,10 @@
 
 In this tutorial you will set up the benchmarking framework on the [ARCHER2](https://www.archer2.ac.uk) supercomputer, build and run example benchmarks, create a new benchmark and explore benchmark data.
 
+## Collaborative document for RSECon23
+
+[hackmd link](https://hackmd.io/@BvcZAzBNTSazzlAasCy2nw/rJsG3X0ah)
+
 ---
 
 # Getting Started
