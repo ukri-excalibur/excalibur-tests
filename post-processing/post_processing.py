@@ -7,6 +7,7 @@ import re
 import traceback
 import math
 from functools import reduce
+from itertools import chain
 from pathlib import Path
 
 import pandas as pd
@@ -187,7 +188,7 @@ class PostProcessing:
                 else math.ceil(max(typed_y_column)*1.2)
 
         # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover", toolbar_location="above")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}_top".format(y_column))], tools="hover", toolbar_location="above")
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
@@ -337,61 +338,41 @@ def read_perflog(path):
         NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
 
         The returned dataframe will have columns for all fields in a performance log record
-        except display name, which will be broken up into test name and parameter columns.
+        except display name, extra resources, and env vars. Display name will be broken up
+        into test name and parameter columns, while the other two will be replaced by the
+        dictionary contents of their fields (keys become columns, values become row contents).
     """
 
+    # read perflog into dataframe
+    df = pd.read_csv(path, delimiter="|")
     REQUIRED_LOG_FIELDS = ["job_completion_time", r"\w+_value$", r"\w+_unit$", "display_name"]
-    COLUMN_NAMES = []
-    display_name_index = -1
-    records = []
 
-    with fileinput.input(path) as f:
-        try:
-            for line in f:
+    # look for required column matches
+    required_field_matches = [len(list(filter(re.compile(rexpr).match, df.columns))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+    # check all required columns are present
+    if False in required_field_matches:
+        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
 
-                # split columns
-                columns = line.strip().split("|")
+    # replace display name
+    results = df.apply(get_display_name_info, axis=1)
+    display_name_index = df.columns.get_loc("display_name")
+    # get set of params from all rows
+    params = set(chain.from_iterable(r[1].keys() for r in results))
+    for p in params:
+        # insert params as new columns
+        df.insert(display_name_index, p, [e[1][p] if p in e[1].keys() else "" for e in results])
+    df.insert(display_name_index, "test_name", [e[0] for e in results])
+    df.drop("display_name", axis=1, inplace=True)
 
-                # store perflog column names
-                if fileinput.isfirstline():
+    # FIXME: replace extra resources and env vars here, if they are present
 
-                    COLUMN_NAMES = columns
-                    # look for field names that match required columns
-                    required_field_matches = [len(list(filter(re.compile(rexpr).match, COLUMN_NAMES))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+    # FIXME: keep (almost) everything as a string for now because
+    # pandas default typing breaks bokeh bar charts
+    df = df.astype(str)
+    # set job completion time to datetime
+    df = df.astype({"job_completion_time": "datetime64"})
 
-                    # check all required columns are present
-                    if False in required_field_matches:
-                        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
-
-                # determine dataframe column names
-                elif fileinput.lineno() == 2:
-
-                    # get display name index
-                    display_name_index = COLUMN_NAMES.index("display_name")
-                    # break up display name into test name and parameters
-                    display_name = columns[display_name_index]
-                    _, params = get_display_name_info(display_name)
-
-                    # remove display name
-                    COLUMN_NAMES.pop(display_name_index)
-                    # replace with test name and params
-                    COLUMN_NAMES[display_name_index:display_name_index] = [name for name in params]
-                    COLUMN_NAMES.insert(display_name_index, "test_name")
-
-                    # store as dictionary
-                    record = dict(zip(COLUMN_NAMES, prepare_columns(columns, display_name_index)))
-                    records.append(record)
-
-                else:
-                    # store as dictionary
-                    record = dict(zip(COLUMN_NAMES, prepare_columns(columns, display_name_index)))
-                    records.append(record)
-
-        except Exception as e:
-            e.args = (e.args[0] + " in file \'{0}\':".format(path),) + e.args[1:]
-            raise
-
-    return pd.DataFrame.from_records(records)
+    return df
 
 def get_display_name_info(display_name):
     """
@@ -401,6 +382,7 @@ def get_display_name_info(display_name):
             display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
     """
 
+    display_name = display_name["display_name"]
     split_display_name = display_name.split(" %")
     test_name = split_display_name[0]
     params = [p.split("=") for p in split_display_name[1:]]
