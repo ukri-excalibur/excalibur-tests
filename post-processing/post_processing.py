@@ -354,7 +354,7 @@ def read_perflog(path):
         raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
 
     # replace display name
-    results = df.apply(get_display_name_info, axis=1)
+    results = df["display_name"].apply(get_display_name_info)
     display_name_index = df.columns.get_loc("display_name")
     # get set of params from all rows
     params = set(chain.from_iterable(r[1].keys() for r in results))
@@ -370,7 +370,7 @@ def read_perflog(path):
     # pandas default typing breaks bokeh bar charts
     df = df.astype(str)
     # set job completion time to datetime
-    df = df.astype({"job_completion_time": "datetime64"})
+    df = df.astype({"job_completion_time": "datetime64[ns]"})
 
     return df
 
@@ -382,7 +382,6 @@ def get_display_name_info(display_name):
             display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
     """
 
-    display_name = display_name["display_name"]
     split_display_name = display_name.split(" %")
     test_name = split_display_name[0]
     params = [p.split("=") for p in split_display_name[1:]]
