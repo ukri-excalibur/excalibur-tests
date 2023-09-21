@@ -65,6 +65,12 @@ The settings above will produce a graph that will have its x-axis data grouped b
 - (`x_val_2`, `series_val_1`)
 - (`x_val_2`, `series_val_2`)
 
+#### A Note About Replaced ReFrame Columns
+
+A perflog contains certain columns that will not be present in the DataFrame available to the graphing script. Currently, these columns are `display_name`, `extra_resources`, and `env_vars`. Removed columns should not be referenced in a plot config file.
+
+When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources` and `env_vars` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
+
 ### Future Development
 
 The post-processing capabilities are still a work in progress. Some upcoming developments:
