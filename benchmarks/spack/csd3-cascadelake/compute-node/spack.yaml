@@ -103,10 +103,10 @@ spack:
   - compiler:
       spec: gcc@11.2.0
       paths:
-        cc: /usr/local/software/spack/archive2/linux-scientific7-skylake_avx512/gcc-9.3.0/gcc-11.2.0-do3vmb6iub2hwfop75wwnhbsk3s2ucpi/bin/gcc
-        cxx: /usr/local/software/spack/archive2/linux-scientific7-skylake_avx512/gcc-9.3.0/gcc-11.2.0-do3vmb6iub2hwfop75wwnhbsk3s2ucpi/bin/g++
-        f77: /usr/local/software/spack/archive2/linux-scientific7-skylake_avx512/gcc-9.3.0/gcc-11.2.0-do3vmb6iub2hwfop75wwnhbsk3s2ucpi/bin/gfortran
-        fc: /usr/local/software/spack/archive2/linux-scientific7-skylake_avx512/gcc-9.3.0/gcc-11.2.0-do3vmb6iub2hwfop75wwnhbsk3s2ucpi/bin/gfortran
+        cc: /usr/local/software/master/gcc/11/bin/gcc
+        cxx: /usr/local/software/master/gcc/11/bin/g++
+        f77: /usr/local/software/master/gcc/11/bin/gfortran
+        fc: /usr/local/software/master/gcc/11/bin/gfortran
       flags: {}
       operating_system: centos7
       target: x86_64
