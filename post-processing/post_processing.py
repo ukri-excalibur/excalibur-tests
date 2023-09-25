@@ -356,24 +356,19 @@ def read_perflog(path):
     # replace display name
     results = df["display_name"].apply(get_display_name_info)
     index = df.columns.get_loc("display_name")
-    # get set of params from all rows
-    params = set(chain.from_iterable(r[1].keys() for r in results))
-    for p in params:
-        # insert params as new columns
-        df.insert(index, p, [r[1][p] if p in r[1].keys() else "" for r in results])
+    # insert new columns and contents
+    insert_key_cols(df, index, [r[1] for r in results])
     df.insert(index, "test_name", [r[0] for r in results])
+    # drop old column
     df.drop("display_name", axis=1, inplace=True)
 
     # replace other columns with dictionary contents
     dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
     for col in dict_cols:
         results = df[col].apply(lambda x: ast.literal_eval(x))
-        index = df.columns.get_loc(col)
-        # get set of dict keys from all rows
-        keys = set(chain.from_iterable([r.keys() for r in results]))
-        for k in keys:
-            # insert keys as new columns
-            df.insert(index, k, [r[k] if k in r.keys() else "" for r in results])
+        # insert new columns and contents
+        insert_key_cols(df, df.columns.get_loc(col), results)
+        # drop old column
         df.drop(col, axis=1, inplace=True)
 
     # FIXME: keep (almost) everything as a string for now because
@@ -398,27 +393,20 @@ def get_display_name_info(display_name):
 
     return test_name, dict(params)
 
-def prepare_columns(columns, dni):
+def insert_key_cols(df: pd.DataFrame, index, results):
     """
-        Return a list of modified column values for a single perflog entry, after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
+        Modify a dataframe to include new columns (extracted from results) inserted at a given index.
 
         Args:
-            columns: str list, containing the column values for the whole perflog line, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
-            dni: int, a display name index that identifies the display name column.
+            df: dataframe, to be modified by this function.
+            index: int, index as which to insert new columns into the dataframe.
+            results: dict list, contains key-value mapping information for all rows.
     """
-
-    # get display name
-    display_name = columns[dni]
-    # get test name and parameters
-    test_name, params = get_display_name_info(display_name)
-
-    # remove display name from columns
-    columns.pop(dni)
-    # replace with test name and parameter values
-    columns[dni:dni] = [params[name] for name in params]
-    columns.insert(dni, test_name)
-
-    return columns
+    # get set of keys from all rows
+    keys = set(chain.from_iterable([r.keys() for r in results]))
+    for k in keys:
+        # insert keys as new columns
+        df.insert(index, k, [r[k] if k in r.keys() else "" for r in results])
 
 def main():
 
