@@ -1,6 +1,6 @@
 import argparse
+import ast
 import errno
-import fileinput
 import operator as op
 import os
 import re
@@ -355,16 +355,26 @@ def read_perflog(path):
 
     # replace display name
     results = df["display_name"].apply(get_display_name_info)
-    display_name_index = df.columns.get_loc("display_name")
+    index = df.columns.get_loc("display_name")
     # get set of params from all rows
     params = set(chain.from_iterable(r[1].keys() for r in results))
     for p in params:
         # insert params as new columns
-        df.insert(display_name_index, p, [e[1][p] if p in e[1].keys() else "" for e in results])
-    df.insert(display_name_index, "test_name", [e[0] for e in results])
+        df.insert(index, p, [r[1][p] if p in r[1].keys() else "" for r in results])
+    df.insert(index, "test_name", [r[0] for r in results])
     df.drop("display_name", axis=1, inplace=True)
 
-    # FIXME: replace extra resources and env vars here, if they are present
+    # replace other columns with dictionary contents
+    dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
+    for col in dict_cols:
+        results = df[col].apply(lambda x: ast.literal_eval(x))
+        index = df.columns.get_loc(col)
+        # get set of dict keys from all rows
+        keys = set(chain.from_iterable([r.keys() for r in results]))
+        for k in keys:
+            # insert keys as new columns
+            df.insert(index, k, [r[k] if k in r.keys() else "" for r in results])
+        df.drop(col, axis=1, inplace=True)
 
     # FIXME: keep (almost) everything as a string for now because
     # pandas default typing breaks bokeh bar charts
