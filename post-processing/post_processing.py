@@ -134,7 +134,7 @@ class PostProcessing:
 
         return df[columns][mask]
 
-    def plot_generic(self, title, df, x_axis, y_axis, series_filters):
+    def plot_generic(self, title, df: pd.DataFrame, x_axis, y_axis, series_filters):
         """
             Create a bar chart for the supplied data using bokeh.
 
@@ -165,6 +165,9 @@ class PostProcessing:
         for f in series_filters:
             if f[0] not in groups:
                 groups.append(f[0])
+        # all x-axis data treated as categorical
+        for g in groups:
+            df[g] = df[g].astype(str)
         # combine group names for later plotting with groupby
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
@@ -179,16 +182,14 @@ class PostProcessing:
         # create html file to store plot in
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
-        # FIXME: this needs to come pre-typed (see issue #176)
-        typed_y_column = df[y_column].astype(float)
         # adjust y-axis range
-        min_y = 0 if min(typed_y_column) >= 0 \
-                else math.floor(min(typed_y_column)*1.2)
-        max_y = 0 if max(typed_y_column) <= 0 \
-                else math.ceil(max(typed_y_column)*1.2)
+        min_y = 0 if min(df[y_column]) >= 0 \
+                else math.floor(min(df[y_column])*1.2)
+        max_y = 0 if max(df[y_column]) <= 0 \
+                else math.ceil(max(df[y_column])*1.2)
 
         # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}_top".format(y_column))], tools="hover", toolbar_location="above")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}_mean".format(y_column))], tools="hover", toolbar_location="above")
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
@@ -202,7 +203,7 @@ class PostProcessing:
         data_source["legend_labels"] = legend_labels
 
         # add bars
-        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
+        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
@@ -371,9 +372,8 @@ def read_perflog(path):
         # drop old column
         df.drop(col, axis=1, inplace=True)
 
-    # FIXME: keep (almost) everything as a string for now because
-    # pandas default typing breaks bokeh bar charts
-    df = df.astype(str)
+    # infer numeric columns
+    df = df.apply(pd.to_numeric, errors="ignore")
     # set job completion time to datetime
     df = df.astype({"job_completion_time": "datetime64[ns]"})
 
