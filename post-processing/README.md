@@ -14,7 +14,13 @@ There are three main post-processing components:
   - A filtered DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
   - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
 
-Before running post-processing, create a config file including all necessary information for graph generation (specify at least plot title, x-axis, and y-axis). See below for an example.
+### Installation
+
+Post-processing is an optional dependency of the ExCALIBUR tests package, as it requires Python version 3.9 or later (while the base package requires Python version 3.7 or later).
+
+You can include post-processing in your `pip` installation of the package with the following command:
+
+> ```pip install -e .[post-processing]```
 
 ### Usage
 
@@ -27,6 +33,8 @@ Before running post-processing, create a config file including all necessary inf
 Run `post_processing.py -h` for more information (including debugging flags).
 
 ### Configuration Structure
+
+Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, and y-axis). See below for an example.
 
 - `title` - Plot title.
 - `x_axis`, `y_axis` - Axis information.
