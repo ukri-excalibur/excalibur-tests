@@ -29,7 +29,8 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
-  'pytest >= 6.0',
+  "pytest >= 6.0",
+  "excalibur-tests[post-processing]",
 ]
 post-processing = [
     "pandas >= 2.0.1",
