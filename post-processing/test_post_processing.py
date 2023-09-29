@@ -105,6 +105,8 @@ def run_sombrero():
         # add new column to changed log
         changed_df = pd.read_csv(sombrero_changed_log_path, delimiter="|")
         changed_df.insert(0, "id", [i+1 for i in changed_df.index])
+        # change one display name
+        changed_df.at[1, "display_name"] += " %extra_param=5"
         changed_df.to_csv(sombrero_changed_log_path, sep="|", index=False)
 
         # remove required column from incomplete log
@@ -157,7 +159,7 @@ def test_read_perflog(run_sombrero):
 # Test that high-level control script works as expected
 def test_high_level_script(run_sombrero):
 
-    sombrero_log_path, _, sombrero_incomplete_log_path = run_sombrero
+    sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path = run_sombrero
     post_ = post.PostProcessing()
 
     # check expected failure from invalid log file
@@ -231,6 +233,16 @@ def test_high_level_script(run_sombrero):
     except Exception as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
+    else:
+        assert False
+
+    # check correct display name parsing
+    try:
+        df = post_.run_post_processing(sombrero_changed_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "cpus_per_task", "units": {"column": "extra_param"}}})
+    except Exception as e:
+        # three param columns found in changed log
+        EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
+        assert e.args[1].columns.tolist() == EXPECTED_FIELDS
     else:
         assert False
 
