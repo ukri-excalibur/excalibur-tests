@@ -27,4 +27,4 @@ filters: [["system", "==", "default"]]
 # bokeh can only handle 3 x-axis groups (2 series columns + 1 x-axis column).
 # NOTE: For now, only one distinct column name is supported.
 # Series format: [column_name, value]
-series: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]
+series: [["cpus_per_task", 1], ["cpus_per_task", 2]]

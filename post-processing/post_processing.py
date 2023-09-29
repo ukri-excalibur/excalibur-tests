@@ -150,6 +150,7 @@ class PostProcessing:
         x_column = x_axis.get("value")
         y_column = y_axis.get("value")
         # get units
+        # FIXME: add some check that all rows have the same units for each axis?
         x_units = df[x_axis["units"]["column"]].iloc[0] if x_axis.get("units").get("column") \
                   else x_axis.get("units").get("custom")
         y_units = df[y_axis["units"]["column"]].iloc[0] if y_axis.get("units").get("column") \
@@ -250,13 +251,9 @@ class PostProcessing:
             mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
-                # FIXME: dataframe column is interpreted as the same type as the supplied value
-                mask = operator(df[column].astype(type(value)), value)
+                mask = operator(df[column], value)
             except TypeError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
-                raise
-            except ValueError as e:
-                e.args = (e.args[0] + " in column: \'{0}\'".format(column),) + e.args[1:]
                 raise
 
         if self.debug & self.verbose:
@@ -373,6 +370,7 @@ def read_perflog(path):
         df.drop(col, axis=1, inplace=True)
 
     # infer numeric columns
+    # null or "" becomes float, none becomes string
     df = df.apply(pd.to_numeric, errors="ignore")
     # set job completion time to datetime
     df = df.astype({"job_completion_time": "datetime64[ns]"})

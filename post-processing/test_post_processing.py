@@ -1,11 +1,11 @@
-import fileinput
 import os
-from pandas.errors import EmptyDataError
-from pathlib import Path
 import post_processing as post
 import pytest
 import shutil
 import subprocess as sp
+
+import pandas as pd
+from pathlib import Path
 
 # Run given benchmark with reframe using subprocess
 def run_benchmark(path):
@@ -103,27 +103,14 @@ def run_sombrero():
         shutil.copyfile(sombrero_log_path, sombrero_incomplete_log_path)
 
         # add new column to changed log
-        NEW_FIELD = "id"
-        for line in fileinput.input(sombrero_changed_log_path, inplace=True):
-            if fileinput.isfirstline():
-                new_line = "|".join((NEW_FIELD, line.strip()))
-            else:
-                new_line = "|".join((str(fileinput.lineno()-1), line.strip()))
-            # inline replacement
-            print(new_line, end="\n")
+        changed_df = pd.read_csv(sombrero_changed_log_path, delimiter="|")
+        changed_df.insert(0, "id", [i+1 for i in changed_df.index])
+        changed_df.to_csv(sombrero_changed_log_path, sep="|", index=False)
 
         # remove required column from incomplete log
-        REQUIRED_FIELD = "flops_value"
-        required_field_index = 0
-        for line in fileinput.input(sombrero_incomplete_log_path, inplace=True):
-            # find index of column to be removed
-            if fileinput.isfirstline():
-                LOG_FIELDS = line.strip().split("|")
-                required_field_index = LOG_FIELDS.index(REQUIRED_FIELD)
-            # remove a required field
-            new_line = remove_field_from_perflog(line, required_field_index)
-            # inline replacement
-            print(new_line, end="\n")
+        incomplete_df = pd.read_csv(sombrero_incomplete_log_path, delimiter="|")
+        incomplete_df.drop("flops_value", axis=1, inplace=True)
+        incomplete_df.to_csv(sombrero_incomplete_log_path, sep="|", index=False)
 
     yield sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path
 
@@ -215,8 +202,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", 1]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except ValueError:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", "1"]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except TypeError:
         assert True
     else:
         assert False
@@ -224,7 +211,7 @@ def test_high_level_script(run_sombrero):
     # check expected failure from filtering out every row
     try:
         post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except EmptyDataError:
+    except pd.errors.EmptyDataError:
         assert True
     else:
         assert False
