@@ -107,6 +107,8 @@ def run_sombrero():
         changed_df.insert(0, "id", [i+1 for i in changed_df.index])
         # change one display name
         changed_df.at[1, "display_name"] += " %extra_param=5"
+        # change job completion times
+        changed_df["job_completion_time"] = ["2000-01-01T12:30:15", "2000-03-01T12:30:15", "2000-09-01T12:30:15", "2000-12-01T12:30:15"]
         changed_df.to_csv(sombrero_changed_log_path, sep="|", index=False)
 
         # remove required column from incomplete log
@@ -226,6 +228,22 @@ def test_high_level_script(run_sombrero):
     else:
         assert False
 
+    # check correct display name parsing
+    try:
+        df = post_.run_post_processing(sombrero_changed_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "cpus_per_task", "units": {"column": "extra_param"}}})
+    except Exception as e:
+        # three param columns found in changed log
+        EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
+        # FIXME: assert a certain column dtype for the extra param here?
+        assert e.args[1].columns.tolist() == EXPECTED_FIELDS
+    else:
+        assert False
+
+    # check correct date filtering
+    df = post_.run_post_processing(sombrero_changed_log_path, {"title": "Title", "filters": [["job_completion_time", ">", "2000-06-01T12:30:15"]], "series": [], "x_axis": {"value": "job_completion_time", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    # check returned subset is as expected
+    assert len(df) == 2
+
     # check correct concatenation of two dataframes with different columns
     try:
         # get collated dataframe subset
@@ -233,16 +251,6 @@ def test_high_level_script(run_sombrero):
     except Exception as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
-    else:
-        assert False
-
-    # check correct display name parsing
-    try:
-        df = post_.run_post_processing(sombrero_changed_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "cpus_per_task", "units": {"column": "extra_param"}}})
-    except Exception as e:
-        # three param columns found in changed log
-        EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
-        assert e.args[1].columns.tolist() == EXPECTED_FIELDS
     else:
         assert False
 
