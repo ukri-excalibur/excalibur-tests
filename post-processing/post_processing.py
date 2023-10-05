@@ -37,7 +37,7 @@ class PostProcessing:
         # look for perflogs
         if os.path.isfile(log_path):
             if os.path.splitext(log_path)[1] != ".log":
-                raise RuntimeError("perflog file name provided should have a .log extension.")
+                raise RuntimeError("Perflog file name provided should have a .log extension.")
             log_files = [log_path]
         elif os.path.isdir(log_path):
             log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
@@ -169,14 +169,14 @@ class PostProcessing:
             for key, _ in grouped_df:
                 print(grouped_df.get_group(key))
 
-        # create html file to store plot in
-        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
-
         # adjust y-axis range
         min_y = 0 if min(df[y_column]) >= 0 \
                 else math.floor(min(df[y_column])*1.2)
         max_y = 0 if max(df[y_column]) <= 0 \
                 else math.ceil(max(df[y_column])*1.2)
+
+        # create html file to store plot in
+        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
         # create plot
         plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}_mean".format(y_column))], tools="hover", toolbar_location="above")
@@ -189,7 +189,7 @@ class PostProcessing:
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
         data_source = ColumnDataSource(grouped_df).data
-        legend_labels = ["{0} = {1}".format(groups[-1],group[-1]) for group in data_source[index_group_col]]
+        legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "), group[-1]) for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
         # add bars
@@ -398,8 +398,9 @@ def get_axis_info(df: pd.DataFrame, axis):
     """
         Return the column name and label for a given axis. If a column name is supplied as units information, the actual units will be extracted from a dataframe.
 
-        df: dataframe, data to plot.
-        axis: dict, axis column and units.
+        Args:
+            df: dataframe, data to plot.
+            axis: dict, axis column and units.
     """
 
     # get column name of axis
