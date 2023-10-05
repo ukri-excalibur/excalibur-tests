@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pandas as pd
 import yaml
-from bokeh.models import Legend
+from bokeh.models import Legend, HoverTool
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
@@ -179,7 +179,11 @@ class PostProcessing:
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
         # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}_mean".format(y_column))], tools="hover", toolbar_location="above")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, toolbar_location="above")
+        # configure tooltip
+        plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
+                                            + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype) else ""))],
+                                 formatters={"@{0}_mean".format(y_column) : "printf"}))
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
