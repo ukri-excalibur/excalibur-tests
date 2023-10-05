@@ -146,20 +146,9 @@ class PostProcessing:
                 series_filters: list, x-axis groups used to filter graph data.
         """
 
-        # get column names of axes
-        x_column = x_axis.get("value")
-        y_column = y_axis.get("value")
-        # get units
-        # FIXME: add some check that all rows have the same units for each axis?
-        x_units = df[x_axis["units"]["column"]].iloc[0] if x_axis.get("units").get("column") \
-                  else x_axis.get("units").get("custom")
-        y_units = df[y_axis["units"]["column"]].iloc[0] if y_axis.get("units").get("column") \
-                  else y_axis.get("units").get("custom")
-        # determine axis labels
-        x_label = "{0}{1}".format(x_column.replace("_", " ").title(),
-                                  " ({0})".format(x_units) if x_units else "")
-        y_label = "{0}{1}".format(y_column.replace("_", " ").title(),
-                                  " ({0})".format(y_units) if y_units else "")
+        # get column names and labels for axes
+        x_column, x_label = get_axis_info(df, x_axis)
+        y_column, y_label = get_axis_info(df, y_axis)
 
         # find x-axis groups (series columns)
         groups = [x_column]
@@ -370,10 +359,9 @@ def read_perflog(path):
         df.drop(col, axis=1, inplace=True)
 
     # infer numeric columns
-    # null or "" becomes float, none becomes string
     df = df.apply(pd.to_numeric, errors="ignore")
     # set job completion time to datetime
-    df = df.astype({"job_completion_time": "datetime64[ns]"})
+    df["job_completion_time"] = pd.to_datetime(df["job_completion_time"])
 
     return df
 
@@ -405,6 +393,30 @@ def insert_key_cols(df: pd.DataFrame, index, results):
     for k in keys:
         # insert keys as new columns
         df.insert(index, k, [r[k] if k in r.keys() else "" for r in results])
+
+def get_axis_info(df: pd.DataFrame, axis):
+    """
+        Return the column name and label for a given axis. If a column name is supplied as units information, the actual units will be extracted from a dataframe.
+
+        df: dataframe, data to plot.
+        axis: dict, axis column and units.
+    """
+
+    # get column name of axis
+    col_name = axis.get("value")
+    # get units
+    units = axis.get("units").get("custom")
+    if axis.get("units").get("column"):
+        unit_set = set(df[axis["units"]["column"]])
+        # check all rows have the same units
+        if len(unit_set) > 1:
+            raise RuntimeError("Too many axis unit entries {0}".format(unit_set))
+        units = next(iter(unit_set))
+    # determine axis label
+    label = "{0}{1}".format(col_name.replace("_", " ").title(),
+                            " ({0})".format(units) if units else "")
+
+    return col_name, label
 
 def main():
 
