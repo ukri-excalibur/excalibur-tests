@@ -78,7 +78,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
                     'access': ['--partition=icelake'],
-                    'environs': ['default', 'intel2020-csd3'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 76,
@@ -497,7 +497,7 @@ site_configuration = {
                     'scheduler': 'slurm',
                     'launcher': 'mpiexec',
                     'access': ['--partition=cosma8'],
-                    'environs': ['default', 'intel20-mpi-durham', 'intel20_u2-mpi-durham', 'intel19-mpi-durham', 'intel19_u3-mpi-durham'],
+                    'environs': ['default'],
                     'sched_options': {
                         'use_nodes_option': True,
                     },
@@ -593,7 +593,7 @@ site_configuration = {
                     'descr': 'Computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'environs': ['default', 'intel-oneapi-openmpi-dial3','intel19-mpi-dial3'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 128,
@@ -628,62 +628,6 @@ site_configuration = {
             'cc': 'cc',
             'cxx': 'c++',
             'ftn': 'ftn'
-        },
-        {
-            'name': 'intel20-mpi-durham',
-            'modules':['intel_comp/2020','intel_mpi/2020'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name': 'intel20_u2-mpi-durham',
-            'modules':['intel_comp/2020-update2','intel_mpi/2020-update2'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name': 'intel19-mpi-durham',
-            'modules':['intel_comp/2019','intel_mpi/2019'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name': 'intel19_u3-mpi-durham',
-            'modules':['intel_comp/2019-update3','intel_mpi/2019-update3'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name':'intel-oneapi-openmpi-dial3',
-            'modules':['intel-oneapi-compilers/2021.2.0','openmpi4/intel/4.0.5'],
-            'cc':'mpicc',
-            'cxx':'mpicxx',
-            'ftn':'mpif90'
-        },
-        {
-            'name': 'intel19-mpi-dial3',
-            'modules':['intel-parallel-studio/cluster.2019.5'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name': 'intel2020-csd3',
-            'modules': ["intel/compilers/2020.4",
-                        "intel/mkl/2020.4",
-                        "intel/impi/2020.4/intel",
-                        "intel/libs/idb/2020.4",
-                        "intel/libs/tbb/2020.4",
-                        "intel/libs/ipp/2020.4",
-                        "intel/libs/daal/2020.4",
-                        "intel/bundles/complib/2020.4"],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
         },
     ],
     'logging': [
