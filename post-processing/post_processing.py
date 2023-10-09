@@ -75,30 +75,41 @@ class PostProcessing:
         if config["y_axis"]["units"].get("column"):
             columns.append(config["y_axis"]["units"]["column"])
 
-        series_columns = []
-        series_filters = []
         series = config["series"]
         # extract series columns and filters
-        if series:
-            series_columns = [s[0] for s in series]
-            if len(set(series_columns)) > 1:
-                raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
-            series_filters = [[s[0], "==", s[1]] for s in series]
-            for c in series_columns:
-                if c not in columns:
-                    # add series columns to column list
-                    columns.append(c)
+        series_columns = [s[0] for s in series]
+        series_filters = [[s[0], "==", s[1]] for s in series]
+        # check acceptable number of series
+        if len(set(series_columns)) > 1:
+            raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
+        # add series columns to column list
+        for c in series_columns:
+            if c not in columns:
+                columns.append(c)
+
+        filters = config["filters"]
+        # extract filter columns
+        filter_columns = [f[0] for f in filters]
+        # gather all relevant columns
+        all_columns = columns + filter_columns
 
         invalid_columns = []
         # check for invalid columns
-        for col in columns:
+        for col in all_columns:
             if col not in df.columns:
                 invalid_columns.append(col)
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
+        # apply user-specified types to all relevant columns
+        for col in all_columns:
+            if config["column_types"].get(col):
+                # FIXME: this can and will raise TypeErrors, some of which should be dealt with internally
+                df[col] = df[col].astype(config["column_types"][col])
+            else:
+                raise KeyError("Could not find user-specified type for column", col)
+
         mask = pd.Series(df.index.notnull())
-        filters = config["filters"]
         # filter rows
         if filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
@@ -230,10 +241,6 @@ class PostProcessing:
         if self.debug:
             print("Applying row filter condition:", column, str_op, value)
 
-        # check column validity
-        if column not in df.columns:
-            raise KeyError("Could not find column", column)
-
         # check operator validity
         operator = self.op_lookup.get(str_op)
         if operator is None:
@@ -361,11 +368,6 @@ def read_perflog(path):
         insert_key_cols(df, df.columns.get_loc(col), results)
         # drop old column
         df.drop(col, axis=1, inplace=True)
-
-    # infer numeric columns
-    df = df.apply(pd.to_numeric, errors="ignore")
-    # set job completion time to datetime
-    df["job_completion_time"] = pd.to_datetime(df["job_completion_time"])
 
     return df
 
