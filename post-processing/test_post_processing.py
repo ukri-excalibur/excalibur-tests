@@ -175,32 +175,32 @@ def test_high_level_script(run_sombrero):
     # check expected failure from lack of axis information
     try:
         post_.run_post_processing(sombrero_log_path, {})
-    except KeyError:
-        assert True
+    except KeyError as e:
+        assert e.args[0] == "x_axis"
     else:
         assert False
 
     # check expected failure from invalid column
     try:
-        post_.run_post_processing(sombrero_log_path, {"series": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except KeyError:
-        assert True
+        post_.run_post_processing(sombrero_log_path, {"filters": [], "series": [], "x_axis": {"value": "fake_column", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+    except KeyError as e:
+        assert e.args[1] == ["fake_column"]
     else:
         assert False
 
     # check expected failure from invalid filter column
     try:
         post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except KeyError:
-        assert True
+    except KeyError as e:
+        assert e.args[1] == ["fake_column"]
     else:
         assert False
 
     # check expected failure from invalid filter operator
     try:
         post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except KeyError:
-        assert True
+    except KeyError as e:
+        assert e.args[1] == "!!"
     else:
         assert False
 
@@ -223,7 +223,7 @@ def test_high_level_script(run_sombrero):
     # check expected failure from row number vs unique x-axis value number mismatch
     try:
         df = post_.run_post_processing(sombrero_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
-    except Exception:
+    except RuntimeError:
         assert True
     else:
         assert False
