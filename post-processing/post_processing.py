@@ -442,10 +442,10 @@ def get_axis_info(df: pd.DataFrame, axis):
     # get units
     units = axis.get("units").get("custom")
     if axis.get("units").get("column"):
-        unit_set = set(df[axis["units"]["column"]])
+        unit_set = set(df[axis["units"]["column"]].dropna())
         # check all rows have the same units
-        if len(unit_set) > 1:
-            raise RuntimeError("Too many axis unit entries {0}".format(unit_set))
+        if len(unit_set) != 1:
+            raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
         units = next(iter(unit_set))
     # determine axis label
     label = "{0}{1}".format(col_name.replace("_", " ").title(),
