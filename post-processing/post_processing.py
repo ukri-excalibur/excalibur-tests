@@ -104,8 +104,35 @@ class PostProcessing:
         # apply user-specified types to all relevant columns
         for col in all_columns:
             if config["column_types"].get(col):
-                # FIXME: this can and will raise TypeErrors, some of which should be dealt with internally
-                df[col] = df[col].astype(config["column_types"][col])
+
+                # get user input type
+                conversion_type = config["column_types"][col]
+                # allow user to specify "datetime" as a type (internally convert to "datetime64")
+                conversion_type += "64" if conversion_type == "datetime" else ""
+
+                # internal type conversion
+                if pd.api.types.is_string_dtype(conversion_type):
+                    # all strings treated as object (nullable)
+                    conversion_type = "object"
+                elif pd.api.types.is_float_dtype(conversion_type):
+                    # all floats treated as float64 (nullable)
+                    conversion_type = "float64"
+                elif pd.api.types.is_integer_dtype(conversion_type):
+                    # all integers treated as Int64 (nullable)
+                    # note: default pandas integer type is int64 (not nullable)
+                    conversion_type = "Int64"
+                elif pd.api.types.is_datetime64_any_dtype(conversion_type):
+                    # all datetimes treated as datetime64[ns] (nullable)
+                    conversion_type = "datetime64[ns]"
+                else:
+                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'.".format(conversion_type, col))
+
+                # skip type conversion if column is already the desired type
+                if conversion_type == df[col].dtype:
+                    continue
+                # otherwise apply type to column
+                df[col] = df[col].astype(conversion_type)
+
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
@@ -251,6 +278,7 @@ class PostProcessing:
             mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
+                # FIXME: try to interpret the comparison value as whatever type the df column is
                 mask = operator(df[column], value)
             except TypeError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
@@ -398,7 +426,7 @@ def insert_key_cols(df: pd.DataFrame, index, results):
     keys = set(chain.from_iterable([r.keys() for r in results]))
     for k in keys:
         # insert keys as new columns
-        df.insert(index, k, [r[k] if k in r.keys() else "" for r in results])
+        df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
 
 def get_axis_info(df: pd.DataFrame, axis):
     """
