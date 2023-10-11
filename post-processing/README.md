@@ -34,7 +34,7 @@ Run `post_processing.py -h` for more information (including debugging flags).
 
 ### Configuration Structure
 
-Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, and y-axis). See below for an example.
+Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for an example.
 
 - `title` - Plot title.
 - `x_axis`, `y_axis` - Axis information.
@@ -45,6 +45,8 @@ Before running post-processing, create a config file including all necessary inf
   - `Accepted operators: "==", "!=", "<", ">", "<=", ">="`
 - `series` - (Optional.) Display several plots in the same graph and group x-axis data by specified column values. (Specify an empty list if there is only one series.)
   - `Format: [column_name, value]`
+- `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
+  - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
 
 ### Example Config
 
@@ -61,19 +63,38 @@ y_axis:
   units:
     column: "unit_col"
 
-filters: [["filter_col_1", "<=", "filter_val_1"], ["filter_col_2", "!=", "filter_val_2"]]
+filters: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_val_2]]
 
 series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
+
+column_types:
+  x_axis_col: str
+  y_axis_col: float
+  unit_col: str
+  filter_col_1: datetime
+  filter_col_2: int
+  series_col: str
 ```
 
-The settings above will produce a graph that will have its x-axis data grouped based on the values in `x_axis_col` and `series_col`. If we imagine that `x_axis_col` has two unique values, `"x_val_1"` and `"x_val_2"`, there will be four groups (and four bars) along the x-axis:
+#### A Note on X-axis Grouping
+
+The settings above will produce a graph that will have its x-axis data grouped based on the values in `x_axis_col` and `series_col`. (`Note: only groupings with one series column are currently supported.`) If we imagine that `x_axis_col` has two unique values, `"x_val_1"` and `"x_val_2"`, there will be four groups (and four bars) along the x-axis:
 
 - (`x_val_1`, `series_val_1`)
 - (`x_val_1`, `series_val_2`)
 - (`x_val_2`, `series_val_1`)
 - (`x_val_2`, `series_val_2`)
 
-#### A Note About Replaced ReFrame Columns
+#### A Note on Column Types
+
+All user-specified types are internally converted to their nullable incarnations. As such:
+
+- Strings are treated as `object` (str or mixed type).
+- Floats are treated as `float64`.
+- Integers are treated as `Int64`.
+- Datetimes are treated as `datetime64[ns]`.
+
+#### A Note on Replaced ReFrame Columns
 
 A perflog contains certain columns that will not be present in the DataFrame available to the graphing script. Currently, these columns are `display_name`, `extra_resources`, and `env_vars`. Removed columns should not be referenced in a plot config file.
 
