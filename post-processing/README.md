@@ -68,12 +68,12 @@ filters: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_va
 series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
 
 column_types:
-  x_axis_col: str
-  y_axis_col: float
-  unit_col: str
-  filter_col_1: datetime
-  filter_col_2: int
-  series_col: str
+  x_axis_col: "str"
+  y_axis_col: "float"
+  unit_col: "str"
+  filter_col_1: "datetime"
+  filter_col_2: "int"
+  series_col: "str"
 ```
 
 #### A Note on X-axis Grouping
