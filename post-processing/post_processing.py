@@ -129,7 +129,7 @@ class PostProcessing:
         num_filtered_rows = len(df[mask])
         num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
-        if num_filtered_rows != num_x_data_points:
+        if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         print("Selected dataframe:")
