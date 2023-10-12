@@ -1,11 +1,11 @@
 import argparse
 import ast
 import errno
+import math
 import operator as op
 import os
 import re
 import traceback
-import math
 from functools import reduce
 from itertools import chain
 from pathlib import Path
@@ -278,9 +278,10 @@ class PostProcessing:
             mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
-                # FIXME: try to interpret the comparison value as whatever type the df column is
+                # interpret comparison value as column dtype
+                value = pd.Series(value, dtype=df[column].dtype).iloc[0]
                 mask = operator(df[column], value)
-            except TypeError as e:
+            except TypeError or ValueError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
                 raise
 

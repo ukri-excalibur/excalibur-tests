@@ -198,8 +198,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", "1"]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
-    except TypeError:
+        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", "v"]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+    except ValueError:
         assert True
     else:
         assert False
