@@ -12,6 +12,7 @@ class FenicsBenchmark(CMakePackage):
     git = "https://github.com/FEniCS/performance-test.git"
 
     depends_on("fenics-dolfinx@main")
+    depends_on("py-fenics-ffcx@main")
 
     version("main", branch="main")
 
