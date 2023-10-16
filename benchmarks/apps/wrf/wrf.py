@@ -67,7 +67,7 @@ class WRFBaseBenchmark(SpackTest):
 
     executable = 'wrf.exe'
     executable_opts = []
-    keep_files = ['rsl.error.0000']
+    keep_files.append('rsl.error.0000')
 
     num_cpus_per_task = 2
     num_tasks = required

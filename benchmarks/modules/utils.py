@@ -268,6 +268,10 @@ class SpackTest(rfm.RegressionTest):
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
 
+        # Keep the `spack.lock` file in the output directory so that the Spack
+        # environment can be faithfully reproduced later.
+        self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
+
     @run_before('compile')
     def setup_build_system(self):
         # The `self.spack_spec` attribute is the user-facing and loggable
