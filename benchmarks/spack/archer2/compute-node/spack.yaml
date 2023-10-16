@@ -419,7 +419,7 @@ spack:
         prefix: /usr
     slurm:
       externals:
-      - spec: slurm@22.05.8
+      - spec: slurm@22-05-8
         prefix: /usr
     tar:
       externals:
