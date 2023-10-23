@@ -182,7 +182,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid (filter) column
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["fake_column", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
+        post_.run_post_processing(sombrero_log_path, {"filters": {"and": [["fake_column", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}})
     except KeyError as e:
         assert e.args[1] == ["fake_column"]
     else:
@@ -190,7 +190,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter operator
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", "!!", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+        post_.run_post_processing(sombrero_log_path, {"filters": {"and": [["tasks", "!!", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
     except KeyError as e:
         assert e.args[1] == "!!"
     else:
@@ -198,7 +198,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["flops_value", ">", "v"]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+        post_.run_post_processing(sombrero_log_path, {"filters": {"and": [["flops_value", ">", "v"]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
     except ValueError:
         assert True
     else:
@@ -206,7 +206,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from filtering out every row
     try:
-        post_.run_post_processing(sombrero_log_path, {"filters": [["tasks", ">", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+        post_.run_post_processing(sombrero_log_path, {"filters": {"and": [["tasks", ">", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
     except pd.errors.EmptyDataError:
         assert True
     else:
@@ -214,7 +214,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from row number vs unique x-axis value number mismatch
     try:
-        df = post_.run_post_processing(sombrero_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+        df = post_.run_post_processing(sombrero_log_path, {"filters": {"and": [], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
     except RuntimeError:
         assert True
     else:
@@ -222,7 +222,7 @@ def test_high_level_script(run_sombrero):
 
     # check correct display name parsing
     try:
-        df = post_.run_post_processing(sombrero_changed_log_path, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "cpus_per_task", "units": {"column": "extra_param"}}, "column_types": {"tasks": "int", "cpus_per_task": "int", "extra_param": "int"}})
+        df = post_.run_post_processing(sombrero_changed_log_path, {"filters": {"and": [], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "cpus_per_task", "units": {"column": "extra_param"}}, "column_types": {"tasks": "int", "cpus_per_task": "int", "extra_param": "int"}})
     except RuntimeError as e:
         # three param columns found in changed log
         EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
@@ -232,14 +232,14 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # check correct date filtering
-    df = post_.run_post_processing(sombrero_changed_log_path, {"title": "Title", "filters": [["job_completion_time", ">", "2000-06-01T12:30:15"]], "series": [], "x_axis": {"value": "job_completion_time", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"job_completion_time": "datetime", "flops_value": "float", "flops_unit": "str"}})
+    df = post_.run_post_processing(sombrero_changed_log_path, {"title": "Title", "filters": {"and": [["job_completion_time", ">", "2000-06-01T12:30:15"]], "or": []}, "series": [], "x_axis": {"value": "job_completion_time", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"job_completion_time": "datetime", "flops_value": "float", "flops_unit": "str"}})
     # check returned subset is as expected
     assert len(df) == 2
 
     # check correct concatenation of two dataframes with different columns
     try:
         # get collated dataframe subset
-        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": [], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
+        df = post_.run_post_processing(Path(sombrero_log_path).parent, {"filters": {"and": [], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str"}})
     except RuntimeError as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
@@ -247,7 +247,7 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # get filtered dataframe subset
-    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
+    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected
