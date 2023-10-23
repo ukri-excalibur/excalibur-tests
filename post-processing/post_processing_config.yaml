@@ -19,7 +19,9 @@ y_axis:
 
 # Optional row filters (specify an empty list [] if none are required).
 # Filter format: [column_name, operator, value]
-filters: [["system", "==", "default"]]
+filters:
+  and: [["system", "==", "default"]]
+  or: []
 
 # Optional setting to display several plots in the same graph.
 # Number of series, if used, must be >=2 (specify an empty list [] if there is only one series).

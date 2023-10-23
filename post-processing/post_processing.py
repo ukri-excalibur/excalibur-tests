@@ -82,16 +82,17 @@ class PostProcessing:
         # check acceptable number of series
         if len(set(series_columns)) > 1:
             raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
-        # add series columns to column list
+        # add series columns to dataframe column list
         for c in series_columns:
             if c not in columns:
                 columns.append(c)
 
-        filters = config["filters"]
+        and_filters = config["filters"]["and"]
+        or_filters = config["filters"]["or"]
         # extract filter columns
-        filter_columns = [f[0] for f in filters]
+        filter_columns = [f[0] for f in and_filters] + [f[0] for f in or_filters]
         # gather all relevant columns
-        all_columns = columns + filter_columns
+        all_columns = set(columns + filter_columns)
 
         invalid_columns = []
         # check for invalid columns
@@ -138,12 +139,13 @@ class PostProcessing:
 
         mask = pd.Series(df.index.notnull())
         # filter rows
-        if filters:
-            mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
+        if and_filters:
+            mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
+        if or_filters:
+            mask = mask & reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
         # apply series filters
         if series_filters:
-            series_mask = reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
-            mask = mask & series_mask
+            mask = mask & reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
