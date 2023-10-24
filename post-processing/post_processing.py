@@ -142,10 +142,10 @@ class PostProcessing:
         if and_filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
         if or_filters:
-            mask = mask & reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
         # apply series filters
         if series_filters:
-            mask = mask & reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
