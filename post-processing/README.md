@@ -41,6 +41,8 @@ Before running post-processing, create a config file including all necessary inf
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
 - `filters` - (Optional.) Filter data rows based on specified conditions. (Specify an empty list if no filters are required.)
+  - `and` - Filter mask is determined from a logical AND of conditions in list.
+  - `or` - Filter mask is determined from a logical OR of conditions in list.
   - `Format: [column_name, operator, value]`
   - `Accepted operators: "==", "!=", "<", ">", "<=", ">="`
 - `series` - (Optional.) Display several plots in the same graph and group x-axis data by specified column values. (Specify an empty list if there is only one series.)
@@ -63,7 +65,9 @@ y_axis:
   units:
     column: "unit_col"
 
-filters: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_val_2]]
+filters:
+  and: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_val_2]]
+  or: []
 
 series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
 
@@ -84,6 +88,16 @@ The settings above will produce a graph that will have its x-axis data grouped b
 - (`x_val_1`, `series_val_2`)
 - (`x_val_2`, `series_val_1`)
 - (`x_val_2`, `series_val_2`)
+
+#### A Note on Filters
+
+AND filters, OR filters, and series (treated as special OR filters) are all combined with a logical AND to produce the final filter mask applied to the DataFrame prior to graphing. For example:
+
+- `and_filters` = `cond1`, `cond2`
+- `or_filters`= `cond3`, `cond4`
+- `series` = `ser1`, `ser2`
+
+The filters above would produce the final filter `mask` = (`cond1` AND `cond2`) AND (`cond3` OR `cond4`) AND (`ser1` OR `ser2`).
 
 #### A Note on Column Types
 
