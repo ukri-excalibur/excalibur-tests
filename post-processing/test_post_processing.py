@@ -236,6 +236,11 @@ def test_high_level_script(run_sombrero):
     # check returned subset is as expected
     assert len(df) == 2
 
+    # check correct or filtering
+    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]}, "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]], "x_axis": {"value": "cpus_per_task", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "cpus_per_task": "int", "flops_value": "float", "flops_unit": "str"}})
+    # check returned subset is as expected
+    assert len(df) == 4
+
     # check correct concatenation of two dataframes with different columns
     try:
         # get collated dataframe subset
