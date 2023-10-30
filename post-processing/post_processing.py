@@ -1,17 +1,18 @@
 import argparse
+import ast
 import errno
-import fileinput
+import math
 import operator as op
 import os
 import re
 import traceback
-import math
 from functools import reduce
+from itertools import chain
 from pathlib import Path
 
 import pandas as pd
 import yaml
-from bokeh.models import Legend
+from bokeh.models import Legend, HoverTool
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
@@ -36,7 +37,7 @@ class PostProcessing:
         # look for perflogs
         if os.path.isfile(log_path):
             if os.path.splitext(log_path)[1] != ".log":
-                raise RuntimeError("perflog file name provided should have a .log extension.")
+                raise RuntimeError("Perflog file name provided should have a .log extension.")
             log_files = [log_path]
         elif os.path.isdir(log_path):
             log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
@@ -74,30 +75,68 @@ class PostProcessing:
         if config["y_axis"]["units"].get("column"):
             columns.append(config["y_axis"]["units"]["column"])
 
-        series_columns = []
-        series_filters = []
         series = config["series"]
         # extract series columns and filters
-        if series:
-            series_columns = [s[0] for s in series]
-            if len(set(series_columns)) > 1:
-                raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
-            series_filters = [[s[0], "==", s[1]] for s in series]
-            for c in series_columns:
-                if c not in columns:
-                    # add series columns to column list
-                    columns.append(c)
+        series_columns = [s[0] for s in series]
+        series_filters = [[s[0], "==", s[1]] for s in series]
+        # check acceptable number of series
+        if len(set(series_columns)) > 1:
+            raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
+        # add series columns to column list
+        for c in series_columns:
+            if c not in columns:
+                columns.append(c)
+
+        filters = config["filters"]
+        # extract filter columns
+        filter_columns = [f[0] for f in filters]
+        # gather all relevant columns
+        all_columns = columns + filter_columns
 
         invalid_columns = []
         # check for invalid columns
-        for col in columns:
+        for col in all_columns:
             if col not in df.columns:
                 invalid_columns.append(col)
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
+        # apply user-specified types to all relevant columns
+        for col in all_columns:
+            if config["column_types"].get(col):
+
+                # get user input type
+                conversion_type = config["column_types"][col]
+                # allow user to specify "datetime" as a type (internally convert to "datetime64")
+                conversion_type += "64" if conversion_type == "datetime" else ""
+
+                # internal type conversion
+                if pd.api.types.is_string_dtype(conversion_type):
+                    # all strings treated as object (nullable)
+                    conversion_type = "object"
+                elif pd.api.types.is_float_dtype(conversion_type):
+                    # all floats treated as float64 (nullable)
+                    conversion_type = "float64"
+                elif pd.api.types.is_integer_dtype(conversion_type):
+                    # all integers treated as Int64 (nullable)
+                    # note: default pandas integer type is int64 (not nullable)
+                    conversion_type = "Int64"
+                elif pd.api.types.is_datetime64_any_dtype(conversion_type):
+                    # all datetimes treated as datetime64[ns] (nullable)
+                    conversion_type = "datetime64[ns]"
+                else:
+                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'.".format(conversion_type, col))
+
+                # skip type conversion if column is already the desired type
+                if conversion_type == df[col].dtype:
+                    continue
+                # otherwise apply type to column
+                df[col] = df[col].astype(conversion_type)
+
+            else:
+                raise KeyError("Could not find user-specified type for column", col)
+
         mask = pd.Series(df.index.notnull())
-        filters = config["filters"]
         # filter rows
         if filters:
             mask = reduce(op.and_, (self.row_filter(f, df) for f in filters))
@@ -133,7 +172,7 @@ class PostProcessing:
 
         return df[columns][mask]
 
-    def plot_generic(self, title, df, x_axis, y_axis, series_filters):
+    def plot_generic(self, title, df: pd.DataFrame, x_axis, y_axis, series_filters):
         """
             Create a bar chart for the supplied data using bokeh.
 
@@ -145,25 +184,18 @@ class PostProcessing:
                 series_filters: list, x-axis groups used to filter graph data.
         """
 
-        # get column names of axes
-        x_column = x_axis.get("value")
-        y_column = y_axis.get("value")
-        # get units
-        x_units = df[x_axis["units"]["column"]].iloc[0] if x_axis.get("units").get("column") \
-                  else x_axis.get("units").get("custom")
-        y_units = df[y_axis["units"]["column"]].iloc[0] if y_axis.get("units").get("column") \
-                  else y_axis.get("units").get("custom")
-        # determine axis labels
-        x_label = "{0}{1}".format(x_column.replace("_", " ").title(),
-                                  " ({0})".format(x_units) if x_units else "")
-        y_label = "{0}{1}".format(y_column.replace("_", " ").title(),
-                                  " ({0})".format(y_units) if y_units else "")
+        # get column names and labels for axes
+        x_column, x_label = get_axis_info(df, x_axis)
+        y_column, y_label = get_axis_info(df, y_axis)
 
         # find x-axis groups (series columns)
         groups = [x_column]
         for f in series_filters:
             if f[0] not in groups:
                 groups.append(f[0])
+        # all x-axis data treated as categorical
+        for g in groups:
+            df[g] = df[g].astype(str)
         # combine group names for later plotting with groupby
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
@@ -175,19 +207,21 @@ class PostProcessing:
             for key, _ in grouped_df:
                 print(grouped_df.get_group(key))
 
+        # adjust y-axis range
+        min_y = 0 if min(df[y_column]) >= 0 \
+                else math.floor(min(df[y_column])*1.2)
+        max_y = 0 if max(df[y_column]) <= 0 \
+                else math.ceil(max(df[y_column])*1.2)
+
         # create html file to store plot in
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
-        # FIXME: this needs to come pre-typed (see issue #176)
-        typed_y_column = df[y_column].astype(float)
-        # adjust y-axis range
-        min_y = 0 if min(typed_y_column) >= 0 \
-                else math.floor(min(typed_y_column)*1.2)
-        max_y = 0 if max(typed_y_column) <= 0 \
-                else math.ceil(max(typed_y_column)*1.2)
-
         # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, tooltips=[(y_label, "@{0}".format("{0}_top".format(y_column)))], tools="hover", toolbar_location="above")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, toolbar_location="above")
+        # configure tooltip
+        plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
+                                            + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype) else ""))],
+                                 formatters={"@{0}_mean".format(y_column) : "printf"}))
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
@@ -197,11 +231,11 @@ class PostProcessing:
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
         data_source = ColumnDataSource(grouped_df).data
-        legend_labels = ["{0} = {1}".format(groups[-1],group[-1]) for group in data_source[index_group_col]]
+        legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "), group[-1]) for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
         # add bars
-        plot.vbar(x=index_group_col, top="{0}_top".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
+        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
@@ -234,10 +268,6 @@ class PostProcessing:
         if self.debug:
             print("Applying row filter condition:", column, str_op, value)
 
-        # check column validity
-        if column not in df.columns:
-            raise KeyError("Could not find column", column)
-
         # check operator validity
         operator = self.op_lookup.get(str_op)
         if operator is None:
@@ -248,13 +278,11 @@ class PostProcessing:
             mask = df[column].isnull() if operator == op.eq else df[column].notnull()
         else:
             try:
-                # FIXME: dataframe column is interpreted as the same type as the supplied value
-                mask = operator(df[column].astype(type(value)), value)
-            except TypeError as e:
+                # interpret comparison value as column dtype
+                value = pd.Series(value, dtype=df[column].dtype).iloc[0]
+                mask = operator(df[column], value)
+            except TypeError or ValueError as e:
                 e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
-                raise
-            except ValueError as e:
-                e.args = (e.args[0] + " in column: \'{0}\'".format(column),) + e.args[1:]
                 raise
 
         if self.debug & self.verbose:
@@ -337,61 +365,40 @@ def read_perflog(path):
         NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
 
         The returned dataframe will have columns for all fields in a performance log record
-        except display name, which will be broken up into test name and parameter columns.
+        except display name, extra resources, and env vars. Display name will be broken up
+        into test name and parameter columns, while the other two will be replaced by the
+        dictionary contents of their fields (keys become columns, values become row contents).
     """
 
+    # read perflog into dataframe
+    df = pd.read_csv(path, delimiter="|")
     REQUIRED_LOG_FIELDS = ["job_completion_time", r"\w+_value$", r"\w+_unit$", "display_name"]
-    COLUMN_NAMES = []
-    display_name_index = -1
-    records = []
 
-    with fileinput.input(path) as f:
-        try:
-            for line in f:
+    # look for required column matches
+    required_field_matches = [len(list(filter(re.compile(rexpr).match, df.columns))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+    # check all required columns are present
+    if False in required_field_matches:
+        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
 
-                # split columns
-                columns = line.strip().split("|")
+    # replace display name
+    results = df["display_name"].apply(get_display_name_info)
+    index = df.columns.get_loc("display_name")
+    # insert new columns and contents
+    insert_key_cols(df, index, [r[1] for r in results])
+    df.insert(index, "test_name", [r[0] for r in results])
+    # drop old column
+    df.drop("display_name", axis=1, inplace=True)
 
-                # store perflog column names
-                if fileinput.isfirstline():
+    # replace other columns with dictionary contents
+    dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
+    for col in dict_cols:
+        results = df[col].apply(lambda x: ast.literal_eval(x))
+        # insert new columns and contents
+        insert_key_cols(df, df.columns.get_loc(col), results)
+        # drop old column
+        df.drop(col, axis=1, inplace=True)
 
-                    COLUMN_NAMES = columns
-                    # look for field names that match required columns
-                    required_field_matches = [len(list(filter(re.compile(rexpr).match, COLUMN_NAMES))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
-
-                    # check all required columns are present
-                    if False in required_field_matches:
-                        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
-
-                # determine dataframe column names
-                elif fileinput.lineno() == 2:
-
-                    # get display name index
-                    display_name_index = COLUMN_NAMES.index("display_name")
-                    # break up display name into test name and parameters
-                    display_name = columns[display_name_index]
-                    _, params = get_display_name_info(display_name)
-
-                    # remove display name
-                    COLUMN_NAMES.pop(display_name_index)
-                    # replace with test name and params
-                    COLUMN_NAMES[display_name_index:display_name_index] = [name for name in params]
-                    COLUMN_NAMES.insert(display_name_index, "test_name")
-
-                    # store as dictionary
-                    record = dict(zip(COLUMN_NAMES, prepare_columns(columns, display_name_index)))
-                    records.append(record)
-
-                else:
-                    # store as dictionary
-                    record = dict(zip(COLUMN_NAMES, prepare_columns(columns, display_name_index)))
-                    records.append(record)
-
-        except Exception as e:
-            e.args = (e.args[0] + " in file \'{0}\':".format(path),) + e.args[1:]
-            raise
-
-    return pd.DataFrame.from_records(records)
+    return df
 
 def get_display_name_info(display_name):
     """
@@ -407,27 +414,45 @@ def get_display_name_info(display_name):
 
     return test_name, dict(params)
 
-def prepare_columns(columns, dni):
+def insert_key_cols(df: pd.DataFrame, index, results):
     """
-        Return a list of modified column values for a single perflog entry, after breaking up the display name column into test name and parameters. A display name index is used to determine which column to parse as the display name.
+        Modify a dataframe to include new columns (extracted from results) inserted at a given index.
 
         Args:
-            columns: str list, containing the column values for the whole perflog line, expecting the display name column format of <test_name> followed by zero or more %<param>=<value> pairs.
-            dni: int, a display name index that identifies the display name column.
+            df: dataframe, to be modified by this function.
+            index: int, index as which to insert new columns into the dataframe.
+            results: dict list, contains key-value mapping information for all rows.
+    """
+    # get set of keys from all rows
+    keys = set(chain.from_iterable([r.keys() for r in results]))
+    for k in keys:
+        # insert keys as new columns
+        df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
+
+def get_axis_info(df: pd.DataFrame, axis):
+    """
+        Return the column name and label for a given axis. If a column name is supplied as units information, the actual units will be extracted from a dataframe.
+
+        Args:
+            df: dataframe, data to plot.
+            axis: dict, axis column and units.
     """
 
-    # get display name
-    display_name = columns[dni]
-    # get test name and parameters
-    test_name, params = get_display_name_info(display_name)
+    # get column name of axis
+    col_name = axis.get("value")
+    # get units
+    units = axis.get("units").get("custom")
+    if axis.get("units").get("column"):
+        unit_set = set(df[axis["units"]["column"]].dropna())
+        # check all rows have the same units
+        if len(unit_set) != 1:
+            raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
+        units = next(iter(unit_set))
+    # determine axis label
+    label = "{0}{1}".format(col_name.replace("_", " ").title(),
+                            " ({0})".format(units) if units else "")
 
-    # remove display name from columns
-    columns.pop(dni)
-    # replace with test name and parameter values
-    columns[dni:dni] = [params[name] for name in params]
-    columns.insert(dni, test_name)
-
-    return columns
+    return col_name, label
 
 def main():
 

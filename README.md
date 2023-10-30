@@ -15,9 +15,9 @@ We require Python version 3.7 or later. Install the **excalibur-tests** package 
 pip install -e .
 ```
 
-The `-e/--editable` flag is recommended for two reasons. 
+The `-e/--editable` flag is recommended for two reasons.
 - Spack installs packages in a `opt` directory under the spack environment. With `-e` the spack
-environment remains in your local directory and `pip` creates symlinks to it. Without `-e` spack 
+environment remains in your local directory and `pip` creates symlinks to it. Without `-e` spack
 will install packages inside your python environment.
 - For [development](https://setuptools.pypa.io/en/latest/userguide/development_mode.html),
 the `-e` flag to `pip` links the installed package to the files in the local
@@ -48,15 +48,15 @@ manually provide an installation of **Spack**.
 [Spack](https://spack.io/) is a package manager specifically designed for HPC
 facilities. In some HPC facilities there may be already a central Spack installation available.
 However, the version installed is most likely too old to support all the features
-used by this package. Therefore we recommend you install the latest version locally, 
+used by this package. Therefore we recommend you install the latest version locally,
 following the instructions below.
 
-_**Note**: if you have already installed spack locally and you want to upgrade to 
-a newer version, you might first have to clear the cache to avoid conflicts: 
+_**Note**: if you have already installed spack locally and you want to upgrade to
+a newer version, you might first have to clear the cache to avoid conflicts:
 `spack clean -m`_
 
-Follow the [official instructions](https://spack.readthedocs.io/en/latest/getting_started.html) 
-to install the latest version of Spack (summarised here for convenience, but not guaranteed to be 
+Follow the [official instructions](https://spack.readthedocs.io/en/latest/getting_started.html)
+to install the latest version of Spack (summarised here for convenience, but not guaranteed to be
 up-to-date):
 - git clone spack:
 `git clone -c feature.manyFiles=true https://github.com/spack/spack.git`
@@ -65,7 +65,7 @@ up-to-date):
 
 In order to use Spack in ReFrame, the framework we use to run the benchmarks
 (see below), the directory where the `spack` program is installed needs to be in
-the `PATH` environment variable. This is taken care of by the `setup-env.sh` 
+the `PATH` environment variable. This is taken care of by the `setup-env.sh`
 script as above, and you can have your shell init script (e.g. `.bashrc`)
 do that automatically in every session, by adding the following lines to it:
 ```sh
@@ -111,7 +111,7 @@ that file.
 
 **Note**: in order to use the Spack build system in ReFrame, the `spack`
 executable must be in the `PATH` also on the compute nodes of a cluster, if
-you want to run your benchmarks on them. This is taken care of by adding it 
+you want to run your benchmarks on them. This is taken care of by adding it
 to your init file (see spack section above).
 
 However, you will also need to set the
@@ -157,8 +157,8 @@ reframe -c benchmarks/apps/sombrero -r --performance-report -S spack_spec='sombr
 
 ### Setting environment variables
 
-All the built-in fields of ReFrame regression classes can be set on a per-job basis using the 
-`-S` command-line option. One useful such field is 
+All the built-in fields of ReFrame regression classes can be set on a per-job basis using the
+`-S` command-line option. One useful such field is
 [`env_vars`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.env_vars),
 which controls the environment variables used in a job.
 The syntax to set dictionary items, like for `env_vars`, is a comma-separated list of `key:value` pairs: `-S dict=key_1:value_1,key_2:value_2`.
@@ -190,18 +190,18 @@ to `reframe` (e.g., `--job-option='--account=...'`).
 The configuration provided in [`reframe_config.py`](./reframe_config.py) lets you run the
 benchmarks on pre-configured HPC systems.  However you
 can use this framework on any system by choosing the "default" system with `--system
-default`, or by using your own ReFrame configuration.  You can use the "default" system to run 
+default`, or by using your own ReFrame configuration.  You can use the "default" system to run
 benchmarks in ReFrame without using a queue manager or an MPI launcher (e.g. on a personal workstation).
 
 If you choose the "default" system and a benchmark using the Spack build system,
 a new empty Spack environment will be automatically created in
-`benchmarks/spack/default` when ReFrame is launched for the first time. 
+`benchmarks/spack/default` when ReFrame is launched for the first time.
 You should populate the environment with the packages already installed on your system
-before running Spack to avoid excessively rebuilding system packages. See the 
-*Spack configuration* section of [`CONTRIBUTING.md`](./CONTRIBUTING.md) for instructions on how 
+before running Spack to avoid excessively rebuilding system packages. See the
+*Spack configuration* section of [`CONTRIBUTING.md`](./CONTRIBUTING.md) for instructions on how
 to set up a Spack environment.
-In particular, make sure that at least a compiler and an MPI library are added into the environment. 
-After the Spack environment is set up, tell ReFrame to use it by setting the environment 
+In particular, make sure that at least a compiler and an MPI library are added into the environment.
+After the Spack environment is set up, tell ReFrame to use it by setting the environment
 variable `EXCALIBUR_SPACK_ENV`, as described above.
 
 
@@ -209,6 +209,18 @@ variable `EXCALIBUR_SPACK_ENV`, as described above.
 
 While the aim is to automate as much system-specific configuration as possible, there are some options that have to be provided by the user, such as accounting details, and unfortunately the syntax can vary.
 The file [`SYSTEMS.md`](./SYSTEMS.md) contains information about the use of this framework on specific systems.
+
+### Selecting multiple benchmarks
+
+ReFrame tests may contain tags that allow the user to select which tests to run. These can be leveraged to defined sets of benchmarks. To run all tests in a directory, pass the [`-R` flag](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-R) to ReFrame. Then filter down to a specific tag by passing the [`-t` flag](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0).
+
+For example, the [tag "example" is defined](https://github.com/ukri-excalibur/excalibur-tests/blob/1a7377e885977833c150569c32eb1db478f63087/benchmarks/examples/sombrero/sombrero.py#L113) in the sombrero example. To select the sombrero example out of all benchmarks, run
+
+```bash
+reframe -c benchmarks/ -R -r -t example
+```
+
+Tests can contain multiple tags. To create a custom set of benchmarks, add a new tag to the tests you want to include in the set.
 
 ## Contributing new systems or benchmarks
 
