@@ -120,11 +120,11 @@ You may also need to compile GPU applications on the compute nodes, as the login
 ### Python3 module
 
 The only default Python in the system is currently Python 2.7, but this may change in the future.
-Both ReFrame v3 and Spack v0.20 require Python v3.6 (at the moment most benchmarks should work also with Spack v0.18, but newer recipes may only be available in more recent versions of Spack), so you need to have a Python 3.6 available.
-This is provided by the `python3` module in the system, the easiest thing to do is to add the lines
+We require Python v3.7 or later so you need to have `python3` available. 
+This is provided by the `python3` module in the system. The `python3/recommended` module on myriad is built with an incompatible version of `openssl` for ReFrame. The easiest thing to do is to add the lines
 
 ```sh
-module load python3
+module load python3/3.11
 export RFM_USE_LOGIN_SHELL="True"
 ```
 
