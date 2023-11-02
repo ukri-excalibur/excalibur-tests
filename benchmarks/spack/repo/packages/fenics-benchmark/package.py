@@ -13,7 +13,7 @@ class FenicsBenchmark(CMakePackage):
 
     depends_on("fenics-dolfinx@0.6.0")
     depends_on("py-fenics-ffcx@0.6.0", type="build")
-    depends_on("py-setuptools", type="run")
+    depends_on("py-setuptools", type="build")
     depends_on("py-fenics-ufl@2023.1", type="build")
 
     version("0.6.0", commit="5c95102f73c811ba1e9e20f8184ca75655bb7d25")
