@@ -77,7 +77,7 @@ site_configuration = {
                     'descr': 'Icelake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=icelake'],
+                    'access': ['--partition=icelake', '--exclusive'],
                     'environs': ['default', 'intel2020-csd3'],
                     'max_jobs': 64,
                     'processor': {
@@ -101,7 +101,7 @@ site_configuration = {
                     'descr': 'Skylake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=cclake'],
+                    'access': ['--partition=cclake', '--exclusive'],
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
