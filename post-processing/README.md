@@ -91,13 +91,12 @@ The settings above will produce a graph that will have its x-axis data grouped b
 
 #### A Note on Filters
 
-AND filters, OR filters, and series (treated as special OR filters) are all combined with a logical AND to produce the final filter mask applied to the DataFrame prior to graphing. For example:
+AND filters and OR filters are combined with a logical AND to produce the final filter mask applied to the DataFrame prior to graphing. For example:
 
 - `and_filters` = `cond1`, `cond2`
 - `or_filters`= `cond3`, `cond4`
-- `series` = `ser1`, `ser2`
 
-The filters above would produce the final filter `mask` = (`cond1` AND `cond2`) AND (`cond3` OR `cond4`) AND (`ser1` OR `ser2`).
+The filters above would produce the final filter `mask` = (`cond1` AND `cond2`) AND (`cond3` OR `cond4`).
 
 #### A Note on Column Types
 
