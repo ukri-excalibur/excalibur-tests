@@ -17,7 +17,7 @@ from benchmarks.modules.utils import SpackTest
 
 @rfm.simple_test
 class FEniCSBenchmark(SpackTest):
-    spack_spec = "fenics-benchmark@main"
+    spack_spec = "fenics-benchmark@0.6.0"
     valid_systems = ['-gpu']
     valid_prog_environs = ['default']
     num_cpus_per_task = 1
