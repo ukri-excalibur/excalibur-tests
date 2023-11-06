@@ -40,9 +40,9 @@ class SombreroBenchmark(SpackTest):
     # either 1 or 2, but in other cases you may want to use something different.
     # Note: ReFrame will automatically launch MPI with the given number of tasks,
     # using the launcher specificed in the config for the current system.
-    tasks = parameter([1])  # Used to set `num_tasks` in `__init__`.
+    tasks = parameter([1, 2])  # Used to set `num_tasks` in `__init__`.
     num_tasks_per_node = 1
-    cpus_per_task = parameter([1])  # Used to set `num_cpus_per_task` in `__init__`.
+    cpus_per_task = parameter([1, 2])  # Used to set `num_cpus_per_task` in `__init__`.
     # The program for running the benchmarks.
     executable = 'sombrero1'
     # Arguments to pass to the program above to run the benchmarks.
