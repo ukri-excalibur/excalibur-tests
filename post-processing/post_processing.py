@@ -10,9 +10,10 @@ from functools import reduce
 from itertools import chain
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import yaml
-from bokeh.models import Legend, HoverTool
+from bokeh.models import HoverTool, Legend
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
@@ -91,8 +92,16 @@ class PostProcessing:
         or_filters = config["filters"]["or"]
         # extract filter columns
         filter_columns = [f[0] for f in and_filters] + [f[0] for f in or_filters]
+
+        # FIXME: add scaling for x-axis
+        scaling_columns = []
+        # extract scaling columns
+        if config["y_axis"].get("scaling"):
+            if config["y_axis"]["scaling"].get("column"):
+                scaling_columns.append(config["y_axis"]["scaling"]["column"]["name"])
+
         # gather all relevant columns
-        all_columns = set(columns + filter_columns)
+        all_columns = set(columns + filter_columns + scaling_columns)
 
         invalid_columns = []
         # check for invalid columns
@@ -161,6 +170,15 @@ class PostProcessing:
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
+        # apply data transformation per series
+        if series_filters:
+            for f in series_filters:
+                m = self.row_filter(f, df)
+                df[mask & m] = self.transform_axis(df[mask & m], config["y_axis"])
+        # apply data transformation to all data
+        else:
+            df[mask] = self.transform_axis(df[mask], config["y_axis"])
+
         print("Selected dataframe:")
         print(df[columns][mask])
 
@@ -211,9 +229,9 @@ class PostProcessing:
 
         # adjust y-axis range
         min_y = 0 if min(df[y_column]) >= 0 \
-                else math.floor(min(df[y_column])*1.2)
+                else math.floor(np.nanmin(df[y_column])*1.2)
         max_y = 0 if max(df[y_column]) <= 0 \
-                else math.ceil(max(df[y_column])*1.2)
+                else math.ceil(np.nanmax(df[y_column])*1.2)
 
         # create html file to store plot in
         output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
@@ -293,6 +311,31 @@ class PostProcessing:
             print("")
 
         return mask
+
+    def transform_axis(self, df: pd.DataFrame, axis):
+        """
+            Divide axis values by specified values and reflect this change in the dataframe.
+
+            Args:
+                df: dataframe, data to plot.
+                axis: dict, axis column, units, and values to scale by.
+        """
+
+        # FIXME: try to make this an in-place process
+        if axis.get("scaling"):
+            # scale by column
+            if axis["scaling"].get("column"):
+                # check types
+                if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
+                   not pd.api.types.is_numeric_dtype(df[axis["scaling"]["column"]["name"]].dtype):
+                    # both columns must be numeric
+                    raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
+                                    .format(axis["value"], df[axis["value"]].dtype,
+                                            axis["scaling"]["column"]["name"],
+                                            df[axis["scaling"]["column"]["name"]].dtype))
+                df[axis["value"]] /= df[axis["scaling"]["column"]["name"]]
+
+        return df
 
 def read_args():
     """
@@ -437,7 +480,7 @@ def get_axis_info(df: pd.DataFrame, axis):
 
         Args:
             df: dataframe, data to plot.
-            axis: dict, axis column and units.
+            axis: dict, axis column, units, and values to scale by.
     """
 
     # get column name of axis
@@ -450,9 +493,17 @@ def get_axis_info(df: pd.DataFrame, axis):
         if len(unit_set) != 1:
             raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
         units = next(iter(unit_set))
+
+    # get values to scale by
+    scaling = None
+    if axis.get("scaling"):
+        if axis.get("scaling").get("column"):
+            scaling = axis.get("scaling").get("column").get("name")
+
     # determine axis label
-    label = "{0}{1}".format(col_name.replace("_", " ").title(),
-                            " ({0})".format(units) if units else "")
+    label = "{0}{1}{2}".format(col_name.replace("_", " ").title(),
+                               " Scaled by {0}".format(scaling.replace("_", " ").title()) if scaling else "",
+                               " ({0})".format(units) if units else "")
 
     return col_name, label
 
