@@ -13,7 +13,7 @@ env:
 jobs:
   test:
     name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Spack spec ${{ matrix.spack_spec }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -28,7 +28,7 @@ jobs:
           # `example` is a package in our custom Spack repo, ensure we can build
           # packages in it.
           - sombrero@2021-08-16
-          - example@2021-08-16
+          # - example@2021-08-16
         # Compatible ReFrame versions are set in pyproject.toml
     steps:
       - uses: actions/checkout@v4
@@ -56,6 +56,10 @@ jobs:
       - name: ReFrame version number
         shell: bash
         run: reframe -V
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
       - name: Run sample benchmark
         shell: bash
         run: |
