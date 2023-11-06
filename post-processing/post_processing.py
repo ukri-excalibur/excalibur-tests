@@ -174,10 +174,10 @@ class PostProcessing:
         if series_filters:
             for f in series_filters:
                 m = self.row_filter(f, df)
-                df[mask & m] = self.transform_axis(df[mask & m], config["y_axis"])
+                df[mask & m] = self.transform_axis(df[mask & m], config["y_axis"], config["x_axis"]["value"])
         # apply data transformation to all data
         else:
-            df[mask] = self.transform_axis(df[mask], config["y_axis"])
+            df[mask] = self.transform_axis(df[mask], config["y_axis"], config["x_axis"]["value"])
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -259,6 +259,9 @@ class PostProcessing:
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
+        # remove x-axis group ticks
+        plot.xaxis.major_tick_line_color = None
+        plot.xaxis.major_label_text_font_size = "0pt"
         # adjust font size
         plot.title.text_font_size = "15pt"
 
@@ -312,19 +315,21 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, df: pd.DataFrame, axis):
+    def transform_axis(self, df: pd.DataFrame, axis, x_column):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
                 df: dataframe, data to plot.
                 axis: dict, axis column, units, and values to scale by.
+                x_column: string, name of column containing x-axis values.
         """
 
         # FIXME: try to make this an in-place process
         if axis.get("scaling"):
             # scale by column
             if axis["scaling"].get("column"):
+
                 # check types
                 if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
                    not pd.api.types.is_numeric_dtype(df[axis["scaling"]["column"]["name"]].dtype):
@@ -333,7 +338,14 @@ class PostProcessing:
                                     .format(axis["value"], df[axis["value"]].dtype,
                                             axis["scaling"]["column"]["name"],
                                             df[axis["scaling"]["column"]["name"]].dtype))
-                df[axis["value"]] /= df[axis["scaling"]["column"]["name"]]
+
+                # scale by specific value in column
+                if axis["scaling"]["column"].get("x_value"):
+                    x_value = axis["scaling"]["column"]["x_value"]
+                    df[axis["value"]] /= df[df[x_column] == x_value][axis["scaling"]["column"]["name"]].iloc[0]
+                # scale by entire column
+                else:
+                    df[axis["value"]] /= df[axis["scaling"]["column"]["name"]]
 
         return df
 
@@ -498,7 +510,10 @@ def get_axis_info(df: pd.DataFrame, axis):
     scaling = None
     if axis.get("scaling"):
         if axis.get("scaling").get("column"):
-            scaling = axis.get("scaling").get("column").get("name")
+            if axis.get("scaling").get("column").get("x_value"):
+                scaling = "{0} {1}".format(axis.get("scaling").get("column").get("x_value"), axis.get("scaling").get("column").get("name"))
+            else:
+                scaling = axis.get("scaling").get("column").get("name")
 
     # determine axis label
     label = "{0}{1}{2}".format(col_name.replace("_", " ").title(),
