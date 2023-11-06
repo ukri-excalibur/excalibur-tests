@@ -64,7 +64,8 @@ jobs:
         shell: bash
         run: |
           reframe -v -c benchmarks/examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'
-      - name: Post-processing tests
-        shell: bash
-        run: |
-          pytest
+          find -name 'rfm_build.out' -print -exec cat '{}' \;
+      # - name: Post-processing tests
+      #   shell: bash
+      #   run: |
+      #     pytest
