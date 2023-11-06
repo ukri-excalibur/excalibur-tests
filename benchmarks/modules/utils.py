@@ -10,6 +10,7 @@ import reframe as rfm
 from reframe.core.exceptions import BuildSystemError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
+import reframe.core.buildsystems as bs
 
 
 SYSFILE = 'systems/sysinfo.json' # interpreted relative to jupyter root
@@ -241,7 +242,8 @@ def identify_build_environment(current_partition):
 
 
 class SpackTest(rfm.RegressionTest):
-    build_system = 'Spack'
+    build_system = bs.Spack()
+    build_system.install_opts = ['--no-check-signature']
     spack_spec = variable(str, value='', loggable=True)
 
     @run_before('compile')
