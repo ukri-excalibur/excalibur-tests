@@ -36,15 +36,6 @@ jobs:
         with:
           python-version: '3.11.0'
           # cache: 'pip'
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-      - name: Install Excalibur-tests
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip
-          pip install .[test]
       - name: Install Spack
         shell: bash
         working-directory: ${{runner.workspace}}
@@ -52,6 +43,15 @@ jobs:
           git clone --depth=1 --branch=${{ matrix.spack_version }} https://github.com/spack/spack.git
           cd spack
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
+      - name: Install Excalibur-tests
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[test]
       # Make sure `spack` command works
       - name: Spack version number
         shell: bash
