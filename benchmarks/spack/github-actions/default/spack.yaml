@@ -8,6 +8,9 @@ spack:
   view: false
   include:
   - ../../common.yaml
+  mirrors:
+    spack-buildcache: oci://ghcr.io/spack/github-actions-buildcache
+    excalibur-buildcache: oci://ghcr.io/ukri-excalibur/github-actions-buildcache
   compilers:
   - compiler:
       spec: clang@12.0.1
@@ -100,15 +103,3 @@ spack:
       modules: []
       environment: {}
       extra_rpaths: []
-  packages:
-    cmake:
-      externals:
-      - spec: cmake@3.22.1
-        prefix: /usr
-      - spec: cmake@3.25.0
-        prefix: /usr/local
-    openmpi:
-      externals:
-      - spec: openmpi@4.1.2%gcc@11.3.0~cuda+cxx~cxx_exceptions+java~memchecker+pmi~static~wrapper-rpath
-          fabrics=ofi,psm,psm2,ucx schedulers=slurm
-        prefix: /usr

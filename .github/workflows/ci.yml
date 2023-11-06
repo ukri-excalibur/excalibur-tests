@@ -21,8 +21,8 @@ jobs:
         os:
           - ubuntu-latest
         spack_version:
-          # In README.md we claim compatibility with v0.18.0
-          - v0.18.0
+          # # In README.md we claim compatibility with v0.18.0
+          # - v0.18.0
           - develop
         spack_spec:
           # `example` is a package in our custom Spack repo, ensure we can build
@@ -56,9 +56,10 @@ jobs:
       - name: ReFrame version number
         shell: bash
         run: reframe -V
-      - name: Install OpenMPI, CMake and extra Python packages
-        shell: bash
-        run: sudo apt-get install openmpi-bin libopenmpi-dev cmake
+      - name: Set authentication method for mirror
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          spack -e . mirror set --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" excalibur-buildcache
       - name: Run sample benchmark
         shell: bash
         run: |
