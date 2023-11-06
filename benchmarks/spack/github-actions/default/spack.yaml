@@ -103,3 +103,6 @@ spack:
       modules: []
       environment: {}
       extra_rpaths: []
+  packages:
+    all:
+      require: '%gcc@12 target=x86_64_v2'
