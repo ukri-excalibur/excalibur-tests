@@ -56,10 +56,6 @@ jobs:
       - name: ReFrame version number
         shell: bash
         run: reframe -V
-      - name: Set authentication method for mirror
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          spack -e . mirror set --oci-username ${{ github.actor }} --oci-password "${{ secrets.GITHUB_TOKEN }}" excalibur-buildcache
       - name: Run sample benchmark
         shell: bash
         run: |
