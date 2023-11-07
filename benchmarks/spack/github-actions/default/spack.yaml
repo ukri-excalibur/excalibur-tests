@@ -9,6 +9,7 @@ spack:
   include:
   - ../../common.yaml
   mirrors:
+    spack-buildcache: oci://ghcr.io/spack/github-actions-buildcache
     excalibur-buildcache: oci://ghcr.io/ukri-excalibur/github-actions-buildcache
   compilers:
   - compiler:

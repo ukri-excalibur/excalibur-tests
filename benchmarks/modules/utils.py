@@ -243,6 +243,7 @@ def identify_build_environment(current_partition):
 
 class SpackTest(rfm.RegressionTest):
     build_system = bs.Spack()
+    build_system.install_opts = ['--no-check-signature']
     spack_spec = variable(str, value='', loggable=True)
 
     @run_before('compile')
