@@ -54,9 +54,12 @@ class Water64(ConquestBaseBenchmark):
 
     input_dir = "$(dirname $(which Conquest))/../benchmarks/water_64mols"
 
-    prerun_cmds.append(f"cp {input_dir}/coords.dat .")
     prerun_cmds.append(f"cp {input_dir}/Conquest_input .")
-    prerun_cmds.append(f"cp {input_dir}/Si.ion .")
+    prerun_cmds.append(f"cp {input_dir}/H20_coord.in .")
+    prerun_cmds.append(f"cp {input_dir}/H_SZ.ion .")
+    prerun_cmds.append(f"cp {input_dir}/H_SZP.ion .")
+    prerun_cmds.append(f"cp {input_dir}/O_SZ.ion .")
+    prerun_cmds.append(f"cp {input_dir}/O_SZP.ion .")
 
 @rfm.simple_test
 class SiWeakScaling(ConquestBaseBenchmark):
