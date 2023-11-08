@@ -34,8 +34,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11.0'
-          # cache: 'pip'
+          python-version: '3.10.6'
+          cache: 'pip'
       - name: Install Spack
         shell: bash
         working-directory: ${{runner.workspace}}
