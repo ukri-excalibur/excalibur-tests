@@ -305,7 +305,7 @@ class PostProcessing:
                 value = pd.Series(value, dtype=df[column].dtype).iloc[0]
                 mask = operator(df[column], value)
             except TypeError or ValueError as e:
-                e.args = (e.args[0] + " for column: \'{0}\' and value: \'{1}\'".format(column, value),)
+                e.args = (e.args[0] + " for column '{0}' and value '{1}'".format(column, value),)
                 raise
 
         if self.debug & self.verbose:
@@ -327,25 +327,38 @@ class PostProcessing:
 
         # FIXME: try to make this an in-place process
         if axis.get("scaling"):
+
             # scale by column
             if axis["scaling"].get("column"):
 
+                scaling_column = axis["scaling"]["column"]["name"]
+                x_value = axis["scaling"]["column"].get("x_value")
+
                 # check types
                 if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
-                   not pd.api.types.is_numeric_dtype(df[axis["scaling"]["column"]["name"]].dtype):
+                   not pd.api.types.is_numeric_dtype(df[scaling_column].dtype):
                     # both columns must be numeric
                     raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
                                     .format(axis["value"], df[axis["value"]].dtype,
-                                            axis["scaling"]["column"]["name"],
-                                            df[axis["scaling"]["column"]["name"]].dtype))
+                                            scaling_column, df[scaling_column].dtype))
 
                 # scale by specific value in column
-                if axis["scaling"]["column"].get("x_value"):
-                    x_value = axis["scaling"]["column"]["x_value"]
-                    df[axis["value"]] /= df[df[x_column] == x_value][axis["scaling"]["column"]["name"]].iloc[0]
+                if x_value:
+                    df[axis["value"]] /= df[df[x_column] == x_value][scaling_column].iloc[0]
                 # scale by entire column
                 else:
                     df[axis["value"]] /= df[axis["scaling"]["column"]["name"]]
+
+            # scale by custom value
+            elif axis["scaling"].get("custom"):
+                scaling_value = axis["scaling"]["custom"]
+                try:
+                    # interpret scaling value as column dtype
+                    scaling_value = pd.Series(scaling_value, dtype=df[axis["value"]].dtype).iloc[0]
+                except ValueError as e:
+                    e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
+                    raise
+                df[axis["value"]] /= scaling_value
 
         return df
 
@@ -361,7 +374,7 @@ def read_args():
     parser.add_argument("config_path", type=str, help="path to a configuration file specifying what to plot")
 
     # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: \'generic\')")
+    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: 'generic')")
 
     # info dump flags
     parser.add_argument("-d", "--debug", action="store_true", help="debug flag for printing additional information")
@@ -506,14 +519,15 @@ def get_axis_info(df: pd.DataFrame, axis):
             raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
         units = next(iter(unit_set))
 
-    # get values to scale by
+    # get scaling information
     scaling = None
     if axis.get("scaling"):
-        if axis.get("scaling").get("column"):
-            if axis.get("scaling").get("column").get("x_value"):
-                scaling = "{0} {1}".format(axis.get("scaling").get("column").get("x_value"), axis.get("scaling").get("column").get("name"))
-            else:
-                scaling = axis.get("scaling").get("column").get("name")
+        if axis["scaling"].get("column"):
+            scaling_column = axis["scaling"]["column"]["name"]
+            x_value = axis["scaling"]["column"].get("x_value")
+            scaling = "{0} {1}".format(x_value, scaling_column) if x_value else scaling_column
+        else:
+            scaling = str(axis["scaling"].get("custom"))
 
     # determine axis label
     label = "{0}{1}{2}".format(col_name.replace("_", " ").title(),
