@@ -241,15 +241,26 @@ def test_high_level_script(run_sombrero):
     # check returned subset is as expected
     assert len(df) == 4
 
-    # check correct scaling
+    # check correct column scaling
     dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"column": {"name": "OMP_NUM_THREADS"}}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int", "OMP_NUM_THREADS": "int"}})
     # check flops values are halved compared to previous df
     assert (dfs["flops_value"] == df[df["cpus_per_task"] == 2]["flops_value"]/2).all()
 
-    # check expected failure from scaling by incorrect type
+    # check correct custom scaling
+    dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"custom": 2}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
+    # check flops values are halved compared to previous df
+    assert (dfs["flops_value"] == df[df["cpus_per_task"] == 2]["flops_value"]/2).all()
+
+    # check expected failure from scaling by incorrect column type
     try:
         df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": []}, "series": [["cpus_per_task", 1], ["cpus_per_task", 2]], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"column": {"name": "OMP_NUM_THREADS"}}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int", "OMP_NUM_THREADS": "str"}})
     except TypeError:
+        assert True
+
+    # check expected failure from scaling by incompatible custom type
+    try:
+        df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"custom": "s"}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
+    except ValueError:
         assert True
 
     # check correct concatenation of two dataframes with different columns
