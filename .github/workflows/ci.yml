@@ -7,6 +7,9 @@ on:
   pull_request:
   release:
 
+env:
+  RFM_CONFIG_FILES: "${{ github.workspace }}/benchmarks/reframe_config.py"
+
 jobs:
   test:
     name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Spack spec ${{ matrix.spack_spec }}
@@ -28,7 +31,7 @@ jobs:
           - example@2021-08-16
         # Compatible ReFrame versions are set in pyproject.toml
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10.6'
@@ -42,9 +45,8 @@ jobs:
         shell: bash
         working-directory: ${{runner.workspace}}
         run: |
-          git clone https://github.com/spack/spack.git
+          git clone --depth=1 --branch=${{ matrix.spack_version }} https://github.com/spack/spack.git
           cd spack
-          git checkout ${{ matrix.spack_version }}
           echo "PATH=${PWD}/bin:${PATH}" >> "${GITHUB_ENV}"
       # Make sure `spack` command works
       - name: Spack version number
@@ -60,10 +62,8 @@ jobs:
       - name: Run sample benchmark
         shell: bash
         run: |
-          export RFM_CONFIG_FILES=$Python_ROOT_DIR/lib/python3.10/site-packages/benchmarks/reframe_config.py
-          reframe -v -c $Python_ROOT_DIR/lib/python3.10/site-packages/benchmarks/examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'
+          reframe -v -c benchmarks/examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'
       - name: Post-processing tests
         shell: bash
         run: |
-          export RFM_CONFIG_FILES=$Python_ROOT_DIR/lib/python3.10/site-packages/benchmarks/reframe_config.py
           pytest
