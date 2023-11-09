@@ -170,14 +170,30 @@ class PostProcessing:
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
-        # apply data transformation per series
-        if series_filters:
-            for f in series_filters:
-                m = self.row_filter(f, df)
-                df[mask & m] = self.transform_axis(df[mask & m], config["y_axis"], config["x_axis"]["value"])
-        # apply data transformation to all data
-        else:
-            df[mask] = self.transform_axis(df[mask], config["y_axis"], config["x_axis"]["value"])
+        scaling_column = None
+        scaling_series_mask = None
+        scaling_x_value_mask = None
+        # extract scaling information
+        if config["y_axis"].get("scaling"):
+
+            if config["y_axis"]["scaling"].get("column"):
+                # copy scaling column (prevents issues when scaling by itself)
+                scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
+                # get mask of scaling series
+                if config["y_axis"]["scaling"]["column"].get("series") is not None:
+                    scaling_series_mask = self.row_filter(series_filters[config["y_axis"]["scaling"]["column"]["series"]], df)
+                # get mask of scaling x-value
+                if config["y_axis"]["scaling"]["column"].get("x_value"):
+                    scaling_x_value_mask = df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"]
+
+            # apply data transformation per series
+            if series_filters:
+                for f in series_filters:
+                    m = self.row_filter(f, df)
+                    df[mask & m] = self.transform_axis(df[mask & m], mask & m, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
+            # apply data transformation to all data
+            else:
+                df[mask] = self.transform_axis(df[mask], mask, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -315,7 +331,7 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, df: pd.DataFrame, axis, x_column):
+    def transform_axis(self, df: pd.DataFrame, df_mask, axis, scaling_column, scaling_series_mask, scaling_x_value_mask):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
@@ -326,39 +342,43 @@ class PostProcessing:
         """
 
         # FIXME: try to make this an in-place process
-        if axis.get("scaling"):
 
-            # scale by column
-            if axis["scaling"].get("column"):
+        # scale by column
+        if scaling_column is not None:
 
-                scaling_column = axis["scaling"]["column"]["name"]
-                x_value = axis["scaling"]["column"].get("x_value")
+            # check types
+            if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
+                not pd.api.types.is_numeric_dtype(scaling_column.dtype):
+                # both columns must be numeric
+                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
+                                .format(axis["value"], df[axis["value"]].dtype,
+                                        axis["scaling"]["column"]["name"], scaling_column.dtype))
 
-                # check types
-                if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
-                   not pd.api.types.is_numeric_dtype(df[scaling_column].dtype):
-                    # both columns must be numeric
-                    raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
-                                    .format(axis["value"], df[axis["value"]].dtype,
-                                            scaling_column, df[scaling_column].dtype))
+            # get mask of scaling value(s)
+            scaling_mask = df_mask.copy()
+            if scaling_series_mask is not None:
+                scaling_mask = scaling_series_mask
+            if scaling_x_value_mask is not None:
+                scaling_mask &= scaling_x_value_mask
 
-                # scale by specific value in column
-                if x_value:
-                    df[axis["value"]] /= df[df[x_column] == x_value][scaling_column].iloc[0]
-                # scale by entire column
-                else:
-                    df[axis["value"]] /= df[axis["scaling"]["column"]["name"]]
+            scaling_val = scaling_column[scaling_mask].iloc[0] if len(scaling_column[scaling_mask]) == 1 \
+                            else scaling_column[scaling_mask].values
 
-            # scale by custom value
-            elif axis["scaling"].get("custom"):
-                scaling_value = axis["scaling"]["custom"]
-                try:
-                    # interpret scaling value as column dtype
-                    scaling_value = pd.Series(scaling_value, dtype=df[axis["value"]].dtype).iloc[0]
-                except ValueError as e:
-                    e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
-                    raise
-                df[axis["value"]] /= scaling_value
+            # FIXME: add a check that the masked scaling column has the same number of values
+            # as the masked df (unless there is only one scaling value)
+
+            df[axis["value"]] = df[axis["value"]].values / scaling_val
+
+        # scale by custom value
+        elif axis["scaling"].get("custom"):
+            scaling_value = axis["scaling"]["custom"]
+            try:
+                # interpret scaling value as column dtype
+                scaling_value = pd.Series(scaling_value, dtype=df[axis["value"]].dtype).iloc[0]
+            except ValueError as e:
+                e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
+                raise
+            df[axis["value"]] /= scaling_value
 
         return df
 
@@ -524,8 +544,11 @@ def get_axis_info(df: pd.DataFrame, axis):
     if axis.get("scaling"):
         if axis["scaling"].get("column"):
             scaling_column = axis["scaling"]["column"]["name"]
+            series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            scaling = "{0} {1}".format(x_value, scaling_column) if x_value else scaling_column
+            series_col = "series {0} of {1}".format(series_index, scaling_column) \
+                         if series_index is not None else scaling_column
+            scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
         else:
             scaling = str(axis["scaling"].get("custom"))
 
