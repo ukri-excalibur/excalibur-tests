@@ -61,7 +61,7 @@ class SphngBase_evolution(SphngBase):
 
     reference = {
         'dial:slurm-local': {
-            'elapsed-time': (10, None, None, 'minutes'),
+            'elapsed_time': (10, None, None, 'minutes'),
             },
         }
 
@@ -69,7 +69,7 @@ class SphngBase_evolution(SphngBase):
     def validate_successful_run(self):
         return sn.assert_found(r'ended on', self.stdout)
 
-    @performance_function('minutes', perf_key='elapsed-time')
+    @performance_function('minutes', perf_key='elapsed_time')
     def extract_elapsed_time(self):
         return sn.extractsingle(r'cpu time used for this run :\s+(\S+)\s', self.stdout, 1, float)
 
