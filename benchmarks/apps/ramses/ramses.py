@@ -33,7 +33,7 @@ class RamsesMPI(SpackTest):
 
     reference = {
             '*': {
-                'Total elapsed time': (500, None, None, 'seconds'),
+                'elapsed_time': (500, None, None, 'seconds'),
                 },
             }
 
@@ -56,9 +56,9 @@ class RamsesMPI(SpackTest):
     def validate_successful_run(self):
         return sn.assert_found(r'Run completed', self.stdout)
 
-    @performance_function('seconds', perf_key='Total elapsed time')
+    @performance_function('seconds', perf_key='elapsed_time')
     def extract_elapsed_time(self):
-        return sn.extractsingle(r'Total elapsed time:\s+(\S+)\s', self.stdout, 1, float)
+        return sn.extractsingle(r'elapsed_time:\s+(\S+)\s', self.stdout, 1, float)
 
 
 @rfm.simple_test
