@@ -269,7 +269,9 @@ class PostProcessing:
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
         data_source = ColumnDataSource(grouped_df).data
-        legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "), group[-1]) for group in data_source[index_group_col]]
+        legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "),
+                                            group[-1] if len(groups) > 1 else group)
+                         for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
         # add bars
