@@ -176,6 +176,8 @@ class PostProcessing:
         # extract scaling information
         if config["y_axis"].get("scaling"):
 
+            # FIXME: if there is a scaling field, check that there is at least one of column or custom
+
             if config["y_axis"]["scaling"].get("column"):
                 # copy scaling column (prevents issues when scaling by itself)
                 scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
@@ -221,8 +223,8 @@ class PostProcessing:
         """
 
         # get column names and labels for axes
-        x_column, x_label = get_axis_info(df, x_axis)
-        y_column, y_label = get_axis_info(df, y_axis)
+        x_column, x_label = get_axis_info(df, x_axis, series_filters)
+        y_column, y_label = get_axis_info(df, y_axis, series_filters)
 
         # find x-axis groups (series columns)
         groups = [x_column]
@@ -336,9 +338,12 @@ class PostProcessing:
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
-                df: dataframe, data to plot.
+                df: dataframe, data to plot (pre-masked by series, if present).
+                df_mask: bool list, the mask (pre-)applied to the df argument.
                 axis: dict, axis column, units, and values to scale by.
-                x_column: string, name of column containing x-axis values.
+                scaling_column: dataframe column, copy of column containing values to scale by.
+                scaling_series_mask: bool list, a series mask to be applied to the scaling column.
+                scaling_x_value_mask: bool list, an x-axis value mask to be applied to the scaling column.
         """
 
         # FIXME: try to make this an in-place process
@@ -519,7 +524,7 @@ def insert_key_cols(df: pd.DataFrame, index, results):
         # insert keys as new columns
         df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
 
-def get_axis_info(df: pd.DataFrame, axis):
+def get_axis_info(df: pd.DataFrame, axis, series_filters):
     """
         Return the column name and label for a given axis. If a column name is supplied as units information, the actual units will be extracted from a dataframe.
 
@@ -546,7 +551,7 @@ def get_axis_info(df: pd.DataFrame, axis):
             scaling_column = axis["scaling"]["column"]["name"]
             series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            series_col = "series {0} of {1}".format(series_index, scaling_column) \
+            series_col = "{0} {1}".format(series_filters[series_index][2], scaling_column) \
                          if series_index is not None else scaling_column
             scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
         else:
