@@ -90,3 +90,105 @@ spack:
   packages:
     all:
       target: [icelake]
+    binutils:
+      externals:
+      - spec: binutils@2.30.119
+        prefix: /usr
+    coreutils:
+      externals:
+      - spec: coreutils@8.30
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.6.0
+        prefix: /usr
+    gawk:
+      externals:
+      - spec: gawk@4.2.1
+        prefix: /usr
+    openssh:
+      externals:
+      - spec: openssh@8.0p1
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1k
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.30
+        prefix: /usr
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.16.1
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@3.20.2
+        prefix: /usr
+    curl:
+      externals:
+      - spec: curl@7.61.1+gssapi+ldap+nghttp2
+        prefix: /usr
+    cvs:
+      externals:
+      - spec: cvs@1.11.23
+        prefix: /usr
+    doxygen:
+      externals:
+      - spec: doxygen@1.8.14+graphviz~mscgen
+        prefix: /usr
+    flex:
+      externals:
+      - spec: flex@2.6.1+lex
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@2.39.3+tcltk
+        prefix: /usr
+    gmake:
+      externals:
+      - spec: gmake@4.2.1
+        prefix: /usr
+    groff:
+      externals:
+      - spec: groff@1.22.3
+        prefix: /usr
+    libtool:
+      externals:
+      - spec: libtool@2.4.6
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+    pkgconf:
+      externals:
+      - spec: pkgconf@1.4.2
+        prefix: /usr
+    subversion:
+      externals:
+      - spec: subversion@1.10.2
+        prefix: /usr
+      - spec: subversion@1.12.2
+        prefix: /usr/local/software/global-rhel8
+    swig:
+      externals:
+      - spec: swig@4.1.1
+        prefix: /usr
+    texinfo:
+      externals:
+      - spec: texinfo@6.5
+        prefix: /usr
