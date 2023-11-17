@@ -422,32 +422,49 @@ def read_config(path):
 
     # check x-axis information
     if not config.get("x_axis"):
-        raise KeyError("Missing x-axis information")
+        raise KeyError("Missing x-axis information.")
     if not config.get("x_axis").get("value"):
-        raise KeyError("Missing x-axis value information")
+        raise KeyError("Missing x-axis value information.")
     if not config.get("x_axis").get("units"):
-        raise KeyError("Missing x-axis units information")
+        raise KeyError("Missing x-axis units information.")
+    if config.get("x_axis").get("units").get("custom") is not None and \
+       config.get("x_axis").get("units").get("column") is not None:
+        raise KeyError("Specify x-axis units information as only one of 'custom' or 'column'.")
+
     # check y-axis information
     if not config.get("y_axis"):
-        raise KeyError("Missing y-axis information")
+        raise KeyError("Missing y-axis information.")
     if not config.get("y_axis").get("value"):
-        raise KeyError("Missing y-axis value information")
+        raise KeyError("Missing y-axis value information.")
     if not config.get("y_axis").get("units"):
-        raise KeyError("Missing y-axis units information")
+        raise KeyError("Missing y-axis units information.")
+    if config.get("y_axis").get("units").get("custom") is not None and \
+       config.get("y_axis").get("units").get("column") is not None:
+        raise KeyError("Specify y-axis units information as only one of 'custom' or 'column'.")
+
+    # check optional scaling information
+    if config.get("y_axis").get("scaling"):
+        if config.get("y_axis").get("scaling").get("custom") is not None and \
+           config.get("y_axis").get("scaling").get("column") is not None:
+            raise KeyError("Specify y-axis scaling information as only one of 'custom' or 'column'.")
 
     # check series length
     if config.get("series") is None:
-        raise KeyError("Missing series information (specify an empty list [] if there is only one series)")
+        raise KeyError("Missing series information (specify an empty list [] if there is only one series).")
     if len(config["series"]) == 1:
-        raise KeyError("Number of series must be >= 2 (specify an empty list [] if there is only one series)")
+        raise KeyError("Number of series must be >= 2 (specify an empty list [] if there is only one series).")
 
     # check filters are present
-    if config.get("filters") is None:
-        raise KeyError("Missing filters information (specify an empty list [] if none are required)")
+    if not config.get("filters"):
+        raise KeyError("Missing filter information (specify 'and' and 'or' filters).")
+    if config.get("filters").get("and") is None:
+        raise KeyError("Missing 'and' filters (specify an empty list [] if none are required).")
+    if config.get("filters").get("or") is None:
+        raise KeyError("Missing 'or' filters (specify an empty list [] if none are required).")
 
     # check plot title information
     if not config.get("title"):
-        raise KeyError("Missing plot title information")
+        raise KeyError("Missing plot title information.")
 
     return config
 
