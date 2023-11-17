@@ -176,8 +176,7 @@ class PostProcessing:
         # extract scaling information
         if config["y_axis"].get("scaling"):
 
-            # FIXME: if there is a scaling field, check that there is at least one of column or custom
-
+            # check column information
             if config["y_axis"]["scaling"].get("column"):
                 # copy scaling column (prevents issues when scaling by itself)
                 scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
@@ -187,6 +186,10 @@ class PostProcessing:
                 # get mask of scaling x-value
                 if config["y_axis"]["scaling"]["column"].get("x_value"):
                     scaling_x_value_mask = df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"]
+
+            # check custom value is not zero
+            elif not config["y_axis"]["scaling"].get("custom"):
+                raise RuntimeError("Invalid custom scaling value (cannot divide by {0}).".format(config["y_axis"]["scaling"].get("custom")))
 
             # apply data transformation per series
             if series_filters:
