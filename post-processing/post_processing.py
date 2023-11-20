@@ -200,6 +200,21 @@ class PostProcessing:
             else:
                 df[mask] = self.transform_axis(df[mask], mask, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
 
+        # FIXME: sorted dataframe doesn't translate to sorted bokeh graph
+        if config["x_axis"].get("sorting"):
+            ascending = None
+            if config["x_axis"]["sorting"] == "ascending":
+                ascending = True
+            elif config["x_axis"]["sorting"] == "descending":
+                ascending = False
+            if ascending is not None:
+                # sort x values
+                df.sort_values([config["x_axis"]["value"]], ascending=ascending, inplace=True, ignore_index=True)
+                # NOTE: currently assuming there can only be one series column
+                if series_columns:
+                    # sort series column
+                    df.sort_values(series_columns[0], ascending=ascending, inplace=True, ignore_index=True)
+
         print("Selected dataframe:")
         print(df[columns][mask])
 
@@ -240,7 +255,7 @@ class PostProcessing:
         # combine group names for later plotting with groupby
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
-        grouped_df = df.groupby(x_column) if len(groups) == 1 else df.groupby(groups)
+        grouped_df = df.groupby(x_column, sort=False) if len(groups) == 1 else df.groupby(groups, sort=False)
 
         if self.debug:
             print("")
