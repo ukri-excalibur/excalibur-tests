@@ -89,6 +89,9 @@ spack:
       extra_rpaths: []
   packages:
     all:
+      providers:
+        mpi: [intel-oneapi-mpi] # Prefer Intel MPI
+      compiler: [intel] # Prefer Intel Classic Compilers
       target: [icelake]
     binutils:
       externals:
