@@ -1,0 +1,143 @@
+packages:
+  binutils:
+    externals:
+    - spec: binutils@2.30.119
+      prefix: /usr
+  coreutils:
+    externals:
+    - spec: coreutils@8.30
+      prefix: /usr
+  diffutils:
+    externals:
+    - spec: diffutils@3.6
+      prefix: /usr
+  findutils:
+    externals:
+    - spec: findutils@4.6.0
+      prefix: /usr
+  gawk:
+    externals:
+    - spec: gawk@4.2.1
+      prefix: /usr
+  openssh:
+    externals:
+    - spec: openssh@8.0p1
+      prefix: /usr
+  openssl:
+    externals:
+    - spec: openssl@1.1.1k
+      prefix: /usr
+  tar:
+    externals:
+    - spec: tar@1.30
+      prefix: /usr
+  autoconf:
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
+  automake:
+    externals:
+    - spec: automake@1.16.1
+      prefix: /usr
+  bison:
+    externals:
+    - spec: bison@3.0.4
+      prefix: /usr
+  cmake:
+    externals:
+    - spec: cmake@3.20.2
+      prefix: /usr
+  curl:
+    externals:
+    - spec: curl@7.61.1+gssapi+ldap+nghttp2
+      prefix: /usr
+  cvs:
+    externals:
+    - spec: cvs@1.11.23
+      prefix: /usr
+  doxygen:
+    externals:
+    - spec: doxygen@1.8.14+graphviz~mscgen
+      prefix: /usr
+  flex:
+    externals:
+    - spec: flex@2.6.1+lex
+      prefix: /usr
+  git:
+    externals:
+    - spec: git@2.39.3+tcltk
+      prefix: /usr
+  gsl:
+    externals:
+    - spec: gsl@2.7.1~external-cblas
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/gsl-2.7.1-cjb5f4uixxxx6j7i7budicfhdb2rqtwu
+  gmake:
+    externals:
+    - spec: gmake@4.2.1
+      prefix: /usr
+  groff:
+    externals:
+    - spec: groff@1.22.3
+      prefix: /usr
+  hdf5:
+    externals:
+    - spec: hdf5@1.10.8~cxx+fortran+hl~ipo~java+mpi+shared+szip~threadsafe+tools
+        api=default build_type=RelWithDebInfo patches=ee351eb %intel@2021.6.0 ^intel-oneapi-mpi@2021.6.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/hdf5-1.10.8-h75adcalc32r6k5hkaajovxvzvqa6rec
+    - spec: hdf5@1.10.8~cxx+fortran+hl~ipo~java+mpi+shared+szip~threadsafe+tools
+        api=default build_type=RelWithDebInfo patches=ee351eb %intel@2021.6.0 ^openmpi@4.1.5
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/hdf5-1.10.8-liscqv523hlafp5fxpqzxh2salpr4pm5
+    - spec: hdf5@1.10.8~cxx+fortran+hl~ipo~java+mpi+shared+szip~threadsafe+tools
+        api=default build_type=RelWithDebInfo patches=ee351eb %gcc@11.3.0 ^intel-oneapi-mpi@2021.6.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/hdf5-1.10.8-xbjoagf5adm6bbnfczvtbbw7ohgn2glt
+  intel-oneapi-mkl:
+    externals:
+    - spec: intel-oneapi-mkl@2022.1.0~cluster~ilp64+shared %intel@2021.6.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/intel-oneapi-mkl-2022.1.0-mngj3ad6jpozccxhdxtmzexvz6qkjag2
+    - spec: intel-oneapi-mkl@2022.1.0~cluster~ilp64+shared %gcc@11.3.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/intel-oneapi-mkl-2022.1.0-wt7gb6hfk7ojls7rj2k7dkyyt36de4n7
+  intel-oneapi-mpi:
+    externals:
+    - spec: intel-oneapi-mpi@2021.6.0~external-libfabric~ilp64 %intel@2021.6.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0-guxuvcpmykplbrr2e3af2yd7njqhau5e
+    - spec: intel-oneapi-mpi@2021.6.0~external-libfabric~ilp64 %gcc@11.3.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/intel-oneapi-mpi-2021.6.0-2yn3govbxvgmaanmi4wpwjrqa2b3lthl
+  libtool:
+    externals:
+    - spec: libtool@2.4.6
+      prefix: /usr
+  m4:
+    externals:
+    - spec: m4@1.4.18
+      prefix: /usr
+  openmpi:
+    externals:
+    - spec: openmpi@4.1.5~atomics~cuda~cxx~cxx_exceptions~gpfs~internal-hwloc~java+legacylaunchers~lustre~memchecker+pmi+romio+rsh~singularity+static+vt+wrapper-rpath
+        fabrics=ucx schedulers=slurm %intel@2021.6.0
+      prefix: /usr/local/software/spack/spack-views/rocky8-icelake-20220710/openmpi-4.1.5/intel-2021.6.0/b42idtrxnxnhjeplfsf7xjlghp5kwvkz/
+  pkgconf:
+    externals:
+    - spec: pkgconf@1.4.2
+      prefix: /usr
+  python:
+    externals:
+    - spec: python@2.7.18+bz2+crypt+ctypes+dbm~lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
+      prefix: /usr
+    - spec: python@3.6.8+bz2+crypt+ctypes+dbm+lzma+nis+pyexpat~pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      prefix: /usr
+    - spec: python@3.9.12+bz2+crypt+ctypes+dbm+lzma~nis+pyexpat+pythoncmd+readline+sqlite3+ssl~tix+tkinter+uuid+zlib
+      prefix: /usr/local/software/spack/spack-views/rocky8-icelake-20220710/python-3.9.12/gcc-11.3.0/pdcqf4o5kyppnbgu6s4xkujbzvxmezu5
+  subversion:
+    externals:
+    - spec: subversion@1.10.2
+      prefix: /usr
+    - spec: subversion@1.12.2
+      prefix: /usr/local/software/global-rhel8
+  swig:
+    externals:
+    - spec: swig@4.1.1
+      prefix: /usr
+  texinfo:
+    externals:
+    - spec: texinfo@6.5
+      prefix: /usr
