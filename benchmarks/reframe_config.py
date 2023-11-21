@@ -89,6 +89,23 @@ site_configuration = {
                         'num_cpus_per_socket': 38,
                     },
                 },
+                {
+                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/icelake.html
+                    'name': 'sapphirerapids',
+                    'descr': 'Sapphire Rapids compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'modules': ['rhel8/default-sar'],
+                    'access': ['--partition=sapphire', '--exclusive'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 112,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 56,
+                    },
+                },
             ]
         },  # end CSD3 Rocky 8
         {
