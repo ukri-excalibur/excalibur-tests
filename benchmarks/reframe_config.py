@@ -66,19 +66,21 @@ site_configuration = {
             ]
         },  # end ARCHER2
         {
-            # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
-            'name': 'csd3-icelake',
-            'descr': 'CSD3 Icelake',
-            'hostnames': ['login-q-[0-9]+'],
+            # https://www.hpc.cam.ac.uk/index.php/high-performance-computing
+            'name': 'csd3-rocky8',
+            'descr': 'Cambridge Service for Data Driven Discovery - Rocky Linux 8 (RHEL8 compatible) nodes',
+            'hostnames': ['login-q-[0-4]+'],
             'modules_system': 'tmod4',
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Icelake compute nodes',
+                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/icelake.html
+                    'name': 'icelake',
+                    'descr': 'Ice Lake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
+                    'modules': ['rhel8/default-icl'],
                     'access': ['--partition=icelake', '--exclusive'],
-                    'environs': ['default', 'intel2020-csd3'],
+                    'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 76,
@@ -88,19 +90,21 @@ site_configuration = {
                     },
                 },
             ]
-        },  # end CSD3 Icelake
+        },  # end CSD3 Rocky 8
         {
-            # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
-            'name': 'csd3-cascadelake',
-            'descr': 'CSD3 Cascade lake',
-            'hostnames': ['login-e-[0-9]+'],
+            # https://www.hpc.cam.ac.uk/index.php/high-performance-computing
+            'name': 'csd3-centos7',
+            'descr': 'Cambridge Service for Data Driven Discovery - CentOS 7 (RHEL7 compatible) nodes',
+            'hostnames': ['login-p-[0-4]+'],
             'modules_system': 'tmod32',
             'partitions': [
                 {
-                    'name': 'compute-node',
-                    'descr': 'Skylake compute nodes',
+                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
+                    'name': 'cascadelake',
+                    'descr': 'Cascade Lake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
+                    'modules': ['rhel7/default-ccl'],
                     'access': ['--partition=cclake', '--exclusive'],
                     'environs': ['default'],
                     'max_jobs': 64,
@@ -112,7 +116,7 @@ site_configuration = {
                     }
                 },
             ]
-        },  # end CSD3 Cascade lake
+        },  # end CSD3 CentOS 7
         {
             # https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/#node-types
             'name': 'myriad',
@@ -667,20 +671,6 @@ site_configuration = {
         {
             'name': 'intel19-mpi-dial3',
             'modules':['intel-parallel-studio/cluster.2019.5'],
-            'cc': 'mpiicc',
-            'cxx': 'mpiicpc',
-            'ftn': 'mpiifort'
-        },
-        {
-            'name': 'intel2020-csd3',
-            'modules': ["intel/compilers/2020.4",
-                        "intel/mkl/2020.4",
-                        "intel/impi/2020.4/intel",
-                        "intel/libs/idb/2020.4",
-                        "intel/libs/tbb/2020.4",
-                        "intel/libs/ipp/2020.4",
-                        "intel/libs/daal/2020.4",
-                        "intel/bundles/complib/2020.4"],
             'cc': 'mpiicc',
             'cxx': 'mpiicpc',
             'ftn': 'mpiifort'
