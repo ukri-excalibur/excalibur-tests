@@ -15,4 +15,4 @@ spack:
       providers:
         mpi: [intel-oneapi-mpi] # Prefer Intel MPI
       compiler: [intel] # Prefer Intel Classic Compilers
-      target: [icelake]
+      require: 'target=icelake'

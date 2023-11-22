@@ -15,4 +15,8 @@ spack:
       providers:
         mpi: [intel-oneapi-mpi] # Prefer Intel MPI
       compiler: [intel] # Prefer Intel Classic Compilers
-      target: [sapphirerapids]
+      require: 'target=sapphirerapids'
+  concretizer:
+    targets:
+      # Allow targetting sapphirerapids when building on icelake login node
+      host_compatible: false
