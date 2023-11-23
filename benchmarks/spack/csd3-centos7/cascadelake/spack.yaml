@@ -157,6 +157,45 @@ spack:
       environment: {}
       extra_rpaths:
       - /usr/local/Cluster-Apps/intel/2020.4/compilers_and_libraries_2020.4.304/linux/lib
+  - compiler:
+      spec: dpcpp@=2022.0.0
+      paths:
+        cc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/icx
+        cxx: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/dpcpp
+        f77: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
+        fc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@=2021.5.0
+      paths:
+        cc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/intel64/icc
+        cxx: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/intel64/icpc
+        f77: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/intel64/ifort
+        fc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: oneapi@=2022.0.0
+      paths:
+        cc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/icx
+        cxx: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/icpx
+        f77: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
+        fc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
   packages:
     all:
       providers:
@@ -241,6 +280,10 @@ spack:
       externals:
       - spec: gmake@3.82
         prefix: /usr
+    gmp:
+      externals:
+      - spec: gmp@6.1.2
+        prefix: /usr/local/software/spack/spack-0.11.2/opt/spack/linux-rhel7-x86_64/gcc-5.4.0/gmp-6.1.2-sdvx5boug4isdzywdxgaqzwwor46yden
     groff:
       externals:
       - spec: groff@1.22.2
@@ -255,6 +298,10 @@ spack:
       externals:
       - spec: m4@1.4.16
         prefix: /usr
+    mpfr:
+      externals:
+      - spec: mpfr@4.0.1
+        prefix: /usr/local/software/spack/current/opt/spack/linux-rhel7-x86_64/gcc-5.4.0/mpfr-4.0.1-bernlygfdt6uk3fgrmwvyqssc7zzlwsw
     pkg-config:
       externals:
       - spec: pkg-config@0.27.1
@@ -285,7 +332,7 @@ spack:
         prefix: /usr/local/software/hdf5/1.10.3
       - spec: hdf5@1.10.5%gcc@9.3.0+mpi^openmpi
         prefix: /usr/local/Cluster-Apps/hdf5/openmpi/gcc/9.2/1.10.5
-      - spec: hdf5@1.10.5%intel+mpi^intel-mpi
+      - spec: hdf5@1.10.5 +mpi^intel-mpi
         prefix: /usr/local/Cluster-Apps/hdf5/mpi/intel/2019.3/1.10.5
       - spec: hdf5@1.12.0%gcc@9.3.0+mpi^openmpi
         prefix: /usr/local/Cluster-Apps/hdf5/openmpi/gcc/9.3/1.12.0
@@ -293,6 +340,10 @@ spack:
       externals:
       - spec: intel-mkl@2020.4.304
         prefix: /usr/local/Cluster-Apps/intel/2020.4/compilers_and_libraries_2020.4.304/linux/mkl
+    intel-oneapi-mkl:
+      externals:
+      - spec: intel-oneapi-mkl@2022.0.2
+        prefix: /usr/local/software/intel/oneapi/2022.1
     intel-mpi:
       externals:
       - spec: intel-mpi@2017.4.239
@@ -305,6 +356,10 @@ spack:
         prefix: /usr/local/Cluster-Apps/intel/2020.2/compilers_and_libraries_2020.2.254/linux/mpi/intel64
       - spec: intel-mpi@2020.4.304
         prefix: /usr/local/Cluster-Apps/intel/2020.4/compilers_and_libraries_2020.4.304/linux/mpi/intel64
+    intel-oneapi-mpi:
+      externals:
+      - spec: intel-oneapi-mpi@2021.5.1
+        prefix: /usr/local/software/intel/oneapi/2022.1
     openmpi:
       externals:
       - spec: openmpi@4.0.4
