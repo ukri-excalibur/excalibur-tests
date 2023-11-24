@@ -336,6 +336,10 @@ spack:
         prefix: /usr/local/Cluster-Apps/hdf5/mpi/intel/2019.3/1.10.5
       - spec: hdf5@1.12.0%gcc@9.3.0+mpi^openmpi
         prefix: /usr/local/Cluster-Apps/hdf5/openmpi/gcc/9.3/1.12.0
+    intel-oneapi-ipp:
+      externals:
+      - spec: intel-oneapi-ipp@2021.5.2
+        prefix: /usr/local/software/intel/oneapi/2022.1
     intel-mkl:
       externals:
       - spec: intel-mkl@2020.4.304
@@ -359,6 +363,10 @@ spack:
     intel-oneapi-mpi:
       externals:
       - spec: intel-oneapi-mpi@2021.5.1
+        prefix: /usr/local/software/intel/oneapi/2022.1
+    intel-oneapi-tbb:
+      externals:
+      - spec: intel-oneapi-tbb@2021.5.1
         prefix: /usr/local/software/intel/oneapi/2022.1
     openmpi:
       externals:

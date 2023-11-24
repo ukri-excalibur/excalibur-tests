@@ -106,6 +106,12 @@ packages:
       prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0-guxuvcpmykplbrr2e3af2yd7njqhau5e
     - spec: intel-oneapi-mpi@2021.6.0~external-libfabric~ilp64 %gcc@11.3.0
       prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/intel-oneapi-mpi-2021.6.0-2yn3govbxvgmaanmi4wpwjrqa2b3lthl
+  intel-oneapi-tbb:
+    externals:
+    - spec: intel-oneapi-tbb@2021.6.0 %intel@2021.6.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/intel-2021.6.0/intel-oneapi-tbb-2021.6.0-2kqmsptsinryemz5gyirbg5umohppbev
+    - spec: intel-oneapi-tbb@2021.6.0 %gcc@11.3.0
+      prefix: /usr/local/software/spack/spack-rhel8-20210927/opt/spack/linux-rocky8-icelake/gcc-11.3.0/intel-oneapi-tbb-2021.6.0-wf2uirslvvxv6vb6fsk2cd7dyyvnrvgb
   libtool:
     externals:
     - spec: libtool@2.4.6
