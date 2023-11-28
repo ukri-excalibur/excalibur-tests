@@ -139,7 +139,7 @@ site_configuration = {
                     'max_jobs': 64,
                     'processor': {
                         'num_cpus': 56,
-                        'num_cpus_per_core': 2,
+                        'num_cpus_per_core': 1,
                         'num_sockets': 2,
                         'num_cpus_per_socket': 28,
                     }
