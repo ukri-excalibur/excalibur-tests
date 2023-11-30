@@ -237,14 +237,28 @@ def test_high_level_script(run_sombrero):
     assert len(df) == 2
 
     # check correct or filtering
-    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]}, "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]], "x_axis": {"value": "cpus_per_task", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "cpus_per_task": "int", "flops_value": "float", "flops_unit": "str"}})
+    df = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]}, "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}}, "column_types": {"tasks": "int", "cpus_per_task": "int", "flops_value": "float", "flops_unit": "str"}})
     # check returned subset is as expected
     assert len(df) == 4
 
     # check correct column scaling
     dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"column": {"name": "OMP_NUM_THREADS"}}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int", "OMP_NUM_THREADS": "int"}})
     # check flops values are halved compared to previous df
-    assert (dfs["flops_value"] == df[df["cpus_per_task"] == 2]["flops_value"]/2).all()
+    assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
+
+    # check correct column + series scaling
+    dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": []}, "series": [["cpus_per_task", 1], ["cpus_per_task", 2]], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"column": {"name": "flops_value", "series": 0}}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
+    assert (dfs[dfs["cpus_per_task"] == 1]["flops_value"].values ==
+            df[df["cpus_per_task"] == 1]["flops_value"].values /
+            df[df["cpus_per_task"] == 1]["flops_value"].values).all()
+    assert (dfs[dfs["cpus_per_task"] == 2]["flops_value"].values ==
+            df[df["cpus_per_task"] == 2]["flops_value"].values /
+            df[df["cpus_per_task"] == 1]["flops_value"].values).all()
+
+    # check correct column + series + x value scaling
+    dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [], "or": []}, "series": [["cpus_per_task", 1], ["cpus_per_task", 2]], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"column": {"name": "flops_value", "series": 0, "x_value": 2}}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
+    assert (dfs["flops_value"].values == df["flops_value"].values /
+            df[(df["cpus_per_task"] == 1) & (df["tasks"] == 2)]["flops_value"].iloc[0]).all()
 
     # check correct custom scaling
     dfs = post_.run_post_processing(sombrero_log_path, {"title": "Title", "filters": {"and": [["cpus_per_task", "==", 2]], "or": []}, "series": [], "x_axis": {"value": "tasks", "units": {"custom": None}}, "y_axis": {"value": "flops_value", "units": {"column": "flops_unit"}, "scaling": {"custom": 2}}, "column_types": {"tasks": "int", "flops_value": "float", "flops_unit": "str", "cpus_per_task": "int"}})
