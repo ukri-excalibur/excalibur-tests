@@ -201,20 +201,13 @@ class PostProcessing:
             else:
                 df[mask] = self.transform_axis(df[mask], mask, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
 
-        # FIXME: sorted dataframe doesn't translate to sorted bokeh graph
-        if config["x_axis"].get("sorting"):
-            ascending = None
-            if config["x_axis"]["sorting"] == "ascending":
-                ascending = True
-            elif config["x_axis"]["sorting"] == "descending":
-                ascending = False
-            if ascending is not None:
-                # sort x values
-                df.sort_values([config["x_axis"]["value"]], ascending=ascending, inplace=True, ignore_index=True)
-                # NOTE: currently assuming there can only be one series column
-                if series_columns:
-                    # sort series column
-                    df.sort_values(series_columns[0], ascending=ascending, inplace=True, ignore_index=True)
+        # sort series in ascending order
+        # NOTE: currently assuming there can only be one series column
+        if series_columns:
+            # NOTE: don't use ignore_index=True, this results in unexpected behaviour
+            df.sort_values(series_columns[0], inplace=True)
+            # reset index after sorting
+            df.index = range(len(df.index))
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -279,6 +272,11 @@ class PostProcessing:
         plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
                                             + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype) else ""))],
                                  formatters={"@{0}_mean".format(y_column) : "printf"}))
+
+        # sort x-axis values in ascending order (otherwise default sort is descending)
+        if x_axis.get("sort"):
+            if x_axis["sort"] == "ascending":
+                plot.x_range.factors = sorted(plot.x_range.factors, key=lambda x: x[0], reverse=True)
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
