@@ -18,6 +18,7 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
+from titlecase import titlecase
 
 class PostProcessing:
 
@@ -588,15 +589,16 @@ def get_axis_info(df: pd.DataFrame, axis, series_filters):
             scaling_column = axis["scaling"]["column"]["name"]
             series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            series_col = "{0} {1}".format(series_filters[series_index][2], scaling_column) \
+            # FIXME: make scaling label more clear
+            series_col = "{0} in {1}".format(series_filters[series_index][2], scaling_column) \
                          if series_index is not None else scaling_column
             scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
         else:
             scaling = str(axis["scaling"].get("custom"))
 
     # determine axis label
-    label = "{0}{1}{2}".format(col_name.replace("_", " ").title(),
-                               " Scaled by {0}".format(scaling.replace("_", " ").title()) if scaling else "",
+    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
+                               titlecase(" Scaled by {0}".format(scaling.replace("_", " "))) if scaling else "",
                                " ({0})".format(units) if units else "")
 
     return col_name, label
