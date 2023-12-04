@@ -171,6 +171,14 @@ class PostProcessing:
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
+        sorting_columns = [config["x_axis"]["value"]]
+        # sort x-axis values and series in ascending order
+        if series_columns:
+            # NOTE: currently assuming there can only be one series column
+            sorting_columns.append(series_columns[0])
+        # sorting here is necessary to ensure correct scaling alignment
+        df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+
         scaling_column = None
         scaling_series_mask = None
         scaling_x_value_mask = None
@@ -200,14 +208,6 @@ class PostProcessing:
             # apply data transformation to all data
             else:
                 df[mask] = self.transform_axis(df[mask], mask, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
-
-        # sort series in ascending order
-        # NOTE: currently assuming there can only be one series column
-        if series_columns:
-            # NOTE: don't use ignore_index=True, this results in unexpected behaviour
-            df.sort_values(series_columns[0], inplace=True)
-            # reset index after sorting
-            df.index = range(len(df.index))
 
         print("Selected dataframe:")
         print(df[columns][mask])
@@ -386,7 +386,7 @@ class PostProcessing:
                 scaling_mask &= scaling_x_value_mask
 
             scaling_val = scaling_column[scaling_mask].iloc[0] if len(scaling_column[scaling_mask]) == 1 \
-                            else scaling_column[scaling_mask].values
+                          else scaling_column[scaling_mask].values
 
             # FIXME: add a check that the masked scaling column has the same number of values
             # as the masked df (unless there is only one scaling value)
