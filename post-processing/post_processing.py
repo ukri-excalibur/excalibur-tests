@@ -243,6 +243,8 @@ class PostProcessing:
         for f in series_filters:
             if f[0] not in groups:
                 groups.append(f[0])
+        # keep original x-axis dtype for sorting
+        x_col_dtype = df[x_column].dtype
         # all x-axis data treated as categorical
         for g in groups:
             df[g] = df[g].astype(str)
@@ -274,9 +276,13 @@ class PostProcessing:
                                  formatters={"@{0}_mean".format(y_column) : "printf"}))
 
         # sort x-axis values in ascending order (otherwise default sort is descending)
+        reverse = False
         if x_axis.get("sort"):
             if x_axis["sort"] == "ascending":
-                plot.x_range.factors = sorted(plot.x_range.factors, key=lambda x: x[0], reverse=True)
+                reverse = True
+        plot.x_range.factors = sorted(plot.x_range.factors,
+                                      key=lambda x: pd.Series(x[0], dtype=x_col_dtype).iloc[0],
+                                      reverse=reverse)
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
