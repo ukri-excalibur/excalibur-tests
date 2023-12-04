@@ -7,34 +7,18 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
-from apps.sombrero import case_filter
+from benchmarks.apps.sombrero import case_filter
 from benchmarks.modules.reframe_extras import scaling_config
 from benchmarks.modules.utils import SpackTest
 
 
 @rfm.simple_test
-class SombreroBuild(SpackTest, rfm.CompileOnlyRegressionTest):
-    descr = "Build SOMBRERO"
+class SombreroBenchmarkBase(SpackTest):
     valid_systems = ['-gpu']
-    valid_prog_environs = ['default']
-    spack_spec = 'sombrero@2021-08-16'
-
-    @run_before('sanity')
-    def set_sanity_patterns(self):
-        self.sanity_patterns = sn.assert_not_found("error", self.stderr)
-
-
-@rfm.simple_test
-class SombreroBenchmarkBase(SpackTest, rfm.RunOnlyRegressionTest):
-    valid_systems = []
     valid_prog_environs = ['default']
     time_limit = '3m'
     spack_spec = 'sombrero@2021-08-16'
     theory_id = parameter(range(1, 7))
-
-    @run_after('init')
-    def inject_dependencies(self):
-        self.depends_on("SombreroBuild", udeps.fully)
 
     @run_after('init')
     def set_executable(self):
