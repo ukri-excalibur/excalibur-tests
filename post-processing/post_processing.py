@@ -280,9 +280,9 @@ class PostProcessing:
         if x_axis.get("sort"):
             if x_axis["sort"] == "ascending":
                 reverse = True
-        plot.x_range.factors = sorted(plot.x_range.factors,
-                                      key=lambda x: pd.Series(x[0], dtype=x_col_dtype).iloc[0],
-                                      reverse=reverse)
+        plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
+                                      key=lambda x: pd.Series(x[0] if len(groups) > 1 else x,
+                                                              dtype=x_col_dtype).iloc[0])
 
         # create legend outside plot
         plot.add_layout(Legend(), "right")
