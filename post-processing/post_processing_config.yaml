@@ -1,4 +1,11 @@
-title: "Performance vs number of tasks and CPUs_per_task"
+# Plot title
+title: Example Plot
+
+# Axes must have a value specified with a perflog column name or a
+# benchmark parameter name (denoted by a "%" in the perflog "info"
+# and "display_name" fields, if it exists).
+# Units can either be specified with a perflog column name
+# or a custom label (including null (i.e. None) if units are N/A).
 
 x_axis:
   value: "tasks"
@@ -10,6 +17,14 @@ y_axis:
   units:
     column: "flops_unit"
 
-filters: [["tags", "==", "example"]]
+# Optional row filters (specify an empty list [] if none are required)
+# Filter format: [column_name, operator, value]
+filters: [["system", "==", "default"]]
 
+# Optional setting to display several plots in the same graph.
+# Number of series, if used, must be >=2 (specify an empty list [] if there is only one series).
+# Do not use more than two distinct column names in this list -
+# bokeh can only handle 3 x-axis groups (2 series columns + 1 x-axis column).
+# NOTE: For now, only one distinct column name is supported.
+# Series format: [column_name, value]
 series: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]

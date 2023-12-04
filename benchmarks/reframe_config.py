@@ -66,31 +66,7 @@ site_configuration = {
             ]
         },  # end ARCHER2
         {
-            # https://www.hpc.cam.ac.uk/systems/peta-4
-            'name': 'csd3-skylake',
-            'descr': 'CSD3 Skylake',
-            'hostnames': ['login-e-[0-9]+'],
-            'modules_system': 'tmod32',
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'descr': 'Skylake compute nodes',
-                    'scheduler': 'slurm',
-                    'launcher': 'mpirun',
-                    'access': ['--partition=skylake'],
-                    'environs': ['default'],
-                    'max_jobs': 64,
-                    'processor': {
-                        'num_cpus': 32,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 16,
-                    }
-                },
-            ]
-        },  # end CSD3 Skylake
-        {
-            # https://www.hpc.cam.ac.uk/systems/peta-4
+            # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
             'name': 'csd3-icelake',
             'descr': 'CSD3 Icelake',
             'hostnames': ['login-q-[0-9]+'],
@@ -101,7 +77,7 @@ site_configuration = {
                     'descr': 'Icelake compute nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=icelake'],
+                    'access': ['--partition=icelake', '--exclusive'],
                     'environs': ['default', 'intel2020-csd3'],
                     'max_jobs': 64,
                     'processor': {
@@ -113,6 +89,30 @@ site_configuration = {
                 },
             ]
         },  # end CSD3 Icelake
+        {
+            # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
+            'name': 'csd3-cascadelake',
+            'descr': 'CSD3 Cascade lake',
+            'hostnames': ['login-e-[0-9]+'],
+            'modules_system': 'tmod32',
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Skylake compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'access': ['--partition=cclake', '--exclusive'],
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 56,
+                        'num_cpus_per_core': 2,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 28,
+                    }
+                },
+            ]
+        },  # end CSD3 Cascade lake
         {
             # https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/#node-types
             'name': 'myriad',

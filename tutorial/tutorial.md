@@ -8,7 +8,7 @@
 }
 </style>
 
-# Benchmarking Tutorial
+# Using ReFrame for reproducible and portable performance benchmarking
 
 In this tutorial you will set up the benchmarking framework on the [ARCHER2](https://www.archer2.ac.uk) supercomputer, build and run example benchmarks, create a new benchmark and explore benchmark data.
 
@@ -18,10 +18,12 @@ In this tutorial you will set up the benchmarking framework on the [ARCHER2](htt
 
 To complete this tutorial, you need to [connect to ARCHER2 via ssh](https://docs.archer2.ac.uk/user-guide/connecting/). You will need
 
-1. An ARCHER2 account. You can [request a new account](https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2) if you haven't got one you can use. Use the project code `ta122` to request your account. You can use an existing ARCHER2 account to complete this workshop.
+1. An ARCHER2 account. You can [request a new account](https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2) if you haven't got one you can use. Use the project code `ta131` to request your account. You can use an existing ARCHER2 account to complete this workshop.
 2. A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see [Connecting to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal) for more information and Windows instructions.
 
 ----
+
+## ssh
 
 Once you have the above prerequisites, you have to [generate an ssh key pair](https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs) and [upload the public key to SAFE](https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe). 
 
@@ -30,6 +32,40 @@ When you are done, check that you are able to connect to ARCHER2 with
 ```bash
 ssh username@login.archer2.ac.uk
 ```
+
+----
+
+## ARCHER2 MFA
+
+ARCHER2 is deploying mandatory multi-factor authentication (MFA) **Today**!
+
+This was deployed between 0900 and 1000 this morning (06/12/2023).
+
+This means that once the switch has happened, SSH keys will work as before, but instead of your ARCHER2 password, a Time-based One-Time Password (TOTP) code will be requested. 
+
+TOTP is a six digit number, refreshed every 30 seconds, which is generated typically by an app running on your mobile phone or laptop.
+
+Thus authentication will require two factors:
+
+1) SSH key and passphrase
+2) TOTP
+
+----
+
+## ARCHER2 MFA Docs and Support
+
+The SAFE documentation which details how to set up MFA on machine accounts (ARCHER2) is available at:
+https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account
+
+The documentation includes how to set this up without the need of a personal smartphone device.
+
+We have also updated the ARCHER2 documentation with details of the new connection process:
+https://docs.archer2.ac.uk/user-guide/connecting-totp/
+https://docs.archer2.ac.uk/quick-start/quickstart-users-totp/
+
+If there are any issues or concerns please contact us at: 
+
+support@archer2.ac.uk
 
 ---
 
@@ -41,9 +77,9 @@ ssh username@login.archer2.ac.uk
 
 We are going to use `python` and the `pip` package installer to install and run the framework. Load the `cray-python` module to get a python version that fills the requirements.
 ```bash
-$ module load cray-python
+module load cray-python
 ```
-You can check with `python3 --version` that your python version is `3.8` or greater. **[JQ - `python` also works]** You will have to load this module every time you login.
+You can check with `python3 --version` that your python version is `3.8` or greater. You will have to load this module every time you login.
 
 (at the time of writing, the default version was `3.9.13`).
 
@@ -54,7 +90,7 @@ You can check with `python3 --version` that your python version is `3.8` or grea
 On ARCHER2, the compute nodes do not have access to your home directory, therefore it is important to install everything in a [work file system](https://docs.archer2.ac.uk/user-guide/data/#work-file-systems). Change to the work directory with
 
 ```bash
-$ cd /work/ta122/ta122/${USER}
+cd /work/ta131/ta131/${USER}
 ```
 
 :::warning
@@ -68,7 +104,7 @@ If you are tempted to use a symlink here, ensure you use `cd -P` when changing d
 In the work directory, clone the [excalibur-tests](https://github.com/ukri-excalibur/excalibur-tests) repository with
 
 ```bash
-$ git clone https://github.com/ukri-excalibur/excalibur-tests.git
+git clone https://github.com/ukri-excalibur/excalibur-tests.git
 ```
 
 ----
@@ -76,8 +112,8 @@ $ git clone https://github.com/ukri-excalibur/excalibur-tests.git
 ## Create a virtual environment
 Before proceeding to install the software, we recommend creating a python virtual environment to avoid clashes with other installed python packages. You can do this with
 ```bash
-$ python3 -m venv excalibur-env
-$ source excalibur-env/bin/activate
+python3 -m venv excalibur-env
+source excalibur-env/bin/activate
 ```
 
 You should now see the name of the environment in parenthesis your terminal prompt, for example:
@@ -96,9 +132,11 @@ pip install --upgrade pip
 ```
 then install the framework with
 ```bash
-$ pip install -e ./excalibur-tests
+pip install -e ./excalibur-tests[post-processing]
 ```
-We used the `editable` flag `-e` because later in the tutorial you will edit the repository to develop a new benchmark. 
+We used the `editable` flag `-e` because later in the tutorial you will edit the repository to develop a new benchmark.
+
+We included optional dependencies with `[post-processing]`. We will need those in the postprocessing section.
 
 ----
 
@@ -118,13 +156,13 @@ export RFM_USE_LOGIN_SHELL="true"
 Finally, we need to install the `spack` package manager. The framework will use it to build the benchmarks. Clone spack with
 
 ```bash
-$ git clone -c feature.manyFiles=true https://github.com/spack/spack.git
+git clone -c feature.manyFiles=true https://github.com/spack/spack.git
 ```
 
 Then configure `spack` with
 
 ```bash
-$ source ./spack/share/spack/setup-env.sh
+source ./spack/share/spack/setup-env.sh
 ```
 
 Spack should now be in the default search path.
@@ -137,9 +175,9 @@ You can check everything has been installed successfully by checking that `spack
 
 ```bash
 $ spack --version
-0.19.0.dev0 (a8b1314d188149e696eb8e7ba3e4d0de548f1894)
+0.22.0.dev0 (88e738c34346031ce875fdd510dd2251aa63dad7)
 $ reframe --version
-4.3.0
+4.4.1
 $ ls $RFM_CONFIG_FILES
 /work/d193/d193/tk-d193/excalibur-tests/benchmarks/reframe_config.py
 ```
@@ -173,9 +211,9 @@ reframe -c <path/to/benchmark> -r
 
 In addition, on ARCHER2, you have to provide the quality of service (QoS) type for your job to ReFrame on the command line with `-J`. Use the "short" QoS to run the sombrero example with
 ```bash
-$ reframe -c excalibur-tests/benchmarks/examples/sombrero -r -J'--qos=short'
+reframe -c excalibur-tests/benchmarks/examples/sombrero -r -J'--qos=short'
 ```
-You may notice you actually ran four benchmarks with that single command! That is because the benchmark is parametrized. We will talk about it in the next section.
+You may notice you actually ran four benchmarks with that single command! That is because the benchmark is parametrized. We will talk about this in the next section.
 
 ----
 
@@ -233,6 +271,8 @@ You can find the performance log file from the benchmark in `perflogs/`. The per
 
 Now let's look at the Benchmark performance results, and create a plot to visualise them.
 
+**NOTE:** The post-processing package is currently under heavy development. Please refer to the latest `post-processing/README.md` and `post-processing/post_processing_config.yaml` to use it.
+
 ----
 
 ## The perflog
@@ -245,7 +285,11 @@ job_completion_time|version|info|jobid|num_tasks|num_cpus_per_task|num_tasks_per
 2023-08-25T11:23:48|reframe 4.3.2|SombreroBenchmark %tasks=1 %cpus_per_task=1 /52e1ce98 @archer2:compute-node+default|4323434|1|1|1|null|0.67|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=1 %cpus_per_task=1|archer2|compute-node|default|{}|{"OMP_NUM_THREADS": "1"}|example
 2023-08-25T11:23:48|reframe 4.3.2|SombreroBenchmark %tasks=2 %cpus_per_task=1 /c52a123d @archer2:compute-node+default|4323432|2|1|1|null|1.29|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=2 %cpus_per_task=1|archer2|compute-node|default|{}|{"OMP_NUM_THREADS": "1"}|example
 ```
-Every time the same benchmark is run, a line is appended in this perflog. The perflog contains
+Every time the same benchmark is run, a line is appended in this perflog.
+
+----
+
+The perflog contains
 - Some general info about the benchmark run, including system, spack, and environment info.
 - The Figure(s) Of Merit (FOM) value, units, reference value, and lower and upper limits (`flops` in this case)
 - The `display_name` field, which encodes the benchmark name and parameters (`SombreroBenchmark %tasks=... %cpus_per_task=...` in this case)
@@ -257,13 +301,14 @@ Every time the same benchmark is run, a line is appended in this perflog. The pe
 ## The plotting configuration file
 
 
-There are tools to plot the FOMs of benchmarks against any of the other parameters in the perflog. This generic plotting is driven by a configuration YAML file. Let's make one, and save it in `excalibur-tests/post-processing/post_processing_config.yaml`.
+The framework contains tools to plot the FOMs of benchmarks against any of the other parameters in the perflog. This generic plotting is driven by a configuration YAML file. Let's make one, and save it in `excalibur-tests/post-processing/post_processing_config.yaml`.
 
 The file needs to include
 - Plot title 
 - Axis information
 - Data series
 - Filters
+- Data types
 
 ----
 
@@ -288,7 +333,7 @@ y_axis:
 
 ## Data series
 
-Display several plots in the same graph and group x-axis data by specified column values. Specify an empty list if the perflog only has one series. In our sombrero example, we have two parameters, Therefore we need to either filter down to one, or make them separate series. Let's use separate series:
+Display several data series in the same plot and group x-axis data by specified column values. Specify an empty list if you only want one series plotted. In our sombrero example, we have two parameters. Therefore we need to either filter down to one, or make them separate series. Let's use separate series:
 
 Format: `[column_name, value]`
 ```yaml
@@ -297,7 +342,6 @@ series: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]
 **NOTE:** Currently, only one distinct `column_name` is supported. In the future, a second one will be allowed to be added. But in any case, unlimited number of series can be plotted for the same `column_name` but different `value`.
 
 ----
-
 
 ## Filtering
 
@@ -309,11 +353,29 @@ Accepted operators: "==", "!=", "<", ">", "<=", ">="
 filters: []
 ```
 
-**NOTE:** I need to use the above filter because my perflog file is a bit dirty, after re-running the benchmarks a few times. Feel free to experiment with a dirtier perflog file (eg. the one in `excalibur-tests/post-processing` or a folder with several perflog files.
+**NOTE:** After re-running the benchmarks a few times your perflog will get populated with multiple lines and you'll have to filter down to what you want to plot. Feel free to experiment with a dirtier perflog file (eg. the one in `excalibur-tests/tutorial`) or a folder with several perflog files.
+
+----
+
+## Data types
+
+All columns used in axes, filters, and series must have a user-specified type for the data they contain. This would be the pandas dtype, e.g. `str/string/object`, `int/int64`, `float/float64`, `datetime/datetime64`.
+```yaml
+column_types:
+  tasks: "int"
+  flops_value: "float"
+  flops_unit: "str"
+  cpus_per_task: "int"
+```
 
 ----
 
 ## Run the postprocessing
+
+The postprocessing package is an optional dependency of the framework. Install it with
+```bash
+pip install -e ./excalibur-tests/[post-processing]
+```
 
 We can now run the postprocessing with
 ```bash
@@ -418,6 +480,7 @@ executable = 'stream_c.exe'
 num_tasks = 1
 num_cpus_per_task = 128
 time_limit = '5m'
+use_multithreading = False
 ```
 
 ----
@@ -487,34 +550,33 @@ reframe -c excalibur-tests/benchmarks/apps/stream/ -r --system archer2 -J'--qos=
 
 ## Sample Output
 ```bash=
-reframe -c apps/stream/ -r --system archer2 -J'--qos=short'
+$ reframe -c excalibur-tests/benchmarks/examples/stream/ -r -J'--qos=short'
 [ReFrame Setup]
-  version:           4.3.0
-  command:           '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-env/bin/reframe -c apps/stream/ -r --system archer2 -J--qos=short'
-  launched by:       tk-d193@ln04
-  working directory: '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/rsecon-demo'
-  settings files:    '<builtin>', '/work/d193/d193/tk-d193/excalibur-tests/benchmarks/reframe_config.py'
-  check search path: '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/rsecon-demo/apps/stream'
-  stage directory:   '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/rsecon-demo/stage'
-  output directory:  '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/rsecon-demo/output'
-  log files:         '/tmp/rfm-70arere5.log'
+  version:           4.4.1
+  command:           '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/demo-env/bin/reframe -c excalibur-tests/benchmarks/examples/stream/ -r -J--qos=short'
+  launched by:       tk-d193@ln03
+  working directory: '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo'
+  settings files:    '<builtin>', '/work/d193/d193/tk-d193/ciuk-demo/excalibur-tests/benchmarks/reframe_config.py'
+  check search path: '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/excalibur-tests/benchmarks/examples/stream'
+  stage directory:   '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/stage'
+  output directory:  '/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/output'
+  log files:         '/tmp/rfm-z87x4min.log'
 
 [==========] Running 1 check(s)
-[==========] Started on Mon Jul 10 15:55:01 2023 
+[==========] Started on Thu Nov 30 14:50:21 2023 
 
 [----------] start processing checks
 [ RUN      ] StreamBenchmark /8aeff853 @archer2:compute-node+default
 [       OK ] (1/1) StreamBenchmark /8aeff853 @archer2:compute-node+default
-P: Copy: 842018.4 MB/s (r:0, l:None, u:None)
-P: Scale: 808540.5 MB/s (r:0, l:None, u:None)
-P: Add: 959612.0 MB/s (r:0, l:None, u:None)
-P: Triad: 941658.5 MB/s (r:0, l:None, u:None)
+P: Copy: 1380840.8 MB/s (r:0, l:None, u:None)
+P: Scale: 1369568.7 MB/s (r:0, l:None, u:None)
+P: Add: 1548666.1 MB/s (r:0, l:None, u:None)
+P: Triad: 1548666.1 MB/s (r:0, l:None, u:None)
 [----------] all spawned checks have finished
 
 [  PASSED  ] Ran 1/1 test case(s) from 1 check(s) (0 failure(s), 0 skipped, 0 aborted)
-[==========] Finished on Mon Jul 10 15:55:18 2023 
-Log file(s) saved in '/tmp/rfm-70arere5.log'
-
+[==========] Finished on Thu Nov 30 14:51:13 2023 
+Log file(s) saved in '/tmp/rfm-z87x4min.log'
 ```
 
 ----
@@ -547,36 +609,35 @@ def __init__(self):
 [ RUN      ] StreamBenchmark %array_size=16000000 /abc01230 @archer2:compute-node+default
 [ RUN      ] StreamBenchmark %array_size=8000000 /51d83d77 @archer2:compute-node+default
 [ RUN      ] StreamBenchmark %array_size=4000000 /8399bc0b @archer2:compute-node+default
-[       OK ] (1/5) StreamBenchmark %array_size=16000000 /abc01230 @archer2:compute-node+default
-P: Copy: 235935.4 MB/s (r:0, l:None, u:None)
-P: Scale: 229579.2 MB/s (r:0, l:None, u:None)
-P: Add: 164113.8 MB/s (r:0, l:None, u:None)
-P: Triad: 160868.2 MB/s (r:0, l:None, u:None)
-[       OK ] (2/5) StreamBenchmark %array_size=8000000 /51d83d77 @archer2:compute-node+default
-P: Copy: 722571.9 MB/s (r:0, l:None, u:None)
-P: Scale: 795364.3 MB/s (r:0, l:None, u:None)
-P: Add: 845910.1 MB/s (r:0, l:None, u:None)
-P: Triad: 857621.3 MB/s (r:0, l:None, u:None)
-[       OK ] (3/5) StreamBenchmark %array_size=32000000 /e16f9017 @archer2:compute-node+default
-P: Copy: 125276.1 MB/s (r:0, l:None, u:None)
-P: Scale: 113126.7 MB/s (r:0, l:None, u:None)
-P: Add: 100628.7 MB/s (r:0, l:None, u:None)
-P: Triad: 104038.0 MB/s (r:0, l:None, u:None)
+[       OK ] (1/5) StreamBenchmark %array_size=32000000 /e16f9017 @archer2:compute-node+default
+P: Copy: 343432.5 MB/s (r:0, l:None, u:None)
+P: Scale: 291065.8 MB/s (r:0, l:None, u:None)
+P: Add: 275577.5 MB/s (r:0, l:None, u:None)
+P: Triad: 247425.0 MB/s (r:0, l:None, u:None)
+[       OK ] (2/5) StreamBenchmark %array_size=16000000 /abc01230 @archer2:compute-node+default
+P: Copy: 2538396.7 MB/s (r:0, l:None, u:None)
+P: Scale: 2349544.5 MB/s (r:0, l:None, u:None)
+P: Add: 2912500.4 MB/s (r:0, l:None, u:None)
+P: Triad: 2886402.8 MB/s (r:0, l:None, u:None)
+[       OK ] (3/5) StreamBenchmark %array_size=8000000 /51d83d77 @archer2:compute-node+default
+P: Copy: 1641807.1 MB/s (r:0, l:None, u:None)
+P: Scale: 1362616.5 MB/s (r:0, l:None, u:None)
+P: Add: 1959382.9 MB/s (r:0, l:None, u:None)
+P: Triad: 1940497.3 MB/s (r:0, l:None, u:None)
 [       OK ] (4/5) StreamBenchmark %array_size=64000000 /bbfd0e71 @archer2:compute-node+default
-P: Copy: 130526.3 MB/s (r:0, l:None, u:None)
-P: Scale: 106487.7 MB/s (r:0, l:None, u:None)
-P: Add: 104170.9 MB/s (r:0, l:None, u:None)
-P: Triad: 106335.6 MB/s (r:0, l:None, u:None)
+P: Copy: 255622.4 MB/s (r:0, l:None, u:None)
+P: Scale: 235186.0 MB/s (r:0, l:None, u:None)
+P: Add: 204853.9 MB/s (r:0, l:None, u:None)
+P: Triad: 213072.2 MB/s (r:0, l:None, u:None)
 [       OK ] (5/5) StreamBenchmark %array_size=4000000 /8399bc0b @archer2:compute-node+default
-P: Copy: 735439.6 MB/s (r:0, l:None, u:None)
-P: Scale: 791845.0 MB/s (r:0, l:None, u:None)
-P: Add: 951898.8 MB/s (r:0, l:None, u:None)
-P: Triad: 949653.7 MB/s (r:0, l:None, u:None)
+P: Copy: 1231355.3 MB/s (r:0, l:None, u:None)
+P: Scale: 1086783.2 MB/s (r:0, l:None, u:None)
+P: Add: 1519446.0 MB/s (r:0, l:None, u:None)
+P: Triad: 1548666.1 MB/s (r:0, l:None, u:None)
 [----------] all spawned checks have finished
 
 [  PASSED  ] Ran 5/5 test case(s) from 5 check(s) (0 failure(s), 0 skipped, 0 aborted)
-[==========] Finished on Wed Aug 23 13:25:12 2023 
-
+[==========] Finished on Thu Nov 30 14:34:48 2023 
 ```
 :::
 
@@ -589,31 +650,15 @@ ReFrame can automate checking that the results fall within an expected range. We
 ```python
 reference = {
     'archer2': {
-        'Copy':  (130000, -0.25, 0.25, 'MB/s'),
-        'Scale': (105000, -0.25, 0.25, 'MB/s'),
-        'Add':   (105000, -0.25, 0.25, 'MB/s'),
-        'Triad': (105000, -0.25, 0.25, 'MB/s')
+        'Copy':  (260000, -0.25, 0.25, 'MB/s'),
+        'Scale': (230000, -0.25, 0.25, 'MB/s'),
+        'Add':   (210000, -0.25, 0.25, 'MB/s'),
+        'Triad': (210000, -0.25, 0.25, 'MB/s')
     }
 }
 ```
 
 > The performance reference tuple consists of the reference value, the lower and upper thresholds expressed as fractional numbers relative to the reference value, and the unit of measurement. If any of the thresholds is not relevant, None may be used instead. Also, the units in this reference variable are entirely optional, since they were already provided through the @performance_function decorator.
-
-----
-
-## (extra) Tuning the performance
-
-ReFrame allows you to [modify the parallel launcher command](https://reframe-hpc.readthedocs.io/en/stable/tutorial_advanced.html#modifying-the-parallel-launcher-command). Doing it too generally may break portability of benchmarks, and is not advised. However, we can target the `archer2` system specifically to get better performance on ARCHER2 by using
-
-```python
-@run_before('run')
-def set_cpu_binding(self):
-    if self.current_system.name == 'archer2':
-        self.job.launcher.options = ['--distribution=block:block --hint=nomultithread']
-```
-Modify the reference values to match the improved performance.
-
-Note: launcher options don't get recored in ReFrame logs
 
 ----
 
