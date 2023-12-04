@@ -1,5 +1,5 @@
-# Demo class for running the amg benchmark
-# RSECon2023 Reframe workshop
+# Demo class for running the stream benchmark
+# Used for tutorial
 
 # Import modules from reframe and excalibur-tests
 import reframe as rfm
@@ -11,7 +11,7 @@ class StreamBenchmark(SpackTest):
 
     # Run configuration
     ## Mandatory ReFrame setup
-    valid_systems = ['archer2']
+    valid_systems = ['*']
     valid_prog_environs = ['default']
 
     ## Executable
@@ -27,36 +27,31 @@ class StreamBenchmark(SpackTest):
         'OMP_NUM_THREADS': f'{num_cpus_per_task}',
         'OMP_PLACES': 'cores'
     }
+    use_multithreading = False
 
-    ## Reference performance values
+    ## Reference performance values for Archer2
     reference = {
         'archer2': {
-            'Copy':  (130000, -0.25, 0.25, 'MB/s'),
-            'Scale': (100000, -0.25, 0.25, 'MB/s'),
-            'Add':   (100000, -0.25, 0.25, 'MB/s'),
-            'Triad': (100000, -0.25, 0.25, 'MB/s')
+            'Copy':  (260000, -0.25, 0.25, 'MB/s'),
+            'Scale': (200000, -0.25, 0.25, 'MB/s'),
+            'Add':   (200000, -0.25, 0.25, 'MB/s'),
+            'Triad': (200000, -0.25, 0.25, 'MB/s')
         }
     }
 
     ## Build configuration
     ## Comment/uncomment the appropriate one
-    
-    # Basic build configuration
-    spack_spec = 'stream@5.10 +openmp'
-    
-    # Build configuration with optimized array size
+
+    # # Basic build configuration with OpenMP threads
+    # spack_spec = 'stream@5.10 +openmp'
+
+    # Build configuration with large array size to avoid caching
     spack_spec = 'stream@5.10 +openmp stream_array_size=64000000'
 
-    # Parametrized build configuration
-    array_size = parameter(int(i) for i in [4e6,8e6,16e6,32e6,64e6])
-    def __init__(self):
-        self.spack_spec = f"stream@5.10 +openmp stream_array_size={self.array_size}"
-
-    # Performance tuning by passing system specific scheduler options
-    @run_before('run')
-    def set_cpu_binding(self):
-        if self.current_system.name == 'archer2':
-            self.job.launcher.options = ['--distribution=block:block --hint=nomultithread']
+    # # Build configuration parametrized to scan over array sizes
+    # array_size = parameter(int(i) for i in [8e6,16e6,32e6,64e6,128e6])
+    # def __init__(self):
+    #     self.spack_spec = f"stream@5.10 +openmp stream_array_size={self.array_size}"
 
     # Sanity check
     @sanity_function
