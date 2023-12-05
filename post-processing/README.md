@@ -43,7 +43,7 @@ Before running post-processing, create a config file including all necessary inf
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
     - `scaling` - (Optional.) Scale axis values by either a column or a custom value.
-    - `sort` - (Optional.) Sort categorical x-axis in ascending order (otherwise values are sorted in descending order by default).
+    - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
 - `filters` - (Optional.) Filter data rows based on specified conditions. (Specify an empty list if no filters are required.)
   - `and` - Filter mask is determined from a logical AND of conditions in list.
   - `or` - Filter mask is determined from a logical OR of conditions in list.
@@ -63,7 +63,7 @@ x_axis:
   value: "x_axis_col"
   units:
     custom: "unit_label"
-  sort: "ascending"
+  sort: "descending"
 
 y_axis:
   value: "y_axis_col"

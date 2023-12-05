@@ -275,11 +275,11 @@ class PostProcessing:
                                             + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype) else ""))],
                                  formatters={"@{0}_mean".format(y_column) : "printf"}))
 
-        # sort x-axis values in ascending order (otherwise default sort is descending)
-        reverse = False
+        # sort x-axis values in descending order (otherwise default sort is ascending)
+        reverse = True
         if x_axis.get("sort"):
-            if x_axis["sort"] == "ascending":
-                reverse = True
+            if x_axis["sort"] == "descending":
+                reverse = False
         plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
                                       key=lambda x: pd.Series(x[0] if len(groups) > 1 else x,
                                                               dtype=x_col_dtype).iloc[0])
