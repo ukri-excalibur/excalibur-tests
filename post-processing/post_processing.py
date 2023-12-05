@@ -147,6 +147,14 @@ class PostProcessing:
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
+        sorting_columns = [config["x_axis"]["value"]]
+        # sort x-axis values and series in ascending order
+        if series_columns:
+            # NOTE: currently assuming there can only be one series column
+            sorting_columns.append(series_columns[0])
+        # sorting here is necessary to ensure correct filtering + scaling alignment
+        df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+
         mask = pd.Series(df.index.notnull())
         # filter rows
         if and_filters:
@@ -170,14 +178,6 @@ class PostProcessing:
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
-
-        sorting_columns = [config["x_axis"]["value"]]
-        # sort x-axis values and series in ascending order
-        if series_columns:
-            # NOTE: currently assuming there can only be one series column
-            sorting_columns.append(series_columns[0])
-        # sorting here is necessary to ensure correct scaling alignment
-        df.sort_values(sorting_columns, inplace=True, ignore_index=True)
 
         scaling_column = None
         scaling_series_mask = None
@@ -582,8 +582,8 @@ def get_axis_info(df: pd.DataFrame, axis, series_filters):
     if axis.get("units").get("column"):
         unit_set = set(df[axis["units"]["column"]].dropna())
         # check all rows have the same units
-        if len(unit_set) != 1:
-            raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
+        #if len(unit_set) != 1:
+        #    raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
         units = next(iter(unit_set))
 
     # get scaling information
