@@ -83,7 +83,10 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=icelake', '--exclusive'],
+                    'access': ['--partition=icelake', '--exclusive', '--mem=256120'],
+                    'sched_options': {
+                        'job_submit_timeout': 120,
+                    },
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
@@ -94,7 +97,6 @@ site_configuration = {
                     },
                 },
                 {
-                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/icelake.html
                     'name': 'sapphirerapids',
                     'descr': 'Sapphire Rapids compute nodes',
                     'scheduler': 'slurm',
@@ -104,7 +106,10 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=sapphire', '--exclusive'],
+                    'access': ['--partition=sapphire', '--exclusive', '--mem=512960'],
+                    'sched_options': {
+                        'job_submit_timeout': 120,
+                    },
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
@@ -134,7 +139,10 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=cclake', '--exclusive'],
+                    'access': ['--partition=cclake', '--exclusive', '--mem=191520'],
+                    'sched_options': {
+                        'job_submit_timeout': 120,
+                    },
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {
