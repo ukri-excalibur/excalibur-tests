@@ -28,7 +28,8 @@ class PostProcessing:
 
     def run_post_processing(self, log_path, config):
         """
-            Return a dataframe containing the information passed to a plotting script and produce relevant graphs.
+            Return a dataframe containing the information passed to a plotting script
+            and produce relevant graphs.
 
             Args:
                 log_path: str, path to a log file or a directory containing log files.
@@ -42,12 +43,14 @@ class PostProcessing:
                 raise RuntimeError("Perflog file name provided should have a .log extension.")
             log_files = [log_path]
         elif os.path.isdir(log_path):
-            log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path) for file in files]
+            log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path)
+                              for file in files]
             for file in log_files_temp:
                 if os.path.splitext(file)[1] == ".log":
                     log_files.append(file)
             if len(log_files) == 0:
-                raise RuntimeError("No perflogs found in this path. Perflogs should have a .log extension.")
+                raise RuntimeError(
+                    "No perflogs found in this path. Perflogs should have a .log extension.")
         else:
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
 
@@ -65,7 +68,8 @@ class PostProcessing:
                 df = pd.concat([df, temp], ignore_index=True)
             except KeyError as e:
                 if self.debug:
-                    print("Discarding %s:" %os.path.basename(file), type(e).__name__ + ":", e.args[0], e.args[1])
+                    print("Discarding %s:" %os.path.basename(file),
+                          type(e).__name__ + ":", e.args[0], e.args[1])
                     print("")
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
@@ -83,7 +87,8 @@ class PostProcessing:
         series_filters = [[s[0], "==", s[1]] for s in series]
         # check acceptable number of series
         if len(set(series_columns)) > 1:
-            raise RuntimeError("Currently supporting grouping of series by only one column. Please use a single column name in your series configuration.")
+            raise RuntimeError("Currently supporting grouping of series by only one column. \
+                               Please use a single column name in your series configuration.")
         # add series columns to dataframe column list
         for c in series_columns:
             if c not in columns:
@@ -130,13 +135,14 @@ class PostProcessing:
                     conversion_type = "float64"
                 elif pd.api.types.is_integer_dtype(conversion_type):
                     # all integers treated as Int64 (nullable)
-                    # note: default pandas integer type is int64 (not nullable)
+                    # NOTE: default pandas integer type is int64 (not nullable)
                     conversion_type = "Int64"
                 elif pd.api.types.is_datetime64_any_dtype(conversion_type):
                     # all datetimes treated as datetime64[ns] (nullable)
                     conversion_type = "datetime64[ns]"
                 else:
-                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'.".format(conversion_type, col))
+                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'." \
+                                       .format(conversion_type, col))
 
                 # skip type conversion if column is already the desired type
                 if conversion_type == df[col].dtype:
@@ -177,7 +183,9 @@ class PostProcessing:
         num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
-            raise RuntimeError("Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})".format(num_filtered_rows, num_x_data_points), df[columns][mask])
+            raise RuntimeError("Unexpected number of rows ({0}) does not match \
+                               number of unique x-axis values per series ({1})" \
+                               .format(num_filtered_rows, num_x_data_points), df[columns][mask])
 
         scaling_column = None
         scaling_series_mask = None
@@ -191,29 +199,37 @@ class PostProcessing:
                 scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
                 # get mask of scaling series
                 if config["y_axis"]["scaling"]["column"].get("series") is not None:
-                    scaling_series_mask = self.row_filter(series_filters[config["y_axis"]["scaling"]["column"]["series"]], df)
+                    scaling_series_mask = self.row_filter(
+                        series_filters[config["y_axis"]["scaling"]["column"]["series"]], df)
                 # get mask of scaling x-value
                 if config["y_axis"]["scaling"]["column"].get("x_value"):
-                    scaling_x_value_mask = df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"]
+                    scaling_x_value_mask = (
+                        df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"])
 
             # check custom value is not zero
             elif not config["y_axis"]["scaling"].get("custom"):
-                raise RuntimeError("Invalid custom scaling value (cannot divide by {0}).".format(config["y_axis"]["scaling"].get("custom")))
+                raise RuntimeError("Invalid custom scaling value (cannot divide by {0})." \
+                                   .format(config["y_axis"]["scaling"].get("custom")))
 
             # apply data transformation per series
             if series_filters:
                 for f in series_filters:
                     m = self.row_filter(f, df)
-                    df[mask & m] = self.transform_axis(df[mask & m], mask & m, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
+                    df[mask & m] = self.transform_axis(
+                        df[mask & m], mask & m, config["y_axis"], scaling_column,
+                        scaling_series_mask, scaling_x_value_mask)
             # apply data transformation to all data
             else:
-                df[mask] = self.transform_axis(df[mask], mask, config["y_axis"], scaling_column, scaling_series_mask, scaling_x_value_mask)
+                df[mask] = self.transform_axis(
+                    df[mask], mask, config["y_axis"], scaling_column,
+                    scaling_series_mask, scaling_x_value_mask)
 
         print("Selected dataframe:")
         print(df[columns][mask])
 
         # call a plotting script
-        self.plot_generic(config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
+        self.plot_generic(
+            config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
 
         if self.debug & self.verbose:
             print("")
@@ -252,7 +268,8 @@ class PostProcessing:
         # combine group names for later plotting with groupby
         index_group_col = "_".join(groups)
         # group by group names (or just x-axis if no other groups are present)
-        grouped_df = df.groupby(x_column, sort=False) if len(groups) == 1 else df.groupby(groups, sort=False)
+        grouped_df = df.groupby(x_column, sort=False) if len(groups) == 1 \
+                     else df.groupby(groups, sort=False)
 
         if self.debug:
             print("")
@@ -267,13 +284,17 @@ class PostProcessing:
                 else math.ceil(np.nanmax(df[y_column])*1.2)
 
         # create html file to store plot in
-        output_file(filename=os.path.join(Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+        output_file(filename=os.path.join(
+            Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
         # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title, width=800, toolbar_location="above")
+        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
+                      width=800, toolbar_location="above")
         # configure tooltip
-        plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
-                                            + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype) else ""))],
+        plot.add_tools(HoverTool(tooltips=
+                                 [(y_label, "@{0}_mean".format(y_column)
+                                   + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                      else ""))],
                                  formatters={"@{0}_mean".format(y_column) : "printf"}))
 
         # sort x-axis values in descending order (otherwise default sort is ascending)
@@ -289,7 +310,8 @@ class PostProcessing:
         colour_factors = [str(x) for x in sorted(pd.Series(df[groups[-1]].unique(),
                                                            dtype=last_group_dtype))]
         # divide and assign colours
-        index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
+        index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)),
+                                 factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
         data_source = ColumnDataSource(grouped_df).data
         legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "),
@@ -300,7 +322,8 @@ class PostProcessing:
         # create legend outside plot
         plot.add_layout(Legend(), "right")
         # add bars
-        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
+        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
+                  line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
@@ -333,7 +356,8 @@ class PostProcessing:
 
     def row_filter(self, filter, df: pd.DataFrame):
         """
-            Return a dataframe mask based on a filter condition. The filter is a list that contains a column name, an operator, and a value (e.g. ["flops_value", ">=", 1.0]).
+            Return a dataframe mask based on a filter condition. The filter is a list that
+            contains a column name, an operator, and a value (e.g. ["flops_value", ">=", 1.0]).
 
             Args:
                 filter: list, a condition based on which a dataframe is filtered.
@@ -368,7 +392,8 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, df: pd.DataFrame, df_mask, axis, scaling_column, scaling_series_mask, scaling_x_value_mask):
+    def transform_axis(self, df: pd.DataFrame, df_mask, axis, scaling_column,
+                       scaling_series_mask, scaling_x_value_mask):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
@@ -427,18 +452,25 @@ def read_args():
         Return parsed command line arguments.
     """
 
-    parser = argparse.ArgumentParser(description="Plot benchmark data. At least one perflog must be supplied.")
+    parser = argparse.ArgumentParser(description="Plot benchmark data. \
+                                     At least one perflog must be supplied.")
 
     # required positional arguments (log path, config path)
-    parser.add_argument("log_path", type=str, help="path to a perflog file or a directory containing perflog files")
-    parser.add_argument("config_path", type=str, help="path to a configuration file specifying what to plot")
+    parser.add_argument("log_path", type=str,
+                        help="path to a perflog file or a directory containing perflog files")
+    parser.add_argument("config_path", type=str,
+                        help="path to a configuration file specifying what to plot")
 
     # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic", help="type of plot to be generated (default: 'generic')")
+    parser.add_argument("-p", "--plot_type", type=str, default="generic",
+                        help="type of plot to be generated (default: 'generic')")
 
     # info dump flags
-    parser.add_argument("-d", "--debug", action="store_true", help="debug flag for printing additional information")
-    parser.add_argument("-v", "--verbose", action="store_true", help="verbose flag for printing more debug information (must be used in conjunction with the debug flag)")
+    parser.add_argument("-d", "--debug", action="store_true",
+                        help="debug flag for printing additional information")
+    parser.add_argument("-v", "--verbose", action="store_true",
+                        help="verbose flag for printing more debug information \
+                            (must be used in conjunction with the debug flag)")
 
     return parser.parse_args()
 
@@ -483,9 +515,11 @@ def read_config(path):
 
     # check series length
     if config.get("series") is None:
-        raise KeyError("Missing series information (specify an empty list [] if there is only one series).")
+        raise KeyError(
+            "Missing series information (specify an empty list [] if there is only one series).")
     if len(config["series"]) == 1:
-        raise KeyError("Number of series must be >= 2 (specify an empty list [] if there is only one series).")
+        raise KeyError(
+            "Number of series must be >= 2 (specify an empty list [] if there is only one series).")
 
     # check filters are present
     if not config.get("filters"):
@@ -509,7 +543,8 @@ def read_perflog(path):
         Args:
             path: str, path to log file.
 
-        NB: This currently depends on having a non-default handlers_perflog.filelog.format in reframe's configuration. See code.
+        NB: This currently depends on having a non-default handlers_perflog.filelog.format
+            in reframe's configuration. See code.
 
         The returned dataframe will have columns for all fields in a performance log record
         except display name, extra resources, and env vars. Display name will be broken up
@@ -522,7 +557,8 @@ def read_perflog(path):
     REQUIRED_LOG_FIELDS = ["job_completion_time", r"\w+_value$", r"\w+_unit$", "display_name"]
 
     # look for required column matches
-    required_field_matches = [len(list(filter(re.compile(rexpr).match, df.columns))) > 0 for rexpr in REQUIRED_LOG_FIELDS]
+    required_field_matches = [len(list(filter(re.compile(rexpr).match, df.columns))) > 0
+                              for rexpr in REQUIRED_LOG_FIELDS]
     # check all required columns are present
     if False in required_field_matches:
         raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
@@ -549,10 +585,13 @@ def read_perflog(path):
 
 def get_display_name_info(display_name):
     """
-        Return a tuple containing the test name and a dictionary of parameter names and their values from the given input string. The parameter dictionary may be empty if no parameters are present.
+        Return a tuple containing the test name and a dictionary of parameter names
+        and their values from the given input string. The parameter dictionary may be empty
+        if no parameters are present.
 
         Args:
-            display_name: str, expecting a format of <test_name> followed by zero or more %<param>=<value> pairs.
+            display_name: str, expecting a format of <test_name> followed by zero or more
+            %<param>=<value> pairs.
     """
 
     split_display_name = display_name.split(" %")
@@ -578,7 +617,8 @@ def insert_key_cols(df: pd.DataFrame, index, results):
 
 def get_axis_info(df: pd.DataFrame, axis, series_filters):
     """
-        Return the column name and label for a given axis. If a column name is supplied as units information, the actual units will be extracted from a dataframe.
+        Return the column name and label for a given axis. If a column name is supplied as
+        units information, the actual units will be extracted from a dataframe.
 
         Args:
             df: dataframe, data to plot.
@@ -592,8 +632,8 @@ def get_axis_info(df: pd.DataFrame, axis, series_filters):
     if axis.get("units").get("column"):
         unit_set = set(df[axis["units"]["column"]].dropna())
         # check all rows have the same units
-        #if len(unit_set) != 1:
-        #    raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
+        if len(unit_set) != 1:
+            raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
         units = next(iter(unit_set))
 
     # get scaling information
@@ -612,7 +652,8 @@ def get_axis_info(df: pd.DataFrame, axis, series_filters):
 
     # determine axis label
     label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " "))) if scaling else "",
+                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
+                               if scaling else "",
                                " ({0})".format(units) if units else "")
 
     return col_name, label
