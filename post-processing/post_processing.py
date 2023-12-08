@@ -277,16 +277,14 @@ class PostProcessing:
                                  formatters={"@{0}_mean".format(y_column) : "printf"}))
 
         # sort x-axis values in descending order (otherwise default sort is ascending)
-        reverse = True
+        reverse = False
         if x_axis.get("sort"):
             if x_axis["sort"] == "descending":
-                reverse = False
+                reverse = True
         plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
                                       key=lambda x: pd.Series(x[0] if len(groups) > 1 else x,
                                                               dtype=x_col_dtype).iloc[0])
 
-        # create legend outside plot
-        plot.add_layout(Legend(), "right")
         # automatically base bar colouring on last group column
         colour_factors = [str(x) for x in sorted(pd.Series(df[groups[-1]].unique(),
                                                            dtype=last_group_dtype))]
@@ -294,14 +292,15 @@ class PostProcessing:
         index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)), factors=colour_factors, start=len(groups)-1, end=len(groups))
         # add legend labels to data source
         data_source = ColumnDataSource(grouped_df).data
-        # FIXME: attempt to adjust legend label sorting to match new colouring
         legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "),
                                             group[-1] if len(groups) > 1 else group)
                          for group in data_source[index_group_col]]
         data_source["legend_labels"] = legend_labels
 
+        # create legend outside plot
+        plot.add_layout(Legend(), "right")
         # add bars
-        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_field="legend_labels", hover_alpha=0.9)
+        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source, line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
         # add labels
         plot.xaxis.axis_label = x_label
         plot.yaxis.axis_label = y_label
@@ -310,6 +309,14 @@ class PostProcessing:
         plot.xaxis.major_label_text_font_size = "0pt"
         # adjust font size
         plot.title.text_font_size = "15pt"
+
+        # get label values with their original dtype
+        label_values = [pd.Series(x.label.value.split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
+                        for x in plot.legend[0].items]
+        # sort legend items (order determined by x-axis sort)
+        sorted_legend_items = [x[1] for x in sorted(zip(label_values, plot.legend[0].items),
+                                                    reverse=reverse, key=lambda x: x[0])]
+        plot.legend[0].items = sorted_legend_items
 
         # save to file
         save(plot)
