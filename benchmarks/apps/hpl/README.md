@@ -6,7 +6,7 @@ Run Intel optimised HPL tests on one and all nodes.
 
 ### Intel HPL
 
-This uses the pre-built binaries supplied with [Intel's MKL package](https://software.intel.com/content/www/us/en/develop/documentation/mkl-windows-developer-guide/top/intel-math-kernel-library-benchmarks/intel-distribution-for-linpack-benchmark/overview-of-the-intel-distribution-for-linpack-benchmark.html).
+This uses the pre-built binaries supplied with [Intel's MKL package](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2024-0/overview-intel-distribution-for-linpack-benchmark.html).
 ***Note***: Intel MPI is also required.
 
 By default the `intel-mkl` and `intel-mpi` Spack recipes will be used.
@@ -23,7 +23,7 @@ ReFrame will copy these files into the staging directories before running a test
 Hints:
 - Generally, set PxQ to equal number of nodes, with P equal or smaller than Q (as using 1x MPI rank per node)
 - Select problem size *N* to use e.g. 80% of total memory
-- Check [Intel documentation](https://software.intel.com/content/www/us/en/develop/documentation/mkl-linux-developer-guide/top/intel-math-kernel-library-benchmarks/intel-distribution-for-linpack-benchmark/configuring-parameters.html) to select appropriate block size *NB*
+- Check [Intel documentation](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2024-0/configuring-parameters.html) to select appropriate block size *NB*
 - When running, check on a single node that `pstree` and `top` appear as expected.
 
 ***Note***: not all systems have appropriate input data, or not for the number of tasks you want to run, so you may have to create the `HPL.DAT` file yourself.
