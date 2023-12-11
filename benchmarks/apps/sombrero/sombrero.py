@@ -11,7 +11,8 @@ from benchmarks.modules.reframe_extras import scaling_config
 from benchmarks.modules.utils import SpackTest
 
 # Fixed lattice volume in ITT benchmarks
-LATTICE_VOLUME = 32 * 24 * 24 * 24
+LATTICE_VOLUME_SMALL = 32 * 24 ** 3
+LATTICE_VOLUME_MEDIUM = 48 ** 3 * 64
 
 
 # Helper function to find maximum number of tasks we can use for benchmarks
@@ -122,9 +123,8 @@ class SombreroITTsn(SombreroBenchmarkBase):
     def setup_num_tasks(self):
         self.num_tasks = max_num_tasks(
             self.current_partition.processor.num_cores,
-            LATTICE_VOLUME,
+            LATTICE_VOLUME_SMALL,
         )
-
 
 @rfm.simple_test
 class SombreroITT64n(SombreroBenchmarkBase):
@@ -137,7 +137,8 @@ class SombreroITT64n(SombreroBenchmarkBase):
 
     @run_after('setup')
     def setup_num_tasks(self):
-        self.num_tasks = max_num_tasks(
-            self.current_partition.processor.num_cores * 64,
-            LATTICE_VOLUME,
+        self.num_tasks_per_node = max_num_tasks(
+            self.current_partition.processor.num_cores,
+            LATTICE_VOLUME_MEDIUM // 64,
         )
+        self.num_tasks = self.num_tasks_per_node * 64
