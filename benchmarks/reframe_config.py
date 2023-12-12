@@ -83,7 +83,7 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=icelake', '--exclusive', '--mem=256120'],
+                    'access': ['--partition=icelake', '--exclusive'],
                     'sched_options': {
                         'job_submit_timeout': 120,
                     },
@@ -106,7 +106,7 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=sapphire', '--exclusive', '--mem=512960'],
+                    'access': ['--partition=sapphire', '--exclusive'],
                     'sched_options': {
                         'job_submit_timeout': 120,
                     },
@@ -139,7 +139,7 @@ site_configuration = {
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
                         ['UCX_NET_DEVICES', 'mlx5_0:1'],
                     ],
-                    'access': ['--partition=cclake', '--exclusive', '--mem=191520'],
+                    'access': ['--partition=cclake', '--exclusive'],
                     'sched_options': {
                         'job_submit_timeout': 120,
                     },
