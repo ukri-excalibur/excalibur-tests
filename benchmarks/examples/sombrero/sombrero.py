@@ -104,7 +104,7 @@ class SombreroBenchmark(SpackTest):
         },
         '*': {
             'flops': (1, None, None, 'Gflops/seconds'),
-            },
+        },
     }
 
     def __init__(self):
