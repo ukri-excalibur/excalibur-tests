@@ -28,11 +28,14 @@ class Hpl(SpackTest):
     # Dictionary of reference values, indexed by number of tasks.
     full_reference = {
         1: {
-            'csd3-skylake': {
-                'Gflops': (2000, -0.2, None, 'Gflops'),
+            'csd3-centos7:cascadelake': {
+                'Gflops': (2600, -0.2, None, 'Gflops'),
             },
-            'csd3-icelake': {
+            'csd3-rocky8:icelake': {
                 'Gflops': (4500, -0.2, None, 'Gflops'),
+            },
+            'csd3-rocky8:sapphirerapids': {
+                'Gflops': (6200, -0.2, None, 'Gflops'),
             },
         },
     }
@@ -42,7 +45,9 @@ class Hpl(SpackTest):
         if self.config_dir:
             self.sourcesdir = self.config_dir
         else:
-            self.sourcesdir = path.join(path.dirname(__file__), self.current_system.name, str(self.num_tasks))
+            self.sourcesdir = path.join(path.dirname(__file__),
+                    self.current_system.name, self.current_partition.name,
+                    str(self.num_tasks))
 
     @run_before('sanity')
     def set_sanity_patterns(self):
@@ -66,7 +71,10 @@ class Hpl(SpackTest):
         }
         # If we have a reference for current combination of system + number of
         # tasks, use it, otherwise default to generic empty reference.
-        if self.num_tasks in self.full_reference.keys() and self.current_system.name in self.full_reference[self.num_tasks].keys():
+        if (self.num_tasks in self.full_reference.keys() and
+            (self.current_system.name in self.full_reference[self.num_tasks].keys()
+            or self.current_system.name + ':' + self.current_partition.name
+            in self.full_reference[self.num_tasks].keys())):
             self.reference = self.full_reference[self.num_tasks]
         else:
             self.reference = {
