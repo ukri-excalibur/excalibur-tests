@@ -130,6 +130,7 @@ class SombreroITTsn(SombreroBenchmarkBase):
 class SombreroITT64n(SombreroBenchmarkBase):
     valid_systems = ['-gpu']
     tags = {"ITT-64n"}
+    num_nodes = variable(int, value=64, loggable=False)
 
     @run_after('init')
     def set_up_from_parameters(self):
@@ -139,6 +140,6 @@ class SombreroITT64n(SombreroBenchmarkBase):
     def setup_num_tasks(self):
         self.num_tasks_per_node = max_num_tasks(
             self.current_partition.processor.num_cores,
-            LATTICE_VOLUME_MEDIUM // 64,
+            LATTICE_VOLUME_MEDIUM // self.num_nodes,
         )
-        self.num_tasks = self.num_tasks_per_node * 64
+        self.num_tasks = self.num_tasks_per_node * self.num_nodes

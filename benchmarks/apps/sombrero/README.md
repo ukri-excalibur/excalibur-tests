@@ -24,6 +24,8 @@ using the `--tag=<TAG>` command line option of `reframe`:
    (as described [here](https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks)).
 - `ITT-64n`: A run on 64 nodes, using all the cores in each node
    (as described [here](https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks)).
+   The number of nodes used can be changed by setting the variable `num_nodes`,
+   for example `reframe ... -S num_nodes=48`.
 - `scaling`: A large benchmarking campaign, where of the benchmarks is launched 
              on a range of number of processes
              (depending on the setup of the machine)
