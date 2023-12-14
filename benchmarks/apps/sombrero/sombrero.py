@@ -5,11 +5,24 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-import reframe.utility.udeps as udeps
 
 from benchmarks.apps.sombrero import case_filter
 from benchmarks.modules.reframe_extras import scaling_config
 from benchmarks.modules.utils import SpackTest
+
+# Fixed lattice volume in ITT benchmarks
+LATTICE_VOLUME_SMALL = 32 * 24 ** 3
+LATTICE_VOLUME_MEDIUM = 48 ** 3 * 64
+
+
+# Helper function to find maximum number of tasks we can use for benchmarks
+# which assume the number of cores divide a fixed lattice volume.
+def max_num_tasks(n, volume):
+    num_tasks = 1
+    for i in range(2, n + 1):
+        if volume % i == 0:
+            num_tasks = i
+    return num_tasks
 
 
 @rfm.simple_test
@@ -108,13 +121,16 @@ class SombreroITTsn(SombreroBenchmarkBase):
 
     @run_after('setup')
     def setup_num_tasks(self):
-        self.num_tasks = self.current_partition.processor.num_cores
-
+        self.num_tasks = max_num_tasks(
+            self.current_partition.processor.num_cores,
+            LATTICE_VOLUME_SMALL,
+        )
 
 @rfm.simple_test
 class SombreroITT64n(SombreroBenchmarkBase):
     valid_systems = ['-gpu']
     tags = {"ITT-64n"}
+    num_nodes = variable(int, value=64, loggable=False)
 
     @run_after('init')
     def set_up_from_parameters(self):
@@ -122,4 +138,8 @@ class SombreroITT64n(SombreroBenchmarkBase):
 
     @run_after('setup')
     def setup_num_tasks(self):
-        self.num_tasks = self.current_partition.processor.num_cores * 64
+        self.num_tasks_per_node = max_num_tasks(
+            self.current_partition.processor.num_cores,
+            LATTICE_VOLUME_MEDIUM // self.num_nodes,
+        )
+        self.num_tasks = self.num_tasks_per_node * self.num_nodes
