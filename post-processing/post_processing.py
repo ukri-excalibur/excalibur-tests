@@ -302,9 +302,23 @@ class PostProcessing:
         if x_axis.get("sort"):
             if x_axis["sort"] == "descending":
                 reverse = True
-        plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
-                                      key=lambda x: pd.Series(x[0] if len(groups) > 1 else x,
-                                                              dtype=x_col_dtype).iloc[0])
+
+        if len(groups) > 1:
+            # sort by x-axis values first
+            plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
+                                          key=lambda x: pd.Series(x[0], dtype=x_col_dtype).iloc[0])
+            # get series values with their original dtype
+            # NOTE: currently not accounting for more than one series column
+            series_values = [pd.Series(x[-1], dtype=last_group_dtype).iloc[0]
+                             for x in plot.x_range.factors]
+            # sort x-axis groups by series
+            sorted_x_items = [x[1] for x in sorted(zip(series_values, plot.x_range.factors),
+                                                   reverse=reverse, key=lambda x: x[0])]
+            plot.x_range.factors = sorted_x_items
+        else:
+            # sort only by x-axis values
+            plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
+                                          key=lambda x: pd.Series(x, dtype=x_col_dtype).iloc[0])
 
         # automatically base bar colouring on last group column
         colour_factors = [str(x) for x in sorted(pd.Series(df[groups[-1]].unique(),
@@ -452,8 +466,8 @@ def read_args():
         Return parsed command line arguments.
     """
 
-    parser = argparse.ArgumentParser(description="Plot benchmark data. \
-                                     At least one perflog must be supplied.")
+    parser = argparse.ArgumentParser(
+        description="Plot benchmark data. At least one perflog must be supplied.")
 
     # required positional arguments (log path, config path)
     parser.add_argument("log_path", type=str,
