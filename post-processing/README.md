@@ -36,7 +36,7 @@ Run `post_processing.py -h` for more information (including debugging flags).
 
 ### Configuration Structure
 
-Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for an example and some clarifying notes.
+Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for a template, an example, and some clarifying notes.
 
 - `title` - Plot title.
 - `x_axis`, `y_axis` - Axis information.
@@ -54,7 +54,57 @@ Before running post-processing, create a config file including all necessary inf
 - `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
   - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
 
+### Complete Config Template
+
+This template includes all possible config fields, some of which are optional or mutually exclusive (e.g. `column` and `custom`).
+
+```yaml
+title: <custom_label>
+
+x_axis:
+  value: <column_name>
+  # use one of 'column' or 'custom'
+  units:
+    column: <column_name>
+    custom: <custom_label>
+  # optional (default: ascending)
+  sort: "descending"
+
+y_axis:
+  value: <column_name>
+  # use one of 'column' or 'custom'
+  units:
+    column: <column_name>
+    custom: <custom_label>
+  # optional (default: no data transformation)
+  # use one of 'column' or 'custom'
+  scaling:
+    column:
+      name: <column_name>
+      series: <index>
+      x_value: <column_value>
+    custom: <custom_value>
+
+# optional (default: include all data)
+# entry format: [<column_name>, <operator>, <column_value>]
+# accepted operators: ==, !=, <, >, <=, >=
+filters:
+  and: <condition_list>
+  or: <condition_list>
+
+# optional (default: no x-axis grouping, one plot per graph)
+# entry format: [<column_name>, <column_value>]
+series: <series_list>
+
+# include types for each column that is used in the config
+# accepted types: string/object, int, float, datetime
+column_types:
+  <column_name>: <column_type>
+```
+
 ### Example Config
+
+This example more accurately illustrates what an actual config file may look like.
 
 ```yaml
 title: "Plot Title"
@@ -91,7 +141,7 @@ column_types:
   series_col: "str"
 ```
 
-#### A Note on X-axis Grouping
+#### X-axis Grouping
 
 The settings above will produce a graph that will have its x-axis data grouped based on the values in `x_axis_col` and `series_col`. (`Note: only groupings with one series column are currently supported.`) If we imagine that `x_axis_col` has two unique values, `"x_val_1"` and `"x_val_2"`, there will be four groups (and four bars) along the x-axis:
 
@@ -100,7 +150,7 @@ The settings above will produce a graph that will have its x-axis data grouped b
 - (`x_val_2`, `series_val_1`)
 - (`x_val_2`, `series_val_2`)
 
-#### A Note on Scaling
+#### Scaling
 
 When axis values are scaled, they are all divided by a number or a list of numbers. If using more than one number for scaling, the length of the list must match the length of the axis column being scaled. (`Note: scaling is currently only supported for y-axis data, as graphs with a non-categorical x-axis are still a work in progress.`)
 
@@ -119,12 +169,12 @@ y_axis:
 
 In the snippet above, all y-axis values are to be divided by 2.
 
-|y_axis_col|scaled_y_axis_col|
-|-|-|
-|3.2|3.2 / 2.0 = 1.6|
-|5.4|5.4 / 2.0 = 2.7|
-|2.4|2.4 / 2.0 = 1.2|
-|5.0|5.0 / 2.0 = 2.5|
+|y_axis_col||scaled_y_axis_col|
+|-|-|-|
+|3.2|3.2 / 2.0 =|1.6|
+|5.4|5.4 / 2.0 =|2.7|
+|2.4|2.4 / 2.0 =|1.2|
+|5.0|5.0 / 2.0 =|2.5|
 
 **Column Scaling**
 
@@ -142,12 +192,12 @@ y_axis:
 
 In the snippet above, all y-axis values are to be divided by the corresponding values in the scaling column.
 
-|y_axis_col|scaling_col|scaled_y_axis_col|
-|-|-|-|
-|3.2|**`1.6`**|3.2 / 1.6 = 2.0|
-|5.4|**`2.0`**|5.4 / 2.0 = 2.7|
-|2.4|**`0.6`**|2.4 / 0.6 = 4.0|
-|5.0|**`2.5`**|5.0 / 2.5 = 2.0|
+|y_axis_col|scaling_col||scaled_y_axis_col|
+|-|-|-|-|
+|3.2|**`1.6`**|3.2 / 1.6 =|2.0|
+|5.4|**`2.0`**|5.4 / 2.0 =|2.7|
+|2.4|**`0.6`**|2.4 / 0.6 =|4.0|
+|5.0|**`2.5`**|5.0 / 2.5 =|2.0|
 
 **Series Scaling**
 
@@ -168,12 +218,12 @@ y_axis:
 
 In the snippet above, all y-axis values are to be split by series and divided by the corresponding values in the scaling series.
 
-|y_axis_col|scaling_col|series_col|scaled_y_axis_col|
-|-|-|-|-|
-|3.2|**`1.6`**|`series_val_1`|3.2 / 1.6 = 2.0|
-|5.4|**`2.0`**|`series_val_1`|5.4 / 2.0 = 2.7|
-|2.4|0.6|series_val_2|2.4 / 1.6 = 1.5|
-|5.0|2.5|series_val_2|5.0 / 2.0 = 2.5|
+|y_axis_col|scaling_col|series_col||scaled_y_axis_col|
+|-|-|-|-|-|
+|3.2|**`1.6`**|`series_val_1`|3.2 / 1.6 =|2.0|
+|5.4|**`2.0`**|`series_val_1`|5.4 / 2.0 =|2.7|
+|2.4|0.6|series_val_2|2.4 / 1.6 =|1.5|
+|5.0|2.5|series_val_2|5.0 / 2.0 =|2.5|
 
 **Selected Value Scaling**
 
@@ -193,25 +243,27 @@ y_axis:
 
 In the snippet above, all y-axis values are to be divided by the scaling value found by filtering the scaling column by both series and x-axis value.
 
-|x_axis_col|y_axis_col|scaling_col|series_col|scaled_y_axis_col|
-|-|-|-|-|-|
-|x_val_1|3.2|1.6|series_val_1|3.2 / 2.0 = 1.6|
-|`x_val_s`|5.4|**`2.0`**|`series_val_1`|5.4 / 2.0 = 2.7|
-|x_val_2|2.4|0.7|series_val_2|2.4 / 2.0 = 1.2|
-|x_val_s|5.0|2.5|series_val_2|5.0 / 2.0 = 2.5|
+|x_axis_col|y_axis_col|scaling_col|series_col||scaled_y_axis_col|
+|-|-|-|-|-|-|
+|x_val_1|3.2|1.6|series_val_1|3.2 / 2.0 =|1.6|
+|`x_val_s`|5.4|**`2.0`**|`series_val_1`|5.4 / 2.0 =|2.7|
+|x_val_2|2.4|0.7|series_val_2|2.4 / 2.0 =|1.2|
+|x_val_s|5.0|2.5|series_val_2|5.0 / 2.0 =|2.5|
 
 (`Note: if series are not present and x-axis values are all unique, it is enough to specify just the column name and x-value.`)
 
-#### A Note on Filters
+#### Filters
 
-AND filters and OR filters are combined with a logical AND to produce the final filter mask applied to the DataFrame prior to graphing. For example:
+A condition list for filtering has entries in the format `[<column_name>, <operator>, <column_value>]`. AND filters and OR filters are combined with a logical AND to produce the final filter mask applied to the DataFrame prior to graphing. For example:
 
 - `and_filters` = `cond1`, `cond2`
 - `or_filters`= `cond3`, `cond4`
 
 The filters above would produce the final filter `mask` = (`cond1` AND `cond2`) AND (`cond3` OR `cond4`).
 
-#### A Note on Column Types
+#### Column Types
+
+Types must be specified for all columns included in the config in the format `<column_name>:<column_type>`. Accepted types include `string/object`, `int`, `float`, and `datetime`.
 
 All user-specified types are internally converted to their nullable incarnations. As such:
 
