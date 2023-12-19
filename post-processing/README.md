@@ -54,6 +54,12 @@ Before running post-processing, create a config file including all necessary inf
 - `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
   - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
 
+#### A Note on Replaced ReFrame Columns
+
+A perflog contains certain columns that will not be present in the DataFrame available to the graphing script. Currently, these columns are `display_name`, `extra_resources`, and `env_vars`. Removed columns should not be referenced in a plot config file.
+
+When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources` and `env_vars` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
+
 ### Complete Config Template
 
 This template includes all possible config fields, some of which are optional or mutually exclusive (e.g. `column` and `custom`).
@@ -271,12 +277,6 @@ All user-specified types are internally converted to their nullable incarnations
 - Floats are treated as `float64`.
 - Integers are treated as `Int64`.
 - Datetimes are treated as `datetime64[ns]`.
-
-#### A Note on Replaced ReFrame Columns
-
-A perflog contains certain columns that will not be present in the DataFrame available to the graphing script. Currently, these columns are `display_name`, `extra_resources`, and `env_vars`. Removed columns should not be referenced in a plot config file.
-
-When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources` and `env_vars` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
 
 ### Future Development
 
