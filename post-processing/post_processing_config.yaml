@@ -6,6 +6,8 @@ title: Example Plot
 # and "display_name" fields, if it exists).
 # Units can either be specified with a perflog column name
 # or a custom label (including null (i.e. None) if units are N/A).
+# Optional axis scaling can either be specified with a perflog column name
+# (+ a series index and/or an x-axis value for filtering), or a custom value
 
 x_axis:
   value: "tasks"
@@ -16,10 +18,17 @@ y_axis:
   value: "flops_value"
   units:
     column: "flops_unit"
+  scaling:
+    column:
+      name: "flops_value"
+      series: 0             # The series at index 0 is ["cpus_per_task", 1]
+      x_value: 2            # Find the row where "tasks" is 2
 
 # Optional row filters (specify an empty list [] if none are required).
 # Filter format: [column_name, operator, value]
-filters: [["system", "==", "default"]]
+filters:
+  and: [["system", "==", "default"]]
+  or: []
 
 # Optional setting to display several plots in the same graph.
 # Number of series, if used, must be >=2 (specify an empty list [] if there is only one series).
