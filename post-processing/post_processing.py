@@ -32,9 +32,11 @@ class PostProcessing:
             and produce relevant graphs.
 
             Args:
-                log_path: str, path to a log file or a directory containing log files.
+                log_path: path, path to a log file or a directory containing log files.
                 config: dict, configuration information for plotting.
         """
+
+        # ----- 1 FIND PERFLOGS -----
 
         log_files = []
         # look for perflogs
@@ -60,6 +62,8 @@ class PostProcessing:
                 print("-", log)
             print("")
 
+        # ----- 2 READ PERFLOGS -----
+
         df = pd.DataFrame()
         # put all perflog information in one dataframe
         for file in log_files:
@@ -74,6 +78,8 @@ class PostProcessing:
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
 
+        # ----- 3 CONFIG INFO -----
+
         # get axis columns
         columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
         if config["x_axis"]["units"].get("column"):
@@ -81,10 +87,12 @@ class PostProcessing:
         if config["y_axis"]["units"].get("column"):
             columns.append(config["y_axis"]["units"]["column"])
 
-        series = config["series"]
+        # FIXME: allow all series values to be selected with *
+        # (or if only column name is supplied)
+        series = config.get("series")
         # extract series columns and filters
-        series_columns = [s[0] for s in series]
-        series_filters = [[s[0], "==", s[1]] for s in series]
+        series_columns = [s[0] for s in series] if series else []
+        series_filters = [[s[0], "==", s[1]] for s in series] if series else []
         # check acceptable number of series
         if len(set(series_columns)) > 1:
             raise RuntimeError("Currently supporting grouping of series by only one column. \
@@ -94,8 +102,8 @@ class PostProcessing:
             if c not in columns:
                 columns.append(c)
 
-        and_filters = config["filters"]["and"]
-        or_filters = config["filters"]["or"]
+        and_filters = config["filters"]["and"] if config.get("filters") else []
+        or_filters = config["filters"]["or"] if config.get("filters") else []
         # extract filter columns
         filter_columns = [f[0] for f in and_filters] + [f[0] for f in or_filters]
 
@@ -116,6 +124,8 @@ class PostProcessing:
                 invalid_columns.append(col)
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
+
+        # ----- 4 APPLY TYPES -----
 
         # apply user-specified types to all relevant columns
         for col in all_columns:
@@ -153,6 +163,8 @@ class PostProcessing:
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
+        # ----- 5 SORT -----
+
         sorting_columns = [config["x_axis"]["value"]]
         # sort x-axis values and series in ascending order
         if series_columns:
@@ -160,6 +172,8 @@ class PostProcessing:
             sorting_columns.append(series_columns[0])
         # sorting here is necessary to ensure correct filtering + scaling alignment
         df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+
+        # ----- 6 FILTER -----
 
         mask = pd.Series(df.index.notnull())
         # filter rows
@@ -186,6 +200,8 @@ class PostProcessing:
             raise RuntimeError("Unexpected number of rows ({0}) does not match \
                                number of unique x-axis values per series ({1})" \
                                .format(num_filtered_rows, num_x_data_points), df[columns][mask])
+
+        # ----- 7 TRANSFORM DATA -----
 
         scaling_column = None
         scaling_series_mask = None
@@ -224,8 +240,16 @@ class PostProcessing:
                     df[mask], mask, config["y_axis"], scaling_column,
                     scaling_series_mask, scaling_x_value_mask)
 
+        # FIXME: add this as a config option at some point
+        # if config["y_axis"].get("drop_nan"):
+        #    df.dropna(subset=[config["y_axis"]["value"]], inplace=True)
+            # reset index
+        #    df.index = range(len(df.index))
+
         print("Selected dataframe:")
         print(df[columns][mask])
+
+        # ----- 8 PLOT -----
 
         # call a plotting script
         self.plot_generic(
@@ -342,6 +366,8 @@ class PostProcessing:
         # remove x-axis group ticks
         plot.xaxis.major_tick_line_color = None
         plot.xaxis.major_label_text_font_size = "0pt"
+        # FIXME: add this as a config option at some point
+        # plot.xaxis.group_label_orientation = "vertical"
         # adjust font size
         plot.title.text_font_size = "15pt"
 
@@ -445,6 +471,8 @@ class PostProcessing:
             # as the masked df (unless there is only one scaling value)
 
             df[axis["value"]] = df[axis["value"]].values / scaling_val
+            # FIXME: add this as a config option at some point in conjunction with dropping NaNs
+            # df[axis["value"]].replace(to_replace=1, value=np.NaN, inplace=True)
 
         # scale by custom value
         elif axis["scaling"].get("custom"):
@@ -468,9 +496,9 @@ def read_args():
         description="Plot benchmark data. At least one perflog must be supplied.")
 
     # required positional arguments (log path, config path)
-    parser.add_argument("log_path", type=str,
+    parser.add_argument("log_path", type=Path,
                         help="path to a perflog file or a directory containing perflog files")
-    parser.add_argument("config_path", type=str,
+    parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
 
     # optional argument (plot type)
@@ -482,70 +510,64 @@ def read_args():
                         help="debug flag for printing additional information")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="verbose flag for printing more debug information \
-                            (must be used in conjunction with the debug flag)")
+                              (must be used in conjunction with the debug flag)")
 
     return parser.parse_args()
 
 def read_config(path):
-    """
-        Return a dictionary containing configuration information for plotting.
+        """
+            Return a dictionary containing configuration information for plotting.
+            At least plot title, x-axis, y-axis, and column types must be present.
 
-        Args:
-            path: str, path to a config file.
-    """
+            Args:
+                path: path, path to yaml config file.
+        """
 
-    with open(path, "r") as file:
-        config = yaml.safe_load(file)
+        with open(path, "r") as file:
+            config = yaml.safe_load(file)
 
-    # check x-axis information
-    if not config.get("x_axis"):
-        raise KeyError("Missing x-axis information.")
-    if not config.get("x_axis").get("value"):
-        raise KeyError("Missing x-axis value information.")
-    if not config.get("x_axis").get("units"):
-        raise KeyError("Missing x-axis units information.")
-    if config.get("x_axis").get("units").get("custom") is not None and \
-       config.get("x_axis").get("units").get("column") is not None:
-        raise KeyError("Specify x-axis units information as only one of 'custom' or 'column'.")
+        # check plot title information
+        if not config.get("title"):
+            raise KeyError("Missing plot title information.")
 
-    # check y-axis information
-    if not config.get("y_axis"):
-        raise KeyError("Missing y-axis information.")
-    if not config.get("y_axis").get("value"):
-        raise KeyError("Missing y-axis value information.")
-    if not config.get("y_axis").get("units"):
-        raise KeyError("Missing y-axis units information.")
-    if config.get("y_axis").get("units").get("custom") is not None and \
-       config.get("y_axis").get("units").get("column") is not None:
-        raise KeyError("Specify y-axis units information as only one of 'custom' or 'column'.")
+        # check x-axis information
+        if not config.get("x_axis"):
+            raise KeyError("Missing x-axis information.")
+        if not config.get("x_axis").get("value"):
+            raise KeyError("Missing x-axis value information.")
+        if not config.get("x_axis").get("units"):
+            raise KeyError("Missing x-axis units information.")
+        if config.get("x_axis").get("units").get("column") is not None and \
+           config.get("x_axis").get("units").get("custom") is not None:
+            raise KeyError("Specify x-axis units information as only one of 'column' or 'custom'.")
 
-    # check optional scaling information
-    if config.get("y_axis").get("scaling"):
-        if config.get("y_axis").get("scaling").get("custom") is not None and \
-           config.get("y_axis").get("scaling").get("column") is not None:
-            raise KeyError("Specify y-axis scaling information as only one of 'custom' or 'column'.")
+        # check y-axis information
+        if not config.get("y_axis"):
+            raise KeyError("Missing y-axis information.")
+        if not config.get("y_axis").get("value"):
+            raise KeyError("Missing y-axis value information.")
+        if not config.get("y_axis").get("units"):
+            raise KeyError("Missing y-axis units information.")
+        if config.get("y_axis").get("units").get("column") is not None and \
+           config.get("y_axis").get("units").get("custom") is not None:
+            raise KeyError("Specify y-axis units information as only one of 'column' or 'custom'.")
 
-    # check series length
-    if config.get("series") is None:
-        raise KeyError(
-            "Missing series information (specify an empty list [] if there is only one series).")
-    if len(config["series"]) == 1:
-        raise KeyError(
-            "Number of series must be >= 2 (specify an empty list [] if there is only one series).")
+        # check optional scaling information
+        if config.get("y_axis").get("scaling"):
+            if config.get("y_axis").get("scaling").get("column") is not None and \
+               config.get("y_axis").get("scaling").get("custom") is not None:
+                raise KeyError("Specify y-axis scaling information as only one of 'column' or 'custom'.")
 
-    # check filters are present
-    if not config.get("filters"):
-        raise KeyError("Missing filter information (specify 'and' and 'or' filters).")
-    if config.get("filters").get("and") is None:
-        raise KeyError("Missing 'and' filters (specify an empty list [] if none are required).")
-    if config.get("filters").get("or") is None:
-        raise KeyError("Missing 'or' filters (specify an empty list [] if none are required).")
+        # check series length
+        if config.get("series"):
+            if len(config.get("series")) == 1:
+                raise KeyError("Number of series must be >= 2.")
 
-    # check plot title information
-    if not config.get("title"):
-        raise KeyError("Missing plot title information.")
+        # check column types information
+        if not config.get("column_types"):
+            raise KeyError("Missing column types information.")
 
-    return config
+        return config
 
 # a modified and updated version of the function from perf_logs.py
 def read_perflog(path):
@@ -553,7 +575,7 @@ def read_perflog(path):
         Return a pandas dataframe from a ReFrame performance log.
 
         Args:
-            path: str, path to log file.
+            path: path, path to log file.
 
         NB: This currently depends on having a non-default handlers_perflog.filelog.format
             in reframe's configuration. See code.
