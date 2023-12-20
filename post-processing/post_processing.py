@@ -515,59 +515,59 @@ def read_args():
     return parser.parse_args()
 
 def read_config(path):
-        """
-            Return a dictionary containing configuration information for plotting.
-            At least plot title, x-axis, y-axis, and column types must be present.
+    """
+        Return a dictionary containing configuration information for plotting.
+        At least plot title, x-axis, y-axis, and column types must be present.
 
-            Args:
-                path: path, path to yaml config file.
-        """
+        Args:
+            path: path, path to yaml config file.
+    """
 
-        with open(path, "r") as file:
-            config = yaml.safe_load(file)
+    with open(path, "r") as file:
+        config = yaml.safe_load(file)
 
-        # check plot title information
-        if not config.get("title"):
-            raise KeyError("Missing plot title information.")
+    # check plot title information
+    if not config.get("title"):
+        raise KeyError("Missing plot title information.")
 
-        # check x-axis information
-        if not config.get("x_axis"):
-            raise KeyError("Missing x-axis information.")
-        if not config.get("x_axis").get("value"):
-            raise KeyError("Missing x-axis value information.")
-        if not config.get("x_axis").get("units"):
-            raise KeyError("Missing x-axis units information.")
-        if config.get("x_axis").get("units").get("column") is not None and \
-           config.get("x_axis").get("units").get("custom") is not None:
-            raise KeyError("Specify x-axis units information as only one of 'column' or 'custom'.")
+    # check x-axis information
+    if not config.get("x_axis"):
+        raise KeyError("Missing x-axis information.")
+    if not config.get("x_axis").get("value"):
+        raise KeyError("Missing x-axis value information.")
+    if not config.get("x_axis").get("units"):
+        raise KeyError("Missing x-axis units information.")
+    if config.get("x_axis").get("units").get("column") is not None and \
+        config.get("x_axis").get("units").get("custom") is not None:
+        raise KeyError("Specify x-axis units information as only one of 'column' or 'custom'.")
 
-        # check y-axis information
-        if not config.get("y_axis"):
-            raise KeyError("Missing y-axis information.")
-        if not config.get("y_axis").get("value"):
-            raise KeyError("Missing y-axis value information.")
-        if not config.get("y_axis").get("units"):
-            raise KeyError("Missing y-axis units information.")
-        if config.get("y_axis").get("units").get("column") is not None and \
-           config.get("y_axis").get("units").get("custom") is not None:
-            raise KeyError("Specify y-axis units information as only one of 'column' or 'custom'.")
+    # check y-axis information
+    if not config.get("y_axis"):
+        raise KeyError("Missing y-axis information.")
+    if not config.get("y_axis").get("value"):
+        raise KeyError("Missing y-axis value information.")
+    if not config.get("y_axis").get("units"):
+        raise KeyError("Missing y-axis units information.")
+    if config.get("y_axis").get("units").get("column") is not None and \
+        config.get("y_axis").get("units").get("custom") is not None:
+        raise KeyError("Specify y-axis units information as only one of 'column' or 'custom'.")
 
-        # check optional scaling information
-        if config.get("y_axis").get("scaling"):
-            if config.get("y_axis").get("scaling").get("column") is not None and \
-               config.get("y_axis").get("scaling").get("custom") is not None:
-                raise KeyError("Specify y-axis scaling information as only one of 'column' or 'custom'.")
+    # check optional scaling information
+    if config.get("y_axis").get("scaling"):
+        if config.get("y_axis").get("scaling").get("column") is not None and \
+            config.get("y_axis").get("scaling").get("custom") is not None:
+            raise KeyError("Specify y-axis scaling information as only one of 'column' or 'custom'.")
 
-        # check series length
-        if config.get("series"):
-            if len(config.get("series")) == 1:
-                raise KeyError("Number of series must be >= 2.")
+    # check series length
+    if config.get("series"):
+        if len(config.get("series")) == 1:
+            raise KeyError("Number of series must be >= 2.")
 
-        # check column types information
-        if not config.get("column_types"):
-            raise KeyError("Missing column types information.")
+    # check column types information
+    if not config.get("column_types"):
+        raise KeyError("Missing column types information.")
 
-        return config
+    return config
 
 # a modified and updated version of the function from perf_logs.py
 def read_perflog(path):
