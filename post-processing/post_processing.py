@@ -6,14 +6,15 @@ import traceback
 from functools import reduce
 from pathlib import Path
 
+import config_handler as cfg_hand
 import numpy as np
 import pandas as pd
-import yaml
 from bokeh.models import HoverTool, Legend
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
+from config_handler import ConfigHandler
 from perflog_handler import PerflogHandler
 from titlecase import titlecase
 
@@ -25,61 +26,23 @@ class PostProcessing:
         self.debug = debug
         self.verbose = verbose
 
-    def run_post_processing(self, log_path, config):
+    def run_post_processing(self, log_path, config_dict):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
 
             Args:
                 log_path: path, path to a log file or a directory containing log files.
-                config: dict, configuration information for plotting.
+                config_dict: dict, configuration information for plotting.
         """
 
         # find and read perflogs
         df = PerflogHandler(log_path, self.debug).read_all_perflogs()
-
-        # ----- 3 CONFIG INFO -----
-
-        # get axis columns
-        columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
-        if config["x_axis"]["units"].get("column"):
-            columns.insert(1, config["x_axis"]["units"]["column"])
-        if config["y_axis"]["units"].get("column"):
-            columns.append(config["y_axis"]["units"]["column"])
-
-        # FIXME: allow all series values to be selected with *
-        # (or if only column name is supplied)
-        series = config.get("series")
-        # extract series columns and filters
-        series_columns = [s[0] for s in series] if series else []
-        series_filters = [[s[0], "==", s[1]] for s in series] if series else []
-        # check acceptable number of series
-        if len(set(series_columns)) > 1:
-            raise RuntimeError("Currently supporting grouping of series by only one column. \
-                               Please use a single column name in your series configuration.")
-        # add series columns to dataframe column list
-        for c in series_columns:
-            if c not in columns:
-                columns.append(c)
-
-        and_filters = config["filters"]["and"] if config.get("filters") else []
-        or_filters = config["filters"]["or"] if config.get("filters") else []
-        # extract filter columns
-        filter_columns = [f[0] for f in and_filters] + [f[0] for f in or_filters]
-
-        # FIXME: add scaling for x-axis
-        scaling_columns = []
-        # extract scaling columns
-        if config["y_axis"].get("scaling"):
-            if config["y_axis"]["scaling"].get("column"):
-                scaling_columns.append(config["y_axis"]["scaling"]["column"]["name"])
-
-        # gather all relevant columns
-        all_columns = set(columns + filter_columns + scaling_columns)
+        config = ConfigHandler(config_dict)
 
         invalid_columns = []
         # check for invalid columns
-        for col in all_columns:
+        for col in config.all_columns:
             if col not in df.columns:
                 invalid_columns.append(col)
         if invalid_columns:
@@ -88,11 +51,11 @@ class PostProcessing:
         # ----- 4 APPLY TYPES -----
 
         # apply user-specified types to all relevant columns
-        for col in all_columns:
-            if config["column_types"].get(col):
+        for col in config.all_columns:
+            if config.column_types.get(col):
 
                 # get user input type
-                conversion_type = config["column_types"][col]
+                conversion_type = config.column_types[col]
                 # allow user to specify "datetime" as a type (internally convert to "datetime64")
                 conversion_type += "64" if conversion_type == "datetime" else ""
 
@@ -125,11 +88,11 @@ class PostProcessing:
 
         # ----- 5 SORT -----
 
-        sorting_columns = [config["x_axis"]["value"]]
+        sorting_columns = [config.x_axis["value"]]
         # sort x-axis values and series in ascending order
-        if series_columns:
-            # NOTE: currently assuming there can only be one series column
-            sorting_columns.append(series_columns[0])
+        if config.series_columns:
+            # NOTE: currently assuming there can only be one unique series column
+            sorting_columns.append(config.series_columns[0])
         # sorting here is necessary to ensure correct filtering + scaling alignment
         df.sort_values(sorting_columns, inplace=True, ignore_index=True)
 
@@ -137,29 +100,29 @@ class PostProcessing:
 
         mask = pd.Series(df.index.notnull())
         # filter rows
-        if and_filters:
-            mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
-        if or_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
+        if config.and_filters:
+            mask = reduce(op.and_, (self.row_filter(f, df) for f in config.and_filters))
+        if config.or_filters:
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in config.or_filters))
         # apply series filters
-        if series_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+        if config.series_filters:
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in config.series_filters))
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
         # get number of occurrences of each column
-        series_col_count = {c: series_columns.count(c) for c in series_columns}
+        series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
         # get number of column combinations
         series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
 
         num_filtered_rows = len(df[mask])
-        num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
+        num_x_data_points = series_combinations * len(set(df[config.x_axis["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match \
                                number of unique x-axis values per series ({1})"
-                               .format(num_filtered_rows, num_x_data_points), df[columns][mask])
+                               .format(num_filtered_rows, num_x_data_points), df[config.plot_columns][mask])
 
         # ----- 7 TRANSFORM DATA -----
 
@@ -167,37 +130,37 @@ class PostProcessing:
         scaling_series_mask = None
         scaling_x_value_mask = None
         # extract scaling information
-        if config["y_axis"].get("scaling"):
+        if config.y_axis.get("scaling"):
 
             # check column information
-            if config["y_axis"]["scaling"].get("column"):
+            if config.y_axis["scaling"].get("column"):
                 # copy scaling column (prevents issues when scaling by itself)
-                scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
+                scaling_column = df[config.y_axis["scaling"]["column"]["name"]].copy()
                 # get mask of scaling series
-                if config["y_axis"]["scaling"]["column"].get("series") is not None:
+                if config.y_axis["scaling"]["column"].get("series") is not None:
                     scaling_series_mask = self.row_filter(
-                        series_filters[config["y_axis"]["scaling"]["column"]["series"]], df)
+                        config.series_filters[config.y_axis["scaling"]["column"]["series"]], df)
                 # get mask of scaling x-value
-                if config["y_axis"]["scaling"]["column"].get("x_value"):
+                if config.y_axis["scaling"]["column"].get("x_value"):
                     scaling_x_value_mask = (
-                        df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"])
+                        df[config.x_axis["value"]] == config.y_axis["scaling"]["column"]["x_value"])
 
             # check custom value is not zero
-            elif not config["y_axis"]["scaling"].get("custom"):
+            elif not config.y_axis["scaling"].get("custom"):
                 raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
-                                   .format(config["y_axis"]["scaling"].get("custom")))
+                                   .format(config.y_axis["scaling"].get("custom")))
 
             # apply data transformation per series
-            if series_filters:
-                for f in series_filters:
+            if config.series_filters:
+                for f in config.series_filters:
                     m = self.row_filter(f, df)
                     df[mask & m] = self.transform_axis(
-                        df[mask & m], mask & m, config["y_axis"], scaling_column,
+                        df[mask & m], mask & m, config.y_axis, scaling_column,
                         scaling_series_mask, scaling_x_value_mask)
             # apply data transformation to all data
             else:
                 df[mask] = self.transform_axis(
-                    df[mask], mask, config["y_axis"], scaling_column,
+                    df[mask], mask, config.y_axis, scaling_column,
                     scaling_series_mask, scaling_x_value_mask)
 
         # FIXME: add this as a config option at some point
@@ -207,20 +170,20 @@ class PostProcessing:
         #    df.index = range(len(df.index))
 
         print("Selected dataframe:")
-        print(df[columns][mask])
+        print(df[config.plot_columns][mask])
 
         # ----- 8 PLOT -----
 
         # call a plotting script
         self.plot_generic(
-            config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
+            config.title, df[config.plot_columns][mask], config.x_axis, config.y_axis, config.series_filters)
 
         if self.debug & self.verbose:
             print("")
             print("Full dataframe:")
             print(df.to_json(orient="columns", indent=2))
 
-        return df[columns][mask]
+        return df[config.plot_columns][mask]
 
     def plot_generic(self, title, df: pd.DataFrame, x_axis, y_axis, series_filters):
         """
@@ -476,62 +439,6 @@ def read_args():
     return parser.parse_args()
 
 
-def read_config(path):
-    """
-        Return a dictionary containing configuration information for plotting.
-        At least plot title, x-axis, y-axis, and column types must be present.
-
-        Args:
-            path: path, path to yaml config file.
-    """
-
-    with open(path, "r") as file:
-        config = yaml.safe_load(file)
-
-    # check plot title information
-    if not config.get("title"):
-        raise KeyError("Missing plot title information.")
-
-    # check x-axis information
-    if not config.get("x_axis"):
-        raise KeyError("Missing x-axis information.")
-    if not config.get("x_axis").get("value"):
-        raise KeyError("Missing x-axis value information.")
-    if not config.get("x_axis").get("units"):
-        raise KeyError("Missing x-axis units information.")
-    if (config.get("x_axis").get("units").get("column") is not None and
-        config.get("x_axis").get("units").get("custom") is not None):
-        raise KeyError("Specify x-axis units information as only one of 'column' or 'custom'.")
-
-    # check y-axis information
-    if not config.get("y_axis"):
-        raise KeyError("Missing y-axis information.")
-    if not config.get("y_axis").get("value"):
-        raise KeyError("Missing y-axis value information.")
-    if not config.get("y_axis").get("units"):
-        raise KeyError("Missing y-axis units information.")
-    if (config.get("y_axis").get("units").get("column") is not None and
-        config.get("y_axis").get("units").get("custom") is not None):
-        raise KeyError("Specify y-axis units information as only one of 'column' or 'custom'.")
-
-    # check optional scaling information
-    if config.get("y_axis").get("scaling"):
-        if (config.get("y_axis").get("scaling").get("column") is not None and
-            config.get("y_axis").get("scaling").get("custom") is not None):
-            raise KeyError("Specify y-axis scaling information as only one of 'column' or 'custom'.")
-
-    # check series length
-    if config.get("series"):
-        if len(config.get("series")) == 1:
-            raise KeyError("Number of series must be >= 2.")
-
-    # check column types information
-    if not config.get("column_types"):
-        raise KeyError("Missing column types information.")
-
-    return config
-
-
 def get_axis_info(df: pd.DataFrame, axis, series_filters):
     """
         Return the column name and label for a given axis. If a column name is supplied as
@@ -582,7 +489,8 @@ def main():
     post = PostProcessing(args.debug, args.verbose)
 
     try:
-        config = read_config(args.config_path)
+        config = cfg_hand.open_config(args.config_path)
+        cfg_hand.read_config(config)
         post.run_post_processing(args.log_path, config)
 
     except Exception as e:

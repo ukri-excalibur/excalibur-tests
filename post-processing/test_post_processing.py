@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 import perflog_handler as log_hand
+import config_handler as cfg_hand
 import post_processing as post
 import pytest
 
@@ -178,6 +179,15 @@ def test_high_level_script(run_sombrero):
     sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path = run_sombrero
     post_ = post.PostProcessing()
 
+    # check expected failure from nonexistent log file
+    try:
+        post_.run_post_processing(os.path.join(Path(sombrero_log_path).parent,
+                                               "SombreroBenchmarkNonexistent.log"), {})
+    except FileNotFoundError:
+        assert True
+    else:
+        assert False
+
     # check expected failure from invalid log file
     try:
         post_.run_post_processing(sombrero_incomplete_log_path, {})
@@ -186,11 +196,11 @@ def test_high_level_script(run_sombrero):
     else:
         assert False
 
-    # check expected failure from lack of axis information
+    # check expected failure from lack of config information
     try:
-        post_.run_post_processing(sombrero_log_path, {})
-    except KeyError as e:
-        assert e.args[0] == "x_axis"
+        cfg_hand.read_config({})
+    except KeyError:
+        assert True
     else:
         assert False
 
