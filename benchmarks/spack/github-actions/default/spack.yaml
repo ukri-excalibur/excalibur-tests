@@ -8,6 +8,9 @@ spack:
   view: false
   include:
   - ../../common.yaml
+  mirrors:
+    spack-buildcache: oci://ghcr.io/spack/github-actions-buildcache
+    excalibur-buildcache: oci://ghcr.io/ukri-excalibur/github-actions-buildcache
   compilers:
   - compiler:
       spec: clang@12.0.1
@@ -62,7 +65,7 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: gcc@10.4.0
+      spec: gcc@10.5.0
       paths:
         cc: /usr/bin/gcc-10
         cxx: /usr/bin/g++-10
@@ -75,7 +78,7 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: gcc@11.3.0
+      spec: gcc@11.4.0
       paths:
         cc: /usr/bin/gcc
         cxx: /usr/bin/g++
@@ -88,7 +91,7 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: gcc@12.1.0
+      spec: gcc@12.3.0
       paths:
         cc: /usr/bin/gcc-12
         cxx: /usr/bin/g++-12
@@ -101,14 +104,5 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
-    cmake:
-      externals:
-      - spec: cmake@3.22.1
-        prefix: /usr
-      - spec: cmake@3.25.0
-        prefix: /usr/local
-    openmpi:
-      externals:
-      - spec: openmpi@4.1.2%gcc@11.3.0~cuda+cxx~cxx_exceptions+java~memchecker+pmi~static~wrapper-rpath
-          fabrics=ofi,psm,psm2,ucx schedulers=slurm
-        prefix: /usr
+    all:
+      require: '%gcc@12 target=x86_64_v2'

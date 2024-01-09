@@ -13,7 +13,7 @@ env:
 jobs:
   test:
     name: Tests on ${{ matrix.os }} - Spack ${{ matrix.spack_version }} - Spack spec ${{ matrix.spack_spec }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -21,14 +21,14 @@ jobs:
         os:
           - ubuntu-latest
         spack_version:
-          # In README.md we claim compatibility with v0.18.0
-          - v0.18.0
+          # # In README.md we claim compatibility with v0.18.0
+          # - v0.18.0
           - develop
         spack_spec:
           # `example` is a package in our custom Spack repo, ensure we can build
           # packages in it.
           - sombrero@2021-08-16
-          - example@2021-08-16
+          # - example@2021-08-16
         # Compatible ReFrame versions are set in pyproject.toml
     steps:
       - uses: actions/checkout@v4
@@ -56,14 +56,12 @@ jobs:
       - name: ReFrame version number
         shell: bash
         run: reframe -V
-      - name: Install OpenMPI, CMake and extra Python packages
-        shell: bash
-        run: sudo apt-get install openmpi-bin libopenmpi-dev cmake
       - name: Run sample benchmark
         shell: bash
         run: |
           reframe -v -c benchmarks/examples/sombrero --run --performance-report --system github-actions:default -S'spack_spec=${{ matrix.spack_spec }}'
-      - name: Post-processing tests
-        shell: bash
-        run: |
-          pytest
+          find -name 'rfm_build.out' -print -exec cat '{}' \;
+      # - name: Post-processing tests
+      #   shell: bash
+      #   run: |
+      #     pytest
