@@ -48,14 +48,58 @@ class PostProcessing:
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
-        # ----- 4 APPLY TYPES -----
+        # apply column types
+        self.apply_df_types(df, config.all_columns, config.column_types)
+        # sort rows
+        # NOTE: sorting here is necessary to ensure correct filtering + scaling alignment
+        self.sort_df(df, config.x_axis, config.series_columns)
+        # filter data
+        mask = self.filter_df(df, config.and_filters, config.or_filters, config.series_filters)
 
-        # apply user-specified types to all relevant columns
-        for col in config.all_columns:
-            if config.column_types.get(col):
+        # get number of occurrences of each column
+        series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
+        # get number of column combinations
+        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
+        num_filtered_rows = len(df[mask])
+        num_x_data_points = series_combinations * len(set(df[config.x_axis["value"]][mask]))
+        # check expected number of rows
+        if num_filtered_rows > num_x_data_points:
+            raise RuntimeError("Unexpected number of rows ({0}) does not match \
+                               number of unique x-axis values per series ({1})"
+                               .format(num_filtered_rows, num_x_data_points), df[config.plot_columns][mask])
+
+        # scale y-axis
+        self.transform_df_data(df, config.x_axis, config.y_axis, config.series_filters, mask)
+
+        print("Selected dataframe:")
+        print(df[config.plot_columns][mask])
+
+        # call a plotting script
+        self.plot_generic(
+            config.title, df[config.plot_columns][mask], config.x_axis, config.y_axis, config.series_filters)
+
+        if self.debug & self.verbose:
+            print("")
+            print("Full dataframe:")
+            print(df.to_json(orient="columns", indent=2))
+
+        return df[config.plot_columns][mask]
+
+    def apply_df_types(self, df: pd.DataFrame, all_columns, column_types):
+        """
+            Apply user-specified types to all relevant columns in the dataframe.
+
+            Args:
+                df: dataframe, benchmarking data.
+                all_columns: list, names of important columns in the dataframe.
+                column_types: dict, name-type pairs for important columns in the dataframe.
+        """
+
+        for col in all_columns:
+            if column_types.get(col):
 
                 # get user input type
-                conversion_type = config.column_types[col]
+                conversion_type = column_types[col]
                 # allow user to specify "datetime" as a type (internally convert to "datetime64")
                 conversion_type += "64" if conversion_type == "datetime" else ""
 
@@ -86,114 +130,113 @@ class PostProcessing:
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
-        # ----- 5 SORT -----
+    def sort_df(self, df: pd.DataFrame, x_axis, series_columns):
+        """
+            Sort the given dataframe such that x-axis values and series are in ascending order.
 
-        sorting_columns = [config.x_axis["value"]]
-        # sort x-axis values and series in ascending order
-        if config.series_columns:
+            Args:
+                df: dataframe, benchmarking data.
+                x_axis: dict, x-axis column and units.
+                series_columns: list, series column names.
+        """
+
+        sorting_columns = [x_axis["value"]]
+        if series_columns:
             # NOTE: currently assuming there can only be one unique series column
-            sorting_columns.append(config.series_columns[0])
-        # sorting here is necessary to ensure correct filtering + scaling alignment
+            sorting_columns.append(series_columns[0])
         df.sort_values(sorting_columns, inplace=True, ignore_index=True)
 
-        # ----- 6 FILTER -----
+    def filter_df(self, df: pd.DataFrame, and_filters, or_filters, series_filters):
+        """
+            Return a mask for the given dataframe based on user-specified filter conditions.
+
+            Args:
+                df: dataframe, benchmarking data.
+                and_filters: list, filter conditions to be concatenated together with logical AND.
+                or_filters: list, filter conditions to be concatenated together with logical OR.
+                series_filters: list, like or_filters, but specifically for series.
+        """
 
         mask = pd.Series(df.index.notnull())
         # filter rows
-        if config.and_filters:
-            mask = reduce(op.and_, (self.row_filter(f, df) for f in config.and_filters))
-        if config.or_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in config.or_filters))
+        if and_filters:
+            mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
+        if or_filters:
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
         # apply series filters
-        if config.series_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in config.series_filters))
+        if series_filters:
+            mask &= reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
         # ensure not all rows are filtered away
         if df[mask].empty:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
 
-        # get number of occurrences of each column
-        series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
-        # get number of column combinations
-        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
+        return mask
 
-        num_filtered_rows = len(df[mask])
-        num_x_data_points = series_combinations * len(set(df[config.x_axis["value"]][mask]))
-        # check expected number of rows
-        if num_filtered_rows > num_x_data_points:
-            raise RuntimeError("Unexpected number of rows ({0}) does not match \
-                               number of unique x-axis values per series ({1})"
-                               .format(num_filtered_rows, num_x_data_points), df[config.plot_columns][mask])
+    def transform_df_data(self, df: pd.DataFrame, x_axis, y_axis, series_filters, mask):
+        """
+            Transform dataframe y-axis based on scaling settings.
 
-        # ----- 7 TRANSFORM DATA -----
+            Args:
+                df: dataframe, benchmarking data.
+                x_axis: dict, x-axis column and units.
+                y_axis: dict, y-axis column, units, and scaling information.
+                series_filters: list, x-axis groups.
+                mask: mask, dataframe filters.
+        """
 
+        # FIXME: overhaul this section
         scaling_column = None
         scaling_series_mask = None
         scaling_x_value_mask = None
         # extract scaling information
-        if config.y_axis.get("scaling"):
+        if y_axis.get("scaling"):
 
             # check column information
-            if config.y_axis["scaling"].get("column"):
+            if y_axis["scaling"].get("column"):
                 # copy scaling column (prevents issues when scaling by itself)
-                scaling_column = df[config.y_axis["scaling"]["column"]["name"]].copy()
+                scaling_column = df[y_axis["scaling"]["column"]["name"]].copy()
                 # get mask of scaling series
-                if config.y_axis["scaling"]["column"].get("series") is not None:
+                if y_axis["scaling"]["column"].get("series") is not None:
                     scaling_series_mask = self.row_filter(
-                        config.series_filters[config.y_axis["scaling"]["column"]["series"]], df)
+                        series_filters[y_axis["scaling"]["column"]["series"]], df)
                 # get mask of scaling x-value
-                if config.y_axis["scaling"]["column"].get("x_value"):
+                if y_axis["scaling"]["column"].get("x_value"):
                     scaling_x_value_mask = (
-                        df[config.x_axis["value"]] == config.y_axis["scaling"]["column"]["x_value"])
+                        df[x_axis["value"]] == y_axis["scaling"]["column"]["x_value"])
 
             # check custom value is not zero
-            elif not config.y_axis["scaling"].get("custom"):
+            elif not y_axis["scaling"].get("custom"):
                 raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
-                                   .format(config.y_axis["scaling"].get("custom")))
+                                   .format(y_axis["scaling"].get("custom")))
 
             # apply data transformation per series
-            if config.series_filters:
-                for f in config.series_filters:
+            if series_filters:
+                for f in series_filters:
                     m = self.row_filter(f, df)
                     df[mask & m] = self.transform_axis(
-                        df[mask & m], mask & m, config.y_axis, scaling_column,
+                        df[mask & m], mask & m, y_axis, scaling_column,
                         scaling_series_mask, scaling_x_value_mask)
             # apply data transformation to all data
             else:
                 df[mask] = self.transform_axis(
-                    df[mask], mask, config.y_axis, scaling_column,
+                    df[mask], mask, y_axis, scaling_column,
                     scaling_series_mask, scaling_x_value_mask)
 
         # FIXME: add this as a config option at some point
-        # if config["y_axis"].get("drop_nan"):
-        #    df.dropna(subset=[config["y_axis"]["value"]], inplace=True)
+        # if y_axis.get("drop_nan"):
+        #    df.dropna(subset=[y_axis["value"]], inplace=True)
             # reset index
         #    df.index = range(len(df.index))
-
-        print("Selected dataframe:")
-        print(df[config.plot_columns][mask])
-
-        # ----- 8 PLOT -----
-
-        # call a plotting script
-        self.plot_generic(
-            config.title, df[config.plot_columns][mask], config.x_axis, config.y_axis, config.series_filters)
-
-        if self.debug & self.verbose:
-            print("")
-            print("Full dataframe:")
-            print(df.to_json(orient="columns", indent=2))
-
-        return df[config.plot_columns][mask]
 
     def plot_generic(self, title, df: pd.DataFrame, x_axis, y_axis, series_filters):
         """
             Create a bar chart for the supplied data using bokeh.
 
             Args:
-                title: str, plot title (read from config).
+                title: str, plot title.
                 df: dataframe, data to plot.
-                x_axis: dict, x-axis column and units (read from config).
-                y_axis: dict, y-axis column and units (read from config).
+                x_axis: dict, x-axis column and units.
+                y_axis: dict, y-axis column and units.
                 series_filters: list, x-axis groups used to filter graph data.
         """
 
