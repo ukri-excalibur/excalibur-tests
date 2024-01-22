@@ -3,9 +3,9 @@ import shutil
 import subprocess as sp
 from pathlib import Path
 
+import config_handler as cfg_hand
 import pandas as pd
 import perflog_handler as log_hand
-import config_handler as cfg_hand
 import post_processing as post
 import pytest
 
