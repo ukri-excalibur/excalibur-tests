@@ -17,6 +17,7 @@ class PostProcessing:
         # FIXME: add proper logging
         self.debug = debug
         self.verbose = verbose
+        # FIXME: add df and config directly to init?
 
     def run_post_processing(self, log_path, config_dict):
         """
@@ -29,61 +30,64 @@ class PostProcessing:
         """
 
         # find and read perflogs
-        df = PerflogHandler(log_path, self.debug).read_all_perflogs()
+        self.df = PerflogHandler(log_path, self.debug).read_all_perflogs()
         config = ConfigHandler(config_dict)
 
         invalid_columns = []
         # check for invalid columns
         for col in config.all_columns:
-            if col not in df.columns:
+            if col not in self.df.columns:
                 invalid_columns.append(col)
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
         # apply column types
-        self.apply_df_types(df, config.all_columns, config.column_types)
+        # FIXME: could this function be part of the perflog handler?
+        self.apply_df_types(config.all_columns, config.column_types)
         # sort rows
         # NOTE: sorting here is necessary to ensure correct filtering + scaling alignment
-        self.sort_df(df, config.x_axis, config.series_columns)
+        self.sort_df(config.x_axis, config.series_columns)
         # filter data
-        mask = self.filter_df(df, config.and_filters, config.or_filters, config.series_filters)
+        # FIXME: should mask also belong to self?
+        mask = self.filter_df(
+            config.and_filters, config.or_filters, config.series_filters)
 
         # get number of occurrences of each column
         series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
         # get number of column combinations
         series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
-        num_filtered_rows = len(df[mask])
-        num_x_data_points = series_combinations * len(set(df[config.x_axis["value"]][mask]))
+        num_filtered_rows = len(self.df[mask])
+        num_x_data_points = series_combinations * len(set(self.df[config.x_axis["value"]][mask]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match \
                                number of unique x-axis values per series ({1})"
-                               .format(num_filtered_rows, num_x_data_points), df[config.plot_columns][mask])
+                               .format(num_filtered_rows, num_x_data_points),
+                               self.df[config.plot_columns][mask])
 
         # scale y-axis
-        self.transform_df_data(df, config.x_axis, config.y_axis, config.series_filters, mask)
+        self.transform_df_data(config.x_axis, config.y_axis, config.series_filters, mask)
 
         print("Selected dataframe:")
-        print(df[config.plot_columns][mask])
+        print(self.df[config.plot_columns][mask])
 
         # call a plotting script
         plot_generic(
-            config.title, df[config.plot_columns][mask], config.x_axis, config.y_axis,
-            config.series_filters, self.debug)
+            config.title, self.df[config.plot_columns][mask],
+            config.x_axis, config.y_axis, config.series_filters, self.debug)
 
         if self.debug & self.verbose:
             print("")
             print("Full dataframe:")
-            print(df.to_json(orient="columns", indent=2))
+            print(self.df.to_json(orient="columns", indent=2))
 
-        return df[config.plot_columns][mask]
+        return self.df[config.plot_columns][mask]
 
-    def apply_df_types(self, df: pd.DataFrame, all_columns, column_types):
+    def apply_df_types(self, all_columns, column_types):
         """
             Apply user-specified types to all relevant columns in the dataframe.
 
             Args:
-                df: dataframe, benchmarking data.
                 all_columns: list, names of important columns in the dataframe.
                 column_types: dict, name-type pairs for important columns in the dataframe.
         """
@@ -115,20 +119,19 @@ class PostProcessing:
                                        .format(conversion_type, col))
 
                 # skip type conversion if column is already the desired type
-                if conversion_type == df[col].dtype:
+                if conversion_type == self.df[col].dtype:
                     continue
                 # otherwise apply type to column
-                df[col] = df[col].astype(conversion_type)
+                self.df[col] = self.df[col].astype(conversion_type)
 
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
-    def sort_df(self, df: pd.DataFrame, x_axis, series_columns):
+    def sort_df(self, x_axis, series_columns):
         """
             Sort the given dataframe such that x-axis values and series are in ascending order.
 
             Args:
-                df: dataframe, benchmarking data.
                 x_axis: dict, x-axis column and units.
                 series_columns: list, series column names.
         """
@@ -137,40 +140,38 @@ class PostProcessing:
         if series_columns:
             # NOTE: currently assuming there can only be one unique series column
             sorting_columns.append(series_columns[0])
-        df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+        self.df.sort_values(sorting_columns, inplace=True, ignore_index=True)
 
-    def filter_df(self, df: pd.DataFrame, and_filters, or_filters, series_filters):
+    def filter_df(self, and_filters, or_filters, series_filters):
         """
             Return a mask for the given dataframe based on user-specified filter conditions.
 
             Args:
-                df: dataframe, benchmarking data.
                 and_filters: list, filter conditions to be concatenated together with logical AND.
                 or_filters: list, filter conditions to be concatenated together with logical OR.
                 series_filters: list, function like or_filters but use series to select x-axis groups.
         """
 
-        mask = pd.Series(df.index.notnull())
+        mask = pd.Series(self.df.index.notnull())
         # filter rows
         if and_filters:
-            mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
+            mask = reduce(op.and_, (self.row_filter(f, self.df) for f in and_filters))
         if or_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, self.df) for f in or_filters))
         # apply series filters
         if series_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, self.df) for f in series_filters))
         # ensure not all rows are filtered away
-        if df[mask].empty:
-            raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
+        if self.df[mask].empty:
+            raise pd.errors.EmptyDataError("Filtered dataframe is empty", self.df[mask].index)
 
         return mask
 
-    def transform_df_data(self, df: pd.DataFrame, x_axis, y_axis, series_filters, mask):
+    def transform_df_data(self, x_axis, y_axis, series_filters, mask):
         """
             Transform dataframe y-axis based on scaling settings.
 
             Args:
-                df: dataframe, benchmarking data.
                 x_axis: dict, x-axis column and units.
                 y_axis: dict, y-axis column, units, and scaling information.
                 series_filters: list, x-axis group filters.
@@ -187,15 +188,15 @@ class PostProcessing:
             # check column information
             if y_axis["scaling"].get("column"):
                 # copy scaling column (prevents issues when scaling by itself)
-                scaling_column = df[y_axis["scaling"]["column"]["name"]].copy()
+                scaling_column = self.df[y_axis["scaling"]["column"]["name"]].copy()
                 # get mask of scaling series
                 if y_axis["scaling"]["column"].get("series") is not None:
                     scaling_series_mask = self.row_filter(
-                        series_filters[y_axis["scaling"]["column"]["series"]], df)
+                        series_filters[y_axis["scaling"]["column"]["series"]], self.df)
                 # get mask of scaling x-value
                 if y_axis["scaling"]["column"].get("x_value"):
                     scaling_x_value_mask = (
-                        df[x_axis["value"]] == y_axis["scaling"]["column"]["x_value"])
+                        self.df[x_axis["value"]] == y_axis["scaling"]["column"]["x_value"])
 
             # check custom value is not zero
             elif not y_axis["scaling"].get("custom"):
@@ -205,14 +206,14 @@ class PostProcessing:
             # apply data transformation per series
             if series_filters:
                 for f in series_filters:
-                    m = self.row_filter(f, df)
-                    df[mask & m] = self.transform_axis(
-                        df[mask & m], mask & m, y_axis, scaling_column,
+                    m = self.row_filter(f, self.df)
+                    self.df[mask & m] = self.transform_axis(
+                        self.df[mask & m], mask & m, y_axis, scaling_column,
                         scaling_series_mask, scaling_x_value_mask)
             # apply data transformation to all data
             else:
-                df[mask] = self.transform_axis(
-                    df[mask], mask, y_axis, scaling_column,
+                self.df[mask] = self.transform_axis(
+                    self.df[mask], mask, y_axis, scaling_column,
                     scaling_series_mask, scaling_x_value_mask)
 
         # FIXME: add this as a config option at some point
@@ -361,6 +362,7 @@ def main():
     post = PostProcessing(args.debug, args.verbose)
 
     try:
+        # FIXME: for ease of use, make a function that both reads and opens config
         config = cfg_hand.open_config(args.config_path)
         cfg_hand.read_config(config)
         post.run_post_processing(args.log_path, config)
