@@ -1,6 +1,6 @@
 import argparse
-import ast
 import errno
+import json
 import math
 import operator as op
 import os
@@ -587,7 +587,7 @@ def read_perflog(path):
     # replace other columns with dictionary contents
     dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
     for col in dict_cols:
-        results = df[col].apply(lambda x: ast.literal_eval(x))
+        results = df[col].apply(lambda x: json.loads(x))
         # insert new columns and contents
         insert_key_cols(df, df.columns.get_loc(col), results)
         # drop old column
