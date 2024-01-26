@@ -31,39 +31,14 @@ class PostProcessing:
         # find and read perflogs
         self.df = PerflogHandler(log_path, self.debug).read_all_perflogs()
 
-        invalid_columns = []
-        # check for invalid columns
-        for col in config.all_columns:
-            if col not in self.df.columns:
-                invalid_columns.append(col)
-        if invalid_columns:
-            raise KeyError("Could not find columns", invalid_columns)
-
         # apply column types
-        # FIXME: could this function be part of the perflog handler?
         self.apply_df_types(config.all_columns, config.column_types)
         # sort rows
         # NOTE: sorting here is necessary to ensure correct filtering + scaling alignment
         self.sort_df(config.x_axis, config.series_columns)
         # filter data
-        # FIXME: should mask also belong to self?
-        mask = self.filter_df(
-            config.and_filters, config.or_filters, config.series_filters)
-
-        # FIXME: make these error checking bits their own functions
-        # get number of occurrences of each column
-        series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
-        # get number of column combinations
-        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
-        num_filtered_rows = len(self.df[mask])
-        num_x_data_points = series_combinations * len(set(self.df[config.x_axis["value"]][mask]))
-        # check expected number of rows
-        if num_filtered_rows > num_x_data_points:
-            raise RuntimeError("Unexpected number of rows ({0}) does not match \
-                               number of unique x-axis values per series ({1})"
-                               .format(num_filtered_rows, num_x_data_points),
-                               self.df[config.plot_columns][mask])
-
+        mask = self.filter_df(config.and_filters, config.or_filters, config.series_filters)
+        self.check_filtered_row_count(mask, config.x_axis, config.series_columns, config.plot_columns)
         # scale y-axis
         self.transform_df_data(config.x_axis, config.y_axis, config.series_filters, mask)
 
@@ -84,14 +59,33 @@ class PostProcessing:
 
         return self.df[config.plot_columns][mask]
 
+    def check_df_columns(self, all_columns):
+        """
+            Check that all columns listed in the config exist in the dataframe.
+
+            Args:
+                all_columns: list, names of all columns mentioned in the config.
+        """
+
+        invalid_columns = []
+        # check for invalid columns
+        for col in all_columns:
+            if col not in self.df.columns:
+                invalid_columns.append(col)
+        if invalid_columns:
+            raise KeyError("Could not find columns", invalid_columns)
+
     def apply_df_types(self, all_columns, column_types):
         """
             Apply user-specified types to all relevant columns in the dataframe.
 
             Args:
-                all_columns: list, names of important columns in the dataframe.
-                column_types: dict, name-type pairs for important columns in the dataframe.
+                all_columns: list, names of all columns mentioned in the config.
+                column_types: dict, name-type pairs for all important columns.
         """
+
+        # validate columns
+        self.check_df_columns(all_columns)
 
         for col in all_columns:
             if column_types.get(col):
@@ -134,7 +128,7 @@ class PostProcessing:
 
             Args:
                 x_axis: dict, x-axis column and units.
-                series_columns: list, series column names.
+                series_columns: list, names of series columns.
         """
 
         sorting_columns = [x_axis["value"]]
@@ -167,6 +161,31 @@ class PostProcessing:
             raise pd.errors.EmptyDataError("Filtered dataframe is empty", self.df[mask].index)
 
         return mask
+
+    def check_filtered_row_count(self, mask, x_axis, series_columns, plot_columns):
+        """
+            Check that the filtered dataframe does not have an incompatible number of rows.
+            Row number must match number of unique x-axis values per series.
+
+            Args:
+                mask: bool series, dataframe filters.
+                x_axis: dict, x-axis column and units.
+                series_columns: list, names of series columns.
+                plot_columns: list, names of all columns needed for plotting.
+        """
+
+        # get number of occurrences of each column
+        series_col_count = {c: series_columns.count(c) for c in series_columns}
+        # get number of column combinations
+        series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
+        num_filtered_rows = len(self.df[mask])
+        num_x_data_points = series_combinations * len(set(self.df[mask][x_axis["value"]]))
+        # check expected number of rows
+        if num_filtered_rows > num_x_data_points:
+            raise RuntimeError("Unexpected number of rows ({0}) does not match \
+                               number of unique x-axis values per series ({1})"
+                               .format(num_filtered_rows, num_x_data_points),
+                               self.df[plot_columns][mask])
 
     def transform_df_data(self, x_axis, y_axis, series_filters, mask):
         """
