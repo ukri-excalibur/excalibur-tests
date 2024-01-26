@@ -122,7 +122,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.title.text_font_size = "15pt"
 
     # get label values with their original dtype
-    label_values = [pd.Series(x.label.value.split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
+    label_values = [pd.Series(x.label["value"].split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
                     for x in plot.legend[0].items]
     # sort legend items (order determined by x-axis sort)
     sorted_legend_items = [x[1] for x in sorted(zip(label_values, plot.legend[0].items),
