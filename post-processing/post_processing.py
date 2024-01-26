@@ -4,7 +4,6 @@ import traceback
 from functools import reduce
 from pathlib import Path
 
-import config_handler as cfg_hand
 import pandas as pd
 from config_handler import ConfigHandler
 from perflog_handler import PerflogHandler
@@ -19,19 +18,18 @@ class PostProcessing:
         self.verbose = verbose
         # FIXME: add df and config directly to init?
 
-    def run_post_processing(self, log_path, config_dict):
+    def run_post_processing(self, log_path, config: ConfigHandler):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
 
             Args:
                 log_path: path, path to a log file or a directory containing log files.
-                config_dict: dict, configuration information for plotting.
+                config: ConfigHandler, class containing configuration information for plotting.
         """
 
         # find and read perflogs
         self.df = PerflogHandler(log_path, self.debug).read_all_perflogs()
-        config = ConfigHandler(config_dict)
 
         invalid_columns = []
         # check for invalid columns
@@ -52,6 +50,7 @@ class PostProcessing:
         mask = self.filter_df(
             config.and_filters, config.or_filters, config.series_filters)
 
+        # FIXME: make these error checking bits their own functions
         # get number of occurrences of each column
         series_col_count = {c: config.series_columns.count(c) for c in config.series_columns}
         # get number of column combinations
@@ -68,6 +67,7 @@ class PostProcessing:
         # scale y-axis
         self.transform_df_data(config.x_axis, config.y_axis, config.series_filters, mask)
 
+        # FIXME: have an option to put this into a file (-s / --save flag?)
         print("Selected dataframe:")
         print(self.df[config.plot_columns][mask])
 
@@ -76,6 +76,7 @@ class PostProcessing:
             config.title, self.df[config.plot_columns][mask],
             config.x_axis, config.y_axis, config.series_filters, self.debug)
 
+        # FIXME: maybe save this bit to a file as well for easier viewing
         if self.debug & self.verbose:
             print("")
             print("Full dataframe:")
@@ -362,9 +363,7 @@ def main():
     post = PostProcessing(args.debug, args.verbose)
 
     try:
-        # FIXME: for ease of use, make a function that both reads and opens config
-        config = cfg_hand.open_config(args.config_path)
-        cfg_hand.read_config(config)
+        config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(args.log_path, config)
 
     except Exception as e:

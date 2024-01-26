@@ -5,6 +5,9 @@ class ConfigHandler:
 
     def __init__(self, config: dict):
 
+        # validate dict structure
+        config = read_config(config)
+        # extract config information
         self.title = config.get("title")
         self.x_axis = config.get("x_axis")
         self.y_axis = config.get("y_axis")
@@ -15,6 +18,10 @@ class ConfigHandler:
         # get column and filter information
         self.get_filters()
         self.get_columns()
+
+    @classmethod
+    def from_path(cfg_hand, config_path):
+        return cfg_hand(open_config(config_path))
 
     def get_filters(self):
         """

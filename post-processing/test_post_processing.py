@@ -3,11 +3,11 @@ import shutil
 import subprocess as sp
 from pathlib import Path
 
-import config_handler as cfg_hand
 import pandas as pd
 import perflog_handler as log_hand
 import post_processing as post
 import pytest
+from config_handler import ConfigHandler
 
 
 # Run given benchmark with reframe using subprocess
@@ -198,7 +198,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from lack of config information
     try:
-        cfg_hand.read_config({})
+        ConfigHandler({})
     except KeyError:
         assert True
     else:
@@ -207,13 +207,18 @@ def test_high_level_script(run_sombrero):
     # check expected failure from invalid (filter) column
     try:
         post_.run_post_processing(
-            sombrero_log_path, {"filters": {"and": [["fake_column", "==", 2]],
-                                            "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"}}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [["fake_column", "==", 2]],
+                             "or": []},
+                 "series": [],
+                 "column_types": {"fake_column": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except KeyError as e:
         assert e.args[1] == ["fake_column"]
     else:
@@ -222,16 +227,18 @@ def test_high_level_script(run_sombrero):
     # check expected failure from invalid filter operator
     try:
         post_.run_post_processing(
-            sombrero_log_path, {"filters": {"and": [["tasks", "!!", 2]],
-                                            "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [["tasks", "!!", 2]],
+                             "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except KeyError as e:
         assert e.args[1] == "!!"
     else:
@@ -240,16 +247,18 @@ def test_high_level_script(run_sombrero):
     # check expected failure from invalid filter value type
     try:
         post_.run_post_processing(
-            sombrero_log_path, {"filters": {"and": [["flops_value", ">", "v"]],
-                                            "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [["flops_value", ">", "v"]],
+                             "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except ValueError:
         assert True
     else:
@@ -258,16 +267,18 @@ def test_high_level_script(run_sombrero):
     # check expected failure from filtering out every row
     try:
         post_.run_post_processing(
-            sombrero_log_path, {"filters": {"and": [["tasks", ">", 2]],
-                                            "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [["tasks", ">", 2]],
+                             "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except pd.errors.EmptyDataError:
         assert True
     else:
@@ -276,15 +287,17 @@ def test_high_level_script(run_sombrero):
     # check expected failure from row number vs unique x-axis value number mismatch
     try:
         df = post_.run_post_processing(
-            sombrero_log_path, {"filters": {"and": [], "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [], "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except RuntimeError:
         assert True
     else:
@@ -293,15 +306,17 @@ def test_high_level_script(run_sombrero):
     # check correct display name parsing
     try:
         df = post_.run_post_processing(
-            sombrero_changed_log_path, {"filters": {"and": [], "or": []},
-                                        "series": [],
-                                        "x_axis": {"value": "tasks",
-                                                   "units": {"custom": None}},
-                                        "y_axis": {"value": "cpus_per_task",
-                                                   "units": {"column": "extra_param"}},
-                                        "column_types": {"tasks": "int",
-                                                         "cpus_per_task": "int",
-                                                         "extra_param": "int"}})
+            sombrero_changed_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "cpus_per_task",
+                            "units": {"column": "extra_param"}},
+                 "filters": {"and": [], "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "cpus_per_task": "int",
+                                  "extra_param": "int"}}))
     except RuntimeError as e:
         # three param columns found in changed log
         EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
@@ -312,71 +327,75 @@ def test_high_level_script(run_sombrero):
 
     # check correct date filtering
     df = post_.run_post_processing(
-        sombrero_changed_log_path, {"title": "Title",
-                                    "filters": {"and": [["job_completion_time", ">",
-                                                         "2000-06-01T12:30:15"]],
-                                                "or": []},
-                                    "series": [],
-                                    "x_axis": {"value": "job_completion_time",
-                                               "units": {"custom": None}},
-                                    "y_axis": {"value": "flops_value",
-                                               "units": {"column": "flops_unit"}},
-                                    "column_types": {"job_completion_time": "datetime",
-                                                     "flops_value": "float",
-                                                     "flops_unit": "str"}})
+        sombrero_changed_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "job_completion_time",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"}},
+             "filters": {"and": [["job_completion_time", ">", "2000-06-01T12:30:15"]],
+                         "or": []},
+             "series": [],
+             "column_types": {"job_completion_time": "datetime",
+                              "flops_value": "float",
+                              "flops_unit": "str"}}))
     # check returned subset is as expected
     assert len(df) == 2
 
     # check correct or filtering
     df = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [],
-                                        "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]},
-                            "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"}},
-                            "column_types": {"tasks": "int",
-                                             "cpus_per_task": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"}},
+             "filters": {"and": [],
+                         "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]},
+             "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]],
+             "column_types": {"tasks": "int",
+                              "cpus_per_task": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str"}}))
     # check returned subset is as expected
     assert len(df) == 4
 
     # check correct column scaling
     dfs = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [["cpus_per_task", "==", 2]],
-                                        "or": []},
-                            "series": [],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"},
-                                       "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
-                            "column_types": {"tasks": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str",
-                                             "cpus_per_task": "int",
-                                             "OMP_NUM_THREADS": "int"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"},
+                        "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
+             "filters": {"and": [["cpus_per_task", "==", 2]],
+                         "or": []},
+             "series": [],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int",
+                              "OMP_NUM_THREADS": "int"}}))
     # check flops values are halved compared to previous df
     assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
 
     # check correct column + series scaling
     dfs = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [], "or": []},
-                            "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"},
-                                       "scaling": {"column": {"name": "flops_value", "series": 0}}},
-                            "column_types": {"tasks": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str",
-                                             "cpus_per_task": "int"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"},
+                        "scaling": {"column": {"name": "flops_value",
+                                               "series": 0}}},
+             "filters": {"and": [], "or": []},
+             "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"}}))
     assert (dfs[dfs["cpus_per_task"] == 1]["flops_value"].values ==
             df[df["cpus_per_task"] == 1]["flops_value"].values /
             df[df["cpus_per_task"] == 1]["flops_value"].values).all()
@@ -386,75 +405,80 @@ def test_high_level_script(run_sombrero):
 
     # check correct column + series + x value scaling
     dfs = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [], "or": []},
-                            "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"},
-                                       "scaling": {"column": {"name": "flops_value",
-                                                              "series": 0, "x_value": 2}}},
-                            "column_types": {"tasks": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str",
-                                             "cpus_per_task": "int"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"},
+                        "scaling": {"column": {"name": "flops_value",
+                                               "series": 0,
+                                               "x_value": 2}}},
+             "filters": {"and": [], "or": []},
+             "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"}}))
     assert (dfs["flops_value"].values == df["flops_value"].values /
             df[(df["cpus_per_task"] == 1) & (df["tasks"] == 2)]["flops_value"].iloc[0]).all()
 
     # check correct custom scaling
     dfs = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [["cpus_per_task", "==", 2]],
-                                        "or": []},
-                            "series": [],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"},
-                                       "scaling": {"custom": 2}},
-                            "column_types": {"tasks": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str",
-                                             "cpus_per_task": "int"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"},
+                        "scaling": {"custom": 2}},
+             "filters": {"and": [["cpus_per_task", "==", 2]],
+                         "or": []},
+             "series": [],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"}}))
     # check flops values are halved compared to previous df
     assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
 
     # check expected failure from scaling by incorrect column type
     try:
         df = post_.run_post_processing(
-            sombrero_log_path, {"title": "Title",
-                                "filters": {"and": [], "or": []},
-                                "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"},
-                                           "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str",
-                                                 "cpus_per_task": "int",
-                                                 "OMP_NUM_THREADS": "str"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"},
+                            "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
+                 "filters": {"and": [], "or": []},
+                 "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str",
+                                  "cpus_per_task": "int",
+                                  "OMP_NUM_THREADS": "str"}}))
     except TypeError:
         assert True
 
     # check expected failure from scaling by incompatible custom type
     try:
         df = post_.run_post_processing(
-            sombrero_log_path, {"title": "Title",
-                                "filters": {"and": [["cpus_per_task", "==", 2]],
-                                            "or": []},
-                                "series": [],
-                                "x_axis": {"value": "tasks",
-                                           "units": {"custom": None}},
-                                "y_axis": {"value": "flops_value",
-                                           "units": {"column": "flops_unit"},
-                                           "scaling": {"custom": "s"}},
-                                "column_types": {"tasks": "int",
-                                                 "flops_value": "float",
-                                                 "flops_unit": "str",
-                                                 "cpus_per_task": "int"}})
+            sombrero_log_path, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"},
+                            "scaling": {"custom": "s"}},
+                 "filters": {"and": [["cpus_per_task", "==", 2]],
+                             "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str",
+                                  "cpus_per_task": "int"}}))
     except ValueError:
         assert True
 
@@ -462,15 +486,17 @@ def test_high_level_script(run_sombrero):
     try:
         # get collated dataframe subset
         df = post_.run_post_processing(
-            Path(sombrero_log_path).parent, {"filters": {"and": [], "or": []},
-                                             "series": [],
-                                             "x_axis": {"value": "tasks",
-                                                        "units": {"custom": None}},
-                                             "y_axis": {"value": "flops_value",
-                                                        "units": {"column": "flops_unit"}},
-                                             "column_types": {"tasks": "int",
-                                                              "flops_value": "float",
-                                                              "flops_unit": "str"}})
+            Path(sombrero_log_path).parent, ConfigHandler(
+                {"title": "Title",
+                 "x_axis": {"value": "tasks",
+                            "units": {"custom": None}},
+                 "y_axis": {"value": "flops_value",
+                            "units": {"column": "flops_unit"}},
+                 "filters": {"and": [], "or": []},
+                 "series": [],
+                 "column_types": {"tasks": "int",
+                                  "flops_value": "float",
+                                  "flops_unit": "str"}}))
     except RuntimeError as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
@@ -479,18 +505,19 @@ def test_high_level_script(run_sombrero):
 
     # get filtered dataframe subset
     df = post_.run_post_processing(
-        sombrero_log_path, {"title": "Title",
-                            "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
-                                        "or": []},
-                            "series": [],
-                            "x_axis": {"value": "tasks",
-                                       "units": {"custom": None}},
-                            "y_axis": {"value": "flops_value",
-                                       "units": {"column": "flops_unit"}},
-                            "column_types": {"tasks": "int",
-                                             "flops_value": "float",
-                                             "flops_unit": "str",
-                                             "cpus_per_task": "int"}})
+        sombrero_log_path, ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"}},
+             "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
+                         "or": []},
+             "series": [],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"}}))
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected
