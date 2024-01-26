@@ -176,7 +176,7 @@ class PostProcessing:
                 x_axis: dict, x-axis column and units.
                 y_axis: dict, y-axis column, units, and scaling information.
                 series_filters: list, x-axis group filters.
-                mask: mask, dataframe filters.
+                mask: bool series, dataframe filters.
         """
 
         # FIXME: overhaul this section
@@ -208,13 +208,13 @@ class PostProcessing:
             if series_filters:
                 for f in series_filters:
                     m = self.row_filter(f, self.df)
-                    self.df[mask & m] = self.transform_axis(
-                        self.df[mask & m], mask & m, y_axis, scaling_column,
+                    self.transform_axis(
+                        mask & m, y_axis, scaling_column,
                         scaling_series_mask, scaling_x_value_mask)
             # apply data transformation to all data
             else:
-                self.df[mask] = self.transform_axis(
-                    self.df[mask], mask, y_axis, scaling_column,
+                self.transform_axis(
+                    mask, y_axis, scaling_column,
                     scaling_series_mask, scaling_x_value_mask)
 
         # FIXME: add this as a config option at some point
@@ -271,47 +271,44 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, df: pd.DataFrame, df_mask, axis, scaling_column,
-                       scaling_series_mask, scaling_x_value_mask):
+    def transform_axis(self, mask, axis, scaling_column, scaling_series_mask, scaling_x_value_mask):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
-                df: dataframe, data to plot (pre-masked by series, if present).
-                df_mask: bool list, the mask (pre-)applied to the df argument.
+                mask: bool series, dataframe filters.
                 axis: dict, axis column, units, and values to scale by.
                 scaling_column: dataframe column, copy of column containing values to scale by.
-                scaling_series_mask: bool list, a series mask to be applied to the scaling column.
-                scaling_x_value_mask: bool list, an x-axis value mask to be applied to the scaling column.
+                scaling_series_mask: bool series, a series mask to be applied to the scaling column.
+                scaling_x_value_mask: bool series, an x-axis value mask to be applied to the scaling column.
         """
-
-        # FIXME: try to make this an in-place process
 
         # scale by column
         if scaling_column is not None:
 
             # check types
-            if (not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or
+            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis["value"]].dtype) or
                 not pd.api.types.is_numeric_dtype(scaling_column.dtype)):
                 # both columns must be numeric
                 raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
-                                .format(axis["value"], df[axis["value"]].dtype,
+                                .format(axis["value"], self.df[mask][axis["value"]].dtype,
                                         axis["scaling"]["column"]["name"], scaling_column.dtype))
 
             # get mask of scaling value(s)
-            scaling_mask = df_mask.copy()
+            scaling_mask = mask.copy()
             if scaling_series_mask is not None:
                 scaling_mask = scaling_series_mask
             if scaling_x_value_mask is not None:
                 scaling_mask &= scaling_x_value_mask
 
-            scaling_val = (scaling_column[scaling_mask].iloc[0] if len(scaling_column[scaling_mask]) == 1
+            scaling_val = (scaling_column[scaling_mask].iloc[0]
+                           if len(scaling_column[scaling_mask]) == 1
                            else scaling_column[scaling_mask].values)
 
             # FIXME: add a check that the masked scaling column has the same number of values
             # as the masked df (unless there is only one scaling value)
 
-            df[axis["value"]] = df[axis["value"]].values / scaling_val
+            self.df.loc[mask, axis["value"]] = self.df[mask][axis["value"]].values / scaling_val
             # FIXME: add this as a config option at some point in conjunction with dropping NaNs
             # df[axis["value"]].replace(to_replace=1, value=np.NaN, inplace=True)
 
@@ -320,13 +317,11 @@ class PostProcessing:
             scaling_value = axis["scaling"]["custom"]
             try:
                 # interpret scaling value as column dtype
-                scaling_value = pd.Series(scaling_value, dtype=df[axis["value"]].dtype).iloc[0]
+                scaling_value = pd.Series(scaling_value, dtype=self.df[mask][axis["value"]].dtype).iloc[0]
             except ValueError as e:
                 e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
                 raise
-            df[axis["value"]] /= scaling_value
-
-        return df
+            self.df.loc[mask, axis["value"]] /= scaling_value
 
 
 def read_args():
