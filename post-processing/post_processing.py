@@ -38,9 +38,13 @@ class PostProcessing:
         self.sort_df(config.x_axis, config.series_columns)
         # filter data
         mask = self.filter_df(config.and_filters, config.or_filters, config.series_filters)
-        self.check_filtered_row_count(mask, config.x_axis, config.series_columns, config.plot_columns)
+        self.check_filtered_row_count(
+            mask, config.x_axis["value"], config.series_columns, config.plot_columns)
         # scale y-axis
-        self.transform_df_data(config.x_axis, config.y_axis, config.series_filters, mask)
+        self.transform_df_data(
+            config.x_axis["value"], config.y_axis["value"], config.scaling_column,
+            config.scaling_series, config.scaling_x_value, config.scaling_custom,
+            config.series_filters, mask)
 
         # FIXME: have an option to put this into a file (-s / --save flag?)
         print("Selected dataframe:")
@@ -162,14 +166,14 @@ class PostProcessing:
 
         return mask
 
-    def check_filtered_row_count(self, mask, x_axis, series_columns, plot_columns):
+    def check_filtered_row_count(self, mask, x_column, series_columns, plot_columns):
         """
             Check that the filtered dataframe does not have an incompatible number of rows.
             Row number must match number of unique x-axis values per series.
 
             Args:
                 mask: bool series, dataframe filters.
-                x_axis: dict, x-axis column and units.
+                x_column: str, name of x-axis column.
                 series_columns: list, names of series columns.
                 plot_columns: list, names of all columns needed for plotting.
         """
@@ -179,7 +183,7 @@ class PostProcessing:
         # get number of column combinations
         series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
         num_filtered_rows = len(self.df[mask])
-        num_x_data_points = series_combinations * len(set(self.df[mask][x_axis["value"]]))
+        num_x_data_points = series_combinations * len(set(self.df[mask][x_column]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match \
@@ -187,54 +191,60 @@ class PostProcessing:
                                .format(num_filtered_rows, num_x_data_points),
                                self.df[plot_columns][mask])
 
-    def transform_df_data(self, x_axis, y_axis, series_filters, mask):
+    def transform_df_data(self, x_column, y_column, scaling_column, scaling_series, scaling_x_value,
+                          scaling_custom, series_filters, mask):
         """
             Transform dataframe y-axis based on scaling settings.
 
             Args:
-                x_axis: dict, x-axis column and units.
-                y_axis: dict, y-axis column, units, and scaling information.
+                x_column: str, name of x-axis column.
+                y_column: str, name of y-axis column.
+                scaling_column: str, name of column containing values to scale by.
+                scaling_series: int, index of series to scale by.
+                scaling_x_value: x-axis value to scale by.
+                scaling_custom: custom value to scale by.
                 series_filters: list, x-axis group filters.
                 mask: bool series, dataframe filters.
         """
 
-        # FIXME: overhaul this section
-        scaling_column = None
+        scaling_value = None
         scaling_series_mask = None
         scaling_x_value_mask = None
-        # extract scaling information
-        if y_axis.get("scaling"):
 
-            # check column information
-            if y_axis["scaling"].get("column"):
-                # copy scaling column (prevents issues when scaling by itself)
-                scaling_column = self.df[y_axis["scaling"]["column"]["name"]].copy()
-                # get mask of scaling series
-                if y_axis["scaling"]["column"].get("series") is not None:
-                    scaling_series_mask = self.row_filter(
-                        series_filters[y_axis["scaling"]["column"]["series"]], self.df)
-                # get mask of scaling x-value
-                if y_axis["scaling"]["column"].get("x_value"):
-                    scaling_x_value_mask = (
-                        self.df[x_axis["value"]] == y_axis["scaling"]["column"]["x_value"])
+        # scale by custom
+        if scaling_custom:
+            try:
+                # interpret scaling value as column dtype
+                scaling_value = pd.Series(scaling_custom, dtype=self.df[y_column].dtype)
+            except ValueError as e:
+                e.args = (e.args[0] + " as a scaling value for column '{0}'".format(y_column),)
+                raise
 
-            # check custom value is not zero
-            elif not y_axis["scaling"].get("custom"):
-                raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
-                                   .format(y_axis["scaling"].get("custom")))
+        # scale by column
+        elif scaling_column:
+            # copy scaling column (prevents issues when scaling a column by itself)
+            scaling_value = self.df[scaling_column].copy()
+            # get mask of scaling series
+            if scaling_series is not None:
+                scaling_series_mask = self.row_filter(series_filters[scaling_series], self.df)
+            # get mask of scaling x-value
+            if scaling_x_value:
+                scaling_x_value_mask = (self.df[x_column] == scaling_x_value)
 
+        # apply scaling
+        if scaling_value is not None:
             # apply data transformation per series
             if series_filters:
                 for f in series_filters:
-                    m = self.row_filter(f, self.df)
+                    s = self.row_filter(f, self.df)
                     self.transform_axis(
-                        mask & m, y_axis, scaling_column,
-                        scaling_series_mask, scaling_x_value_mask)
+                        mask & s, y_column, scaling_value, scaling_series_mask,
+                        scaling_x_value_mask, scaling_column, scaling_custom)
             # apply data transformation to all data
             else:
                 self.transform_axis(
-                    mask, y_axis, scaling_column,
-                    scaling_series_mask, scaling_x_value_mask)
+                        mask, y_column, scaling_value, scaling_series_mask,
+                        scaling_x_value_mask, scaling_column, scaling_custom)
 
         # FIXME: add this as a config option at some point
         # if y_axis.get("drop_nan"):
@@ -290,57 +300,51 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, mask, axis, scaling_column, scaling_series_mask, scaling_x_value_mask):
+    def transform_axis(self, mask, axis_column, scaling_value, scaling_series_mask,
+                       scaling_x_value_mask, scaling_column, scaling_custom):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
                 mask: bool series, dataframe filters.
-                axis: dict, axis column, units, and values to scale by.
-                scaling_column: dataframe column, copy of column containing values to scale by.
+                axis_column: str, name of axis column to scale.
+                scaling_value: dataframe column, copy of column containing values to scale by.
                 scaling_series_mask: bool series, a series mask to be applied to the scaling column.
                 scaling_x_value_mask: bool series, an x-axis value mask to be applied to the scaling column.
+                scaling_column: dataframe column, copy of column containing values to scale by.
+                scaling_series_mask:
+                scaling_custom: custom value to scale by.
         """
 
-        # scale by column
-        if scaling_column is not None:
+        # prepare custom values
+        if scaling_custom:
+            scaling_value = scaling_value.iloc[0] if len(scaling_value) == 1 else scaling_value.values
+
+        # prepare column values
+        elif scaling_column:
 
             # check types
-            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis["value"]].dtype) or
-                not pd.api.types.is_numeric_dtype(scaling_column.dtype)):
+            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis_column].dtype) or
+                not pd.api.types.is_numeric_dtype(scaling_value.dtype)):
                 # both columns must be numeric
                 raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
-                                .format(axis["value"], self.df[mask][axis["value"]].dtype,
-                                        axis["scaling"]["column"]["name"], scaling_column.dtype))
+                                .format(axis_column, self.df[mask][axis_column].dtype,
+                                        scaling_column, scaling_value.dtype))
 
-            # get mask of scaling value(s)
+            # get mask of scaling values
             scaling_mask = mask.copy()
             if scaling_series_mask is not None:
                 scaling_mask = scaling_series_mask
             if scaling_x_value_mask is not None:
                 scaling_mask &= scaling_x_value_mask
 
-            scaling_val = (scaling_column[scaling_mask].iloc[0]
-                           if len(scaling_column[scaling_mask]) == 1
-                           else scaling_column[scaling_mask].values)
+            scaling_value = (scaling_value[scaling_mask].iloc[0]
+                             if len(scaling_value[scaling_mask]) == 1
+                             else scaling_value[scaling_mask].values)
 
-            # FIXME: add a check that the masked scaling column has the same number of values
-            # as the masked df (unless there is only one scaling value)
-
-            self.df.loc[mask, axis["value"]] = self.df[mask][axis["value"]].values / scaling_val
-            # FIXME: add this as a config option at some point in conjunction with dropping NaNs
-            # df[axis["value"]].replace(to_replace=1, value=np.NaN, inplace=True)
-
-        # scale by custom value
-        elif axis["scaling"].get("custom"):
-            scaling_value = axis["scaling"]["custom"]
-            try:
-                # interpret scaling value as column dtype
-                scaling_value = pd.Series(scaling_value, dtype=self.df[mask][axis["value"]].dtype).iloc[0]
-            except ValueError as e:
-                e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
-                raise
-            self.df.loc[mask, axis["value"]] /= scaling_value
+        self.df.loc[mask, axis_column] = self.df[mask][axis_column].values / scaling_value
+        # FIXME: add this as a config option at some point in conjunction with dropping NaNs
+        # df[axis_column].replace(to_replace=1, value=np.NaN, inplace=True)
 
 
 def read_args():
