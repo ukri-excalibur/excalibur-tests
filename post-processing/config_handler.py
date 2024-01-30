@@ -66,10 +66,17 @@ class ConfigHandler:
 
         # FIXME: add scaling for x-axis
         self.scaling_column = None
-        # scaling column
+        self.scaling_series = None
+        self.scaling_x_value = None
+        self.scaling_custom = None
         if self.y_axis.get("scaling"):
+            # custom scaling value
+            self.scaling_custom = self.y_axis.get("scaling").get("custom")
+            # scaling column
             if self.y_axis.get("scaling").get("column"):
                 self.scaling_column = self.y_axis["scaling"]["column"].get("name")
+                self.scaling_series = self.y_axis["scaling"]["column"].get("series")
+                self.scaling_x_value = self.y_axis["scaling"]["column"].get("x_value")
 
         # all typed columns
         self.all_columns = set(self.plot_columns + self.filter_columns +
@@ -131,6 +138,10 @@ def read_config(config):
             config.get("y_axis").get("scaling").get("custom") is not None):
             raise RuntimeError(
                 "Specify y-axis scaling information as only one of 'column' or 'custom'.")
+        if (config.get("y_axis").get("scaling").get("column") is None and
+            not config.get("y_axis").get("scaling").get("custom")):
+            raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
+                               .format(config.get("y_axis").get("scaling").get("custom")))
 
     # check optional series information
     if config.get("series"):
