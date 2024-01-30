@@ -14,8 +14,11 @@ class PerflogHandler:
         self.log_path = log_path
         self.debug = debug
 
-        self.log_files = []
         self.get_log_files()
+        self.read_all_perflogs()
+
+    def get_df(self):
+        return self.df
 
     def get_log_files(self):
         """
@@ -23,6 +26,7 @@ class PerflogHandler:
             log file list.
         """
 
+        self.log_files = []
         # one perflog supplied
         if os.path.isfile(self.log_path):
             # check correct log extension
@@ -58,11 +62,11 @@ class PerflogHandler:
             in class log file list.
         """
 
-        df = pd.DataFrame()
+        self.df = pd.DataFrame()
         # put all perflog information in one dataframe
         for file in self.log_files:
             try:
-                df = pd.concat([df, read_perflog(file)], ignore_index=True)
+                self.df = pd.concat([self.df, read_perflog(file)], ignore_index=True)
             # discard invalid perflogs
             except KeyError as e:
                 if self.debug:
@@ -71,11 +75,9 @@ class PerflogHandler:
                     print("")
 
         # no valid perflogs found
-        if df.empty:
+        if self.df.empty:
             raise FileNotFoundError(
                 errno.ENOENT, "Could not find a valid perflog in path", self.log_path)
-
-        return df
 
 
 def read_perflog(path):

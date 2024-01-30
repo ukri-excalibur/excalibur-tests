@@ -5,9 +5,10 @@ from pathlib import Path
 
 import pandas as pd
 import perflog_handler as log_hand
-import post_processing as post
 import pytest
 from config_handler import ConfigHandler
+from perflog_handler import PerflogHandler
+from post_processing import PostProcessing
 
 
 # Run given benchmark with reframe using subprocess
@@ -177,12 +178,10 @@ def test_read_perflog(run_sombrero):
 def test_high_level_script(run_sombrero):
 
     sombrero_log_path, sombrero_changed_log_path, sombrero_incomplete_log_path = run_sombrero
-    post_ = post.PostProcessing()
 
     # check expected failure from nonexistent log file
     try:
-        post_.run_post_processing(os.path.join(Path(sombrero_log_path).parent,
-                                               "SombreroBenchmarkNonexistent.log"), {})
+        PerflogHandler(os.path.join(Path(sombrero_log_path).parent, "SombreroBenchmarkNonexistent.log"))
     except FileNotFoundError:
         assert True
     else:
@@ -190,7 +189,7 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid log file
     try:
-        post_.run_post_processing(sombrero_incomplete_log_path, {})
+        PerflogHandler(sombrero_incomplete_log_path)
     except FileNotFoundError:
         assert True
     else:
@@ -206,8 +205,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid (filter) column
     try:
-        post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -226,8 +225,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter operator
     try:
-        post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -246,8 +245,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from invalid filter value type
     try:
-        post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -266,8 +265,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from filtering out every row
     try:
-        post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -286,8 +285,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from row number vs unique x-axis value number mismatch
     try:
-        df = post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        df = PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -305,8 +304,8 @@ def test_high_level_script(run_sombrero):
 
     # check correct display name parsing
     try:
-        df = post_.run_post_processing(
-            sombrero_changed_log_path, ConfigHandler(
+        df = PostProcessing(sombrero_changed_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -326,8 +325,8 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # check correct date filtering
-    df = post_.run_post_processing(
-        sombrero_changed_log_path, ConfigHandler(
+    df = PostProcessing(sombrero_changed_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "job_completion_time",
                         "units": {"custom": None}},
@@ -343,8 +342,8 @@ def test_high_level_script(run_sombrero):
     assert len(df) == 2
 
     # check correct or filtering
-    df = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    df = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},
@@ -361,8 +360,8 @@ def test_high_level_script(run_sombrero):
     assert len(df) == 4
 
     # check correct column scaling
-    dfs = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    dfs = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},
@@ -381,8 +380,8 @@ def test_high_level_script(run_sombrero):
     assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
 
     # check correct column + series scaling
-    dfs = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    dfs = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},
@@ -404,8 +403,8 @@ def test_high_level_script(run_sombrero):
             df[df["cpus_per_task"] == 1]["flops_value"].values).all()
 
     # check correct column + series + x value scaling
-    dfs = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    dfs = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},
@@ -424,8 +423,8 @@ def test_high_level_script(run_sombrero):
             df[(df["cpus_per_task"] == 1) & (df["tasks"] == 2)]["flops_value"].iloc[0]).all()
 
     # check correct custom scaling
-    dfs = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    dfs = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},
@@ -444,8 +443,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from scaling by incorrect column type
     try:
-        df = post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        df = PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -464,8 +463,8 @@ def test_high_level_script(run_sombrero):
 
     # check expected failure from scaling by incompatible custom type
     try:
-        df = post_.run_post_processing(
-            sombrero_log_path, ConfigHandler(
+        df = PostProcessing(sombrero_log_path).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -485,8 +484,8 @@ def test_high_level_script(run_sombrero):
     # check correct concatenation of two dataframes with different columns
     try:
         # get collated dataframe subset
-        df = post_.run_post_processing(
-            Path(sombrero_log_path).parent, ConfigHandler(
+        df = PostProcessing(Path(sombrero_log_path).parent).run_post_processing(
+            ConfigHandler(
                 {"title": "Title",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None}},
@@ -504,8 +503,8 @@ def test_high_level_script(run_sombrero):
         assert False
 
     # get filtered dataframe subset
-    df = post_.run_post_processing(
-        sombrero_log_path, ConfigHandler(
+    df = PostProcessing(sombrero_log_path).run_post_processing(
+        ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None}},

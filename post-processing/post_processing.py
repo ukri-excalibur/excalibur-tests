@@ -12,24 +12,23 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, debug=False, verbose=False):
+    def __init__(self, log_path: Path, debug=False, verbose=False):
         # FIXME: add proper logging
         self.debug = debug
         self.verbose = verbose
-        # FIXME: add df and config directly to init?
+        # find and read perflogs
+        self.df = PerflogHandler(log_path, self.debug).get_df()
+        # FIXME: will need an original + modified df
+        # for re-running post-processing with front-end
 
-    def run_post_processing(self, log_path, config: ConfigHandler):
+    def run_post_processing(self, config: ConfigHandler):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
 
             Args:
-                log_path: path, path to a log file or a directory containing log files.
                 config: ConfigHandler, class containing configuration information for plotting.
         """
-
-        # find and read perflogs
-        self.df = PerflogHandler(log_path, self.debug).read_all_perflogs()
 
         # apply column types
         self.apply_df_types(config.all_columns, config.column_types)
@@ -243,8 +242,8 @@ class PostProcessing:
             # apply data transformation to all data
             else:
                 self.transform_axis(
-                        mask, y_column, scaling_value, scaling_series_mask,
-                        scaling_x_value_mask, scaling_column, scaling_custom)
+                    mask, y_column, scaling_value, scaling_series_mask,
+                    scaling_x_value_mask, scaling_column, scaling_custom)
 
         # FIXME: add this as a config option at some point
         # if y_axis.get("drop_nan"):
@@ -378,11 +377,11 @@ def read_args():
 def main():
 
     args = read_args()
-    post = PostProcessing(args.debug, args.verbose)
 
     try:
+        post = PostProcessing(args.log_path, args.debug, args.verbose)
         config = ConfigHandler.from_path(args.config_path)
-        post.run_post_processing(args.log_path, config)
+        post.run_post_processing(config)
 
     except Exception as e:
         print(type(e).__name__ + ":", e)
