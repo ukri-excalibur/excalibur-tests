@@ -267,6 +267,12 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
+        cmd_compiler_name = 'from spack import environment; print(environment.active_environment().spec_lists["specs"].specs[0].compiler.name)'
+        cmd_compiler_version = 'from spack import environment; environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[0]'
+
+        self.postrun_cmds.append(f'echo "compilerName: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
+        self.postrun_cmds.append(f'echo "compilerVersion: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
+        
 
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
@@ -299,6 +305,7 @@ class SpackTest(rfm.RegressionTest):
         # using full partitions may have lower priority.
         if not self.build_locally:
             self.build_job.num_cpus_per_task = min(16, self.current_partition.processor.num_cpus)
+
 
 
 if __name__ == '__main__':
