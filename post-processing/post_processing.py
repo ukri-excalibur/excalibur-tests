@@ -75,10 +75,14 @@ class PostProcessing:
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
         # specify columns to export from dataframe to csv
-        for col in config["csv_export"]:
-            df_csv_export = pd.concat([df_csv_export, df[col]], axis=1, join='outer')
-        if self.debug & self.verbose:
-            print(df_csv_export)
+        if config.get("csv_export") is None:
+            raise KeyError("Missing csv_export (specify an empty list [] if none are required).")
+        else:
+            for col in config["csv_export"]:
+                df_csv_export = pd.concat([df_csv_export, df[col]], axis=1, join='outer')
+            if self.debug:
+                print("Selected dataframe to export CSV file:")
+                print(df_csv_export)
         # get axis columns
         columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
         if config["x_axis"]["units"].get("column"):
