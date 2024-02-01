@@ -80,6 +80,7 @@ class PostProcessing:
         else:
             for col in config["csv_export"]:
                 df_csv_export = pd.concat([df_csv_export, df[col]], axis=1, join='outer')
+                df_csv_export.to_csv(log_path+'/output.csv', index=False)  # Set index=False to exclude the DataFrame index from the CSV
             if self.debug:
                 print("Selected dataframe to export CSV file:")
                 print(df_csv_export)
