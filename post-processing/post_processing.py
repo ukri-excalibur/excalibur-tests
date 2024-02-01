@@ -61,6 +61,7 @@ class PostProcessing:
             print("")
 
         df = pd.DataFrame()
+        df_csv_export = pd.DataFrame()
         # put all perflog information in one dataframe
         for file in log_files:
             try:
@@ -73,7 +74,11 @@ class PostProcessing:
                     print("")
         if df.empty:
             raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
-
+        # specify columns to export from dataframe to csv
+        for col in config["csv_export"]:
+            df_csv_export = pd.concat([df_csv_export, df[col]], axis=1, join='outer')
+        if self.debug & self.verbose:
+            print(df_csv_export)
         # get axis columns
         columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
         if config["x_axis"]["units"].get("column"):

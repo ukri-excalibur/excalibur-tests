@@ -47,3 +47,10 @@ column_types:
   flops_unit: "str"
   system: "str"
   cpus_per_task: "int"
+
+# Specify which columns to export to csv file
+csv_export:
+  [tasks,
+  flops_value,
+  Triad_unit,
+  cpus_per_task]
