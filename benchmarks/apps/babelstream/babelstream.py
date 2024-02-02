@@ -4,19 +4,15 @@
 # SPDX-License-Identifier: BSD-3-Clause
 import reframe as rfm
 import reframe.utility.sanity as sn
-import reframe.utility.osext as osext
 from reframe.core.backends import getlauncher
 # `SpackTest` is a class for benchmarks which will use Spack as build system.
 # The only requirement is to inherit this class and set the `spack_spec`
 # attribute.
 from benchmarks.modules.utils import SpackTest
 
-
 @rfm.simple_test
 class BabelstreamBenchmarkBase(SpackTest):
     descr = 'Build BabelStream with Spack Build System'
-    compiler_version =  variable(str, value='', loggable=True)
-    compiler_name =  variable(str, value='', loggable=True)
     valid_systems = ['*']
     valid_prog_environs = ['default']
     # Time limit of the job, automatically set in the job script.
@@ -34,11 +30,7 @@ class BabelstreamBenchmarkBase(SpackTest):
     @run_before('sanity')
     def set_sanity_patterns(self):
         self.sanity_patterns = sn.assert_found('Running kernels 100 times', self.stdout)
-    # @run_after('run')
-    # def get_compiler_version(self):
-    #     with osext.change_dir(self.stagedir):
-    #         self.compiler_version = sn.extractsingle(r'(.*(?:\((?:G|I)CC\)|version) .*)', self.stdout, 1).evaluate()
-   #--------------------------------------------------
+    #--------------------------------------------------
     #-- Figure of Merit Export
     #--------------------------------------------------
     # Python's built-in float type has double precision (it's a C double in CPython, a Java double in Jython).
@@ -61,15 +53,6 @@ class BabelstreamBenchmarkBase(SpackTest):
     @performance_function('MBytes/sec', perf_key='Dot')
     def extract_dot_perf(self):
         return sn.extractsingle(r'Dot \s+(\S+)\s+.', self.stdout, 1, float)
-    @run_after('run')
-    def get_compiler_name(self):
-        with osext.change_dir(self.stagedir):
-            self.compiler_name = sn.extractsingle(r'compilerName:\s*(\S+)', self.stdout, 1).evaluate()
-    @run_after('run')
-    def get_compiler_version(self):
-        with osext.change_dir(self.stagedir):
-            self.compiler_version = sn.extractsingle(r'compilerVersion:\s*(\S+)', self.stdout, 1).evaluate()
-
     @run_after('setup')
     def setup_num_tasks(self):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'

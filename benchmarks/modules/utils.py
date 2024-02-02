@@ -10,8 +10,8 @@ import reframe as rfm
 from reframe.core.exceptions import BuildSystemError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
-
-
+import reframe.utility.osext as osext
+import reframe.utility.sanity as sn
 SYSFILE = 'systems/sysinfo.json' # interpreted relative to jupyter root
 
 def get_jupyter_root():
@@ -243,6 +243,8 @@ def identify_build_environment(current_partition):
 class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
+    compiler_version =  variable(str, value='', loggable=True)
+    compiler_name =  variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -269,14 +271,20 @@ class SpackTest(rfm.RegressionTest):
         ]
         cmd_compiler_name = 'from spack import environment; print(environment.active_environment().spec_lists["specs"].specs[0].compiler.name)'
         cmd_compiler_version = 'from spack import environment; environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[0]'
-
-        self.postrun_cmds.append(f'echo "compilerName: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
-        self.postrun_cmds.append(f'echo "compilerVersion: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
+        self.postrun_cmds.append(f'echo "compiler_name: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
+        self.postrun_cmds.append(f'echo "compiler_version: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
         
-
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
+    @run_after('run')
+    def get_compiler_name(self):
+        with osext.change_dir(self.stagedir):
+            self.compiler_name = sn.extractsingle(r'compiler_name:\s*(\S+)', self.stdout, 1).evaluate()
+    @run_after('run')
+    def get_compiler_version(self):
+        with osext.change_dir(self.stagedir):
+            self.compiler_version = sn.extractsingle(r'compiler_version:\s*(\S+)', self.stdout, 1).evaluate()
 
     @run_before('compile')
     def setup_build_system(self):
