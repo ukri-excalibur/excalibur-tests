@@ -15,21 +15,39 @@ class ConfigHandler:
         self.series = config.get("series")
         self.column_types = config.get("column_types")
 
-        # get column and filter information
-        self.get_filters()
-        self.get_columns()
+        # parse filter information
+        self.and_filters = []
+        self.or_filters = []
+        self.series_filters = []
+        self.parse_filters()
+
+        # parse scaling information
+        self.scaling_column = None
+        self.scaling_custom = None
+        self.parse_scaling()
+
+        # find relevant columns
+        self.series_columns = []
+        self.plot_columns = []
+        self.all_columns = []
+        self.parse_columns()
 
     @classmethod
     def from_path(cfg_hand, config_path):
         return cfg_hand(open_config(config_path))
 
     def get_filters(self):
+        return self.and_filters, self.or_filters, self.series_filters
+
+    def get_y_scaling(self):
+        return self.scaling_column, self.scaling_custom
+
+    def parse_filters(self):
         """
             Store filtering information from filters and series.
         """
+
         # filters
-        self.and_filters = []
-        self.or_filters = []
         if self.filters:
             if self.filters.get("and"):
                 self.and_filters = self.filters.get("and")
@@ -37,9 +55,22 @@ class ConfigHandler:
                 self.or_filters = self.filters.get("or")
 
         # series filters
-        self.series_filters = [[s[0], "==", s[1]] for s in self.series] if self.series else []
+        if self.series:
+            self.series_filters = [[s[0], "==", s[1]] for s in self.series]
 
-    def get_columns(self):
+    def parse_scaling(self):
+        """
+            Store scaling information for numeric axes.
+        """
+
+        # FIXME (issue #182): add scaling for x-axis
+        if self.y_axis.get("scaling"):
+            # scaling column
+            self.scaling_column = self.y_axis.get("scaling").get("column")
+            # custom scaling value
+            self.scaling_custom = self.y_axis.get("scaling").get("custom")
+
+    def parse_columns(self):
         """
             Store all necessary dataframe columns for plotting and filtering.
         """
@@ -48,7 +79,7 @@ class ConfigHandler:
         self.plot_columns = [self.x_axis.get("value"), self.x_axis["units"].get("column"),
                              self.y_axis.get("value"), self.y_axis["units"].get("column")]
 
-        # FIXME: allow all series values to be selected with *
+        # FIXME (issue #255): allow all series values to be selected with *
         # (or if only column name is supplied)
 
         # series columns (duplicates not removed)
@@ -62,25 +93,11 @@ class ConfigHandler:
         self.plot_columns = [c for c in self.plot_columns if c is not None]
 
         # filter columns (duplicates not removed)
-        self.filter_columns = [f[0] for f in self.and_filters] + [f[0] for f in self.or_filters]
-
-        # FIXME: add scaling for x-axis
-        self.scaling_column = None
-        self.scaling_series = None
-        self.scaling_x_value = None
-        self.scaling_custom = None
-        if self.y_axis.get("scaling"):
-            # custom scaling value
-            self.scaling_custom = self.y_axis.get("scaling").get("custom")
-            # scaling column
-            if self.y_axis.get("scaling").get("column"):
-                self.scaling_column = self.y_axis["scaling"]["column"].get("name")
-                self.scaling_series = self.y_axis["scaling"]["column"].get("series")
-                self.scaling_x_value = self.y_axis["scaling"]["column"].get("x_value")
+        filter_columns = [f[0] for f in self.and_filters] + [f[0] for f in self.or_filters]
 
         # all typed columns
-        self.all_columns = set(self.plot_columns + self.filter_columns +
-                               ([self.scaling_column] if self.scaling_column else []))
+        self.all_columns = set(self.plot_columns + filter_columns +
+                               ([self.scaling_column.get("name")] if self.scaling_column else []))
 
 
 def open_config(path):
@@ -134,12 +151,13 @@ def read_config(config):
 
     # check optional scaling information
     if config.get("y_axis").get("scaling"):
-        if (config.get("y_axis").get("scaling").get("column") is not None and
-            config.get("y_axis").get("scaling").get("custom") is not None):
-            raise RuntimeError(
-                "Specify y-axis scaling information as only one of 'column' or 'custom'.")
-        if (config.get("y_axis").get("scaling").get("column") is None and
-            not config.get("y_axis").get("scaling").get("custom")):
+        if config.get("y_axis").get("scaling").get("column") is not None:
+            if config.get("y_axis").get("scaling").get("custom") is not None:
+                raise RuntimeError(
+                    "Specify y-axis scaling information as only one of 'column' or 'custom'.")
+            if not config.get("y_axis").get("scaling").get("column").get("name"):
+                raise RuntimeError("Scaling column must have a name.")
+        elif not config.get("y_axis").get("scaling").get("custom"):
             raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
                                .format(config.get("y_axis").get("scaling").get("custom")))
 

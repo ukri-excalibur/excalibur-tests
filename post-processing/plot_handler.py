@@ -116,13 +116,14 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     # remove x-axis group ticks
     plot.xaxis.major_tick_line_color = None
     plot.xaxis.major_label_text_font_size = "0pt"
-    # FIXME: add this as a config option at some point
+    # FIXME (#issue #255): add this as a config option at some point
     # plot.xaxis.group_label_orientation = "vertical"
     # adjust font size
     plot.title.text_font_size = "15pt"
 
     # get label values with their original dtype
-    label_values = [pd.Series(x.label["value"].split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
+    # FIXME (issue #259): change x.label.value to x.label["value"] for Bokeh v2.4.3
+    label_values = [pd.Series(x.label.value.split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
                     for x in plot.legend[0].items]
     # sort legend items (order determined by x-axis sort)
     sorted_legend_items = [x[1] for x in sorted(zip(label_values, plot.legend[0].items),
@@ -162,7 +163,7 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling_column = axis["scaling"]["column"]["name"]
             series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            # FIXME: make scaling label more clear
+            # FIXME (issue #263): make scaling label more clear
             series_col = ("{0} in {1}".format(series_filters[series_index][2], scaling_column)
                           if series_index is not None else scaling_column)
             scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
