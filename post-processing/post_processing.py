@@ -1,138 +1,102 @@
 import argparse
-import errno
-import json
-import math
 import operator as op
-import os
-import re
 import traceback
 from functools import reduce
-from itertools import chain
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
-import yaml
-from bokeh.models import HoverTool, Legend
-from bokeh.models.sources import ColumnDataSource
-from bokeh.palettes import viridis
-from bokeh.plotting import figure, output_file, save
-from bokeh.transform import factor_cmap
-from titlecase import titlecase
+from config_handler import ConfigHandler
+from perflog_handler import PerflogHandler
+from plot_handler import plot_generic
+
 
 class PostProcessing:
 
-    def __init__(self, debug=False, verbose=False):
+    def __init__(self, log_path: Path, debug=False, verbose=False):
+        # FIXME (issue #264): add proper logging
         self.debug = debug
         self.verbose = verbose
+        # find and read perflogs
+        self.df = PerflogHandler(log_path, self.debug).get_df()
+        # FIXME (issue #259): will need an original + modified df
+        # for re-running post-processing with front-end
+        # dataframe filters
+        self.mask = pd.Series(self.df.index.notnull())
 
-    def run_post_processing(self, log_path, config):
+    def run_post_processing(self, config: ConfigHandler):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
 
             Args:
-                log_path: str, path to a log file or a directory containing log files.
-                config: dict, configuration information for plotting.
+                config: ConfigHandler, class containing configuration information for plotting.
         """
 
-        log_files = []
-        # look for perflogs
-        if os.path.isfile(log_path):
-            if os.path.splitext(log_path)[1] != ".log":
-                raise RuntimeError("Perflog file name provided should have a .log extension.")
-            log_files = [log_path]
-        elif os.path.isdir(log_path):
-            log_files_temp = [os.path.join(root, file) for root, _, files in os.walk(log_path)
-                              for file in files]
-            for file in log_files_temp:
-                if os.path.splitext(file)[1] == ".log":
-                    log_files.append(file)
-            if len(log_files) == 0:
-                raise RuntimeError(
-                    "No perflogs found in this path. Perflogs should have a .log extension.")
-        else:
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), log_path)
+        # FIXME (issue #265): consider hiding typing + sorting from user
+        # because these steps must happen every time at the start
 
-        if self.debug:
-            print("Found log files:")
-            for log in log_files:
-                print("-", log)
+        # apply column types
+        self.apply_df_types(config.all_columns, config.column_types)
+        # sort rows
+        # NOTE: sorting here is necessary to ensure correct filtering + scaling alignment
+        self.sort_df(config.x_axis, config.series_columns)
+        # get data filter mask
+        self.mask = self.filter_df(*config.get_filters())
+        self.check_filtered_row_count(config.x_axis["value"], config.series_columns, config.plot_columns)
+        # scale y-axis
+        self.transform_df_data(
+            config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
+
+        # FIXME (#issue #255): have an option to put this into a file (-s / --save flag?)
+        print("Selected dataframe:")
+        print(self.df[self.mask][config.plot_columns])
+
+        # call a plotting script
+        plot_generic(
+            config.title, self.df[self.mask][config.plot_columns],
+            config.x_axis, config.y_axis, config.series_filters, self.debug)
+
+        # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
+        if self.debug & self.verbose:
             print("")
+            print("Full dataframe:")
+            print(self.df.to_json(orient="columns", indent=2))
 
-        df = pd.DataFrame()
-        df_csv_export = pd.DataFrame()
-        # put all perflog information in one dataframe
-        for file in log_files:
-            try:
-                temp = read_perflog(file)
-                df = pd.concat([df, temp], ignore_index=True)
-            except KeyError as e:
-                if self.debug:
-                    print("Discarding %s:" %os.path.basename(file),
-                          type(e).__name__ + ":", e.args[0], e.args[1])
-                    print("")
-        if df.empty:
-            raise FileNotFoundError(errno.ENOENT, "Could not find a valid perflog in path", log_path)
-        # specify columns to export from dataframe to csv
-        if config.get("csv_export") is None:
-            raise KeyError("Missing csv_export (specify an empty list [] if none are required).")
-        else:
-            for col in config["csv_export"]:
-                df_csv_export = pd.concat([df_csv_export, df[col]], axis=1, join='outer')
-                df_csv_export.to_csv(log_path+'/output.csv', index=False)  # Set index=False to exclude the DataFrame index from the CSV
-            if self.debug:
-                print("Selected dataframe to export CSV file:")
-                print(df_csv_export)
-        # get axis columns
-        columns = [config["x_axis"]["value"], config["y_axis"]["value"]]
-        if config["x_axis"]["units"].get("column"):
-            columns.insert(1, config["x_axis"]["units"]["column"])
-        if config["y_axis"]["units"].get("column"):
-            columns.append(config["y_axis"]["units"]["column"])
+        return self.df[config.plot_columns][self.mask]
 
-        series = config["series"]
-        # extract series columns and filters
-        series_columns = [s[0] for s in series]
-        series_filters = [[s[0], "==", s[1]] for s in series]
-        # check acceptable number of series
-        if len(set(series_columns)) > 1:
-            raise RuntimeError("Currently supporting grouping of series by only one column. \
-                               Please use a single column name in your series configuration.")
-        # add series columns to dataframe column list
-        for c in series_columns:
-            if c not in columns:
-                columns.append(c)
+    def check_df_columns(self, all_columns):
+        """
+            Check that all columns listed in the config exist in the dataframe.
 
-        and_filters = config["filters"]["and"]
-        or_filters = config["filters"]["or"]
-        # extract filter columns
-        filter_columns = [f[0] for f in and_filters] + [f[0] for f in or_filters]
-
-        # FIXME: add scaling for x-axis
-        scaling_columns = []
-        # extract scaling columns
-        if config["y_axis"].get("scaling"):
-            if config["y_axis"]["scaling"].get("column"):
-                scaling_columns.append(config["y_axis"]["scaling"]["column"]["name"])
-
-        # gather all relevant columns
-        all_columns = set(columns + filter_columns + scaling_columns)
+            Args:
+                all_columns: list, names of all columns mentioned in the config.
+        """
 
         invalid_columns = []
         # check for invalid columns
         for col in all_columns:
-            if col not in df.columns:
+            if col not in self.df.columns:
                 invalid_columns.append(col)
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
-        # apply user-specified types to all relevant columns
+    def apply_df_types(self, all_columns, column_types):
+        """
+            Apply user-specified types to all relevant columns in the dataframe.
+
+            Args:
+                all_columns: list, names of all columns mentioned in the config.
+                column_types: dict, name-type pairs for all important columns.
+        """
+
+        # validate columns
+        self.check_df_columns(all_columns)
+
         for col in all_columns:
-            if config["column_types"].get(col):
+            if column_types.get(col):
 
                 # get user input type
-                conversion_type = config["column_types"][col]
+                conversion_type = column_types[col]
                 # allow user to specify "datetime" as a type (internally convert to "datetime64")
                 conversion_type += "64" if conversion_type == "datetime" else ""
 
@@ -151,227 +115,147 @@ class PostProcessing:
                     # all datetimes treated as datetime64[ns] (nullable)
                     conversion_type = "datetime64[ns]"
                 else:
-                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'." \
+                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'."
                                        .format(conversion_type, col))
 
                 # skip type conversion if column is already the desired type
-                if conversion_type == df[col].dtype:
+                if conversion_type == self.df[col].dtype:
                     continue
                 # otherwise apply type to column
-                df[col] = df[col].astype(conversion_type)
+                self.df[col] = self.df[col].astype(conversion_type)
 
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
-        sorting_columns = [config["x_axis"]["value"]]
-        # sort x-axis values and series in ascending order
-        if series_columns:
-            # NOTE: currently assuming there can only be one series column
-            sorting_columns.append(series_columns[0])
-        # sorting here is necessary to ensure correct filtering + scaling alignment
-        df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+    def sort_df(self, x_axis, series_columns):
+        """
+            Sort the given dataframe such that x-axis values and series are in ascending order.
 
-        mask = pd.Series(df.index.notnull())
+            Args:
+                x_axis: dict, x-axis column and units.
+                series_columns: list, names of series columns.
+        """
+
+        sorting_columns = [x_axis["value"]]
+        if series_columns:
+            # NOTE: currently assuming there can only be one unique series column
+            sorting_columns.append(series_columns[0])
+        self.df.sort_values(sorting_columns, inplace=True, ignore_index=True)
+
+    def filter_df(self, and_filters, or_filters, series_filters):
+        """
+            Return a mask for the given dataframe based on user-specified filter conditions.
+
+            Args:
+                and_filters: list, filter conditions to be concatenated together with logical AND.
+                or_filters: list, filter conditions to be concatenated together with logical OR.
+                series_filters: list, function like or_filters but use series to select x-axis groups.
+        """
+
+        mask = pd.Series(self.df.index.notnull())
         # filter rows
         if and_filters:
-            mask = reduce(op.and_, (self.row_filter(f, df) for f in and_filters))
+            mask = reduce(op.and_, (self.row_filter(f, self.df) for f in and_filters))
         if or_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in or_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, self.df) for f in or_filters))
         # apply series filters
         if series_filters:
-            mask &= reduce(op.or_, (self.row_filter(f, df) for f in series_filters))
+            mask &= reduce(op.or_, (self.row_filter(f, self.df) for f in series_filters))
         # ensure not all rows are filtered away
-        if df[mask].empty:
-            raise pd.errors.EmptyDataError("Filtered dataframe is empty", df[mask].index)
+        if self.df[mask].empty:
+            raise pd.errors.EmptyDataError("Filtered dataframe is empty", self.df[mask].index)
+
+        return mask
+
+    def check_filtered_row_count(self, x_column, series_columns, plot_columns):
+        """
+            Check that the filtered dataframe does not have an incompatible number of rows.
+            Row number must match number of unique x-axis values per series.
+
+            Args:
+                x_column: str, name of x-axis column.
+                series_columns: list, names of series columns.
+                plot_columns: list, names of all columns needed for plotting.
+        """
 
         # get number of occurrences of each column
-        series_col_count = {c:series_columns.count(c) for c in series_columns}
+        series_col_count = {c: series_columns.count(c) for c in series_columns}
         # get number of column combinations
         series_combinations = reduce(op.mul, list(series_col_count.values()), 1)
-
-        num_filtered_rows = len(df[mask])
-        num_x_data_points = series_combinations * len(set(df[config["x_axis"]["value"]][mask]))
+        num_filtered_rows = len(self.df[self.mask])
+        num_x_data_points = series_combinations * len(set(self.df[self.mask][x_column]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
             raise RuntimeError("Unexpected number of rows ({0}) does not match \
-                               number of unique x-axis values per series ({1})" \
-                               .format(num_filtered_rows, num_x_data_points), df[columns][mask])
+                               number of unique x-axis values per series ({1})"
+                               .format(num_filtered_rows, num_x_data_points),
+                               self.df[self.mask][plot_columns])
 
-        scaling_column = None
+    def transform_df_data(self, x_column, y_column, scaling_column, scaling_custom, series_filters):
+        """
+            Transform dataframe y-axis based on scaling settings.
+
+            Args:
+                x_column: str, name of x-axis column.
+                y_column: str, name of y-axis column.
+                scaling_column: dict, name of scaling column, series index, and x-value information.
+                scaling_custom: custom value to scale by.
+                series_filters: list, x-axis group filters.
+        """
+
+        scaling_column_name = None
+        scaling_value = None
         scaling_series_mask = None
         scaling_x_value_mask = None
-        # extract scaling information
-        if config["y_axis"].get("scaling"):
 
-            # check column information
-            if config["y_axis"]["scaling"].get("column"):
-                # copy scaling column (prevents issues when scaling by itself)
-                scaling_column = df[config["y_axis"]["scaling"]["column"]["name"]].copy()
-                # get mask of scaling series
-                if config["y_axis"]["scaling"]["column"].get("series") is not None:
-                    scaling_series_mask = self.row_filter(
-                        series_filters[config["y_axis"]["scaling"]["column"]["series"]], df)
-                # get mask of scaling x-value
-                if config["y_axis"]["scaling"]["column"].get("x_value"):
-                    scaling_x_value_mask = (
-                        df[config["x_axis"]["value"]] == config["y_axis"]["scaling"]["column"]["x_value"])
+        # scale by custom
+        if scaling_custom:
+            try:
+                # interpret scaling value as column dtype
+                scaling_value = pd.Series(scaling_custom, dtype=self.df[y_column].dtype)
+            except ValueError as e:
+                e.args = (e.args[0] + " as a scaling value for column '{0}'".format(y_column),)
+                raise
 
-            # check custom value is not zero
-            elif not config["y_axis"]["scaling"].get("custom"):
-                raise RuntimeError("Invalid custom scaling value (cannot divide by {0})." \
-                                   .format(config["y_axis"]["scaling"].get("custom")))
+        # scale by column
+        elif scaling_column:
+            # copy scaling column (prevents issues when scaling a column by itself)
+            scaling_column_name = scaling_column.get("name")
+            scaling_value = self.df[scaling_column_name].copy()
+            # get mask of scaling series
+            if scaling_column.get("series") is not None:
+                scaling_series_mask = self.row_filter(series_filters[scaling_column.get("series")], self.df)
+            # get mask of scaling x-value
+            if scaling_column.get("x_value"):
+                scaling_x_value_mask = (self.df[x_column] == scaling_column.get("x_value"))
 
+        # apply scaling
+        if scaling_value is not None:
             # apply data transformation per series
             if series_filters:
                 for f in series_filters:
-                    m = self.row_filter(f, df)
-                    df[mask & m] = self.transform_axis(
-                        df[mask & m], mask & m, config["y_axis"], scaling_column,
-                        scaling_series_mask, scaling_x_value_mask)
+                    s = self.row_filter(f, self.df)
+                    self.transform_axis(
+                        self.mask & s, y_column, scaling_value, scaling_series_mask,
+                        scaling_x_value_mask, scaling_column_name, scaling_custom)
             # apply data transformation to all data
             else:
-                df[mask] = self.transform_axis(
-                    df[mask], mask, config["y_axis"], scaling_column,
-                    scaling_series_mask, scaling_x_value_mask)
+                self.transform_axis(
+                    self.mask, y_column, scaling_value, scaling_series_mask,
+                    scaling_x_value_mask, scaling_column_name, scaling_custom)
 
-        print("Selected dataframe:")
-        print(df[columns][mask])
-
-        # call a plotting script
-        self.plot_generic(
-            config["title"], df[columns][mask], config["x_axis"], config["y_axis"], series_filters)
-
-        if self.debug & self.verbose:
-            print("")
-            print("Full dataframe:")
-            print(df.to_json(orient="columns", indent=2))
-
-        return df[columns][mask]
-
-    def plot_generic(self, title, df: pd.DataFrame, x_axis, y_axis, series_filters):
-        """
-            Create a bar chart for the supplied data using bokeh.
-
-            Args:
-                title: str, plot title (read from config).
-                df: dataframe, data to plot.
-                x_axis: dict, x-axis column and units (read from config).
-                y_axis: dict, y-axis column and units (read from config).
-                series_filters: list, x-axis groups used to filter graph data.
-        """
-
-        # get column names and labels for axes
-        x_column, x_label = get_axis_info(df, x_axis, series_filters)
-        y_column, y_label = get_axis_info(df, y_axis, series_filters)
-
-        # find x-axis groups (series columns)
-        groups = [x_column]
-        for f in series_filters:
-            if f[0] not in groups:
-                groups.append(f[0])
-        # keep original x-axis dtype for sorting
-        x_col_dtype = df[x_column].dtype
-        last_group_dtype = df[groups[-1]].dtype
-        # all x-axis data treated as categorical
-        for g in groups:
-            df[g] = df[g].astype(str)
-        # combine group names for later plotting with groupby
-        index_group_col = "_".join(groups)
-        # group by group names (or just x-axis if no other groups are present)
-        grouped_df = df.groupby(x_column, sort=False) if len(groups) == 1 \
-                     else df.groupby(groups, sort=False)
-
-        if self.debug:
-            print("")
-            print("Plot x-axis groups:")
-            for key, _ in grouped_df:
-                print(grouped_df.get_group(key))
-
-        # adjust y-axis range
-        min_y = 0 if min(df[y_column]) >= 0 \
-                else math.floor(np.nanmin(df[y_column])*1.2)
-        max_y = 0 if max(df[y_column]) <= 0 \
-                else math.ceil(np.nanmax(df[y_column])*1.2)
-
-        # create html file to store plot in
-        output_file(filename=os.path.join(
-            Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
-
-        # create plot
-        plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
-                      width=800, toolbar_location="above")
-        # configure tooltip
-        plot.add_tools(HoverTool(tooltips=
-                                 [(y_label, "@{0}_mean".format(y_column)
-                                   + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
-                                      else ""))],
-                                 formatters={"@{0}_mean".format(y_column) : "printf"}))
-
-        # sort x-axis values in descending order (otherwise default sort is ascending)
-        reverse = False
-        if x_axis.get("sort"):
-            if x_axis["sort"] == "descending":
-                reverse = True
-
-        # sort x-axis groups by series first
-        if len(groups) > 1:
-            # get series values with their original dtype
-            # NOTE: currently not accounting for more than one series column
-            series_values = [pd.Series(x[-1], dtype=last_group_dtype).iloc[0]
-                             for x in plot.x_range.factors]
-            sorted_x_items = [x[1] for x in sorted(zip(series_values, plot.x_range.factors),
-                                                   reverse=reverse, key=lambda x: x[0])]
-            plot.x_range.factors = sorted_x_items
-
-        # sort by x-axis values
-        plot.x_range.factors = sorted(plot.x_range.factors, reverse=reverse,
-                                      key=lambda x: pd.Series(x[0] if len(groups) > 1 else x,
-                                                              dtype=x_col_dtype).iloc[0])
-
-        # automatically base bar colouring on last group column
-        colour_factors = [str(x) for x in sorted(pd.Series(df[groups[-1]].unique(),
-                                                           dtype=last_group_dtype))]
-        # divide and assign colours
-        index_cmap = factor_cmap(index_group_col, palette=viridis(len(colour_factors)),
-                                 factors=colour_factors, start=len(groups)-1, end=len(groups))
-        # add legend labels to data source
-        data_source = ColumnDataSource(grouped_df).data
-        legend_labels = ["{0} = {1}".format(groups[-1].replace("_", " "),
-                                            group[-1] if len(groups) > 1 else group)
-                         for group in data_source[index_group_col]]
-        data_source["legend_labels"] = legend_labels
-
-        # create legend outside plot
-        plot.add_layout(Legend(), "right")
-        # add bars
-        plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
-                  line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
-        # add labels
-        plot.xaxis.axis_label = x_label
-        plot.yaxis.axis_label = y_label
-        # remove x-axis group ticks
-        plot.xaxis.major_tick_line_color = None
-        plot.xaxis.major_label_text_font_size = "0pt"
-        # adjust font size
-        plot.title.text_font_size = "15pt"
-
-        # get label values with their original dtype
-        label_values = [pd.Series(x.label.value.split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
-                        for x in plot.legend[0].items]
-        # sort legend items (order determined by x-axis sort)
-        sorted_legend_items = [x[1] for x in sorted(zip(label_values, plot.legend[0].items),
-                                                    reverse=reverse, key=lambda x: x[0])]
-        plot.legend[0].items = sorted_legend_items
-
-        # save to file
-        save(plot)
+        # FIXME (issue #253): add this as a config option at some point
+        # if y_axis.get("drop_nan"):
+        #    df.dropna(subset=[y_axis["value"]], inplace=True)
+            # reset index
+        #    df.index = range(len(df.index))
 
     # operator lookup dictionary
     op_lookup = {
         "==":   op.eq,
         "!=":   op.ne,
-        "<" :   op.lt,
-        ">" :   op.gt,
+        "<":    op.lt,
+        ">":    op.gt,
         "<=":   op.le,
         ">=":   op.ge
     }
@@ -414,60 +298,52 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, df: pd.DataFrame, df_mask, axis, scaling_column,
-                       scaling_series_mask, scaling_x_value_mask):
+    def transform_axis(self, mask, axis_column, scaling_value, scaling_series_mask,
+                       scaling_x_value_mask, scaling_column_name, scaling_custom):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
-                df: dataframe, data to plot (pre-masked by series, if present).
-                df_mask: bool list, the mask (pre-)applied to the df argument.
-                axis: dict, axis column, units, and values to scale by.
-                scaling_column: dataframe column, copy of column containing values to scale by.
-                scaling_series_mask: bool list, a series mask to be applied to the scaling column.
-                scaling_x_value_mask: bool list, an x-axis value mask to be applied to the scaling column.
+                mask: bool series, dataframe filters.
+                axis_column: str, name of axis column to scale.
+                scaling_value: dataframe column, copy of column containing values to scale by.
+                scaling_series_mask: bool series, a series mask to be applied to the scaling column.
+                scaling_x_value_mask: bool series, an x-axis value mask to be applied to the scaling column.
+                scaling_column_name: str, name of scaling column.
+                scaling_custom: custom value to scale by.
         """
 
-        # FIXME: try to make this an in-place process
+        # prepare custom values
+        if scaling_custom:
+            scaling_value = scaling_value.iloc[0] if len(scaling_value) == 1 else scaling_value.values
 
-        # scale by column
-        if scaling_column is not None:
+        # prepare column values
+        elif scaling_column_name:
 
             # check types
-            if not pd.api.types.is_numeric_dtype(df[axis["value"]].dtype) or \
-                not pd.api.types.is_numeric_dtype(scaling_column.dtype):
+            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis_column].dtype) or
+                not pd.api.types.is_numeric_dtype(scaling_value.dtype)):
                 # both columns must be numeric
                 raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
-                                .format(axis["value"], df[axis["value"]].dtype,
-                                        axis["scaling"]["column"]["name"], scaling_column.dtype))
+                                .format(axis_column, self.df[mask][axis_column].dtype,
+                                        scaling_column_name, scaling_value.dtype))
 
-            # get mask of scaling value(s)
-            scaling_mask = df_mask.copy()
+            # get mask of scaling values
+            scaling_mask = mask.copy()
             if scaling_series_mask is not None:
                 scaling_mask = scaling_series_mask
             if scaling_x_value_mask is not None:
                 scaling_mask &= scaling_x_value_mask
 
-            scaling_val = scaling_column[scaling_mask].iloc[0] if len(scaling_column[scaling_mask]) == 1 \
-                          else scaling_column[scaling_mask].values
+            scaling_value = (scaling_value[scaling_mask].iloc[0]
+                             if len(scaling_value[scaling_mask]) == 1
+                             else scaling_value[scaling_mask].values)
 
-            # FIXME: add a check that the masked scaling column has the same number of values
-            # as the masked df (unless there is only one scaling value)
+        # apply scaling
+        self.df.loc[mask, axis_column] = self.df[mask][axis_column].values / scaling_value
+        # FIXME (issue #253): add this as a config option at some point in conjunction with dropping NaNs
+        # df[axis_column].replace(to_replace=1, value=np.NaN, inplace=True)
 
-            df[axis["value"]] = df[axis["value"]].values / scaling_val
-
-        # scale by custom value
-        elif axis["scaling"].get("custom"):
-            scaling_value = axis["scaling"]["custom"]
-            try:
-                # interpret scaling value as column dtype
-                scaling_value = pd.Series(scaling_value, dtype=df[axis["value"]].dtype).iloc[0]
-            except ValueError as e:
-                e.args = (e.args[0] + " as a scaling value for column '{0}'".format(axis["value"]),)
-                raise
-            df[axis["value"]] /= scaling_value
-
-        return df
 
 def read_args():
     """
@@ -478,9 +354,9 @@ def read_args():
         description="Plot benchmark data. At least one perflog must be supplied.")
 
     # required positional arguments (log path, config path)
-    parser.add_argument("log_path", type=str,
+    parser.add_argument("log_path", type=Path,
                         help="path to a perflog file or a directory containing perflog files")
-    parser.add_argument("config_path", type=str,
+    parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
 
     # optional argument (plot type)
@@ -492,208 +368,26 @@ def read_args():
                         help="debug flag for printing additional information")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="verbose flag for printing more debug information \
-                            (must be used in conjunction with the debug flag)")
+                              (must be used in conjunction with the debug flag)")
 
     return parser.parse_args()
 
-def read_config(path):
-    """
-        Return a dictionary containing configuration information for plotting.
-
-        Args:
-            path: str, path to a config file.
-    """
-
-    with open(path, "r") as file:
-        config = yaml.safe_load(file)
-
-    # check x-axis information
-    if not config.get("x_axis"):
-        raise KeyError("Missing x-axis information.")
-    if not config.get("x_axis").get("value"):
-        raise KeyError("Missing x-axis value information.")
-    if not config.get("x_axis").get("units"):
-        raise KeyError("Missing x-axis units information.")
-    if config.get("x_axis").get("units").get("custom") is not None and \
-       config.get("x_axis").get("units").get("column") is not None:
-        raise KeyError("Specify x-axis units information as only one of 'custom' or 'column'.")
-
-    # check y-axis information
-    if not config.get("y_axis"):
-        raise KeyError("Missing y-axis information.")
-    if not config.get("y_axis").get("value"):
-        raise KeyError("Missing y-axis value information.")
-    if not config.get("y_axis").get("units"):
-        raise KeyError("Missing y-axis units information.")
-    if config.get("y_axis").get("units").get("custom") is not None and \
-       config.get("y_axis").get("units").get("column") is not None:
-        raise KeyError("Specify y-axis units information as only one of 'custom' or 'column'.")
-
-    # check optional scaling information
-    if config.get("y_axis").get("scaling"):
-        if config.get("y_axis").get("scaling").get("custom") is not None and \
-           config.get("y_axis").get("scaling").get("column") is not None:
-            raise KeyError("Specify y-axis scaling information as only one of 'custom' or 'column'.")
-
-    # check series length
-    if config.get("series") is None:
-        raise KeyError(
-            "Missing series information (specify an empty list [] if there is only one series).")
-    if len(config["series"]) == 1:
-        raise KeyError(
-            "Number of series must be >= 2 (specify an empty list [] if there is only one series).")
-
-    # check filters are present
-    if not config.get("filters"):
-        raise KeyError("Missing filter information (specify 'and' and 'or' filters).")
-    if config.get("filters").get("and") is None:
-        raise KeyError("Missing 'and' filters (specify an empty list [] if none are required).")
-    if config.get("filters").get("or") is None:
-        raise KeyError("Missing 'or' filters (specify an empty list [] if none are required).")
-
-    # check plot title information
-    if not config.get("title"):
-        raise KeyError("Missing plot title information.")
-
-    return config
-
-# a modified and updated version of the function from perf_logs.py
-def read_perflog(path):
-    """
-        Return a pandas dataframe from a ReFrame performance log.
-
-        Args:
-            path: str, path to log file.
-
-        NB: This currently depends on having a non-default handlers_perflog.filelog.format
-            in reframe's configuration. See code.
-
-        The returned dataframe will have columns for all fields in a performance log record
-        except display name, extra resources, and env vars. Display name will be broken up
-        into test name and parameter columns, while the other two will be replaced by the
-        dictionary contents of their fields (keys become columns, values become row contents).
-    """
-
-    # read perflog into dataframe
-    df = pd.read_csv(path, delimiter="|")
-    REQUIRED_LOG_FIELDS = ["job_completion_time", r"\w+_value$", r"\w+_unit$", "display_name"]
-
-    # look for required column matches
-    required_field_matches = [len(list(filter(re.compile(rexpr).match, df.columns))) > 0
-                              for rexpr in REQUIRED_LOG_FIELDS]
-    # check all required columns are present
-    if False in required_field_matches:
-        raise KeyError("Perflog missing one or more required fields", REQUIRED_LOG_FIELDS)
-
-    # replace display name
-    results = df["display_name"].apply(get_display_name_info)
-    index = df.columns.get_loc("display_name")
-    # insert new columns and contents
-    insert_key_cols(df, index, [r[1] for r in results])
-    df.insert(index, "test_name", [r[0] for r in results])
-    # drop old column
-    df.drop("display_name", axis=1, inplace=True)
-
-    # replace other columns with dictionary contents
-    dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
-    for col in dict_cols:
-        results = df[col].apply(lambda x: json.loads(x))
-        # insert new columns and contents
-        insert_key_cols(df, df.columns.get_loc(col), results)
-        # drop old column
-        df.drop(col, axis=1, inplace=True)
-
-    return df
-
-def get_display_name_info(display_name):
-    """
-        Return a tuple containing the test name and a dictionary of parameter names
-        and their values from the given input string. The parameter dictionary may be empty
-        if no parameters are present.
-
-        Args:
-            display_name: str, expecting a format of <test_name> followed by zero or more
-            %<param>=<value> pairs.
-    """
-
-    split_display_name = display_name.split(" %")
-    test_name = split_display_name[0]
-    params = [p.split("=") for p in split_display_name[1:]]
-
-    return test_name, dict(params)
-
-def insert_key_cols(df: pd.DataFrame, index, results):
-    """
-        Modify a dataframe to include new columns (extracted from results) inserted at a given index.
-
-        Args:
-            df: dataframe, to be modified by this function.
-            index: int, index as which to insert new columns into the dataframe.
-            results: dict list, contains key-value mapping information for all rows.
-    """
-    # get set of keys from all rows
-    keys = set(chain.from_iterable([r.keys() for r in results]))
-    for k in keys:
-        # insert keys as new columns
-        df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
-
-def get_axis_info(df: pd.DataFrame, axis, series_filters):
-    """
-        Return the column name and label for a given axis. If a column name is supplied as
-        units information, the actual units will be extracted from a dataframe.
-
-        Args:
-            df: dataframe, data to plot.
-            axis: dict, axis column, units, and values to scale by.
-    """
-
-    # get column name of axis
-    col_name = axis.get("value")
-    # get units
-    units = axis.get("units").get("custom")
-    if axis.get("units").get("column"):
-        unit_set = set(df[axis["units"]["column"]].dropna())
-        # check all rows have the same units
-        if len(unit_set) != 1:
-            raise RuntimeError("Unexpected number of axis unit entries {0}".format(unit_set))
-        units = next(iter(unit_set))
-
-    # get scaling information
-    scaling = None
-    if axis.get("scaling"):
-        if axis["scaling"].get("column"):
-            scaling_column = axis["scaling"]["column"]["name"]
-            series_index = axis["scaling"]["column"].get("series")
-            x_value = axis["scaling"]["column"].get("x_value")
-            # FIXME: make scaling label more clear
-            series_col = "{0} in {1}".format(series_filters[series_index][2], scaling_column) \
-                         if series_index is not None else scaling_column
-            scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
-        else:
-            scaling = str(axis["scaling"].get("custom"))
-
-    # determine axis label
-    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                               if scaling else "",
-                               " ({0})".format(units) if units else "")
-
-    return col_name, label
 
 def main():
 
     args = read_args()
-    post = PostProcessing(args.debug, args.verbose)
 
     try:
-        config = read_config(args.config_path)
-        post.run_post_processing(args.log_path, config)
+        post = PostProcessing(args.log_path, args.debug, args.verbose)
+        config = ConfigHandler.from_path(args.config_path)
+        post.run_post_processing(config)
 
     except Exception as e:
         print(type(e).__name__ + ":", e)
         print("Post-processing stopped")
         if args.debug:
             print(traceback.format_exc())
+
 
 if __name__ == "__main__":
     main()
