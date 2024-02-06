@@ -14,6 +14,7 @@ class ConfigHandler:
         self.filters = config.get("filters")
         self.series = config.get("series")
         self.column_types = config.get("column_types")
+        self.extra_columns = config.get("additional_columns_to_csv")
 
         # parse filter information
         self.and_filters = []

@@ -23,12 +23,13 @@ class PostProcessing:
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
 
-    def run_post_processing(self, config: ConfigHandler):
+    def run_post_processing(self, log_path: Path, config: ConfigHandler):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
 
             Args:
+                log_path: str, path to a log file or a directory containing log files.
                 config: ConfigHandler, class containing configuration information for plotting.
         """
 
@@ -50,6 +51,10 @@ class PostProcessing:
         # FIXME (#issue #255): have an option to put this into a file (-s / --save flag?)
         print("Selected dataframe:")
         print(self.df[self.mask][config.plot_columns])
+        if self.debug:
+            print("CSV dataframe:")
+            print(self.df[self.mask][config.plot_columns + config.extra_columns])
+        self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(str(log_path)+'/output.csv', index=True)  # Set index=False to exclude the DataFrame index from the CSV
 
         # call a plotting script
         plot_generic(
@@ -380,7 +385,7 @@ def main():
     try:
         post = PostProcessing(args.log_path, args.debug, args.verbose)
         config = ConfigHandler.from_path(args.config_path)
-        post.run_post_processing(config)
+        post.run_post_processing(args.log_path,config)
 
     except Exception as e:
         print(type(e).__name__ + ":", e)
