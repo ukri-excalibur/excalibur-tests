@@ -52,7 +52,7 @@ class PostProcessing:
         print(self.df[self.mask][config.plot_columns])
 
         # call a plotting script
-        plot_generic(
+        self.plot = plot_generic(
             config.title, self.df[self.mask][config.plot_columns],
             config.x_axis, config.y_axis, config.series_filters, self.debug)
 
@@ -62,7 +62,7 @@ class PostProcessing:
             print("Full dataframe:")
             print(self.df.to_json(orient="columns", indent=2))
 
-        return self.df[config.plot_columns][self.mask]
+        return self.df[self.mask][config.plot_columns]
 
     def check_df_columns(self, all_columns):
         """
