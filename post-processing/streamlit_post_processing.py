@@ -14,9 +14,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
             config: ConfigHandler, class containing configuration information for plotting.
     """
 
-    # display data
+    # display graph
     st.bokeh_chart(post.plot, use_container_width=True)
-    st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+
+    # display dataframe data
+    show_df = st.toggle("Show DataFrame")
+    if show_df:
+        st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
 
 
 def main():
