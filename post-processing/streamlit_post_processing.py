@@ -22,6 +22,27 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     if show_df:
         st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
 
+    st.divider()
+    st.write("#### Axis Options")
+    st.write("TODO")
+
+    st.write("#### Filter Options")
+    st.write("TODO")
+
+    # FIXME: try to make a custom tag-like component for filters and series
+    # instead of using multiselect
+    st.write("###### Current AND Filters")
+    st.multiselect("AND Filters", config.and_filters if config.and_filters else [None], config.and_filters,
+                   placeholder="None", label_visibility="collapsed", disabled=True)
+
+    st.write("###### Current OR Filters")
+    st.multiselect("OR Filters", config.or_filters if config.or_filters else [None], config.or_filters,
+                   placeholder="None", label_visibility="collapsed", disabled=True)
+
+    st.write("###### Current Series")
+    st.multiselect("Series", config.series if config.series else [None], config.series,
+                   placeholder="None", label_visibility="collapsed", disabled=True)
+
 
 def main():
 
