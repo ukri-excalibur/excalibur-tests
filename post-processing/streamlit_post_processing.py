@@ -5,6 +5,15 @@ from config_handler import ConfigHandler
 from post_processing import PostProcessing, read_args
 
 
+# drop-down lists
+column_types = ["datetime", "int", "float", "str"]
+# user vs internal pandas type conversion
+type_lookup = {"datetime64[ns]": "datetime",
+               "float64": "float",
+               "Int64": "int",
+               "object": "str"}
+
+
 def update_ui(post: PostProcessing, config: ConfigHandler):
     """
         Create an interactive user interface for post-processing using Streamlit.
@@ -17,15 +26,18 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     # stop the session state from resetting each time this function is run
     if st.session_state.get("post") is None:
         st.session_state.post = post
+        st.session_state.config = config
+
+    post = st.session_state.post
+    config = st.session_state.config
 
     # display graph
-    st.bokeh_chart(st.session_state.post.plot, use_container_width=True)
+    st.bokeh_chart(post.plot, use_container_width=True)
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        st.dataframe(st.session_state.post.df[st.session_state.post.mask][config.plot_columns],
-                     hide_index=True, use_container_width=True)
+        st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
 
     st.divider()
     # set plot title
@@ -34,7 +46,12 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         config.title = title
 
     st.write("#### Axis Options")
-    st.write("TODO")
+    with st.form(key="axis options"):
+        axis_select("x", config.x_axis)
+        axis_select("y", config.y_axis)
+        submit = st.form_submit_button("Update Axes")
+        if submit:
+            update_axes()
 
     st.write("#### Filter Options")
     st.write("TODO")
@@ -53,15 +70,60 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.multiselect("Series", config.series if config.series else [None], config.series,
                    placeholder="None", label_visibility="collapsed", disabled=True)
 
-    st.button("Generate Graph", on_click=rerun_post_processing, args=[config])
+    st.button("Generate Graph", on_click=rerun_post_processing)
 
 
-def rerun_post_processing(config: ConfigHandler):
+def axis_select(label: str, axis: dict):
+
+    df = st.session_state.post.df
+    # default drop-down selections
+    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype)))
+    column_index = list(df.columns).index(axis["value"])
+
+    # axis information drop-downs
+    axis_type, axis_column = st.columns(2)
+    # type select
+    with axis_type:
+        st.selectbox("{0}-axis type".format(label), column_types,
+                     key="{0}_axis_type".format(label), index=type_index)
+    # column select
+    with axis_column:
+        st.selectbox("{0}-axis column".format(label), df.columns,
+                     key="{0}_axis_column".format(label), index=column_index)
+    # FIXME: add units select
+
+
+def update_axes():
+
+    config = st.session_state.config
+    x_column = st.session_state.x_axis_column
+    y_column = st.session_state.y_axis_column
+
+    # remove column types that are no longer needed
+    if config.x_axis["value"] != x_column:
+        config.column_types.pop(config.x_axis["value"], None)
+    if config.y_axis["value"] != y_column:
+        config.column_types.pop(config.y_axis["value"], None)
+
+    # update columns
+    config.x_axis["value"] = x_column
+    config.y_axis["value"] = y_column
+    # FIXME: update units
+    # re-parse column names
+    config.parse_columns()
+
+    # update types
+    config.column_types[x_column] = st.session_state.x_axis_type
+    config.column_types[y_column] = st.session_state.y_axis_type
+
+
+def rerun_post_processing():
+    post = st.session_state.post
     # reset processed df to original state
     # FIXME: make this reset a post-processing function
-    st.session_state.post.df = st.session_state.post.original_df.copy()
+    post.df = post.original_df.copy()
     # run post-processing again
-    st.session_state.post.run_post_processing(config)
+    post.run_post_processing(st.session_state.config)
 
 
 def main():
