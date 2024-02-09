@@ -14,15 +14,25 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
             config: ConfigHandler, class containing configuration information for plotting.
     """
 
+    # stop the session state from resetting each time this function is run
+    if st.session_state.get("post") is None:
+        st.session_state.post = post
+
     # display graph
-    st.bokeh_chart(post.plot, use_container_width=True)
+    st.bokeh_chart(st.session_state.post.plot, use_container_width=True)
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        st.dataframe(st.session_state.post.df[st.session_state.post.mask][config.plot_columns],
+                     hide_index=True, use_container_width=True)
 
     st.divider()
+    # set plot title
+    title = st.text_input("#### Title", config.title)
+    if title != config.title:
+        config.title = title
+
     st.write("#### Axis Options")
     st.write("TODO")
 
@@ -42,6 +52,16 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.write("###### Current Series")
     st.multiselect("Series", config.series if config.series else [None], config.series,
                    placeholder="None", label_visibility="collapsed", disabled=True)
+
+    st.button("Generate Graph", on_click=rerun_post_processing, args=[config])
+
+
+def rerun_post_processing(config: ConfigHandler):
+    # reset processed df to original state
+    # FIXME: make this reset a post-processing function
+    st.session_state.post.df = st.session_state.post.original_df.copy()
+    # run post-processing again
+    st.session_state.post.run_post_processing(config)
 
 
 def main():

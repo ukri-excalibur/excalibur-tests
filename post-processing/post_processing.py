@@ -17,9 +17,9 @@ class PostProcessing:
         self.debug = debug
         self.verbose = verbose
         # find and read perflogs
-        self.df = PerflogHandler(log_path, self.debug).get_df()
-        # FIXME (issue #259): will need an original + modified df
-        # for re-running post-processing with front-end
+        self.original_df = PerflogHandler(log_path, self.debug).get_df()
+        # copy original data for modification during post-processing
+        self.df = self.original_df.copy()
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
 
