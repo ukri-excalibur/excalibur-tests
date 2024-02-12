@@ -22,8 +22,9 @@ class PostProcessing:
         # for re-running post-processing with front-end
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
+        self.log_path = log_path
 
-    def run_post_processing(self, log_path: Path, config: ConfigHandler):
+    def run_post_processing(self, config: ConfigHandler):
         """
             Return a dataframe containing the information passed to a plotting script
             and produce relevant graphs.
@@ -54,7 +55,7 @@ class PostProcessing:
         if self.debug:
             print("CSV dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
-        self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(str(log_path)+'/output.csv', index=True)  # Set index=False to exclude the DataFrame index from the CSV
+        self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(str(self.log_path)+'/output.csv', index=True)  # Set index=False to exclude the DataFrame index from the CSV
 
         # call a plotting script
         plot_generic(
@@ -385,7 +386,7 @@ def main():
     try:
         post = PostProcessing(args.log_path, args.debug, args.verbose)
         config = ConfigHandler.from_path(args.config_path)
-        post.run_post_processing(args.log_path,config)
+        post.run_post_processing(config)
 
     except Exception as e:
         print(type(e).__name__ + ":", e)
