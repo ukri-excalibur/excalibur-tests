@@ -30,7 +30,6 @@ class PostProcessing:
             and produce relevant graphs.
 
             Args:
-                log_path: str, path to a log file or a directory containing log files.
                 config: ConfigHandler, class containing configuration information for plotting.
         """
 
