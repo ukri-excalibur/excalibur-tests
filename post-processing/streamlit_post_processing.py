@@ -74,6 +74,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
 
 
 def axis_select(label: str, axis: dict):
+    """
+        Allow the user to select axis column and type for post-processing.
+
+        Args:
+            label: str, axis label (either 'x' or 'y').
+            axis: dict, axis column and units from config.
+    """
 
     df = st.session_state.post.df
     # default drop-down selections
@@ -94,11 +101,15 @@ def axis_select(label: str, axis: dict):
 
 
 def update_axes():
+    """
+        Apply user-selected axis columns and types to session state config.
+    """
 
     config = st.session_state.config
     x_column = st.session_state.x_axis_column
     y_column = st.session_state.y_axis_column
 
+    # FIXME: need to double-check the column is not needed elsewhere (e.g. filtering)
     # remove column types that are no longer needed
     if config.x_axis["value"] != x_column:
         config.column_types.pop(config.x_axis["value"], None)
@@ -118,6 +129,10 @@ def update_axes():
 
 
 def rerun_post_processing():
+    """
+        Run post-processing with the current session state config.
+    """
+
     post = st.session_state.post
     # reset processed df to original state
     # FIXME: make this reset a post-processing function
