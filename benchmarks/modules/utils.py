@@ -269,10 +269,14 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
+        spack_spec_keys = 'from spack import environment; list(environment.active_environment().spec_lists["specs"].specs[0].variants.dict.keys())'
+        spack_spec_vals = 'from spack import environment; d = environment.active_environment().spec_lists["specs"].specs[0].variants.dict; l = list(d.keys()); values=[d[key].value[0] if isinstance(d[key].value,tuple) else d[key].value for key in l];print(values) '
         cmd_compiler_name = 'from spack import environment; print(environment.active_environment().spec_lists["specs"].specs[0].compiler.name)'
         cmd_compiler_version = 'from spack import environment; environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[0]'
         self.postrun_cmds.append(f'echo "compiler_name: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
         self.postrun_cmds.append(f'echo "compiler_version: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
+        self.postrun_cmds.append(f'echo "Spack_Spec keys : $(spack -e {self.build_system.environment} python -c \'{spack_spec_keys}\')"')
+        self.postrun_cmds.append(f'echo "Spack_Spec vals : $(spack -e {self.build_system.environment} python -c \'{spack_spec_vals}\')"')
         
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
