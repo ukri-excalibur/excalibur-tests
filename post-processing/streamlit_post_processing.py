@@ -111,12 +111,9 @@ def update_axes():
     x_column = st.session_state.x_axis_column
     y_column = st.session_state.y_axis_column
 
-    # FIXME: need to double-check the column is not needed elsewhere (e.g. filtering)
     # remove column types that are no longer needed
-    if config.x_axis["value"] != x_column:
-        config.column_types.pop(config.x_axis["value"], None)
-    if config.y_axis["value"] != y_column:
-        config.column_types.pop(config.y_axis["value"], None)
+    remove_axis_type(config.x_axis["value"], x_column, y_column)
+    remove_axis_type(config.y_axis["value"], y_column, x_column)
 
     # update columns
     config.x_axis["value"] = x_column
@@ -128,6 +125,27 @@ def update_axes():
     # update types
     config.column_types[x_column] = st.session_state.x_axis_type
     config.column_types[y_column] = st.session_state.y_axis_type
+
+
+def remove_axis_type(old_column: str, new_column: str, other_axis_column: str):
+    """
+        Remove an old axis column from the session state config column types dictionary if it is redundant.
+
+        Args:
+            old_column: str, old axis column name in session state config.
+            new_column: str, new axis column name in session state selection.
+            other_axis_column: str, the column name of the other axis in session state selection.
+    """
+
+    config = st.session_state.config
+    if old_column != new_column:
+        # check the old column is not needed for the other axis, scaling, filters, or series
+        is_redundant = old_column not in ([other_axis_column] +
+                                          ([config.scaling_column["name"]]
+                                           if config.scaling_column is not None else []) +
+                                          config.series_columns + config.filter_columns)
+        if is_redundant:
+            config.column_types.pop(old_column, None)
 
 
 def rerun_post_processing():

@@ -42,7 +42,8 @@ class PostProcessing:
         self.sort_df(config.x_axis, config.series_columns)
         # get data filter mask
         self.mask = self.filter_df(*config.get_filters())
-        self.check_filtered_row_count(config.x_axis["value"], config.series_columns, config.plot_columns)
+        self.check_filtered_row_count(
+            config.x_axis["value"], [s[0] for s in config.series_filters], config.plot_columns)
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
@@ -174,7 +175,7 @@ class PostProcessing:
 
             Args:
                 x_column: str, name of x-axis column.
-                series_columns: list, names of series columns.
+                series_columns: list, all names of series columns (including duplicates).
                 plot_columns: list, names of all columns needed for plotting.
         """
 
@@ -321,10 +322,11 @@ class PostProcessing:
         elif scaling_column_name:
 
             # check types
-            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis_column].dtype) or
+            if (not pd.api.types.is_float_dtype(self.df[mask][axis_column].dtype) or
                 not pd.api.types.is_numeric_dtype(scaling_value.dtype)):
-                # both columns must be numeric
-                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
+                # scaled column must be float to avoid casting issues and scaling column must be numeric
+                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}. \
+                                Scaled column must be float and scaling column must be numeric."
                                 .format(axis_column, self.df[mask][axis_column].dtype,
                                         scaling_column_name, scaling_value.dtype))
 
