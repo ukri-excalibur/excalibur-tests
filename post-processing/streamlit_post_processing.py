@@ -48,10 +48,12 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.write("#### Axis Options")
     with st.form(key="axis options"):
         axis_select("x", config.x_axis)
+        sort = st.checkbox("sort descending")
         axis_select("y", config.y_axis)
         submit = st.form_submit_button("Update Axes")
         if submit:
             update_axes()
+            config.x_axis["sort"] = "descending" if sort else "ascending"
 
     st.write("#### Filter Options")
     st.write("TODO")
