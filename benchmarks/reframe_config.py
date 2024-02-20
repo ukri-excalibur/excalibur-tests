@@ -415,7 +415,7 @@ site_configuration = {
                     'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
-                    'access': ['-q instinctq','-l mem=100g' ,'-l place=excl'],
+                    'access': ['-q instinctq', '-l place=excl'],
                     'environs': ['default'],
                     'max_jobs': 20,
                     'features': ['gpu', 'rocm'],
@@ -424,7 +424,14 @@ site_configuration = {
                         'num_cpus_per_core': 2,
                         'num_sockets': 1,
                         'num_cpus_per_socket': 32,
-                    }
+                    },
+                    'resources': [
+                        {
+                            'name': 'cpu',
+                             # TODO: memory should be a separate resource.
+                            'options': ['ncpus={num_cpus}:mem=100g'],
+                        },
+                    ],
                 },
                 {
                     'name': 'milan',
