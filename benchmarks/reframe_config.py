@@ -424,7 +424,14 @@ site_configuration = {
                         'num_cpus_per_core': 2,
                         'num_sockets': 1,
                         'num_cpus_per_socket': 32,
-                    }
+                    },
+                    'resources': [
+                        {
+                            'name': 'cpu',
+                             # TODO: memory should be a separate resource.
+                            'options': ['ncpus={num_cpus}:mem=100g'],
+                        },
+                    ],
                 },
                 {
                     'name': 'milan',
