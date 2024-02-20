@@ -415,7 +415,7 @@ site_configuration = {
                     'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
                     'scheduler': 'pbs',
                     'launcher': 'mpirun',
-                    'access': ['-q instinctq', '-l place=excl'],
+                    'access': ['-q instinctq','-l mem=100g' ,'-l place=excl'],
                     'environs': ['default'],
                     'max_jobs': 20,
                     'features': ['gpu', 'rocm'],
