@@ -4,7 +4,6 @@ import streamlit as st
 from config_handler import ConfigHandler
 from post_processing import PostProcessing, read_args
 
-
 # drop-down lists
 column_types = ["datetime", "int", "float", "str"]
 # user vs internal pandas type conversion
@@ -99,7 +98,33 @@ def axis_select(label: str, axis: dict):
     with axis_column:
         st.selectbox("{0}-axis column".format(label), df.columns,
                      key="{0}_axis_column".format(label), index=column_index)
-    # FIXME: add units select
+    # units select
+    units_select(label, axis)
+
+
+def units_select(label: str, axis: dict):
+    """
+        Allow the user to select or specify axis units for post-processing.
+
+        Args:
+            label: str, axis label (either 'x' or 'y').
+            axis: dict, axis column and units from config.
+    """
+
+    df = st.session_state.post.df
+    # default drop-down selection
+    units_index = list(df.columns).index(axis["units"]["column"]) if axis["units"].get("column") else None
+
+    units_column, units_custom = st.columns(2)
+    # units select
+    with units_column:
+        # NOTE: initialising with index=None allows value to be cleared, but doesn't allow a default value
+        st.selectbox("{0}-axis units column".format(label), df.columns, placeholder="None",
+                     key="{0}_axis_units_column".format(label), index=units_index)
+    # set custom units
+    with units_custom:
+        st.text_input("{0}-axis units custom".format(label), axis["units"].get("custom"),
+                      placeholder="None", key="{0}_axis_units_custom".format(label))
 
 
 def update_axes():
@@ -107,40 +132,62 @@ def update_axes():
         Apply user-selected axis columns and types to session state config.
     """
 
+    # FIXME: if both axis or unit columns are the same, this results in incorrect behaviour
     config = st.session_state.config
     x_column = st.session_state.x_axis_column
     y_column = st.session_state.y_axis_column
+    x_units_column = st.session_state.x_axis_units_column
+    x_units_custom = st.session_state.x_axis_units_custom
+    y_units_column = st.session_state.y_axis_units_column
+    y_units_custom = st.session_state.y_axis_units_custom
 
-    # remove column types that are no longer needed
-    remove_axis_type(config.x_axis["value"], x_column, y_column)
-    remove_axis_type(config.y_axis["value"], y_column, x_column)
+    # remove axis column types that are no longer needed
+    remove_axis_type(x_column, config.x_axis["value"], [y_column, y_units_column, x_units_column])
+    if x_units_column or x_units_custom:
+        remove_axis_type(x_units_column if not x_units_custom else None, config.x_axis["units"].get("column"),
+                         [y_column, y_units_column, x_column])
+    remove_axis_type(y_column, config.y_axis["value"], [x_column, x_units_column, y_units_column])
+    if y_units_column or y_units_custom:
+        remove_axis_type(y_units_column if not y_units_custom else None, config.y_axis["units"].get("column"),
+                         [x_column, x_units_column, y_column])
 
     # update columns
     config.x_axis["value"] = x_column
     config.y_axis["value"] = y_column
-    # FIXME: update units
+    # update units
+    # NOTE: units are automatically interpreted as strings for simplicity
+    # FIXME: currently the only way to clear column selection is to add custom units
+    # (custom units can easily be overwritten with None by leaving text input empty)
+    config.x_axis["units"] = {"custom": x_units_custom}
+    if not x_units_custom and x_units_column:
+        config.x_axis["units"] = {"column": x_units_column}
+        config.column_types[x_units_column] = "str"
+    config.y_axis["units"] = {"custom": y_units_custom}
+    if not y_units_custom and y_units_column:
+        config.y_axis["units"] = {"column": y_units_column}
+        config.column_types[y_units_column] = "str"
+
     # re-parse column names
     config.parse_columns()
-
     # update types
     config.column_types[x_column] = st.session_state.x_axis_type
     config.column_types[y_column] = st.session_state.y_axis_type
 
 
-def remove_axis_type(old_column: str, new_column: str, other_axis_column: str):
+def remove_axis_type(new_column: str, old_column: str, other_axis_columns: list):
     """
         Remove an old axis column from the session state config column types dictionary if it is redundant.
 
         Args:
-            old_column: str, old axis column name in session state config.
             new_column: str, new axis column name in session state selection.
-            other_axis_column: str, the column name of the other axis in session state selection.
+            old_column: str, old axis column name in session state config.
+            other_axis_columns: str list, the names of other axis columns to check against in session state selection.
     """
 
     config = st.session_state.config
     if old_column != new_column:
         # check the old column is not needed for the other axis, scaling, filters, or series
-        is_redundant = old_column not in ([other_axis_column] +
+        is_redundant = old_column not in (other_axis_columns +
                                           ([config.scaling_column["name"]]
                                            if config.scaling_column is not None else []) +
                                           config.series_columns + config.filter_columns)
