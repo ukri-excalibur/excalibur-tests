@@ -91,7 +91,7 @@ class ConfigHandler:
             if s not in self.plot_columns:
                 self.plot_columns.append(s)
         # drop None values
-        self.plot_columns = [c for c in self.plot_columns if c is not None]
+        self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
         # filter columns
         self.filter_columns = list(dict.fromkeys([f[0] for f in self.and_filters] +
