@@ -98,8 +98,9 @@ class ConfigHandler:
                                                  [f[0] for f in self.or_filters]))
 
         # all typed columns
-        self.all_columns = (self.plot_columns + self.filter_columns +
-                            ([self.scaling_column.get("name")] if self.scaling_column else []))
+        self.all_columns = list(
+            dict.fromkeys((self.plot_columns + self.filter_columns +
+                           ([self.scaling_column.get("name")] if self.scaling_column else []))))
 
     def to_dict(self):
         """
@@ -123,14 +124,25 @@ class ConfigHandler:
 
 def open_config(path):
     """
-        Return a dictionary containing configuration information for plotting.
+        Return a dictionary containing configuration information for plotting
+        from the path to a yaml file.
 
         Args:
             path: path, path to yaml config file.
     """
 
     with open(path, "r") as file:
-        return yaml.safe_load(file)
+        return load_config(file)
+
+
+def load_config(file):
+    """
+        Return a loaded config dictionary from a yaml file.
+
+        Args:
+            file: file, config yaml.
+    """
+    return yaml.safe_load(file)
 
 
 def read_config(config):
