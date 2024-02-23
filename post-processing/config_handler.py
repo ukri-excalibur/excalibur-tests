@@ -114,6 +114,11 @@ class ConfigHandler:
             "series": self.series,
             "column_types": self.column_types})
 
+    def to_yaml(self):
+        """
+            Convert information in the class to a yaml format.
+        """
+        return yaml.dump(self.to_dict(), sort_keys=False)
 
 
 def open_config(path):

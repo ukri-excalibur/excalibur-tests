@@ -71,7 +71,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.multiselect("Series", config.series if config.series else [None], config.series,
                    placeholder="None", label_visibility="collapsed", disabled=True)
 
-    st.button("Generate Graph", on_click=rerun_post_processing)
+    generate_graph, download_config = st.columns(2)
+    with generate_graph:
+        st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
+    with download_config:
+        st.download_button("Download Config", config.to_yaml(),
+                           "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
+                           use_container_width=True)
 
 
 def axis_select(label: str, axis: dict):
