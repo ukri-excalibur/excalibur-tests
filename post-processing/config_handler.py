@@ -1,7 +1,6 @@
 import yaml
 
 
-# FIXME: this class will need a to_dict function for Streamlit downloading
 class ConfigHandler:
 
     def __init__(self, config: dict):
@@ -101,6 +100,20 @@ class ConfigHandler:
         # all typed columns
         self.all_columns = (self.plot_columns + self.filter_columns +
                             ([self.scaling_column.get("name")] if self.scaling_column else []))
+
+    def to_dict(self):
+        """
+            Convert information in the class to a dictionary.
+        """
+
+        return dict({
+            "title": self.title,
+            "x_axis": self.x_axis,
+            "y_axis": self.y_axis,
+            "filters": self.filters,
+            "series": self.series,
+            "column_types": self.column_types})
+
 
 
 def open_config(path):
