@@ -1,7 +1,7 @@
 import traceback
 
 import streamlit as st
-from config_handler import ConfigHandler
+from config_handler import ConfigHandler, load_config
 from post_processing import PostProcessing, read_args
 
 # drop-down lists
@@ -39,6 +39,8 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
 
     st.divider()
+    st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
+
     # set plot title
     title = st.text_input("#### Title", config.title)
     if title != config.title:
@@ -47,7 +49,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.write("#### Axis Options")
     with st.form(key="axis options"):
         axis_select("x", config.x_axis)
-        sort = st.checkbox("sort descending")
+        sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
         axis_select("y", config.y_axis)
         submit = st.form_submit_button("Update Axes")
         if submit:
@@ -71,7 +73,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.multiselect("Series", config.series if config.series else [None], config.series,
                    placeholder="None", label_visibility="collapsed", disabled=True)
 
-    st.button("Generate Graph", on_click=rerun_post_processing)
+    generate_graph, download_config = st.columns(2)
+    with generate_graph:
+        st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
+    with download_config:
+        st.download_button("Download Config", config.to_yaml(),
+                           "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
+                           use_container_width=True)
 
 
 def axis_select(label: str, axis: dict):
@@ -193,6 +201,17 @@ def remove_axis_type(new_column: str, old_column: str, other_axis_columns: list)
                                           config.series_columns + config.filter_columns)
         if is_redundant:
             config.column_types.pop(old_column, None)
+
+
+def update_config():
+    """
+        Change session state config to uploaded config file.
+    """
+    uploaded_config = st.session_state.uploaded_config
+    if uploaded_config:
+        st.session_state.config = ConfigHandler(load_config(uploaded_config))
+        # need to re-run here to update dataframe types
+        rerun_post_processing()
 
 
 def rerun_post_processing():
