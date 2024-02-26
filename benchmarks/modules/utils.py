@@ -243,8 +243,6 @@ def identify_build_environment(current_partition):
 class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
-    compiler_version =  variable(str, value='', loggable=True)
-    compiler_name =  variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -269,26 +267,18 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
-        spack_spec_keys = 'from spack import environment; list(environment.active_environment().spec_lists["specs"].specs[0].variants.dict.keys())'
-        spack_spec_vals = 'from spack import environment; d = environment.active_environment().spec_lists["specs"].specs[0].variants.dict; l = list(d.keys()); values=[d[key].value[0] if isinstance(d[key].value,tuple) else d[key].value for key in l];print(values) '
-        cmd_compiler_name = 'from spack import environment; print(environment.active_environment().spec_lists["specs"].specs[0].compiler.name)'
-        cmd_compiler_version = 'from spack import environment; environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[0]'
-        self.postrun_cmds.append(f'echo "compiler_name: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
-        self.postrun_cmds.append(f'echo "compiler_version: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
-        self.postrun_cmds.append(f'echo "Spack_Spec keys : $(spack -e {self.build_system.environment} python -c \'{spack_spec_keys}\')"')
-        self.postrun_cmds.append(f'echo "Spack_Spec vals : $(spack -e {self.build_system.environment} python -c \'{spack_spec_vals}\')"')
+        # else f"{d[key].value}" if isinstance(d[key].value, bool) for boolean with "True" instead of True
+        cmd_spack_spec = 'from spack import environment; d = environment.active_environment().spec_lists["specs"].specs[0].variants.dict; keys = list(d.keys());values = {key: ({d[key].value[i] for i in range(len(d[key].value))} if isinstance(d[key].value, tuple) else d[key].value) for key in keys};values["compiler_name"] = str(environment.active_environment().spec_lists["specs"].specs[0].compiler.name);values["compiler_version"] = {str(environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[i]) for i in range(len(environment.active_environment().spec_lists["specs"].specs[0].compiler.versions))};print(values)'
+        self.postrun_cmds.append(f'echo "Spack_spec_variants: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec}\')"')
         
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
     @run_after('run')
-    def get_compiler_name(self):
+    def get_full_spec(self):
         with osext.change_dir(self.stagedir):
-            self.compiler_name = sn.extractsingle(r'compiler_name:\s*(\S+)', self.stdout, 1).evaluate()
-    @run_after('run')
-    def get_compiler_version(self):
-        with osext.change_dir(self.stagedir):
-            self.compiler_version = sn.extractsingle(r'compiler_version:\s*(\S+)', self.stdout, 1).evaluate()
+            self.spack_spec = sn.extractsingle(r'Spack_spec_variants:\s*(.*)', self.stdout, 1).evaluate()
+
 
     @run_before('compile')
     def setup_build_system(self):
