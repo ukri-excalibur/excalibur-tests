@@ -58,7 +58,11 @@ jobs:
         run: reframe -V
       - name: Install OpenMPI, CMake and extra Python packages
         shell: bash
-        run: sudo apt-get install openmpi-bin libopenmpi-dev cmake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin libopenmpi-dev cmake
+        env:
+          DEBIAN_FRONTEND: noninteractive
       - name: Run sample benchmark
         shell: bash
         run: |
