@@ -59,7 +59,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     st.write("#### Filter Options")
     st.write("TODO")
 
-    # FIXME: try to make a custom tag-like component for filters and series
+    # FIXME (#issue #269): try to make a custom tag-like component for filters and series
     # instead of using multiselect
     st.write("###### Current AND Filters")
     st.multiselect("AND Filters", config.and_filters if config.and_filters else [None], config.and_filters,
@@ -140,7 +140,7 @@ def update_axes():
         Apply user-selected axis columns and types to session state config.
     """
 
-    # FIXME: if both axis or unit columns are the same, this results in incorrect behaviour
+    # FIXME (issue #271): if both axis columns are the same, this results in incorrect behaviour
     config = st.session_state.config
     x_column = st.session_state.x_axis_column
     y_column = st.session_state.y_axis_column
@@ -164,7 +164,7 @@ def update_axes():
     config.y_axis["value"] = y_column
     # update units
     # NOTE: units are automatically interpreted as strings for simplicity
-    # FIXME: currently the only way to clear column selection is to add custom units
+    # FIXME (part of issue #268): currently the only way to clear column selection is to add custom units
     # (custom units can easily be overwritten with None by leaving text input empty)
     config.x_axis["units"] = {"custom": x_units_custom}
     if not x_units_custom and x_units_column:
@@ -221,7 +221,6 @@ def rerun_post_processing():
 
     post = st.session_state.post
     # reset processed df to original state
-    # FIXME: make this reset a post-processing function
     post.df = post.original_df.copy()
     # run post-processing again
     post.run_post_processing(st.session_state.config)
@@ -235,6 +234,7 @@ def main():
         post = PostProcessing(args.log_path, args.debug, args.verbose)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
+        # FIXME (#issue #271): catch post-processing errors before they crash Streamlit
         update_ui(post, config)
 
     except Exception as e:
