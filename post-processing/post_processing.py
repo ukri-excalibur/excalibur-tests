@@ -17,9 +17,9 @@ class PostProcessing:
         self.debug = debug
         self.verbose = verbose
         # find and read perflogs
-        self.df = PerflogHandler(log_path, self.debug).get_df()
-        # FIXME (issue #259): will need an original + modified df
-        # for re-running post-processing with front-end
+        self.original_df = PerflogHandler(log_path, self.debug).get_df()
+        # copy original data for modification during post-processing
+        self.df = self.original_df.copy()
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
 
@@ -42,7 +42,8 @@ class PostProcessing:
         self.sort_df(config.x_axis, config.series_columns)
         # get data filter mask
         self.mask = self.filter_df(*config.get_filters())
-        self.check_filtered_row_count(config.x_axis["value"], config.series_columns, config.plot_columns)
+        self.check_filtered_row_count(
+            config.x_axis["value"], [s[0] for s in config.series_filters], config.plot_columns)
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
@@ -52,7 +53,7 @@ class PostProcessing:
         print(self.df[self.mask][config.plot_columns])
 
         # call a plotting script
-        plot_generic(
+        self.plot = plot_generic(
             config.title, self.df[self.mask][config.plot_columns],
             config.x_axis, config.y_axis, config.series_filters, self.debug)
 
@@ -62,7 +63,7 @@ class PostProcessing:
             print("Full dataframe:")
             print(self.df.to_json(orient="columns", indent=2))
 
-        return self.df[config.plot_columns][self.mask]
+        return self.df[self.mask][config.plot_columns]
 
     def check_df_columns(self, all_columns):
         """
@@ -174,7 +175,7 @@ class PostProcessing:
 
             Args:
                 x_column: str, name of x-axis column.
-                series_columns: list, names of series columns.
+                series_columns: list, all names of series columns (including duplicates).
                 plot_columns: list, names of all columns needed for plotting.
         """
 
@@ -321,10 +322,11 @@ class PostProcessing:
         elif scaling_column_name:
 
             # check types
-            if (not pd.api.types.is_numeric_dtype(self.df[mask][axis_column].dtype) or
+            if (not pd.api.types.is_float_dtype(self.df[mask][axis_column].dtype) or
                 not pd.api.types.is_numeric_dtype(scaling_value.dtype)):
-                # both columns must be numeric
-                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
+                # scaled column must be float to avoid casting issues and scaling column must be numeric
+                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}. \
+                                Scaled column must be float and scaling column must be numeric."
                                 .format(axis_column, self.df[mask][axis_column].dtype,
                                         scaling_column_name, scaling_value.dtype))
 
