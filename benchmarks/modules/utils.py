@@ -243,6 +243,10 @@ def identify_build_environment(current_partition):
 class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
+    spack_variants = variable(str, value='', loggable=True)
+    compiler_version =  variable(str, value='', loggable=True)
+    compiler_name =  variable(str, value='', loggable=True)
+    spack_mpi = variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -268,17 +272,36 @@ class SpackTest(rfm.RegressionTest):
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
         # else f"{d[key].value}" if isinstance(d[key].value, bool) for boolean with "True" instead of True
-        cmd_spack_spec = 'from spack import environment; d = environment.active_environment().spec_lists["specs"].specs[0].variants.dict; keys = list(d.keys());values = {key: ({d[key].value[i] for i in range(len(d[key].value))} if isinstance(d[key].value, tuple) else d[key].value) for key in keys};values["compiler_name"] = str(environment.active_environment().spec_lists["specs"].specs[0].compiler.name);values["compiler_version"] = {str(environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[i]) for i in range(len(environment.active_environment().spec_lists["specs"].specs[0].compiler.versions))};print(values)'
-        self.postrun_cmds.append(f'echo "Spack_spec_variants: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec}\')"')
+        cmd_spack_variants = 'from spack import environment; d = environment.active_environment().spec_lists["specs"].specs[0].variants.dict; keys = list(d.keys());values = {key: ([d[key].value[i] for i in range(len(d[key].value))] if isinstance(d[key].value, tuple) else d[key].value) for key in keys};print(values)'
+        cmd_spec_mpi =  'from spack import environment;print(environment.active_environment().spec_lists["specs"].specs[0]["mpi"]) if "mpi" in environment.active_environment().spec_lists["specs"].specs[0] else "" '
+        cmd_compiler_name = 'from spack import environment; print(environment.active_environment().spec_lists["specs"].specs[0].compiler.name)'
+        # Although we could provide several versions of compiler, reframe only executes with the first version
+        cmd_compiler_version = 'from spack import environment;environment.active_environment().spec_lists["specs"].specs[0].compiler.versions[0]'
+        self.postrun_cmds.append(f'echo "compiler_name: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_name}\')"')
+        self.postrun_cmds.append(f'echo "compiler_version: $(spack -e {self.build_system.environment} python -c \'{cmd_compiler_version}\')"')
+        self.postrun_cmds.append(f'echo "spack_spec_variants: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_variants}\')"')
+        self.postrun_cmds.append(f'echo "MPI: $(spack -e {self.build_system.environment} python -c \'{cmd_spec_mpi}\')"')
         
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
-    @run_after('run')
-    def get_full_spec(self):
-        with osext.change_dir(self.stagedir):
-            self.spack_spec = sn.extractsingle(r'Spack_spec_variants:\s*(.*)', self.stdout, 1).evaluate()
 
+    @run_after('run')
+    def get_compiler_name(self):
+        with osext.change_dir(self.stagedir):
+            self.compiler_name = sn.extractsingle(r'compiler_name: \s*(\S+)', self.stdout, 1).evaluate()
+    @run_after('run')
+    def get_compiler_version(self):
+        with osext.change_dir(self.stagedir):
+            self.compiler_version = sn.extractsingle(r'compiler_version: \s*(.*)', self.stdout, 1).evaluate()
+    @run_after('run')
+    def get_full_variants(self):
+        with osext.change_dir(self.stagedir):
+            self.spack_variants = sn.extractsingle(r'spack_spec_variants: \s*(.*)', self.stdout, 1).evaluate()
+    @run_after('run')
+    def get_spec_mpi(self):
+        with osext.change_dir(self.stagedir):
+            self.spack_mpi = sn.extractsingle(r'MPI: \s*(.*)', self.stdout, 1).evaluate()
 
     @run_before('compile')
     def setup_build_system(self):

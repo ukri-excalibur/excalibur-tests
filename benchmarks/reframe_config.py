@@ -752,7 +752,10 @@ site_configuration = {
                         '%(check_environ)s|'
                         '%(check_extra_resources)s|'
                         '%(check_env_vars)s|'
-                        '%(check_spack_spec)s|'
+                        '%(check_compiler_name)s|'
+                        '%(check_compiler_version)s|'
+                        '%(check_spack_variants)s|'
+                        '%(check_spack_mpi)s|'
                         '%(check_tags)s'
                     ),
                     'format_perfvars': (
