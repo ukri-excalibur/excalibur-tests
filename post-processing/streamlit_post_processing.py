@@ -5,7 +5,9 @@ from config_handler import ConfigHandler, load_config
 from post_processing import PostProcessing, read_args
 
 # drop-down lists
+operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
+filter_types = ["and", "or", "series"]
 # user vs internal pandas type conversion
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
@@ -57,21 +59,70 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
             config.x_axis["sort"] = "descending" if sort else "ascending"
 
     st.write("#### Filter Options")
-    st.write("TODO")
+    # allow wide multiselect labels
+    st.markdown(
+        """
+        <style>
+            .stMultiSelect [data-baseweb=select] span{
+                max-width: inherit;
+            }
+        </style>""",
+        unsafe_allow_html=True)
 
     # FIXME (#issue #269): try to make a custom tag-like component for filters and series
     # instead of using multiselect
     st.write("###### Current AND Filters")
-    st.multiselect("AND Filters", config.and_filters if config.and_filters else [None], config.and_filters,
-                   placeholder="None", label_visibility="collapsed", disabled=True)
+    and_filters = st.multiselect("AND Filters", config.and_filters if config.and_filters else [None],
+                                 config.and_filters, placeholder="None", label_visibility="collapsed")
+    config.and_filters = and_filters
 
     st.write("###### Current OR Filters")
-    st.multiselect("OR Filters", config.or_filters if config.or_filters else [None], config.or_filters,
-                   placeholder="None", label_visibility="collapsed", disabled=True)
+    or_filters = st.multiselect("OR Filters", config.or_filters if config.or_filters else [None],
+                                config.or_filters, placeholder="None", label_visibility="collapsed")
+    config.or_filters = or_filters
 
     st.write("###### Current Series")
-    st.multiselect("Series", config.series if config.series else [None], config.series,
-                   placeholder="None", label_visibility="collapsed", disabled=True)
+    series = st.multiselect("Series", config.series if config.series else [None], config.series,
+                            placeholder="None", label_visibility="collapsed")
+    config.series = series
+    config.series_filters = [[s[0], "==", s[1]] for s in config.series]
+
+    # update types after changing axes, filters, and series
+    update_types()
+
+    # user vs internal filter location conversion
+    filter_lookup = {"and": and_filters,
+                     "or": or_filters,
+                     "series": series}
+
+    # FIXME: can/should this section be placed before displaying current filters by caching earlier components?
+    st.write("###### Add New Filter")
+    with st.container(border=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            st.selectbox("filter type", filter_types, key="filter_type")
+        with c2:
+            st.selectbox("column type", column_types, key="column_type")
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.selectbox("filter column", post.df.columns, key="filter_col")
+        with c2:
+            if st.session_state.filter_type == "series":
+                st.selectbox("operator", ["=="], key="filter_op")
+            else:
+                st.selectbox("operator", operators, key="filter_op")
+        # FIXME: user should be allowed to select values that aren't in the column as well
+        with c3:
+            filter_col = post.df[st.session_state.filter_col].drop_duplicates()
+            st.selectbox("filter value", filter_col.sort_values(), key="filter_val")
+
+        current_filter = [st.session_state.filter_col,
+                          st.session_state.filter_op,
+                          st.session_state.filter_val]
+        st.button("Add Filter", on_click=add_filter,
+                  args=[filter_lookup.get(st.session_state.filter_type), current_filter,
+                        st.session_state.filter_type == "series"])
 
     generate_graph, download_config = st.columns(2)
     with generate_graph:
@@ -80,6 +131,16 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         st.download_button("Download Config", config.to_yaml(),
                            "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
                            use_container_width=True)
+
+
+def update_config():
+    """
+        Change session state config to uploaded config file.
+    """
+
+    uploaded_config = st.session_state.uploaded_config
+    if uploaded_config:
+        st.session_state.config = ConfigHandler(load_config(uploaded_config))
 
 
 def axis_select(label: str, axis: dict):
@@ -149,19 +210,13 @@ def update_axes():
     y_units_column = st.session_state.y_axis_units_column
     y_units_custom = st.session_state.y_axis_units_custom
 
-    # remove axis column types that are no longer needed
-    remove_axis_type(x_column, config.x_axis["value"], [y_column, y_units_column, x_units_column])
-    if x_units_column or x_units_custom:
-        remove_axis_type(x_units_column if not x_units_custom else None, config.x_axis["units"].get("column"),
-                         [y_column, y_units_column, x_column])
-    remove_axis_type(y_column, config.y_axis["value"], [x_column, x_units_column, y_units_column])
-    if y_units_column or y_units_custom:
-        remove_axis_type(y_units_column if not y_units_custom else None, config.y_axis["units"].get("column"),
-                         [x_column, x_units_column, y_column])
-
     # update columns
     config.x_axis["value"] = x_column
     config.y_axis["value"] = y_column
+    # update column types
+    config.column_types[x_column] = st.session_state.x_axis_type
+    config.column_types[y_column] = st.session_state.y_axis_type
+
     # update units
     # NOTE: units are automatically interpreted as strings for simplicity
     # FIXME (part of issue #268): currently the only way to clear column selection is to add custom units
@@ -175,43 +230,40 @@ def update_axes():
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
 
+
+def update_types():
+    """
+        Apply user-selected types to session state config and dataframe.
+    """
+
+    post = st.session_state.post
+    config = st.session_state.config
+
     # re-parse column names
     config.parse_columns()
-    # update types
-    config.column_types[x_column] = st.session_state.x_axis_type
-    config.column_types[y_column] = st.session_state.y_axis_type
+    # remove redundant types from config
+    config.remove_redundant_types()
+    # update dataframe types
+    post.apply_df_types(config.all_columns, config.column_types)
 
 
-def remove_axis_type(new_column: str, old_column: str, other_axis_columns: list):
+def add_filter(loc, filter, is_series):
     """
-        Remove an old axis column from the session state config column types dictionary if it is redundant.
+        Allow the user to add a new filter or series to session state config.
 
         Args:
-            new_column: str, new axis column name in session state selection.
-            old_column: str, old axis column name in session state config.
-            other_axis_columns: str list, the names of other axis columns to check against in session state selection.
+            loc: filter list, reference to the list the given filter should be added to.
+            filter: list, filter column, operator, and value.
+            is_series: bool, identifies if filter is a series filter.
     """
 
-    config = st.session_state.config
-    if old_column != new_column:
-        # check the old column is not needed for the other axis, scaling, filters, or series
-        is_redundant = old_column not in (other_axis_columns +
-                                          ([config.scaling_column["name"]]
-                                           if config.scaling_column is not None else []) +
-                                          config.series_columns + config.filter_columns)
-        if is_redundant:
-            config.column_types.pop(old_column, None)
-
-
-def update_config():
-    """
-        Change session state config to uploaded config file.
-    """
-    uploaded_config = st.session_state.uploaded_config
-    if uploaded_config:
-        st.session_state.config = ConfigHandler(load_config(uploaded_config))
-        # need to re-run here to update dataframe types
-        rerun_post_processing()
+    if filter not in loc:
+        # remove operator from series
+        if is_series:
+            del filter[1]
+        loc.append(filter)
+        # update column type
+        st.session_state.config.column_types[filter[0]] = st.session_state.column_type
 
 
 def rerun_post_processing():
