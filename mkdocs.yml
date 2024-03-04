@@ -1,0 +1,42 @@
+site_name: My Docs
+nav:
+  - Home: index.md
+  - Installation: install.md
+  - Setup: setup.md
+  - Usage: use.md
+  - Contributing: contributing.md
+  - 'Supported Benchmarks':
+    - 'Synthetic Benchmarks':
+      - HPL: apps/hpl/README.md
+      - IMB: apps/imb/README.md
+      - OMB: apps/omb/README.md
+    - 'Mini-apps':
+      - hpcg: apps/hpcg/README.md
+      - hpgmg: apps/hpgmg/README.md
+      - sombrero: apps/sombrero/README.md
+      - babelstream: apps/babelstream/README.md
+    - 'Applications':
+      - cp2k: apps/cp2k/README.md
+      - grid: apps/grid/README.md
+      - openmm: apps/openmm/README.md
+      - ramses: apps/ramses/README.md
+      - sphng: apps/sphng/README.md
+      - swift: apps/swift/README.md
+      - trove: apps/trove/README.md
+      - trove-psydev: apps/trove-psydev/README.md
+      - wrf: apps/wrf/README.md  
+  - 'Supported Systems':
+    - ARCHER2: systems#archer2
+    - CSD3: systems#csd3
+    - DIaL2: systems#dial2
+    - DIaL3: systems#dial3
+    - Isambard 2: systems#isambard-2
+    - Myriad: systems#myriad
+    - Tursa: systems#tursa
+  - ARCHER2 Tutorial: tutorial/tutorial.md
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
