@@ -22,6 +22,7 @@ class PostProcessing:
         self.df = self.original_df.copy()
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
+        self.log_path = log_path
 
     def run_post_processing(self, config: ConfigHandler):
         """
@@ -51,6 +52,10 @@ class PostProcessing:
         # FIXME (#issue #255): have an option to put this into a file (-s / --save flag?)
         print("Selected dataframe:")
         print(self.df[self.mask][config.plot_columns])
+        if self.debug:
+            print("CSV dataframe:")
+            print(self.df[self.mask][config.plot_columns + config.extra_columns])
+        self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(str(self.log_path)+'/output.csv', index=True)  # Set index=False to exclude the DataFrame index from the CSV
 
         # call a plotting script
         self.plot = plot_generic(
