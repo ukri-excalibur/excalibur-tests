@@ -119,7 +119,7 @@ class ConfigHandler:
         """
             Convert information in the class to a yaml format.
         """
-        return yaml.dump(self.to_dict(), sort_keys=False)
+        return yaml.dump(self.to_dict(), default_flow_style=None, sort_keys=False)
 
 
 def open_config(path):
