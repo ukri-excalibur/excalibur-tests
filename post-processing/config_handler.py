@@ -102,6 +102,16 @@ class ConfigHandler:
             dict.fromkeys((self.plot_columns + self.filter_columns +
                            ([self.scaling_column.get("name")] if self.scaling_column else []))))
 
+    def remove_redundant_types(self):
+        """
+            Check for columns that are no longer in use and remove them from the type dict.
+        """
+
+        column_types = self.column_types.copy()
+        for col in column_types:
+            if col not in self.all_columns:
+                self.column_types.pop(col, None)
+
     def to_dict(self):
         """
             Convert information in the class to a dictionary.
