@@ -5,4 +5,5 @@ recursive-include benchmarks/modules *
 recursive-include benchmarks/spack *.yaml
 recursive-include benchmarks/spack/repo *
 recursive-include post-processing *
+prune docs
 prune __pycache__
