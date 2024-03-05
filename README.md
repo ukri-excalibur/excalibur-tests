@@ -14,7 +14,7 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 
 - [Installation](https://ukri-excalibur.github.io/excalibur-tests/install/)
 - [Configuration](https://ukri-excalibur.github.io/excalibur-tests/setup/)
-- [Usage](https://ukri-excalibur.github.io/excalibur-tests/setup/)
+- [Usage](https://ukri-excalibur.github.io/excalibur-tests/use/)
 - [Post-processing](https://ukri-excalibur.github.io/excalibur-tests/post-processing/)
 - [Contributing](https://ukri-excalibur.github.io/excalibur-tests/contributing/)
 - [Supported benchmarks](https://ukri-excalibur.github.io/excalibur-tests/apps/)
