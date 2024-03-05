@@ -122,8 +122,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.title.text_font_size = "15pt"
 
     # get label values with their original dtype
-    # FIXME (issue #259): change x.label.value to x.label["value"] for Bokeh v2.4.3
-    label_values = [pd.Series(x.label.value.split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
+    label_values = [pd.Series(x.label["value"].split("=")[1].strip(), dtype=last_group_dtype).iloc[0]
                     for x in plot.legend[0].items]
     # sort legend items (order determined by x-axis sort)
     sorted_legend_items = [x[1] for x in sorted(zip(label_values, plot.legend[0].items),
@@ -132,6 +131,8 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
 
     # save to file
     save(plot)
+
+    return plot
 
 
 def get_axis_labels(df: pd.DataFrame, axis, series_filters):

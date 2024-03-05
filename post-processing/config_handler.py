@@ -28,6 +28,7 @@ class ConfigHandler:
 
         # find relevant columns
         self.series_columns = []
+        self.filter_columns = []
         self.plot_columns = []
         self.all_columns = []
         self.parse_columns()
@@ -82,34 +83,66 @@ class ConfigHandler:
         # FIXME (issue #255): allow all series values to be selected with *
         # (or if only column name is supplied)
 
-        # series columns (duplicates not removed)
+        # series columns
         # NOTE: currently assuming there can only be one unique series column
-        self.series_columns = [s[0] for s in self.series_filters]
+        self.series_columns = list(dict.fromkeys([s[0] for s in self.series_filters]))
         # add series column to plot column list
         for s in self.series_columns:
             if s not in self.plot_columns:
                 self.plot_columns.append(s)
         # drop None values
-        self.plot_columns = [c for c in self.plot_columns if c is not None]
+        self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
-        # filter columns (duplicates not removed)
-        filter_columns = [f[0] for f in self.and_filters] + [f[0] for f in self.or_filters]
+        # filter columns
+        self.filter_columns = list(dict.fromkeys([f[0] for f in self.and_filters] +
+                                                 [f[0] for f in self.or_filters]))
 
         # all typed columns
-        self.all_columns = set(self.plot_columns + filter_columns +
-                               ([self.scaling_column.get("name")] if self.scaling_column else []))
+        self.all_columns = list(
+            dict.fromkeys((self.plot_columns + self.filter_columns +
+                           ([self.scaling_column.get("name")] if self.scaling_column else []))))
+
+    def to_dict(self):
+        """
+            Convert information in the class to a dictionary.
+        """
+
+        return dict({
+            "title": self.title,
+            "x_axis": self.x_axis,
+            "y_axis": self.y_axis,
+            "filters": self.filters,
+            "series": self.series,
+            "column_types": self.column_types})
+
+    def to_yaml(self):
+        """
+            Convert information in the class to a yaml format.
+        """
+        return yaml.dump(self.to_dict(), sort_keys=False)
 
 
 def open_config(path):
     """
-        Return a dictionary containing configuration information for plotting.
+        Return a dictionary containing configuration information for plotting
+        from the path to a yaml file.
 
         Args:
             path: path, path to yaml config file.
     """
 
     with open(path, "r") as file:
-        return yaml.safe_load(file)
+        return load_config(file)
+
+
+def load_config(file):
+    """
+        Return a loaded config dictionary from a yaml file.
+
+        Args:
+            file: file, config yaml.
+    """
+    return yaml.safe_load(file)
 
 
 def read_config(config):
