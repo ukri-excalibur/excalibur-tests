@@ -337,39 +337,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adding-new-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding new systems
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding new systems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reframe-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      ReFrame configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spack-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Spack configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#adding-new-benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       Adding new benchmarks
@@ -1153,39 +1120,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#adding-new-systems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding new systems
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding new systems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reframe-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      ReFrame configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#spack-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Spack configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#adding-new-benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       Adding new benchmarks
@@ -1235,68 +1169,11 @@
 
 <h1 id="how-to-contribute-to-excalibur-tests">How to contribute to ExCALIBUR tests</h1>
 <p>You are welcome to contribute new application benchmarks and new systems part of
-the ExCALIBUR benchmarking effort.</p>
-<h2 id="adding-new-systems">Adding new systems</h2>
-<p>We need the <a href="https://reframe-hpc.readthedocs.io/en/stable/">ReFrame</a>
-configuration and a Spack environment for the system.</p>
-<h3 id="reframe-configuration">ReFrame configuration</h3>
-<p>Add a new system to the ReFrame configuration in
-<a href="./benchmarks/reframe_config.py"><code>benchmarks/reframe_config.py</code></a>.  Read <a href="https://reframe-hpc.readthedocs.io/en/stable/configure.html">ReFrame documentation about
-configuration</a> for
-more details, or see the examples of the existing systems.  Note: you likely do
-not need to customise the programming environment in ReFrame, as we will use
-Spack as build system, which will deal with that.</p>
-<p>If available, the command <code>lscpu</code>, run on a compute node, is typically useful to
-get information about the CPUs, to be used in the <code>processor</code> item of the system
-configuration.  The numbers you need to watch out for are:</p>
-<ul>
-<li>"CPU(s)", (<code>num_cpus</code> in ReFrame configuration),</li>
-<li>"Thread(s) per core", (<code>num_cpus_per_core</code>),</li>
-<li>"Socket(s)", (<code>num_sockets</code>),</li>
-<li>"Core(s) per socket", (<code>num_cpus_per_socket</code>).</li>
-</ul>
-<h3 id="spack-configuration">Spack configuration</h3>
-<p>When using Spack as build system, ReFrame needs a <a href="https://spack.readthedocs.io/en/latest/environments.html">Spack
-environment</a> to run
-its tests.  We provide already configured Spack environments in the
-<a href="./benchmarks/spack"><code>benchmarks/spack</code></a> directory, for each system in the
-ReFrame configuration.</p>
-<p>Here are the steps to create a Spack environment for a new system:</p>
-<ul>
-<li>create the environment:
-  <code>spack env create --without-view -d spack/SYSTEM-NAME</code>
-  where <code>SYSTEM-NAME</code> is the same name as the ReFrame system name.  Remember to
-  <a href="https://spack.readthedocs.io/en/latest/environments.html#filesystem-views">disable
-  views</a>
-  with <code>--without-view</code> to avoid conflicts when installing incompatible packages
-  in the same environment</li>
-<li>activate it:
-  <code>spack env activate -d spack/SYSTEM-NAME</code></li>
-<li>set the
-  <a href="https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree"><code>install_tree</code></a>:
-  <code>spack config add 'config:install_tree:root:$env/opt/spack'</code></li>
-<li>make sure the compilers you want to add are in the <code>PATH</code> (e.g., load the
-  relevant modules), then add them to the Spack environment with:
-  <code>spack compiler find</code></li>
-<li>add other packages (e.g., MPI): make sure the package you want to add are
-  "visible" (e.g., load the relevant modules) and add them to the environment
-  with
-  <code>spack external find PACKAGE-NAME ...</code>
-  where <code>PACKAGE-NAME ...</code> are the names of the corresponding Spack packages</li>
-<li>
-<p>manually tweak the environment as necessary.  For example, if there is already
-  a global Spack available in the system, you can <a href="https://spack.readthedocs.io/en/latest/environments.html#included-configurations">include its configuration
-  files</a>,
-  or <a href="https://spack.readthedocs.io/en/latest/chain.html">add its install trees as
-  upstreams</a>.</p>
-</li>
-<li>
-<p>If you are using a custom repo for spack package recipes (see <em>Spack package</em> below), add
-  it to the spack environment with
-  <code>spack -e /path/to/environment repo add /path/to/repo</code></p>
-</li>
-</ul>
+the ExCALIBUR benchmarking effort. The easiest way to contribute is to open an
+issue or a pull request to the repository.</p>
 <h2 id="adding-new-benchmarks">Adding new benchmarks</h2>
+<p>In particular, adding new benchmarks that are useful to the scientific community is
+welcome!</p>
 <h3 id="spack-package">Spack package</h3>
 <p>Before adding a new benchmark, make sure the application is available in
 <a href="https://spack.readthedocs.io/en/latest/package_list.html">Spack</a>.  If it is
@@ -1317,15 +1194,15 @@ the application does and how to run the benchmarks.</p>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorials.html">ReFrame Tutorials</a></li>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html">Regression Test API</a></li>
 </ul>
-<p>but you can also have a look at the sample file in
-<a href="./benchmarks/examples/sombrero/sombrero.py"><code>benchmarks/examples/sombrero/sombrero.py</code></a>.</p>
+<p>but you can also have a look at the 
+<a href="https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/examples/sombrero">sombrero example</a>.</p>
 <p>For GPU benchmarks you need to</p>
 <ul>
 <li>set <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.valid_systems"><code>valid_systems = ['+gpu']</code></a></li>
 <li>set the <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_gpus_per_node"><code>num_gpus_per_node</code></a> attribute,</li>
 <li>and add the key <code>gpu</code> to the <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.extra_resources"><code>extra_resources</code></a> dictionary to request the appropriate number of GPUs.</li>
 </ul>
-<p>For an example of a GPU benchmark take a look at <a href="../apps/openmm/openmm_rfm.py">OpenMM</a>.</p>
+<p>For an example of a GPU benchmark take a look at <a href="https://github.com/ukri-excalibur/excalibur-tests/tree/main/benchmarks/apps/openmm">OpenMM</a>.</p>
 
 
 
