@@ -77,7 +77,7 @@ to `threads`.
 
 ## Usage on unsupported systems
 
-The configuration provided in [`reframe_config.py`](./reframe_config.py) lets you run the
+The configuration provided in [`reframe_config.py`](https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/reframe_config.py) lets you run the
 benchmarks on pre-configured HPC systems.  However you
 can use this framework on any system by choosing the "default" system with `--system
 default`, or by using your own ReFrame configuration.  You can use the "default" system to run
