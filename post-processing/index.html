@@ -1489,6 +1489,10 @@
 <li><code>plot_type</code> - (Optional.) Type of plot to be generated. (<code>Note: only a generic bar chart is currently implemented.</code>)</li>
 </ul>
 <p>Run <code>post_processing.py -h</code> for more information (including debugging flags).</p>
+<p>You may also run post-processing with Streamlit to interact with your plots:</p>
+<blockquote>
+<p><code>streamlit run streamlit_post_processing.py log_path config_path [-p plot_type]</code></p>
+</blockquote>
 <h3 id="configuration-structure">Configuration Structure</h3>
 <p>Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for a template, an example, and some clarifying notes.</p>
 <ul>
