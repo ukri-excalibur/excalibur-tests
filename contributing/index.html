@@ -1,0 +1,1101 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../use/">
+      
+      
+        <link rel="next" href="../apps/hpl/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>Contributing - ExCALIBUR-tests Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-contribute-to-excalibur-tests" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ExCALIBUR-tests Docs" class="md-header__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ExCALIBUR-tests Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Contributing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ExCALIBUR-tests Docs" class="md-nav__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ExCALIBUR-tests Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use/" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../post-processing/README.md" class="md-nav__link">
+        Post-processing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contributing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Contributing
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-systems" class="md-nav__link">
+    Adding new systems
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding new systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reframe-configuration" class="md-nav__link">
+    ReFrame configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spack-configuration" class="md-nav__link">
+    Spack configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-benchmarks" class="md-nav__link">
+    Adding new benchmarks
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding new benchmarks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spack-package" class="md-nav__link">
+    Spack package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reframe-benchmark" class="md-nav__link">
+    ReFrame benchmark
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Supported Benchmarks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Supported Benchmarks" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Supported Benchmarks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7_1" type="checkbox" id="__nav_7_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_1" tabindex="0" aria-expanded="false">
+          Synthetic Benchmarks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Synthetic Benchmarks" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_1">
+          <span class="md-nav__icon md-icon"></span>
+          Synthetic Benchmarks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/hpl/" class="md-nav__link">
+        HPL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/imb/" class="md-nav__link">
+        IMB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/omb/" class="md-nav__link">
+        OMB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7_2" type="checkbox" id="__nav_7_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_2" tabindex="0" aria-expanded="false">
+          Mini-apps
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mini-apps" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_2">
+          <span class="md-nav__icon md-icon"></span>
+          Mini-apps
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/hpcg/" class="md-nav__link">
+        hpcg
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/hpgmg/README.md" class="md-nav__link">
+        hpgmg
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/sombrero/" class="md-nav__link">
+        sombrero
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/babelstream/" class="md-nav__link">
+        babelstream
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7_3" type="checkbox" id="__nav_7_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_3" tabindex="0" aria-expanded="false">
+          Applications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Applications" data-md-level="2">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          Applications
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/cp2k/" class="md-nav__link">
+        cp2k
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/grid/" class="md-nav__link">
+        grid
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/openmm/" class="md-nav__link">
+        openmm
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/ramses/" class="md-nav__link">
+        ramses
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/sphng/" class="md-nav__link">
+        sphng
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/swift/README.md" class="md-nav__link">
+        swift
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/trove/" class="md-nav__link">
+        trove
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/trove-psydev/README.md" class="md-nav__link">
+        trove-psydev
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apps/wrf/" class="md-nav__link">
+        wrf
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Supported Systems
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Supported Systems" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Supported Systems
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#archer2" class="md-nav__link">
+        ARCHER2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#csd3" class="md-nav__link">
+        CSD3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#dial2" class="md-nav__link">
+        DIaL2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#dial3" class="md-nav__link">
+        DIaL3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#isambard-2" class="md-nav__link">
+        Isambard 2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#myriad" class="md-nav__link">
+        Myriad
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems#tursa" class="md-nav__link">
+        Tursa
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/tutorial/" class="md-nav__link">
+        ARCHER2 Tutorial
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-systems" class="md-nav__link">
+    Adding new systems
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding new systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reframe-configuration" class="md-nav__link">
+    ReFrame configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spack-configuration" class="md-nav__link">
+    Spack configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-new-benchmarks" class="md-nav__link">
+    Adding new benchmarks
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding new benchmarks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spack-package" class="md-nav__link">
+    Spack package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reframe-benchmark" class="md-nav__link">
+    ReFrame benchmark
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="how-to-contribute-to-excalibur-tests">How to contribute to ExCALIBUR tests</h1>
+<p>You are welcome to contribute new application benchmarks and new systems part of
+the ExCALIBUR benchmarking effort.</p>
+<h2 id="adding-new-systems">Adding new systems</h2>
+<p>We need the <a href="https://reframe-hpc.readthedocs.io/en/stable/">ReFrame</a>
+configuration and a Spack environment for the system.</p>
+<h3 id="reframe-configuration">ReFrame configuration</h3>
+<p>Add a new system to the ReFrame configuration in
+<a href="./benchmarks/reframe_config.py"><code>benchmarks/reframe_config.py</code></a>.  Read <a href="https://reframe-hpc.readthedocs.io/en/stable/configure.html">ReFrame documentation about
+configuration</a> for
+more details, or see the examples of the existing systems.  Note: you likely do
+not need to customise the programming environment in ReFrame, as we will use
+Spack as build system, which will deal with that.</p>
+<p>If available, the command <code>lscpu</code>, run on a compute node, is typically useful to
+get information about the CPUs, to be used in the <code>processor</code> item of the system
+configuration.  The numbers you need to watch out for are:</p>
+<ul>
+<li>"CPU(s)", (<code>num_cpus</code> in ReFrame configuration),</li>
+<li>"Thread(s) per core", (<code>num_cpus_per_core</code>),</li>
+<li>"Socket(s)", (<code>num_sockets</code>),</li>
+<li>"Core(s) per socket", (<code>num_cpus_per_socket</code>).</li>
+</ul>
+<h3 id="spack-configuration">Spack configuration</h3>
+<p>When using Spack as build system, ReFrame needs a <a href="https://spack.readthedocs.io/en/latest/environments.html">Spack
+environment</a> to run
+its tests.  We provide already configured Spack environments in the
+<a href="./benchmarks/spack"><code>benchmarks/spack</code></a> directory, for each system in the
+ReFrame configuration.</p>
+<p>Here are the steps to create a Spack environment for a new system:</p>
+<ul>
+<li>create the environment:
+  <code>spack env create --without-view -d spack/SYSTEM-NAME</code>
+  where <code>SYSTEM-NAME</code> is the same name as the ReFrame system name.  Remember to
+  <a href="https://spack.readthedocs.io/en/latest/environments.html#filesystem-views">disable
+  views</a>
+  with <code>--without-view</code> to avoid conflicts when installing incompatible packages
+  in the same environment</li>
+<li>activate it:
+  <code>spack env activate -d spack/SYSTEM-NAME</code></li>
+<li>set the
+  <a href="https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree"><code>install_tree</code></a>:
+  <code>spack config add 'config:install_tree:root:$env/opt/spack'</code></li>
+<li>make sure the compilers you want to add are in the <code>PATH</code> (e.g., load the
+  relevant modules), then add them to the Spack environment with:
+  <code>spack compiler find</code></li>
+<li>add other packages (e.g., MPI): make sure the package you want to add are
+  "visible" (e.g., load the relevant modules) and add them to the environment
+  with
+  <code>spack external find PACKAGE-NAME ...</code>
+  where <code>PACKAGE-NAME ...</code> are the names of the corresponding Spack packages</li>
+<li>
+<p>manually tweak the environment as necessary.  For example, if there is already
+  a global Spack available in the system, you can <a href="https://spack.readthedocs.io/en/latest/environments.html#included-configurations">include its configuration
+  files</a>,
+  or <a href="https://spack.readthedocs.io/en/latest/chain.html">add its install trees as
+  upstreams</a>.</p>
+</li>
+<li>
+<p>If you are using a custom repo for spack package recipes (see <em>Spack package</em> below), add
+  it to the spack environment with
+  <code>spack -e /path/to/environment repo add /path/to/repo</code></p>
+</li>
+</ul>
+<h2 id="adding-new-benchmarks">Adding new benchmarks</h2>
+<h3 id="spack-package">Spack package</h3>
+<p>Before adding a new benchmark, make sure the application is available in
+<a href="https://spack.readthedocs.io/en/latest/package_list.html">Spack</a>.  If it is
+not, you can read the <a href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html">Spack Package Creation
+Tutorial</a>
+to contribute a new recipe to build the application.</p>
+<p>While we encourage users to contribute all Spack recipes upstream, we have a custom 
+repo for packages not yet ready to be contributed to the main Spack repository.
+This is in the <code>spack/repo</code> directory, create a subdirectory inside <code>spack/repo/packages</code> 
+with the name of the package you want to add, and place into it the <code>package.py</code> Spack recipe.
+On supported HPC systems, this repo is automatically added to the provided Spack environments.</p>
+<h3 id="reframe-benchmark">ReFrame benchmark</h3>
+<p>New benchmarks should be added in the <code>apps/</code> directory, under the specific
+application subdirectory.  Please, add also a <code>README.md</code> file explaining what
+the application does and how to run the benchmarks.</p>
+<p>For writing ReFrame benchmarks you can read the documentation, in particular</p>
+<ul>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorials.html">ReFrame Tutorials</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html">Regression Test API</a></li>
+</ul>
+<p>but you can also have a look at the sample file in
+<a href="./benchmarks/examples/sombrero/sombrero.py"><code>benchmarks/examples/sombrero/sombrero.py</code></a>.</p>
+<p>For GPU benchmarks you need to</p>
+<ul>
+<li>set <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.valid_systems"><code>valid_systems = ['+gpu']</code></a></li>
+<li>set the <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_gpus_per_node"><code>num_gpus_per_node</code></a> attribute,</li>
+<li>and add the key <code>gpu</code> to the <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.extra_resources"><code>extra_resources</code></a> dictionary to request the appropriate number of GPUs.</li>
+</ul>
+<p>For an example of a GPU benchmark take a look at <a href="benchmarks/apps/openmm/openmm_rfm.py">OpenMM</a>.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>
