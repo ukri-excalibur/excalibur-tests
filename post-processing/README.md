@@ -5,14 +5,15 @@
 The post-processing scripts provided with the ExCALIBUR tests package are intended to grant users a quick starting point for visualising benchmark results with basic graphs and tables. Their components can also be used inside custom users' scripts.
 
 There are four main post-processing components:
-- **`Perflog parsing`:**
-  - Data from benchmark performance logs are stored in a pandas DataFrame.
-- **`Data filtering`:**
-  - If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
-  - The DataFrame is then filtered, keeping only relevant rows and columns.
-- **`Data transformation`:**
+
+#### **`Perflog parsing`:**
+- Data from benchmark performance logs are stored in a pandas DataFrame.
+#### **`Data filtering`:**
+- If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
+- The DataFrame is then filtered, keeping only relevant rows and columns.
+#### **`Data transformation`:**
   - Axis value columns in the DataFrame are scaled according to user specifications.
-- **`Plotting`:**
+#### **`Plotting`:**
   - A filtered and transformed DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
   - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
 

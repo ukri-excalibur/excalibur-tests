@@ -1,9 +1,10 @@
-site_name: My Docs
+site_name: ExCALIBUR-tests Docs
 nav:
   - Home: index.md
   - Installation: install.md
   - Setup: setup.md
   - Usage: use.md
+  - Post-processing: post-processing/README.md
   - Contributing: contributing.md
   - 'Supported Benchmarks':
     - 'Synthetic Benchmarks':
