@@ -115,7 +115,7 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system isambar
 
 You may also need to compile GPU applications on the compute nodes, as the login node does not have any GPUs (this really depends on the build system of the application at hand, whether it needs access to a GPU during the build or it is sufficient to have the GPU toolkit available).
 
-## Myriad
+## Myriad and Kathleen
 
 ### Python3 module
 
