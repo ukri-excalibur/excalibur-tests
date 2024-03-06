@@ -24,7 +24,7 @@ that file.
 **Note**: in order to use the Spack build system in ReFrame, the `spack`
 executable must be in the `PATH` also on the compute nodes of a cluster, if
 you want to run your benchmarks on them. This is taken care of by adding it
-to your init file (see spack section above).
+to your init file (see spack section below).
 
 However, you will also need to set the
 [`RFM_USE_LOGIN_SHELL`](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL)
@@ -41,7 +41,7 @@ the user's init script.
 In order to use Spack in ReFrame, 
 the directory where the `spack` program is installed needs to be in
 the `PATH` environment variable. This is taken care of by the `setup-env.sh`
-script run in [install](../install#installation_2). To have spack available in every session,
+script run in [install](install.md#installation_2). To have spack available in every session,
 you can have your shell init script (e.g. `.bashrc`)
 re-run it automatically, by adding the following lines to it:
 ```sh
@@ -130,7 +130,7 @@ export EXCALIBUR_SPACK_ENV=/path/to/environment
 ```
 If this is not set, ReFrame will try to use the
 environment for the current system if known, otherwise it will automatically
-create a very basic environment (see [Usage on unsupported systems](../use#usage-on-unsupported-systems).
+create a very basic environment (see [Usage on unsupported systems](use.md#usage-on-unsupported-systems).
 
 #### (optional) Make manual tweaks
 

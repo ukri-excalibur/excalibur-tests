@@ -24,7 +24,7 @@ nav:
       - sphng: apps/sphng/README.md
       - swift: apps/swift/README.md
       - trove: apps/trove/README.md
-      - trove-psydev: apps/trove-psydev/README.md
+      - trove-pdsyev: apps/trove-pdsyev/README.md
       - wrf: apps/wrf/README.md  
   - 'Supported Systems':
     - ARCHER2: systems#archer2
@@ -41,3 +41,11 @@ theme:
     - content.code.copy
     - content.code.select
     - content.code.annotate
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

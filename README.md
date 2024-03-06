@@ -19,3 +19,4 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 - [Contributing](https://ukri-excalibur.github.io/excalibur-tests/contributing/)
 - [Supported benchmarks](https://ukri-excalibur.github.io/excalibur-tests/apps/)
 - [Supported systems](https://ukri-excalibur.github.io/excalibur-tests/systems/)
+- [ARCHER2 tutorial](https://ukri-excalibur.github.io/excalibur-tests/tutorial/tutorial/)

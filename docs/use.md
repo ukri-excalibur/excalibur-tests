@@ -27,7 +27,7 @@ ReFrame supports a variety of command-line options that can be useful, or someti
 ### System-specific options
 
 While the aim is to automate as much system-specific configuration as possible, there are some options that have to be provided by the user, such as accounting details, and unfortunately the syntax can vary.
-See [systems](../systems) for information about the use of this framework on specific systems.
+See [systems](systems.md) for information about the use of this framework on specific systems.
 
 ### Performance report
 
@@ -88,11 +88,10 @@ a new empty Spack environment will be automatically created in
 `benchmarks/spack/default` when ReFrame is launched for the first time.
 You should populate the environment with the packages already installed on your system
 before running Spack to avoid excessively rebuilding system packages. See
-[spack configuration](../contributing#spack-configuration) for instructions on how
-to set up a Spack environment.
+[setup](setup.md#spack_1) for instructions on how to set up a Spack environment.
 In particular, make sure that at least a compiler and an MPI library are added into the environment.
 After the Spack environment is set up, tell ReFrame to use it by setting the environment
-variable `EXCALIBUR_SPACK_ENV`, as described in [setup](../setup#spack).
+variable `EXCALIBUR_SPACK_ENV`, as described in [setup](setup.md#set-excalibur_spack_env-variable).
 
 ## Selecting multiple benchmarks
 

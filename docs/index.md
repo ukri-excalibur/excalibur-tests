@@ -15,6 +15,8 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 - [Installation](./install.md)
 - [Configuration](./setup.md)
 - [Usage](./use.md)
+- [Post-processing](./post-processing/README.md)
 - [Contributing](./contributing.md)
 - [Supported benchmarks](./apps/README.md)
 - [Supported systems](./systems.md)
+- [ARCHER2 tutorial](./tutorial/tutorial.md)
