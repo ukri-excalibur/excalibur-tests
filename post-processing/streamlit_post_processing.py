@@ -8,7 +8,7 @@ from post_processing import PostProcessing, read_args
 operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
 filter_types = ["and", "or", "series"]
-# user vs internal pandas type conversion
+# internal pandas vs user type conversion
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
                "Int64": "int",
@@ -69,31 +69,23 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         </style>""",
         unsafe_allow_html=True)
 
-    # FIXME (#issue #269): try to make a custom tag-like component for filters and series
-    # instead of using multiselect
     st.write("###### Current AND Filters")
-    and_filters = st.multiselect("AND Filters", config.and_filters if config.and_filters else [None],
-                                 config.and_filters, placeholder="None", label_visibility="collapsed")
-    config.and_filters = and_filters
+    st.multiselect("AND Filters", config.and_filters if config.and_filters else [None],
+                   config.and_filters, key="and", on_change=update_filter,
+                   args=["and"], placeholder="None", label_visibility="collapsed")
 
     st.write("###### Current OR Filters")
-    or_filters = st.multiselect("OR Filters", config.or_filters if config.or_filters else [None],
-                                config.or_filters, placeholder="None", label_visibility="collapsed")
-    config.or_filters = or_filters
+    st.multiselect("OR Filters", config.or_filters if config.or_filters else [None],
+                   config.or_filters, key="or", on_change=update_filter,
+                   args=["or"], placeholder="None", label_visibility="collapsed")
 
     st.write("###### Current Series")
-    series = st.multiselect("Series", config.series if config.series else [None], config.series,
-                            placeholder="None", label_visibility="collapsed")
-    config.series = series
-    config.series_filters = [[s[0], "==", s[1]] for s in config.series]
+    st.multiselect("Series", config.series if config.series else [None],
+                   config.series, key="series", on_change=update_filter,
+                   args=["series"], placeholder="None", label_visibility="collapsed")
 
     # update types after changing axes, filters, and series
     update_types()
-
-    # user vs internal filter location conversion
-    filter_lookup = {"and": and_filters,
-                     "or": or_filters,
-                     "series": series}
 
     # FIXME: can/should this section be placed before displaying current filters by caching earlier components?
     st.write("###### Add New Filter")
@@ -120,9 +112,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         current_filter = [st.session_state.filter_col,
                           st.session_state.filter_op,
                           st.session_state.filter_val]
-        st.button("Add Filter", on_click=add_filter,
-                  args=[filter_lookup.get(st.session_state.filter_type), current_filter,
-                        st.session_state.filter_type == "series"])
+        st.button("Add Filter", on_click=add_filter, args=[current_filter])
 
     generate_graph, download_config = st.columns(2)
     with generate_graph:
@@ -247,21 +237,41 @@ def update_types():
     post.apply_df_types(config.all_columns, config.column_types)
 
 
-def add_filter(loc, filter, is_series):
+def update_filter(key):
+    """
+        Apply user-selected filters or series to session state config.
+
+        Args:
+            key: string, type of filter to update.
+    """
+
+    config = st.session_state.config
+    if key == "series":
+        setattr(config, key, st.session_state[key])
+    else:
+        config.filters[key] = st.session_state[key]
+    # re-parse filters
+    config.parse_filters()
+
+
+def add_filter(filter):
     """
         Allow the user to add a new filter or series to session state config.
 
         Args:
-            loc: filter list, reference to the list the given filter should be added to.
             filter: list, filter column, operator, and value.
-            is_series: bool, identifies if filter is a series filter.
     """
 
+    # FIXME: there is a problem with filter datetime/timestamp formatting that requires further investigation
+    key = st.session_state.filter_type
+    loc = st.session_state[key]
     if filter not in loc:
         # remove operator from series
-        if is_series:
+        if key == "series":
             del filter[1]
+        # add filter to appropriate list location and config
         loc.append(filter)
+        update_filter(key)
         # update column type
         st.session_state.config.column_types[filter[0]] = st.session_state.column_type
 
