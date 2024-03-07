@@ -61,7 +61,7 @@ spack:
       modules: []
       environment:
         prepend_path:
-                LD_LIBRARY_PATH: /shared/ucl/apps/gcc/4.9.2/lib64
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/4.9.2/lib64
       extra_rpaths: []
   - compiler:
       spec: gcc@7.3.0
@@ -76,7 +76,7 @@ spack:
       modules: []
       environment:
         prepend_path:
-                LD_LIBRARY_PATH: /shared/ucl/apps/gcc/7.3.0/lib64
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/7.3.0/lib64
       extra_rpaths: []
   - compiler:
       spec: gcc@8.3.0
@@ -91,7 +91,7 @@ spack:
       modules: []
       environment:
         prepend_path:
-                LD_LIBRARY_PATH: /shared/ucl/apps/gcc/8.3.0/lib64
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/8.3.0/lib64
       extra_rpaths: []
   - compiler:
       spec: gcc@9.2.0
@@ -106,7 +106,7 @@ spack:
       modules: []
       environment:
         prepend_path:
-                LD_LIBRARY_PATH: /shared/ucl/apps/gcc/9.2.0/lib64
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/9.2.0/lib64
       extra_rpaths: []
   - compiler:
       spec: gcc@10.2.0
@@ -121,7 +121,46 @@ spack:
       modules: []
       environment:
         prepend_path:
-                LD_LIBRARY_PATH: /shared/ucl/apps/gcc/10.2.0-p95889/lib64
+          LD_LIBRARY_PATH: /shared/ucl/apps/gcc/10.2.0-p95889/lib64
+      extra_rpaths: []
+  - compiler:
+      spec: dpcpp@=2022.1.0
+      paths:
+        cc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/icx
+        cxx: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/dpcpp
+        f77: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/ifx
+        fc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/ifx
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: intel@=2021.6.0
+      paths:
+        cc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/intel64/icc
+        cxx: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/intel64/icpc
+        f77: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/intel64/ifort
+        fc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/intel64/ifort
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: oneapi@=2022.1.0
+      paths:
+        cc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/icx
+        cxx: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/icpx
+        f77: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/ifx
+        fc: /shared/ucl/apps/intel/2022.2/compiler/2022.1.0/linux/bin/ifx
+      flags: {}
+      operating_system: rhel7
+      target: x86_64
+      modules: []
+      environment: {}
       extra_rpaths: []
   packages:
     autoconf:
@@ -208,6 +247,10 @@ spack:
         prefix: /shared/ucl/apps/intel/2018.Update3
       - spec: intel-mpi@2020.0.166
         prefix: /shared/ucl/apps/intel/2020
+    intel-oneapi-mpi:
+      externals:
+      - spec: intel-oneapi-mpi@2021.6.0
+        prefix: /shared/ucl/apps/intel/2022.2/
     libtool:
       externals:
       - spec: libtool@2.4.2
