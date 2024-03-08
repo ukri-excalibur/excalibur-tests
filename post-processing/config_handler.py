@@ -50,14 +50,11 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            if self.filters.get("and"):
-                self.and_filters = self.filters.get("and")
-            if self.filters.get("or"):
-                self.or_filters = self.filters.get("or")
+            self.and_filters = self.filters["and"] if self.filters.get("and") else []
+            self.or_filters = self.filters["or"] if self.filters.get("or") else []
 
         # series filters
-        if self.series:
-            self.series_filters = [[s[0], "==", s[1]] for s in self.series]
+        self.series_filters = [[s[0], "==", s[1]] for s in self.series] if self.series else []
 
     def parse_scaling(self):
         """
@@ -85,7 +82,8 @@ class ConfigHandler:
 
         # series columns
         # NOTE: currently assuming there can only be one unique series column
-        self.series_columns = list(dict.fromkeys([s[0] for s in self.series_filters]))
+        self.series_columns = (list(dict.fromkeys([s[0] for s in self.series_filters]))
+                               if self.series_filters else [])
         # add series column to plot column list
         for s in self.series_columns:
             if s not in self.plot_columns:
@@ -94,8 +92,9 @@ class ConfigHandler:
         self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
         # filter columns
-        self.filter_columns = list(dict.fromkeys([f[0] for f in self.and_filters] +
-                                                 [f[0] for f in self.or_filters]))
+        self.filter_columns = (list(dict.fromkeys([f[0] for f in self.and_filters] +
+                                                  [f[0] for f in self.or_filters]))
+                               if self.and_filters or self.or_filters else [])
 
         # all typed columns
         self.all_columns = list(
