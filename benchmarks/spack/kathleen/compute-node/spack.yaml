@@ -289,8 +289,6 @@ spack:
         prefix: /shared/ucl/apps/openmpi/4.0.3/gnu-4.9.2
       - spec: openmpi@4.0.5%gcc@10.2.0
         prefix: /shared/ucl/apps/openmpi/4.0.5/gnu-10.2.0
-      - spec: openmpi@4.1.0%gcc@10.2.0
-        prefix: /shared/ucl/apps/openmpi/4.1.0/gnu-10.2.0
     # # This is a newer version of OpenMPI but with an older version of GCC,
     # # so that by default Spack prefers this over above versions, let's hide
     # # it so that we can use GCC 10.2 out-of-the-box.
