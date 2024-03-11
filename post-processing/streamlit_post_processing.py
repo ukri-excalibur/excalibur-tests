@@ -337,8 +337,13 @@ def rerun_post_processing():
     post = st.session_state.post
     # reset processed df to original state
     post.df = post.original_df.copy()
-    # run post-processing again
-    post.run_post_processing(st.session_state.config)
+
+    try:
+        # run post-processing again
+        post.run_post_processing(st.session_state.config)
+
+    except Exception as e:
+        st.exception(e)
 
 
 def main():
