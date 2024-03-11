@@ -315,10 +315,10 @@ def add_filter(filter: list):
     # FIXME: there is a problem with filter datetime/timestamp formatting that requires further investigation
     state = st.session_state
     key = state.filter_type
+    # remove operator from series
+    if key == "series":
+        del filter[1]
     if filter not in state[key]:
-        # remove operator from series
-        if key == "series":
-            del filter[1]
         # add filter to appropriate filter list
         state[key].append(filter)
         # update column type
