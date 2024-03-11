@@ -41,29 +41,31 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     if show_df:
         st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
 
-    # config file uploader
-    st.divider()
-    st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
+    with st.sidebar:
 
-    # set plot title
-    title = st.text_input("#### Title", config.title)
-    if title != config.title:
-        config.title = title
+        # set plot title
+        title = st.text_input("#### Title", config.title)
+        if title != config.title:
+            config.title = title
 
-    # display axis options
-    axis_options()
-    # display filter options
-    filter_options()
+        # display axis options
+        axis_options()
+        # display filter options
+        filter_options()
 
-    generate_graph, download_config = st.columns(2)
-    # re-run post processing and create a new plot
-    with generate_graph:
-        st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
-    # download session state config
-    with download_config:
-        st.download_button("Download Config", config.to_yaml(),
-                           "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
-                           use_container_width=True)
+        generate_graph, download_config = st.columns(2)
+        # re-run post processing and create a new plot
+        with generate_graph:
+            st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
+        # download session state config
+        with download_config:
+            st.download_button("Download Config", config.to_yaml(),
+                               "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
+                               use_container_width=True)
+
+        # config file uploader
+        st.divider()
+        st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
 
 def update_config():
