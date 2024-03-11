@@ -34,6 +34,10 @@ You can include post-processing in your `pip` installation of the package with t
 
 Run `post_processing.py -h` for more information (including debugging flags).
 
+You may also run post-processing with Streamlit to interact with your plots:
+
+>```streamlit run streamlit_post_processing.py log_path config_path [-p plot_type]```
+
 ### Configuration Structure
 
 Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for a template, an example, and some clarifying notes.
