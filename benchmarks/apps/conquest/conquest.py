@@ -66,7 +66,7 @@ class SiWeakScaling(ConquestBaseBenchmark):
 
     tags = {"si_weakscaling"}
     num_threads = parameter([1,2,4,8])
-    num_cores = parameter([8,16,32,64,128,256,512])
+    num_cores = parameter([8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768])
 
     def __init__(self):
         input_files = {
@@ -76,7 +76,13 @@ class SiWeakScaling(ConquestBaseBenchmark):
             64: "si_444.xtl",
             128: "si_844.xtl",
             256: "si_884.xtl",
-            512: "si_888.xtl" }
+            512: "si_888.xtl",
+            1024: "si_1688.xtl",
+            2048: "si_16168.xtl",
+            4096: "si_161616.xtl",
+            8192: "si_321616.xtl",
+            16384: "si_323216.xtl",
+            32768: "si_323232.xtl"}
         input_dir = "$(dirname $(which Conquest))/../benchmarks/matrix_multiply"
 
         self.num_tasks = int(self.num_cores / self.num_threads)
