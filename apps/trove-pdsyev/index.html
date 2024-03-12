@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../trove/">
+      
+      
+        <link rel="next" href="../wrf/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>Trove Pdsyev - ExCALIBUR-tests Docs</title>
+        <title>trove-pdsyev - ExCALIBUR-tests Docs</title>
       
     
     
@@ -94,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Trove Pdsyev
+              trove-pdsyev
             
           </span>
         </div>
@@ -304,17 +308,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -328,7 +334,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Supported Benchmarks
@@ -572,17 +578,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" checked>
         
           
           <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
@@ -596,7 +604,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
             Applications
@@ -754,18 +762,100 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    trove-pdsyev
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-the-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering the benchmarks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler support
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1108,8 +1198,8 @@ spack recipe is not currently set up to work with it. We are working on this and
 This is because we need to be able to verify that the version we run is the same as the one already used for benchmarking.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/trove-pdsyev -r --performance-report
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/trove-pdsyev<span class="w"> </span>-r<span class="w"> </span>--performance-report
+</span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
 <p>By default all benchmarks will be run. You can run individual benchmarks with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a> option:</p>
@@ -1117,8 +1207,8 @@ This is because we need to be able to verify that the version we run is the same
 <li><code>single-node</code> to run benchmarks on a single node</li>
 </ul>
 <p>Examples:</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/trove-pdsyev -r --performance-report --tag single-node
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/trove-pdsyev<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>single-node
+</span></code></pre></div>
 <h2 id="compiler-support">Compiler support</h2>
 <p>Currently, only the intel compiler is supported for this program.</p>
 

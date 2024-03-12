@@ -847,11 +847,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1207,8 +1207,8 @@ per run, but if you manually re-run tests you may prefer to use the following op
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-keep-stage-files"><code>--keep-stage-files</code></a>.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/ramses -r --performance-report
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/ramses<span class="w"> </span>-r<span class="w"> </span>--performance-report
+</span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
 <p>By default all benchmarks will be run. You can run individual benchmarks with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a> option:</p>
@@ -1217,9 +1217,9 @@ per run, but if you manually re-run tests you may prefer to use the following op
 <li><code>strong</code> to run the strong scaling benchmarks</li>
 </ul>
 <p>Examples:</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/ramses -r --performance-report --tag weak
-reframe -c benchmarks/apps/ramses -r --performance-report --tag strong
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/ramses<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>weak
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/ramses<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>strong
+</span></code></pre></div>
 <h2 id="compiler-support">Compiler support</h2>
 <p>Currently, only the intel compiler is supported for this program.</p>
 

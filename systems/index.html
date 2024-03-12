@@ -757,11 +757,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove-psydev/README.md" class="md-nav__link">
+      <a href="../apps/trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1297,16 +1297,16 @@ You likely want to install this benchmarking framework outside of your home dire
 The former is specified by setting the <a href="https://docs.archer2.ac.uk/user-guide/scheduler/#quality-of-service-qos">Quality of Service</a>, the latter is necessary if your user account is associated to multiple projects on ARCHER2 and you need to <a href="https://docs.archer2.ac.uk/user-guide/scheduler/#specifying-resources-in-job-scripts">specify which one to use</a> for the submitted jobs.
 We cannot automatically set these options for you because they are user-specific, but when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to add new job options.
 Some examples:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=serial'
-reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=short' -J'--account=t01'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J&#39;--qos=serial&#39;
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J&#39;--qos=short&#39; -J&#39;--account=t01&#39;
+</span></code></pre></div>
 <h3 id="controlling-cpu-frequency">Controlling CPU frequency</h3>
 <p>ARCHER2 allows <a href="https://docs.archer2.ac.uk/user-guide/energy/#controlling-cpu-frequency">choosing the CPU frequency</a> during jobs by setting the environment variable <code>SLURM_CPU_FREQ_REQ</code> to specific values.
 In ReFrame v3 the list of environment variables set by the framework is held by the dictionary attribute called <code>env_vars</code>, and you can initialise it on the command line when running a benchmark with <code>-S</code>/<code>--setvar</code>.
 For more details, see Setting environment variables in <a href="../use/">usage</a>.
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J'--qos=serial' -S env_vars=SLURM_CPU_FREQ_REQ:1500000
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2 -J&#39;--qos=serial&#39; -S env_vars=SLURM_CPU_FREQ_REQ:1500000
+</span></code></pre></div>
 <h3 id="using-python">Using python</h3>
 <p>ARCHER2 is a Cray system, and they
 <a href="https://docs.archer2.ac.uk/user-guide/python/">recommend using a cray optimised python version</a>.
@@ -1317,8 +1317,8 @@ This is necessary to pip install excalibur-tests following the instructions in <
 path to the work directory on Archer2 is fairly long, and pip by default installs into
 <code>&lt;path/to/virtual/environment&gt;/pythonx.x/site-packages/</code>we may exceed the limit when
 installing to the default directory. If you see an error in ReFrame beginning with</p>
-<pre><code>==&gt; Error: SbangPathError: Install tree root is too long.
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>==&gt; Error: SbangPathError: Install tree root is too long.
+</span></code></pre></div>
 <p>A possible work-around is to provide a shorter installation path to <code>pip</code>. Pass the installation
 path to <code>pip install</code> using <code>--target</code>, for example,
 <code>pip install --target = /work/&lt;project_code&gt;/&lt;project_code&gt;/&lt;username&gt;/pkg .</code>.
@@ -1328,42 +1328,42 @@ Then add  the <code>bin</code> subdirectory to <code>$PATH</code>, for example,
 <h3 id="queue-options_1">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=&lt;ACCOUNT&gt;'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+</span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.
 You can see the account balance of your projects with the <code>mybalance</code> command.</p>
 <h2 id="dial2">DIaL2</h2>
 <h3 id="queue-options_2">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=&lt;ACCOUNT&gt;'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+</span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <p>Note: for exclusive access require to pass -J='-l naccesspolicy=SINGLEJOB -n'</p>
 <h2 id="dial3">DIaL3</h2>
 <h3 id="queue-options_3">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=&lt;ACCOUNT&gt;'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+</span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <h2 id="isambard-2">Isambard 2</h2>
 <h3 id="multi-architecture-comparison-system-macs-partition">Multi-Architecture Comparison System (MACS) partition</h3>
 <h4 id="compilation-on-compute-nodes">Compilation on compute nodes</h4>
 <p>Login nodes on the Isambard 2 MACS partition have Intel "Broadwell" CPUs, but most of the compute nodes use CPUs of different microarchitecture, which means that you cannot directly compile optimised code for the compute nodes with Spack while on the login nodes.
 To run compilation on the compute node, you have to set the attribute <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally"><code>build_locally</code></a> to <code>false</code> with <code>-S build_locally=false</code>, for example:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
-reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
+</span></code></pre></div>
 <p>You may also need to compile GPU applications on the compute nodes, as the login node does not have any GPUs (this really depends on the build system of the application at hand, whether it needs access to a GPU during the build or it is sufficient to have the GPU toolkit available).</p>
 <h2 id="myriad">Myriad</h2>
 <h3 id="python3-module">Python3 module</h3>
 <p>The only default Python in the system is currently Python 2.7, but this may change in the future.
 We require Python v3.7 or later so you need to have <code>python3</code> available. 
 This is provided by the <code>python3</code> module in the system. The <code>python3/recommended</code> module on myriad is built with an incompatible version of <code>openssl</code> for ReFrame. The easiest thing to do is to add the lines</p>
-<pre><code class="language-sh">module load python3/3.11
-export RFM_USE_LOGIN_SHELL=&quot;True&quot;
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>module<span class="w"> </span>load<span class="w"> </span>python3/3.11
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;True&quot;</span>
+</span></code></pre></div>
 <p>to your shell init script (e.g. <code>~/.bashrc</code>).
 The second line tells ReFrame to always load the shell init script when running the jobs, so that the Python3 module is available also during the jobs, to run Spack.</p>
 <h3 id="temporary-directory-for-building-packages-with-spack">Temporary directory for building packages with Spack</h3>
@@ -1372,14 +1372,14 @@ By default on Myriad this is <code>/tmp</code>, but this directory is shared wit
 To work around this issue you can use as temporary directory the one pointed to by <code>XDG_RUNTIME_DIR</code>, which use a larger partition, reserved only to your user.
 Note that this directory is automatically cleaned up after you log all of your sessions out of the system.
 You can add the following line to your shell init script (e.g., <code>~/.bashrc</code>) to make <code>TMPDIR</code> use <code>XDG_RUNTIME_DIR</code>, unless otherwise set:</p>
-<pre><code class="language-sh">export TMPDIR=&quot;${TMPDIR:-${XDG_RUNTIME_DIR:-/tmp}}&quot;
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="k">:-</span><span class="si">${</span><span class="nv">XDG_RUNTIME_DIR</span><span class="k">:-</span><span class="p">/tmp</span><span class="si">}}</span><span class="s2">&quot;</span>
+</span></code></pre></div>
 <h2 id="tursa">Tursa</h2>
 <h3 id="queue-options_4">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<pre><code>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=&lt;ACCOUNT&gt;'
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+</span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 
 

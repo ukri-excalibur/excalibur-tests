@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../trove/">
+        <link rel="prev" href="../trove-pdsyev/">
       
       
         <link rel="next" href="../../tutorial/tutorial/">
@@ -765,11 +765,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1190,17 +1190,17 @@ Descriptions from the above benchmark page.</p>
 </ul>
 <h2 id="usage">Usage</h2>
 <p>Run using e.g.:</p>
-<pre><code>reframe/bin/reframe -C reframe_config.py -c benchmarks/apps/wrf/ --run --performance-report
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe/bin/reframe -C reframe_config.py -c benchmarks/apps/wrf/ --run --performance-report
+</span></code></pre></div>
 <p>A precursor task automatically downloads the required benchmark files.
 This may take some time due to the files size.</p>
 <h3 id="filtering-the-benchmark">Filtering the benchmark</h3>
 <p>You can filter the benchmark to run by filtering by tag:</p>
-<pre><code class="language-sh"># For the 12km data
-reframe/bin/reframe -c benchmarks/apps/wrf/ --run --performance-report --tag '12km'
-# For the 2.5km data
-reframe/bin/reframe -c benchmarks/apps/wrf/ --run --performance-report --tag '2.5km'
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># For the 12km data</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>reframe/bin/reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/wrf/<span class="w"> </span>--run<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span><span class="s1">&#39;12km&#39;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># For the 2.5km data</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>reframe/bin/reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/wrf/<span class="w"> </span>--run<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span><span class="s1">&#39;2.5km&#39;</span>
+</span></code></pre></div>
 <h3 id="setting-the-number-of-threads-and-mpi-processes">Setting the number of threads and MPI processes</h3>
 <p>By default, these benchmarks will use</p>
 <ul>
@@ -1213,8 +1213,8 @@ reframe/bin/reframe -c benchmarks/apps/wrf/ --run --performance-report --tag '2.
 <p>You can override the values of these variables from the command line with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>--setvar</code></a>
 option, for example</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/wrf -r --performance-report --setvar=num_cpus_per_task=4 --setvar=num_tasks=16
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/wrf<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">4</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_tasks</span><span class="o">=</span><span class="m">16</span>
+</span></code></pre></div>
 <p><em><strong>Note</strong></em>: you're responsible for overriding these variables in a consistent
 way, so that, for example, <code>num_tasks_per_node</code> doesn't exceed the number of
 total tasks runnable on each node.</p>

@@ -945,11 +945,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove-psydev/README.md" class="md-nav__link">
+      <a href="../apps/trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1399,36 +1399,36 @@ On these systems the ReFrame configuration and Spack environment are included in
 <p>You can point ReFrame to the provided config file by setting the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_CONFIG_FILES"><code>RFM_CONFIG_FILES</code></a>
 environment variable:</p>
-<pre><code class="language-sh">export RFM_CONFIG_FILES=&quot;&lt;path-to-excalibur-tests&gt;/benchmarks/reframe_config.py&quot;
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_CONFIG_FILES</span><span class="o">=</span><span class="s2">&quot;&lt;path-to-excalibur-tests&gt;/benchmarks/reframe_config.py&quot;</span>
+</span></code></pre></div>
 <p>If you want to use a different ReFrame configuration file, for example because
 you use a different system, you can set this environment variable to the path of
 that file.</p>
 <p><strong>Note</strong>: in order to use the Spack build system in ReFrame, the <code>spack</code>
 executable must be in the <code>PATH</code> also on the compute nodes of a cluster, if
 you want to run your benchmarks on them. This is taken care of by adding it
-to your init file (see spack section above).</p>
+to your init file (see spack section below).</p>
 <p>However, you will also need to set the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#envvar-RFM_USE_LOGIN_SHELL"><code>RFM_USE_LOGIN_SHELL</code></a>
-environment variable </p>
-<pre><code class="language-sh">export RFM_USE_LOGIN_SHELL=&quot;true&quot;
-</code></pre>
-<p>in order to make ReFrame use <code>!#/bin/bash -l</code> as 
+environment variable 
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+</span></code></pre></div>
+in order to make ReFrame use <code>!#/bin/bash -l</code> as 
 <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a> line, which would load
 the user's init script.</p>
 <h3 id="spack">Spack</h3>
 <p>In order to use Spack in ReFrame, 
 the directory where the <code>spack</code> program is installed needs to be in
 the <code>PATH</code> environment variable. This is taken care of by the <code>setup-env.sh</code>
-script run in <a href="../install#installation_2">install</a>. To have spack available in every session,
+script run in <a href="../install/#installation_2">install</a>. To have spack available in every session,
 you can have your shell init script (e.g. <code>.bashrc</code>)
-re-run it automatically, by adding the following lines to it:</p>
-<pre><code class="language-sh">export SPACK_ROOT=&quot;/path/to/spack&quot;
-if [ -f &quot;${SPACK_ROOT}/share/spack/setup-env.sh&quot; ]; then
-    source &quot;${SPACK_ROOT}/share/spack/setup-env.sh&quot;
-fi
-</code></pre>
-<p>replacing <code>/path/to/spack</code> with the actual path to your Spack installation.</p>
+re-run it automatically, by adding the following lines to it:
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SPACK_ROOT</span><span class="o">=</span><span class="s2">&quot;/path/to/spack&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SPACK_ROOT</span><span class="si">}</span><span class="s2">/share/spack/setup-env.sh&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SPACK_ROOT</span><span class="si">}</span><span class="s2">/share/spack/setup-env.sh&quot;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">fi</span>
+</span></code></pre></div>
+replacing <code>/path/to/spack</code> with the actual path to your Spack installation.</p>
 <h2 id="new-systems">New systems</h2>
 <p>We need the <a href="https://reframe-hpc.readthedocs.io/en/stable/">ReFrame</a>
 configuration and a Spack environment for a new system.</p>
@@ -1454,39 +1454,39 @@ configuration.  The numbers you need to watch out for are:</p>
 environment</a> to run
 its tests. Follow these steps to create a Spack environment for a new system:</p>
 <h4 id="create-the-environment">Create the environment</h4>
-<pre><code class="language-sh">spack env create --without-view -d /path/to/environment
-</code></pre>
-<p>Remember to
+<p><div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>spack<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>--without-view<span class="w"> </span>-d<span class="w"> </span>/path/to/environment
+</span></code></pre></div>
+Remember to
 <a href="https://spack.readthedocs.io/en/latest/environments.html#filesystem-views">disable views</a>
 with <code>--without-view</code> to avoid conflicts when installing incompatible packages
 in the same environment</p>
 <h4 id="activate-the-environment">Activate the environment</h4>
-<pre><code class="language-sh">spack env activate -d /path/to/environment
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>spack<span class="w"> </span>env<span class="w"> </span>activate<span class="w"> </span>-d<span class="w"> </span>/path/to/environment
+</span></code></pre></div>
 <h4 id="set-install_tree">Set <a href="https://spack.readthedocs.io/en/latest/config_yaml.html#install-tree"><code>install_tree</code></a></h4>
-<pre><code class="language-sh">spack config add 'config:install_tree:root:$env/opt/spack'
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>spack<span class="w"> </span>config<span class="w"> </span>add<span class="w"> </span><span class="s1">&#39;config:install_tree:root:$env/opt/spack&#39;</span>
+</span></code></pre></div>
 <h4 id="add-compilers">Add compilers</h4>
 <p>Make sure the compilers you want to add are in the <code>PATH</code> (e.g., load the
-relevant modules), then add them to the Spack environment with:</p>
-<pre><code class="language-sh">spack compiler find
-</code></pre>
+relevant modules), then add them to the Spack environment with:
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>spack<span class="w"> </span>compiler<span class="w"> </span>find
+</span></code></pre></div></p>
 <h4 id="add-external-packages">Add external packages</h4>
 <p>Add other packages (e.g., MPI): make sure the package you want to add are
 "visible" (e.g., load the relevant modules) and add them to the environment
-with</p>
-<pre><code class="language-sh">spack external find PACKAGE-NAME ...
-</code></pre>
-<p>where <code>PACKAGE-NAME ...</code> are the names of the corresponding Spack packages</p>
+with
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>spack<span class="w"> </span>external<span class="w"> </span>find<span class="w"> </span>PACKAGE-NAME<span class="w"> </span>...
+</span></code></pre></div>
+where <code>PACKAGE-NAME ...</code> are the names of the corresponding Spack packages</p>
 <h4 id="set-excalibur_spack_env-variable">Set <code>EXCALIBUR_SPACK_ENV</code> variable</h4>
 <p>To use the new Spack environment in ReFrame,
 set the environment variable <code>EXCALIBUR_SPACK_ENV</code> to the path of the directory
-where the environment is, i.e.</p>
-<pre><code class="language-sh">export EXCALIBUR_SPACK_ENV=/path/to/environment
-</code></pre>
-<p>If this is not set, ReFrame will try to use the
+where the environment is, i.e.
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">EXCALIBUR_SPACK_ENV</span><span class="o">=</span>/path/to/environment
+</span></code></pre></div>
+If this is not set, ReFrame will try to use the
 environment for the current system if known, otherwise it will automatically
-create a very basic environment (see <a href="../use#usage-on-unsupported-systems">Usage on unsupported systems</a>.</p>
+create a very basic environment (see <a href="../use/#usage-on-unsupported-systems">Usage on unsupported systems</a>.</p>
 <h4 id="optional-make-manual-tweaks">(optional) Make manual tweaks</h4>
 <p>If necessary, manually tweak the environment. For example, if there is already
 a global Spack available in the system, you can <a href="https://spack.readthedocs.io/en/latest/environments.html#included-configurations">include its configuration
@@ -1495,9 +1495,9 @@ or <a href="https://spack.readthedocs.io/en/latest/chain.html">add its install t
 upstreams</a>.</p>
 <h4 id="optional-add-spack-repositories">(optional) Add spack repositories</h4>
 <p>If you are using a custom repo for spack package recipes (see <em>Spack package</em> below), add
-it to the spack environment with</p>
-<pre><code class="language-sh">spack -e /path/to/environment repo add /path/to/repo
-</code></pre>
+it to the spack environment with
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>spack<span class="w"> </span>-e<span class="w"> </span>/path/to/environment<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>/path/to/repo
+</span></code></pre></div></p>
 
 
 

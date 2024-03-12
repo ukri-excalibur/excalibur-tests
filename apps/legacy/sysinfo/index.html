@@ -752,11 +752,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../trove-psydev/README.md" class="md-nav__link">
+      <a href="../../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1048,8 +1048,8 @@
 <p>To use:
 1. In the ReFrame configuration <code>reframe_config.py</code>, add an environment "sysinfo" for the system/parition(s) of interest (see Alaska example).
 1. Run:</p>
-<pre><code>        reframe/bin/reframe -C reframe_config.py -c apps/sysinfo/ --run
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code>        reframe/bin/reframe -C reframe_config.py -c apps/sysinfo/ --run
+</code></pre></div>
 <p>This will run an mpi job, producing <code>output/&lt;system&gt;/&lt;partition&gt;/sysinfo/Sysinfo/sysinfo.json</code> containing hardware information for every node in the partition. Commit this file.
 1. The <code>apps/sysinfo/sysinfo/sysinfo.ipynb</code> notebook collates and presents this data: navigate to it in a browser, rerun, save and commit it.</p>
 

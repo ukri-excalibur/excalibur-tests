@@ -888,11 +888,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove-psydev/README.md" class="md-nav__link">
+      <a href="../apps/trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1278,21 +1278,21 @@
 <h1 id="usage">Usage</h1>
 <h2 id="running-benchmarks">Running benchmarks</h2>
 <p>Once you have set up Spack and ReFrame, you can execute a benchmark with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/BENCH_NAME -r
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/BENCH_NAME<span class="w"> </span>-r
+</span></code></pre></div>
 <p>where <code>benchmarks/apps/BENCH_NAME</code> is the directory where the benchmark is.  The command
 above assumes you have the program <code>reframe</code> in your PATH.  If you have followed the instructions
 to install using <code>pip</code> into the default directory, it should have been automatically added.
 If it is not the case, call <code>reframe</code> with its relative or absolute path.</p>
 <p>For example, to run the Sombrero benchmark in the <code>benchmarks/apps/sombrero</code> directory you can
 use</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/sombrero -r
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/sombrero<span class="w"> </span>-r
+</span></code></pre></div>
 <h2 id="setting-reframe-command-line-options">Setting ReFrame command line options</h2>
 <p>ReFrame supports a variety of command-line options that can be useful, or sometimes necessary.</p>
 <h3 id="system-specific-options">System-specific options</h3>
 <p>While the aim is to automate as much system-specific configuration as possible, there are some options that have to be provided by the user, such as accounting details, and unfortunately the syntax can vary.
-See <a href="../systems">systems</a> for information about the use of this framework on specific systems.</p>
+See <a href="../systems/">systems</a> for information about the use of this framework on specific systems.</p>
 <h3 id="performance-report">Performance report</h3>
 <p>You can use the <code>--performance-report</code> command-line option to ReFrame to get a nicely formatted performance report after the benchmark has completed.</p>
 <h3 id="selecting-spack-build-spec">Selecting Spack build spec</h3>
@@ -1301,8 +1301,8 @@ to be installed in the environment, but users can change it when invoking ReFram
 command line with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>-S</code></a> option to set
 the <code>spack_spec</code> variable:</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/sombrero -r --performance-report -S spack_spec='sombrero@2021-08-16%intel'
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/sombrero<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="s1">&#39;sombrero@2021-08-16%intel&#39;</span>
+</span></code></pre></div>
 <h3 id="selecting-system-and-queue-access-options">Selecting system and queue access options</h3>
 <p>The provided ReFrame configuration file contains the settings for multiple systems.  If you
 use it, the automatic detection of the system may fail, as some systems may use clashing
@@ -1321,8 +1321,8 @@ to <code>reframe</code> (e.g., <code>--job-option='--account=...'</code>).</p>
 which controls the environment variables used in a job.
 The syntax to set dictionary items, like for <code>env_vars</code>, is a comma-separated list of <code>key:value</code> pairs: <code>-S dict=key_1:value_1,key_2:value_2</code>.
 For example</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/sombrero -r --performance-report -S env_vars=OMP_PLACES:threads
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/sombrero<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-S<span class="w"> </span><span class="nv">env_vars</span><span class="o">=</span>OMP_PLACES:threads
+</span></code></pre></div>
 <p>runs the <code>benchmarks/apps/sombrero</code> benchmark setting the environment variable <code>OMP_PLACES</code>
 to <code>threads</code>.</p>
 <h2 id="usage-on-unsupported-systems">Usage on unsupported systems</h2>
@@ -1336,16 +1336,15 @@ a new empty Spack environment will be automatically created in
 <code>benchmarks/spack/default</code> when ReFrame is launched for the first time.
 You should populate the environment with the packages already installed on your system
 before running Spack to avoid excessively rebuilding system packages. See
-<a href="../contributing#spack-configuration">spack configuration</a> for instructions on how
-to set up a Spack environment.
+<a href="../setup/#spack_1">setup</a> for instructions on how to set up a Spack environment.
 In particular, make sure that at least a compiler and an MPI library are added into the environment.
 After the Spack environment is set up, tell ReFrame to use it by setting the environment
-variable <code>EXCALIBUR_SPACK_ENV</code>, as described in <a href="../setup#spack">setup</a>.</p>
+variable <code>EXCALIBUR_SPACK_ENV</code>, as described in <a href="../setup/#set-excalibur_spack_env-variable">setup</a>.</p>
 <h2 id="selecting-multiple-benchmarks">Selecting multiple benchmarks</h2>
 <p>ReFrame tests may contain tags that allow the user to select which tests to run. These can be leveraged to defined sets of benchmarks. To run all tests in a directory, pass the <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-R"><code>-R</code> flag</a> to ReFrame. Then filter down to a specific tag by passing the <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>-t</code> flag</a>.</p>
 <p>For example, the <a href="https://github.com/ukri-excalibur/excalibur-tests/blob/1a7377e885977833c150569c32eb1db478f63087/benchmarks/examples/sombrero/sombrero.py#L113">tag "example" is defined</a> in the sombrero example. To select the sombrero example out of all benchmarks, run</p>
-<pre><code class="language-bash">reframe -c benchmarks/ -R -r -t example
-</code></pre>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/<span class="w"> </span>-R<span class="w"> </span>-r<span class="w"> </span>-t<span class="w"> </span>example
+</span></code></pre></div>
 <p>Tests can contain multiple tags. To create a custom set of benchmarks, add a new tag to the tests you want to include in the set.</p>
 
 

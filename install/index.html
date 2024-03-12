@@ -885,11 +885,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove-psydev/README.md" class="md-nav__link">
+      <a href="../apps/trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1278,18 +1278,18 @@
 the package in a virtual environment. For example, using the python3 
 <a href="https://docs.python.org/3/library/venv.html">built-in virtual environment tool <code>venv</code></a>,
 create an environment called <code>my_environment</code> with</p>
-<pre><code class="language-sh">python3 -m venv ./my_environment
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>./my_environment
+</span></code></pre></div>
 <p>and activate it with</p>
-<pre><code class="language-sh">source ./my_environment/bin/activate
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">source</span><span class="w"> </span>./my_environment/bin/activate
+</span></code></pre></div>
 <h3 id="installation_1">Installation</h3>
 <p>First, clone the git repository</p>
-<pre><code class="language-sh">git clone https://github.com/ukri-excalibur/excalibur-tests.git
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ukri-excalibur/excalibur-tests.git
+</span></code></pre></div>
 <p>Install the <strong>excalibur-tests</strong> package and the necessary dependencies with <code>pip</code> by</p>
-<pre><code class="language-sh">pip install -e ./excalibur-tests
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./excalibur-tests
+</span></code></pre></div>
 <h3 id="notes">Notes</h3>
 <p>The <code>-e/--editable</code> flag is recommended for two reasons.</p>
 <ul>
@@ -1314,15 +1314,15 @@ following the instructions below.</p>
 to install the latest version of Spack (summarised here for convenience, but not guaranteed to be
 up-to-date):</p>
 <h3 id="installation_2">Installation</h3>
-<p>Git clone the spack repository</p>
-<pre><code class="language-sh">git clone -c feature.manyFiles=true https://github.com/spack/spack.git
-</code></pre>
-<p>Run spack setup script </p>
-<pre><code class="language-sh">source ./spack/share/spack/setup-env.sh
-</code></pre>
-<p>Check spack is in <code>$PATH</code>, for example </p>
-<pre><code class="language-sh">spack --version
-</code></pre>
+<p>Git clone the spack repository
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>clone<span class="w"> </span>-c<span class="w"> </span>feature.manyFiles<span class="o">=</span><span class="nb">true</span><span class="w"> </span>https://github.com/spack/spack.git
+</span></code></pre></div>
+Run spack setup script 
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">source</span><span class="w"> </span>./spack/share/spack/setup-env.sh
+</span></code></pre></div>
+Check spack is in <code>$PATH</code>, for example 
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>spack<span class="w"> </span>--version
+</span></code></pre></div></p>
 <h3 id="notes_1">Notes</h3>
 <p><em><strong>Note</strong>: if you have already installed spack locally and you want to upgrade to
 a newer version, you might first have to clear the cache to avoid conflicts:

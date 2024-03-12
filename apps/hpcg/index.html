@@ -814,11 +814,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1129,8 +1129,8 @@ At the time of writing, there are three benchmarks in the suite: the original im
 which solves a different problem with an <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/lfric">LFRic</a> stencil and data.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/hpcg -r --performance-report
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/hpcg<span class="w"> </span>-r<span class="w"> </span>--performance-report
+</span></code></pre></div>
 <p>You can use the <code>-n/--name</code> argument to pick <code>HPCG_Original / HPCG_Stencil / HPCG_LFRic</code> to select a particular benchmark.
 Alternatively, if you want to compare the two implementations of the 27 point stencil problem (Original and Stencil), you can filter by tag <code>-t 27pt_stencil</code>.</p>
 <p>This app is currently intended to be parallelized with MPI, and it is recommended to use the <code>--system</code> argument to pick up the appropriate hardware details, as well as Spack libraries.</p>

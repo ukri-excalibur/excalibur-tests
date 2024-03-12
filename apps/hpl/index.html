@@ -856,11 +856,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1229,17 +1229,17 @@ ReFrame will copy these files into the staging directories before running a test
 <p>If you want to use an <code>HPL.dat</code> file in a different directory, you can pass <code>--setvar config_dir=&lt;DIRECTORY&gt;</code> as additional argument to the ReFrame invocation (see below), where <code>&lt;DIRECTORY&gt;</code> is the absolute path of the directory where <code>HPL.dat</code> is.</p>
 <h2 id="running-tests">Running tests</h2>
 <p>Run using e.g.:</p>
-<pre><code>reframe -c benchmarks/apps/hpl --run --performance-report
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe -c benchmarks/apps/hpl --run --performance-report
+</span></code></pre></div>
 <p>You can set the number of nodes and tasks per node to use by setting the following variables:</p>
 <ul>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node"><code>num_tasks_per_node</code></a> (default = 1)</li>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks"><code>num_tasks</code></a> (default = 1)</li>
 </ul>
 <p>For example</p>
-<pre><code>reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=4 # 4 MPI ranks
-reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=8 --setvar num_tasks_per_node=2 # 8 MPI ranks, 2 for each node (for a total of 4 nodes)
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=4 # 4 MPI ranks
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>reframe -c benchmarks/apps/hpl --run --performance-report --setvar num_tasks=8 --setvar num_tasks_per_node=2 # 8 MPI ranks, 2 for each node (for a total of 4 nodes)
+</span></code></pre></div>
 <h2 id="outputs">Outputs</h2>
 <p>The ReFrame performance variable is:</p>
 <ul>

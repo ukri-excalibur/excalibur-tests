@@ -757,11 +757,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../trove-psydev/README.md" class="md-nav__link">
+      <a href="../../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1056,25 +1056,25 @@
 <h1 id="installation-of-intel-hpl-using-spack">Installation of Intel-HPL using Spack</h1>
 <p>Prebuilt binaries are provided with MKL - tests here use AVX2-specific binaries so assume system is AVX2-capable.</p>
 <p>E.g.:</p>
-<pre><code>spack load patch
+<div class="language-text highlight"><pre><span></span><code>spack load patch
 spack load gcc@9
 spack install intel-mpi %gcc@9: # DONE
-spack install intel-mkl %gcc@9: # NB this doesn't have threads enabled here/by default
-</code></pre>
+spack install intel-mkl %gcc@9: # NB this doesn&#39;t have threads enabled here/by default
+</code></pre></div>
 <p>Note that the executables are provided within the MKL installation directory, e.g.:</p>
-<pre><code>$HOME/spack/opt/spack/linux-centos7-broadwell/gcc-9.3.0/intel-mkl-2020.1.217-5tpgp7bze633d4bybvvumfp2nhyg64xf/compilers_and_libraries_2020.1.217/linux/mkl/benchmarks/hpcg/bin/
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code>$HOME/spack/opt/spack/linux-centos7-broadwell/gcc-9.3.0/intel-mkl-2020.1.217-5tpgp7bze633d4bybvvumfp2nhyg64xf/compilers_and_libraries_2020.1.217/linux/mkl/benchmarks/hpcg/bin/
+</code></pre></div>
 <p>which contains:</p>
-<pre><code>hpcg.dat    xhpcg_avx   xhpcg_avx2  xhpcg_knl   xhpcg_skx
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code>hpcg.dat    xhpcg_avx   xhpcg_avx2  xhpcg_knl   xhpcg_skx
+</code></pre></div>
 <p>The ReFrame environment configuration(s) for this test <strong>must</strong> include two items:</p>
 <p>Firstly, to add the <code>/bin</code> directory to $PATH (as the spack-generated MKL module does not do this) include:</p>
-<pre><code>['PATH', '$PATH:$MKLROOT/benchmarks/hpcg/bin/']
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code>[&#39;PATH&#39;, &#39;$PATH:$MKLROOT/benchmarks/hpcg/bin/&#39;]
+</code></pre></div>
 <p>(Note that <code>MKLROOT</code> is exported by the MKL module).</p>
 <p>Secondly, to select the appropriate binary for the system include:</p>
-<pre><code>['XHPCG_BIN', &lt;binary&gt;]
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code>[&#39;XHPCG_BIN&#39;, &lt;binary&gt;]
+</code></pre></div>
 <p>where <code>&lt;binary&gt;</code> is one of the above - note <code>xhpcg_skx</code> is AVX512 (Skylake).</p>
 <h1 id="hpcg-dat-configuration-files">hpcg .dat configuration files</h1>
 <p>Appropriate HPCG configuration files named <code>hpcg-single.dat</code> and <code>hpcg-all.dat</code> for the single- and all-node cases respectively must be generated and placed in either:</p>

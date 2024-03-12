@@ -847,11 +847,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1197,8 +1197,8 @@ There are multiple implementations of this benchmark in a variety of programming
 This code was previously called GPU-STREAM.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/babelstream -r  --tag &lt;TAG&gt; --system=&lt;ENV:PARTITION&gt; -Sbuild_locally=false -Sspack_spec='babelstream +tag &lt;extra flags&gt;'
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/babelstream<span class="w"> </span>-r<span class="w">  </span>--tag<span class="w"> </span>&lt;TAG&gt;<span class="w"> </span>--system<span class="o">=</span>&lt;ENV:PARTITION&gt;<span class="w"> </span>-Sbuild_locally<span class="o">=</span><span class="nb">false</span><span class="w"> </span>-Sspack_spec<span class="o">=</span><span class="s1">&#39;babelstream +tag &lt;extra flags&gt;&#39;</span>
+</span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
 <p>The Spack directives for the babelstream could be found <a href="https://github.com/spack/spack/tree/develop/var/spack/repos/builtin/packages/babelstream">here</a>
 You can run individual benchmarks with the <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a> option:</p>
@@ -1218,10 +1218,10 @@ You can run individual benchmarks with the <a href="https://reframe-hpc.readthed
 <li><code>thrust</code> to run the <code>THRUST</code> benchmark,</li>
 </ul>
 <p>Examples:</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/babelstream -r --tag omp --system=isambard-macs:volta -S build_locally=false -S spack_spec='babelstream%gcc@9.2.0 +omp cuda_arch=70'
-reframe -c benchmarks/apps/babelstream -r --tag tbb --system=isambard-macs:cascadelake -S build_locally=false -S spack_spec='babelstream@develop +tbb'
-reframe -c benchmarks/apps/babelstream -r --tag cuda --system=isambard-macs:volta -S build_locally=false -S spack_spec='babelstream@develop%gcc@9.2.0 +cuda cuda_arch=70'
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/babelstream<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>omp<span class="w"> </span>--system<span class="o">=</span>isambard-macs:volta<span class="w"> </span>-S<span class="w"> </span><span class="nv">build_locally</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="s1">&#39;babelstream%gcc@9.2.0 +omp cuda_arch=70&#39;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/babelstream<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>tbb<span class="w"> </span>--system<span class="o">=</span>isambard-macs:cascadelake<span class="w"> </span>-S<span class="w"> </span><span class="nv">build_locally</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="s1">&#39;babelstream@develop +tbb&#39;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/babelstream<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>cuda<span class="w"> </span>--system<span class="o">=</span>isambard-macs:volta<span class="w"> </span>-S<span class="w"> </span><span class="nv">build_locally</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="s1">&#39;babelstream@develop%gcc@9.2.0 +cuda cuda_arch=70&#39;</span>
+</span></code></pre></div>
 <h3 id="setting-the-number-of-threads-and-mpi-processes">Setting the number of threads and MPI processes</h3>
 <p>By default, these benchmarks will use</p>
 <ul>
@@ -1230,35 +1230,35 @@ reframe -c benchmarks/apps/babelstream -r --tag cuda --system=isambard-macs:volt
 <p>You can override the value of this variable from the command line with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>--setvar</code></a>
 option, for example</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/babelstream -r --tag cuda --system=isambard-macs:volta -S build_locally=false -S spack_spec='babelstream@develop%gcc@9.2.0 +cuda cuda_arch=70' --setvar=num_gpus_per_node=2
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/babelstream<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>cuda<span class="w"> </span>--system<span class="o">=</span>isambard-macs:volta<span class="w"> </span>-S<span class="w"> </span><span class="nv">build_locally</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="s1">&#39;babelstream@develop%gcc@9.2.0 +cuda cuda_arch=70&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_gpus_per_node</span><span class="o">=</span><span class="m">2</span>
+</span></code></pre></div>
 <p><em><strong>Note</strong></em>: you're responsible for overriding this variable in a consistent
 way, so that, for example, <code>num_gpus_per_node</code> doesn't exceed the number of
 total GPUs runnable on each node.</p>
 <h2 id="figure-of-merit">Figure of merit</h2>
 <p>The figure of merit captured by these benchmarks is the bandwidth.
 For example, if the output of the program is</p>
-<pre><code>BabelStream
-Version: 4.0
-Implementation: OpenMP
-Running kernels 100 times
-Precision: double
-Array size: 268.4 MB (=0.3 GB)
-Total size: 805.3 MB (=0.8 GB)
-Function    MBytes/sec  Min (sec)   Max         Average     
-Copy        91018.241   0.00590     0.01087     0.00721     
-Mul         80014.622   0.00671     0.01173     0.00837     
-Add         92644.967   0.00869     0.01636     0.01121     
-Triad       93484.396   0.00861     0.01416     0.01142     
-Dot         114688.364  0.00468     0.01382     0.00707
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>BabelStream
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Version: 4.0
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Implementation: OpenMP
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Running kernels 100 times
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Precision: double
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Array size: 268.4 MB (=0.3 GB)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Total size: 805.3 MB (=0.8 GB)
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Function    MBytes/sec  Min (sec)   Max         Average     
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Copy        91018.241   0.00590     0.01087     0.00721     
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Mul         80014.622   0.00671     0.01173     0.00837     
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Add         92644.967   0.00869     0.01636     0.01121     
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Triad       93484.396   0.00861     0.01416     0.01142     
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Dot         114688.364  0.00468     0.01382     0.00707
+</span></code></pre></div>
 <p>the output numbers </p>
-<pre><code>Copy : 91018.241
-Mul : 80014.622
-Add : 92644.967 
-Triad : 93484.396
-Dot : 114688.364
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Copy : 91018.241
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Mul : 80014.622
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Add : 92644.967 
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Triad : 93484.396
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Dot : 114688.364
+</span></code></pre></div>
 <p>will be captured.</p>
 
 

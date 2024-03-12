@@ -847,11 +847,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-psydev/README.md" class="md-nav__link">
+      <a href="../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    trove-psydev
+    trove-pdsyev
   </span>
   
 
@@ -1194,8 +1194,8 @@
 parallel C++ mathematical object library.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/grid -r --performance-report
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report
+</span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
 <p>You can run individual benchmarks with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a>
@@ -1204,8 +1204,8 @@ option.  At the moment we have the following tags:</p>
 <li><code>ITT</code> to run the <code>Benchmark_ITT</code> application.</li>
 </ul>
 <p>Examples:</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/grid -r --performance-report --tag ITT
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>ITT
+</span></code></pre></div>
 <h3 id="options-memory-number-of-threads-and-mpi-processes">Options (memory, number of threads and MPI processes)</h3>
 <p>There are some options you can set to control the settings of the benchmark.
 These are the currently available options, with their default values:</p>
@@ -1223,16 +1223,16 @@ These are the currently available options, with their default values:</p>
 <p>You can override the values of these variables from the command line with the
 <a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>--setvar</code></a>
 option, for example</p>
-<pre><code class="language-sh">reframe -c benchmarks/apps/grid -r --performance-report --setvar=mpi='2.2.1.1' --setvar=num_cpus_per_task=12
-reframe -c benchmarks/apps/grid -r --performance-report --setvar=mpi='4.4.4.4' --setvar=shm=4096
-</code></pre>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;2.2.1.1&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">12</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;4.4.4.4&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">shm</span><span class="o">=</span><span class="m">4096</span>
+</span></code></pre></div>
 <p><em><strong>Note</strong></em>: you're responsible for overriding these variables in a consistent
 way, so that, for example, <code>num_tasks_per_node</code> doesn't exceed the number of
 total tasks runnable on each node.</p>
 <h2 id="figure-of-merit">Figure of merit</h2>
 <p>If the output of the program contains</p>
-<pre><code>Grid : Message : 380809 ms :  Comparison point  result: 143382.7 Mflop/s per node
-</code></pre>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Grid : Message : 380809 ms :  Comparison point  result: 143382.7 Mflop/s per node
+</span></code></pre></div>
 <p>the number <code>143382.7</code> will be captured as figure of merit.</p>
 
 
