@@ -34,7 +34,9 @@ test = [
 ]
 post-processing = [
     "pandas >= 2.0.1",
-    "bokeh >= 3.2.0",
+    "bokeh == 2.4.3",
+    "titlecase >= 2.4.1",
+    "streamlit >= 1.30.0",
 ]
 
 [tool.setuptools_scm]

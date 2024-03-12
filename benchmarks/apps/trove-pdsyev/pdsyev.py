@@ -23,7 +23,7 @@ class PdsyevBase(SpackTest):
 
     reference = {
             '*': {
-                'diagonlization': (200, None, None, 'seconds'),
+                'elapsed_time': (200, None, None, 'seconds'),
                 },
             }
 
@@ -68,7 +68,7 @@ class PdsyevBase(SpackTest):
     def validate_successful_run(self):
         return sn.assert_found(r'Diagonalization finished successfully', self.stdout)
 
-    @performance_function('seconds', perf_key='diagonlization')
+    @performance_function('seconds', perf_key='elapsed_time')
     def extract_elapsed_time(self):
         return sn.extractsingle(r'Time to diagonalize matrix is \s+(\S+)\s', self.stdout, 1, float)
 

@@ -19,7 +19,7 @@ class TroveBase(SpackTest):
 
     reference = {
             'dial:slurm-local': {
-                'Total elapsed time': (500, None, None, 'seconds'),
+                'elapsed_time': (500, None, None, 'seconds'),
                 },
             }
 
@@ -42,7 +42,7 @@ class TroveBase(SpackTest):
     def validate_successful_run(self):
         return sn.assert_found(r'End of TROVE', self.stdout)
 
-    @performance_function('seconds', perf_key='Total elapsed time')
+    @performance_function('seconds', perf_key='elapsed_time')
     def extract_elapsed_time(self):
         return sn.extractsingle(r'TROVE\s{30}\s+(\S+)\s+(\S+)', self.stdout, 2, float)
 
