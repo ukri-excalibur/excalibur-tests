@@ -290,6 +290,14 @@ class SpackTest(rfm.RegressionTest):
             # Set the total number of CPUs to be requested for the SGE scheduler.
             self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
 
+    @run_before('compile')
+    def set_isambard_instinct_memory(self):
+        # We want to define the `instinct_memory` extra resource, so that we
+        # can use the corresponding resources in the config file.
+        system, partition = current_partition.fullname.split(':')
+        if system == "isambard-phase3" and partition == "instinct":
+            self.extra_resources['instinct_memory'] = {}
+
     @run_after('setup')
     def setup_build_job_num_cpus(self):
         # When running a build on a compute node, ReFrame by default uses only a

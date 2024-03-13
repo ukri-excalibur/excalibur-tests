@@ -434,9 +434,9 @@ site_configuration = {
                     },
                     'resources': [
                         {
-                            'name': 'cpu',
-                             # TODO: memory should be a separate resource.
-                            'options': ['ncpus={num_cpus}:mem=100g'],
+                            'name': 'instinct_memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
                         },
                     ],
                 },
