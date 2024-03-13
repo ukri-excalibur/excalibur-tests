@@ -3,10 +3,12 @@ import yaml
 
 class ConfigHandler:
 
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, template=False):
 
-        # validate dict structure
-        config = read_config(config)
+        if not template:
+            # validate dict structure
+            config = read_config(config)
+
         # extract config information
         self.title = config.get("title")
         self.x_axis = config.get("x_axis")
@@ -36,6 +38,16 @@ class ConfigHandler:
     @classmethod
     def from_path(cfg_hand, config_path):
         return cfg_hand(open_config(config_path))
+
+    @classmethod
+    def from_template(cfg_hand):
+        return cfg_hand(dict({
+            "title": None,
+            "x_axis": {"value": None, "units": {"custom": None}},
+            "y_axis": {"value": None, "units": {"custom": None}},
+            "filters": {"and": [], "or": []},
+            "series": [],
+            "column_types": {}}), template=True)
 
     def get_filters(self):
         return self.and_filters, self.or_filters, self.series_filters

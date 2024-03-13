@@ -1,8 +1,10 @@
+import argparse
 import traceback
+from pathlib import Path
 
 import streamlit as st
 from config_handler import ConfigHandler, load_config
-from post_processing import PostProcessing, read_args
+from post_processing import PostProcessing
 
 # drop-down lists
 operators = ["==", "!=", "<", ">", "<=", ">="]
@@ -34,17 +36,24 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     config = st.session_state.config
 
     # display graph
-    st.bokeh_chart(post.plot, use_container_width=True)
+    if post.plot:
+        st.bokeh_chart(post.plot, use_container_width=True)
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        if len(config.plot_columns) > 0:
+            st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        else:
+            st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
 
+    # FIXME: add toggle to show current config
+
+    # display config information
     with st.sidebar:
 
         # set plot title
-        title = st.text_input("#### Title", config.title)
+        title = st.text_input("#### Title", config.title, placeholder="None")
         if title != config.title:
             config.title = title
 
@@ -59,9 +68,12 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
             st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
         # download session state config
         with download_config:
-            st.download_button("Download Config", config.to_yaml(),
-                               "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
-                               use_container_width=True)
+            if config.title:
+                st.download_button("Download Config", config.to_yaml(),
+                                   "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
+                                   use_container_width=True)
+            else:
+                st.button("Download Config", disabled=True, use_container_width=True)
 
         # config file uploader
         st.divider()
@@ -110,8 +122,8 @@ def axis_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype)))
-    column_index = list(df.columns).index(axis["value"])
+    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis["value"] else None
+    column_index = list(df.columns).index(axis["value"]) if axis["value"] in df.columns else None
 
     # axis information drop-downs
     axis_type, axis_column = st.columns(2)
@@ -213,6 +225,7 @@ def filter_options():
     """
 
     st.write("#### Filter Options")
+    # FIXME: inherit max width can be too large for sidebar
     # allow wide multiselect labels
     st.markdown(
         """
@@ -346,15 +359,36 @@ def rerun_post_processing():
         st.exception(e)
 
 
+def read_args():
+    """
+        Return parsed command line arguments.
+    """
+
+    parser = argparse.ArgumentParser(
+        description="Plot benchmark data. At least one perflog must be supplied.")
+
+    # required positional argument (log path)
+    parser.add_argument("log_path", type=Path,
+                        help="path to a perflog file or a directory containing perflog files")
+    # optional argument (config path)
+    parser.add_argument("-c", "--config_path", type=Path, default=None,
+                        help="path to a configuration file specifying what to plot")
+
+    return parser.parse_args()
+
+
 def main():
 
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose)
-        config = ConfigHandler.from_path(args.config_path)
-        post.run_post_processing(config)
-        # FIXME (#issue #271): catch post-processing errors before they crash Streamlit
+        post = PostProcessing(args.log_path)
+        # FIXME: update README with optional arg -- separation method
+        if args.config_path:
+            config = ConfigHandler.from_path(args.config_path)
+            post.run_post_processing(config)
+        else:
+            config = ConfigHandler.from_template()
         update_ui(post, config)
 
     except Exception as e:
