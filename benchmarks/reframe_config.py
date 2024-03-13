@@ -455,6 +455,13 @@ site_configuration = {
                         'num_sockets': 2,
                         'num_cpus_per_socket': 64,
                     },
+                    'resources': [
+                        {
+                            'name': 'memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
+                        },
+                    ],
                 },
             ]
         },  # end Isambard Phase3
