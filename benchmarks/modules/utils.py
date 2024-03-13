@@ -294,9 +294,9 @@ class SpackTest(rfm.RegressionTest):
     def set_isambard_instinct_memory(self):
         # We want to define the `instinct_memory` extra resource, so that we
         # can use the corresponding resources in the config file.
-        system, partition = current_partition.fullname.split(':')
-        if system == "isambard-phase3" and partition == "instinct":
-            self.extra_resources['instinct_memory'] = {}
+        system, partition = self.current_partition.fullname.split(':')
+        if system == "isambard-phase3":
+            self.extra_resources['memory'] = {}
 
     @run_after('setup')
     def setup_build_job_num_cpus(self):

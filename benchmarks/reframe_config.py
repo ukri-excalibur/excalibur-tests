@@ -434,7 +434,7 @@ site_configuration = {
                     },
                     'resources': [
                         {
-                            'name': 'instinct_memory',
+                            'name': 'memory',
                              # TODO: memory should be a more general resource.
                             'options': ['mem=100g'],
                         },
