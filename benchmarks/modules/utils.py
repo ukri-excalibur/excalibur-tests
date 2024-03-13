@@ -291,8 +291,8 @@ class SpackTest(rfm.RegressionTest):
             self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
 
     @run_before('compile')
-    def set_isambard_instinct_memory(self):
-        # We want to define the `instinct_memory` extra resource, so that we
+    def set_isambard_memory(self):
+        # We define the `memory` extra resource, so that we
         # can use the corresponding resources in the config file.
         system, partition = self.current_partition.fullname.split(':')
         if system == "isambard-phase3":
