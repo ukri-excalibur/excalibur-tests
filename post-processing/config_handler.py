@@ -1,9 +1,18 @@
+from pathlib import Path
+
 import yaml
 
 
 class ConfigHandler:
 
     def __init__(self, config: dict, template=False):
+        """
+            Initialise class.
+
+            Args:
+                config: dict, plot configuration information.
+                template: bool, flag to skip config validation (unsafe).
+        """
 
         if not template:
             # validate dict structure
@@ -36,12 +45,19 @@ class ConfigHandler:
         self.parse_columns()
 
     @classmethod
-    def from_path(cfg_hand, config_path):
-        return cfg_hand(open_config(config_path))
+    def from_path(self, config_path: Path):
+        """
+            Initialise class from a path.
+        """
+        return self(open_config(config_path))
 
     @classmethod
-    def from_template(cfg_hand):
-        return cfg_hand(dict({
+    def from_template(self):
+        """
+            Initialise class from an empty template. Skips config validation.
+        """
+
+        return self(dict({
             "title": None,
             "x_axis": {"value": None, "units": {"custom": None}},
             "y_axis": {"value": None, "units": {"custom": None}},
@@ -50,9 +66,15 @@ class ConfigHandler:
             "column_types": {}}), template=True)
 
     def get_filters(self):
+        """
+            Return and, or, and series filter lists.
+        """
         return self.and_filters, self.or_filters, self.series_filters
 
     def get_y_scaling(self):
+        """
+            Return column and custom scaling information.
+        """
         return self.scaling_column, self.scaling_custom
 
     def parse_filters(self):
@@ -143,15 +165,14 @@ class ConfigHandler:
         return yaml.dump(self.to_dict(), default_flow_style=None, sort_keys=False)
 
 
-def open_config(path):
+def open_config(path: Path):
     """
         Return a dictionary containing configuration information for plotting
         from the path to a yaml file.
 
         Args:
-            path: path, path to yaml config file.
+            path: Path, path to yaml config file.
     """
-
     with open(path, "r") as file:
         return load_config(file)
 
@@ -166,13 +187,13 @@ def load_config(file):
     return yaml.safe_load(file)
 
 
-def read_config(config):
+def read_config(config: dict):
     """
         Check required configuration information. At least plot title, x-axis,
         y-axis, and column types must be present.
 
         Args:
-            config: dict, config information.
+            config: dict, plot configuration information.
     """
 
     # check plot title information

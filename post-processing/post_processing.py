@@ -205,7 +205,7 @@ class PostProcessing:
                 .format(num_filtered_rows, num_x_data_points), self.df[self.mask][plot_columns])
 
     def transform_df_data(self, x_column: str, y_column: str, scaling_column: dict,
-                          scaling_custom: float | 'list[float]', series_filters: 'list[list[str]]'):
+                          scaling_custom: 'float | list[float]', series_filters: 'list[list[str]]'):
         """
             Transform dataframe y-axis based on scaling settings.
 
@@ -281,7 +281,7 @@ class PostProcessing:
 
             Args:
                 filter: list[str], a condition based on which a dataframe is filtered.
-                df: dataframe, used to create a mask by having the filter condition applied to it.
+                df: pd.DataFrame, used to create a mask by having the filter condition applied to it.
         """
 
         column, str_op, value = filter
@@ -314,7 +314,7 @@ class PostProcessing:
 
     def transform_axis(self, mask: 'pd.Series[bool]', axis_column: str, scaling_value: pd.Series,
                        scaling_series_mask: 'pd.Series[bool]', scaling_x_value_mask: 'pd.Series[bool]',
-                       scaling_column_name: str, scaling_custom: float | 'list[float]'):
+                       scaling_column_name: str, scaling_custom: 'float | list[float]'):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
