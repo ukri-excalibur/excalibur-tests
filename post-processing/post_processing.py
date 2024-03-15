@@ -13,6 +13,15 @@ from plot_handler import plot_generic
 class PostProcessing:
 
     def __init__(self, log_path: Path, debug=False, verbose=False):
+        """
+            Initialise class.
+
+            Args:
+                log_path: Path, path to performance log file or directory.
+                debug: bool, flag to print additional information to console.
+                verbose: bool, flag to print more additional information to console.
+        """
+
         # FIXME (issue #264): add proper logging
         self.debug = debug
         self.verbose = verbose
@@ -22,6 +31,8 @@ class PostProcessing:
         self.df = self.original_df.copy()
         # dataframe filters
         self.mask = pd.Series(self.df.index.notnull())
+        # plot placeholder
+        self.plot = None
 
     def run_post_processing(self, config: ConfigHandler):
         """
@@ -66,12 +77,12 @@ class PostProcessing:
 
         return self.df[self.mask][config.plot_columns]
 
-    def check_df_columns(self, all_columns):
+    def check_df_columns(self, all_columns: 'list[str]'):
         """
             Check that all columns listed in the config exist in the dataframe.
 
             Args:
-                all_columns: list, names of all columns mentioned in the config.
+                all_columns: list[str], names of all columns mentioned in the config.
         """
 
         invalid_columns = []
@@ -82,12 +93,12 @@ class PostProcessing:
         if invalid_columns:
             raise KeyError("Could not find columns", invalid_columns)
 
-    def apply_df_types(self, all_columns, column_types):
+    def apply_df_types(self, all_columns: 'list[str]', column_types: dict):
         """
             Apply user-specified types to all relevant columns in the dataframe.
 
             Args:
-                all_columns: list, names of all columns mentioned in the config.
+                all_columns: list[str], names of all columns mentioned in the config.
                 column_types: dict, name-type pairs for all important columns.
         """
 
@@ -129,13 +140,13 @@ class PostProcessing:
             else:
                 raise KeyError("Could not find user-specified type for column", col)
 
-    def sort_df(self, x_axis, series_columns):
+    def sort_df(self, x_axis: dict, series_columns: 'list[str]'):
         """
             Sort the given dataframe such that x-axis values and series are in ascending order.
 
             Args:
                 x_axis: dict, x-axis column and units.
-                series_columns: list, names of series columns.
+                series_columns: list[str], names of series columns.
         """
 
         sorting_columns = [x_axis["value"]]
@@ -144,14 +155,15 @@ class PostProcessing:
             sorting_columns.append(series_columns[0])
         self.df.sort_values(sorting_columns, inplace=True, ignore_index=True)
 
-    def filter_df(self, and_filters, or_filters, series_filters):
+    def filter_df(self, and_filters: 'list[list[str]]', or_filters: 'list[list[str]]',
+                  series_filters: 'list[list[str]]'):
         """
             Return a mask for the given dataframe based on user-specified filter conditions.
 
             Args:
-                and_filters: list, filter conditions to be concatenated together with logical AND.
-                or_filters: list, filter conditions to be concatenated together with logical OR.
-                series_filters: list, function like or_filters but use series to select x-axis groups.
+                and_filters: list[list[str]], filter conditions to be concatenated together with logical AND.
+                or_filters: list[list[str]], filter conditions to be concatenated together with logical OR.
+                series_filters: list[list[str]], function like or_filters but use series to select x-axis groups.
         """
 
         mask = pd.Series(self.df.index.notnull())
@@ -169,15 +181,15 @@ class PostProcessing:
 
         return mask
 
-    def check_filtered_row_count(self, x_column, series_columns, plot_columns):
+    def check_filtered_row_count(self, x_column: str, series_columns: 'list[str]', plot_columns: 'list[str]'):
         """
             Check that the filtered dataframe does not have an incompatible number of rows.
             Row number must match number of unique x-axis values per series.
 
             Args:
                 x_column: str, name of x-axis column.
-                series_columns: list, all names of series columns (including duplicates).
-                plot_columns: list, names of all columns needed for plotting.
+                series_columns: list[str], all names of series columns (including duplicates).
+                plot_columns: list[str], names of all columns needed for plotting.
         """
 
         # get number of occurrences of each column
@@ -188,12 +200,12 @@ class PostProcessing:
         num_x_data_points = series_combinations * len(set(self.df[self.mask][x_column]))
         # check expected number of rows
         if num_filtered_rows > num_x_data_points:
-            raise RuntimeError("Unexpected number of rows ({0}) does not match \
-                               number of unique x-axis values per series ({1})"
-                               .format(num_filtered_rows, num_x_data_points),
-                               self.df[self.mask][plot_columns])
+            raise RuntimeError(
+                "Unexpected number of rows ({0}) does not match number of unique x-axis values per series ({1})"
+                .format(num_filtered_rows, num_x_data_points), self.df[self.mask][plot_columns])
 
-    def transform_df_data(self, x_column, y_column, scaling_column, scaling_custom, series_filters):
+    def transform_df_data(self, x_column: str, y_column: str, scaling_column: dict,
+                          scaling_custom: float | 'list[float]', series_filters: 'list[list[str]]'):
         """
             Transform dataframe y-axis based on scaling settings.
 
@@ -201,8 +213,8 @@ class PostProcessing:
                 x_column: str, name of x-axis column.
                 y_column: str, name of y-axis column.
                 scaling_column: dict, name of scaling column, series index, and x-value information.
-                scaling_custom: custom value to scale by.
-                series_filters: list, x-axis group filters.
+                scaling_custom: float | list[float], custom value to scale by.
+                series_filters: list[list[str]], x-axis group filters.
         """
 
         scaling_column_name = None
@@ -262,13 +274,13 @@ class PostProcessing:
         ">=":   op.ge
     }
 
-    def row_filter(self, filter, df: pd.DataFrame):
+    def row_filter(self, filter: 'list[str]', df: pd.DataFrame):
         """
             Return a dataframe mask based on a filter condition. The filter is a list that
             contains a column name, an operator, and a value (e.g. ["flops_value", ">=", 1.0]).
 
             Args:
-                filter: list, a condition based on which a dataframe is filtered.
+                filter: list[str], a condition based on which a dataframe is filtered.
                 df: dataframe, used to create a mask by having the filter condition applied to it.
         """
 
@@ -300,19 +312,20 @@ class PostProcessing:
 
         return mask
 
-    def transform_axis(self, mask, axis_column, scaling_value, scaling_series_mask,
-                       scaling_x_value_mask, scaling_column_name, scaling_custom):
+    def transform_axis(self, mask: 'pd.Series[bool]', axis_column: str, scaling_value: pd.Series,
+                       scaling_series_mask: 'pd.Series[bool]', scaling_x_value_mask: 'pd.Series[bool]',
+                       scaling_column_name: str, scaling_custom: float | 'list[float]'):
         """
             Divide axis values by specified values and reflect this change in the dataframe.
 
             Args:
-                mask: bool series, dataframe filters.
+                mask: pd.Series[bool], dataframe filters.
                 axis_column: str, name of axis column to scale.
-                scaling_value: dataframe column, copy of column containing values to scale by.
-                scaling_series_mask: bool series, a series mask to be applied to the scaling column.
-                scaling_x_value_mask: bool series, an x-axis value mask to be applied to the scaling column.
+                scaling_value: pd.Series, copy of column containing values to scale by.
+                scaling_series_mask: pd.Series[bool], a series mask to be applied to the scaling column.
+                scaling_x_value_mask: pd.Series[bool], an x-axis value mask to be applied to the scaling column.
                 scaling_column_name: str, name of scaling column.
-                scaling_custom: custom value to scale by.
+                scaling_custom: float | list[float], custom value to scale by.
         """
 
         # prepare custom values
@@ -326,10 +339,11 @@ class PostProcessing:
             if (not pd.api.types.is_float_dtype(self.df[mask][axis_column].dtype) or
                 not pd.api.types.is_numeric_dtype(scaling_value.dtype)):
                 # scaled column must be float to avoid casting issues and scaling column must be numeric
-                raise TypeError("Cannot scale column '{0}' of type {1} by column '{2}' of type {3}. \
-                                Scaled column must be float and scaling column must be numeric."
-                                .format(axis_column, self.df[mask][axis_column].dtype,
-                                        scaling_column_name, scaling_value.dtype))
+                raise TypeError("{0} {1}".format(
+                    "Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
+                    .format(axis_column, self.df[mask][axis_column].dtype,
+                            scaling_column_name, scaling_value.dtype),
+                    "Scaled column must be float and scaling column must be numeric."))
 
             # get mask of scaling values
             scaling_mask = mask.copy()
