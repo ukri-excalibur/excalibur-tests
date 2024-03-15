@@ -36,7 +36,9 @@ Run `post_processing.py -h` for more information (including debugging flags).
 
 You may also run post-processing with Streamlit to interact with your plots:
 
->```streamlit run streamlit_post_processing.py log_path config_path [-p plot_type]```
+>```streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
+
+The config path is optional when running with Streamlit, as the UI allows you to create a new config on the fly. If you would still like to supply a config path, make sure to include `--` before any post-processing flags to indicate that the arguments belong to the post-processing script rather than Streamlit itself.
 
 ### Configuration Structure
 
