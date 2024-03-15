@@ -135,7 +135,7 @@ class PostProcessing:
                 if conversion_type == self.df[col].dtype:
                     continue
                 # otherwise apply type to column
-                self.df[col] = self.df[col].astype(conversion_type)
+                self.df[col] = self.original_df[col].copy().astype(conversion_type)
 
             else:
                 raise KeyError("Could not find user-specified type for column", col)
