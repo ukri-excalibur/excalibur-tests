@@ -226,7 +226,7 @@ class PostProcessing:
         if scaling_custom:
             try:
                 # interpret scaling value as column dtype
-                scaling_value = pd.Series(scaling_custom, dtype=self.df[y_column].dtype)
+                scaling_value = self.val_as_col_dtype(scaling_custom, y_column)
             except ValueError as e:
                 e.args = (e.args[0] + " as a scaling value for column '{0}'".format(y_column),)
                 raise
@@ -264,6 +264,16 @@ class PostProcessing:
             # reset index
         #    df.index = range(len(df.index))
 
+    def val_as_col_dtype(self, value, column: str):
+        """
+            Return a pandas series that interprets a given value as the dtype of a specified column.
+
+            Args:
+                value: a value to by typed.
+                column: str, column name.
+        """
+        return pd.Series(value, dtype=self.df[column].dtype)
+
     # operator lookup dictionary
     op_lookup = {
         "==":   op.eq,
@@ -299,7 +309,7 @@ class PostProcessing:
         else:
             try:
                 # interpret comparison value as column dtype
-                value = pd.Series(value, dtype=df[column].dtype).iloc[0]
+                value = self.val_as_col_dtype(value, column).iloc[0]
                 mask = operator(df[column], value)
             except TypeError or ValueError as e:
                 e.args = (e.args[0] + " for column '{0}' and value '{1}'".format(column, value),)
