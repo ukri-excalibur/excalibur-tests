@@ -369,6 +369,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#adding-new-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding new systems
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1152,6 +1161,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#adding-new-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding new systems
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1180,21 +1198,23 @@ welcome!</p>
 not, you can read the <a href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html">Spack Package Creation
 Tutorial</a>
 to contribute a new recipe to build the application.</p>
-<p>While we encourage users to contribute all Spack recipes upstream, we have a custom 
+<p>While we encourage users to contribute all Spack recipes upstream, we have a custom
 repo for packages not yet ready to be contributed to the main Spack repository.
-This is in the <code>spack/repo</code> directory, create a subdirectory inside <code>spack/repo/packages</code> 
+This is in the <code>spack/repo</code> directory, create a subdirectory inside <code>spack/repo/packages</code>
 with the name of the package you want to add, and place into it the <code>package.py</code> Spack recipe.
 On supported HPC systems, this repo is automatically added to the provided Spack environments.</p>
 <h3 id="reframe-benchmark">ReFrame benchmark</h3>
 <p>New benchmarks should be added in the <code>apps/</code> directory, under the specific
 application subdirectory.  Please, add also a <code>README.md</code> file explaining what
-the application does and how to run the benchmarks.</p>
+the application does and how to run the benchmarks in the same directory. Then,
+link the <code>README.md</code> file under <code>nav: Supported Benchmarks:</code>
+in the <a href="https://github.com/ukri-excalibur/excalibur-tests/blob/main/mkdocs.yml">mkdocs documentation config</a>.</p>
 <p>For writing ReFrame benchmarks you can read the documentation, in particular</p>
 <ul>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorials.html">ReFrame Tutorials</a></li>
 <li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html">Regression Test API</a></li>
 </ul>
-<p>but you can also have a look at the 
+<p>but you can also have a look at the
 <a href="https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/examples/sombrero">sombrero example</a>.</p>
 <p>For GPU benchmarks you need to</p>
 <ul>
@@ -1203,6 +1223,13 @@ the application does and how to run the benchmarks.</p>
 <li>and add the key <code>gpu</code> to the <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.extra_resources"><code>extra_resources</code></a> dictionary to request the appropriate number of GPUs.</li>
 </ul>
 <p>For an example of a GPU benchmark take a look at <a href="https://github.com/ukri-excalibur/excalibur-tests/tree/main/benchmarks/apps/openmm">OpenMM</a>.</p>
+<h2 id="adding-new-systems">Adding new systems</h2>
+<p>If you <a href="../setup/">configure the framework</a> on a HPC system that is not included in <a href="../systems/">supported systems</a>, please upen a pull request to upload the configuration so that other users can benefit from it. To add a new system, consider the following items</p>
+<ul>
+<li><a href="../setup/#reframe_1">ReFrame configuration</a></li>
+<li><a href="../setup/#spack_1">Spack configuration</a></li>
+<li><a href="../systems/">Documentation</a></li>
+</ul>
 
 
 
