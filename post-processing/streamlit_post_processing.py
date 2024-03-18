@@ -3,7 +3,7 @@ import traceback
 from pathlib import Path
 
 import streamlit as st
-from config_handler import ConfigHandler, load_config
+from config_handler import ConfigHandler, load_config, read_config
 from post_processing import PostProcessing
 
 # drop-down lists
@@ -17,7 +17,7 @@ type_lookup = {"datetime64[ns]": "datetime",
                "object": "str"}
 
 
-def update_ui(post: PostProcessing, config: ConfigHandler):
+def update_ui(post: PostProcessing, config: ConfigHandler, e=None):
     """
         Create an interactive user interface for post-processing using Streamlit.
 
@@ -31,9 +31,11 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     if state.get("post") is None:
         state.post = post
         state.config = config
+        if e:
+            st.exception(e)
 
-    post = st.session_state.post
-    config = st.session_state.config
+    post = state.post
+    config = state.config
 
     # display graph
     if post.plot:
@@ -47,10 +49,16 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
         else:
             st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
 
-    # FIXME: add toggle to show current config
+    # display config in current session state
+    show_config = st.toggle("Show Config", key="show_config")
+    if show_config:
+        st.write(config.to_dict())
 
     # display config information
     with st.sidebar:
+
+        # config file uploader
+        st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
         # set plot title
         title = st.text_input("#### Title", config.title, placeholder="None")
@@ -75,19 +83,18 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
             else:
                 st.button("Download Config", disabled=True, use_container_width=True)
 
-        # config file uploader
-        st.divider()
-        st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
-
 
 def update_config():
     """
         Change session state config to uploaded config file.
     """
 
-    uploaded_config = st.session_state.uploaded_config
+    state = st.session_state
+    uploaded_config = state.uploaded_config
     if uploaded_config:
-        st.session_state.config = ConfigHandler(load_config(uploaded_config))
+        state.config = ConfigHandler(load_config(uploaded_config))
+        # update dataframe types
+        state.post.apply_df_types(state.config.all_columns, state.config.column_types)
 
 
 def axis_options():
@@ -122,7 +129,7 @@ def axis_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis["value"] else None
+    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis["value"] else 0
     column_index = list(df.columns).index(axis["value"]) if axis["value"] in df.columns else None
 
     # axis information drop-downs
@@ -348,12 +355,15 @@ def rerun_post_processing():
     """
 
     post = st.session_state.post
-    # reset processed df to original state
-    post.df = post.original_df.copy()
+    config = st.session_state.config
 
     try:
+        # validate config
+        read_config(config.to_dict())
+        # reset processed df to original state
+        post.df = post.original_df.copy()
         # run post-processing again
-        post.run_post_processing(st.session_state.config)
+        post.run_post_processing(config)
 
     except Exception as e:
         st.exception(e)
@@ -383,17 +393,22 @@ def main():
 
     try:
         post = PostProcessing(args.log_path)
-        # FIXME: update README with optional arg -- separation method
+        # set up empty template config
+        config, err = ConfigHandler.from_template(), None
+        # optionally load config from file path
         if args.config_path:
-            config = ConfigHandler.from_path(args.config_path)
-            post.run_post_processing(config)
-        else:
-            config = ConfigHandler.from_template()
-        update_ui(post, config)
+            try:
+                config = ConfigHandler.from_path(args.config_path)
+                # only run post-processing with a valid config
+                post.run_post_processing(config)
+            except Exception as e:
+                err = e
+        # display ui
+        update_ui(post, config, e=err)
 
     except Exception as e:
+        st.exception(e)
         print(type(e).__name__ + ":", e)
-        print("Post-processing stopped")
         print(traceback.format_exc())
 
 
