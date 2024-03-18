@@ -17,9 +17,9 @@ not, you can read the [Spack Package Creation
 Tutorial](https://spack-tutorial.readthedocs.io/en/latest/tutorial_packaging.html)
 to contribute a new recipe to build the application.
 
-While we encourage users to contribute all Spack recipes upstream, we have a custom 
+While we encourage users to contribute all Spack recipes upstream, we have a custom
 repo for packages not yet ready to be contributed to the main Spack repository.
-This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages` 
+This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/packages`
 with the name of the package you want to add, and place into it the `package.py` Spack recipe.
 On supported HPC systems, this repo is automatically added to the provided Spack environments.
 
@@ -27,14 +27,16 @@ On supported HPC systems, this repo is automatically added to the provided Spack
 
 New benchmarks should be added in the `apps/` directory, under the specific
 application subdirectory.  Please, add also a `README.md` file explaining what
-the application does and how to run the benchmarks.
+the application does and how to run the benchmarks in the same directory. Then,
+link the `README.md` file under `nav: Supported Benchmarks:`
+in the [mkdocs documentation config](https://github.com/ukri-excalibur/excalibur-tests/blob/main/mkdocs.yml).
 
 For writing ReFrame benchmarks you can read the documentation, in particular
 
 * [ReFrame Tutorials](https://reframe-hpc.readthedocs.io/en/stable/tutorials.html)
 * [Regression Test API](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html)
 
-but you can also have a look at the 
+but you can also have a look at the
 [sombrero example](https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/examples/sombrero).
 
 For GPU benchmarks you need to
@@ -44,3 +46,13 @@ For GPU benchmarks you need to
 * and add the key `gpu` to the [`extra_resources`](https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.extra_resources) dictionary to request the appropriate number of GPUs.
 
 For an example of a GPU benchmark take a look at [OpenMM](https://github.com/ukri-excalibur/excalibur-tests/tree/main/benchmarks/apps/openmm).
+
+
+
+## Adding new systems
+
+If you [configure the framework](./setup.md) on a HPC system that is not included in [supported systems](./systems.md), please upen a pull request to upload the configuration so that other users can benefit from it. To add a new system, consider the following items
+
+* [ReFrame configuration](./setup.md#reframe_1)
+* [Spack configuration](./setup.md#spack_1)
+* [Documentation](./systems.md)
