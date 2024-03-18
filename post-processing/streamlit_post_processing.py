@@ -92,9 +92,12 @@ def update_config():
     state = st.session_state
     uploaded_config = state.uploaded_config
     if uploaded_config:
-        state.config = ConfigHandler(load_config(uploaded_config))
-        # update dataframe types
-        state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+        try:
+            state.config = ConfigHandler(load_config(uploaded_config))
+            # update dataframe types
+            state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+        except Exception as e:
+            st.exception(e)
 
 
 def axis_options():
@@ -334,12 +337,13 @@ def add_filter(filter: list):
             filter: list, filter column, operator, and value.
     """
 
-    # FIXME: there is a problem with filter datetime/timestamp formatting that requires further investigation
     state = st.session_state
     key = state.filter_type
+
     # remove operator from series
     if key == "series":
         del filter[1]
+
     if filter not in state[key]:
         # add filter to appropriate filter list
         state[key].append(filter)
@@ -347,6 +351,10 @@ def add_filter(filter: list):
         state.config.column_types[filter[0]] = state.column_type
         # add filter to config and update df types
         update_filter(key)
+        # interpret filter value as filter column dtype
+        filter_value = state.post.val_as_col_dtype(state[key][-1][-1], filter[0]).iloc[0]
+        # adjust filter value after typing
+        state[key][-1][-1] = str(filter_value)
 
 
 def rerun_post_processing():
