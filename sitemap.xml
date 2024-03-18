@@ -1,147 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/contributing.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/contributing/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/install.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/install/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/setup.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/setup/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/systems.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/systems/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/use.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/use/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/babelstream/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/babelstream/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/cp2k/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/cp2k/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/grid/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/grid/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/hpcg/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/hpcg/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/hpl/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/hpl/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/imb/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/imb/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/castep/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/castep/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/gromacs/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/gromacs/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/hpcg/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/hpcg/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/openfoam/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/openfoam/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/sysinfo/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/legacy/sysinfo/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/omb/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/omb/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/openmm/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/openmm/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/ramses/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/ramses/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/sombrero/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/sombrero/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/sphng/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/sphng/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/trove/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/trove/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/trove-pdsyev/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/trove-pdsyev/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/wrf/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/apps/wrf/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/post-processing/index.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/post-processing/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/tutorial/tutorial.html</loc>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/preview/tutorial/tutorial/</loc>
          <lastmod>2024-03-18</lastmod>
          <changefreq>daily</changefreq>
     </url>
