@@ -21,6 +21,7 @@ Appropriate `HPL.dat` configuration files must be generated and placed in `<repo
 ReFrame will copy these files into the staging directories before running a test, so changes made to these files will persist and apply to the next run.
 
 Hints:
+
 - Generally, set PxQ to equal number of nodes, with P equal or smaller than Q (as using 1x MPI rank per node)
 - Select problem size *N* to use e.g. 80% of total memory
 - Check [Intel documentation](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2024-0/configuring-parameters.html) to select appropriate block size *NB*
