@@ -39,6 +39,7 @@ jobs:
           mkdocs build
 
       - name: Deploy docs
+        if: ${{ github.event_name == 'push' || ! github.event.pull_request.head.repo.fork }}
         run: |
           cd gh-pages
           cp -fr ../site/* .
