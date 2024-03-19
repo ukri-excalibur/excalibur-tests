@@ -44,6 +44,6 @@ jobs:
           mv ../site/* .
           git add .
           git config user.name ${{github.actor}}
-          git config user.email "${{github.actor_id}}+${{github.actor}}+@users.noreply.github.com"
+          git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
           git commit -m "Update docs"
           git push origin gh-pages
