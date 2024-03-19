@@ -15,6 +15,14 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
+          cache: 'pip'
+
+      - name: Install mkdocs
+        run: pip install mkdocs
+        
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
