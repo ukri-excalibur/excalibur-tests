@@ -21,7 +21,7 @@ jobs:
           cache: 'pip'
 
       - name: Install mkdocs
-        run: pip install mkdocs
+        run: pip install mkdocs-material
         
       - name: Checkout gh-pages
         uses: actions/checkout@v4
