@@ -23,7 +23,7 @@ jobs:
 
       - name: Build docs
         run: |
-          if [[ ${{ github.event_name }} == 'pull_request' ]];
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             export MKDOCS_SITE_DIR="site/preview/PR${{ github.event.number }}"
           else
             export MKDOCS_SITE_DIR="site"
