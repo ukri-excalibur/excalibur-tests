@@ -1,5 +1,6 @@
 site_name: ExCALIBUR-tests Docs
 site_url: !ENV [MKDOCS_SITE_URL, 'https://ukri-excalibur.github.io/excalibur-tests/']
+site_dir: !ENV [MKDOCS_SITE_DIR, 'site']
 remote_branch: !ENV [MKDOCS_REMOTE_BRANCH, 'gh-pages']
 repo_url: https://github.com/ukri-excalibur/excalibur-tests
 nav:
