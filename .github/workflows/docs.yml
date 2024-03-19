@@ -41,7 +41,7 @@ jobs:
       - name: Deploy docs
         run: |
           cd gh-pages
-          mv ../site/* .
+          mv -f ../site/* .
           git add .
           git config user.name ${{github.actor}}
           git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
