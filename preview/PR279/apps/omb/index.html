@@ -548,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/README.md" class="md-nav__link">
+      <a href="../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -759,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/README.md" class="md-nav__link">
+      <a href="../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1099,16 +1099,22 @@
 <h1 id="osu-micro-benchmarks">OSU Micro-Benchmarks</h1>
 <p>http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt</p>
 <p>The following tests are run (extracted performance variables described in brackets):</p>
-<p>On 2x nodes using 1x process per node:
-- <code>osu_bw</code> - bandwidth (max value over all message sizes)
-- <code>osu_latency</code> - latency (min value over all message sizes)
-- <code>osu_bibw</code> - bi-directional bandwidth (max value over all message sizes)</p>
-<p>On 2x nodes using as many processes per node as there are physical cores:
-- <code>osu_allgather</code> - latency (mean value calculated at each message size over pairs, then min taken over all message sizes)
-- <code>osu_allreduce</code> - as above
-- <code>osu_alltoall</code> - as above</p>
-<p>The following tags are defined:
-    - Test name, as given above without the leading "osu_"</p>
+<p>On 2x nodes using 1x process per node:</p>
+<ul>
+<li><code>osu_bw</code> - bandwidth (max value over all message sizes)</li>
+<li><code>osu_latency</code> - latency (min value over all message sizes)</li>
+<li><code>osu_bibw</code> - bi-directional bandwidth (max value over all message sizes)</li>
+</ul>
+<p>On 2x nodes using as many processes per node as there are physical cores:</p>
+<ul>
+<li><code>osu_allgather</code> - latency (mean value calculated at each message size over pairs, then min taken over all message sizes)</li>
+<li><code>osu_allreduce</code> - as above</li>
+<li><code>osu_alltoall</code> - as above</li>
+</ul>
+<p>The following tags are defined:</p>
+<ul>
+<li>Test name, as given above without the leading "osu_"</li>
+</ul>
 <h1 id="running">Running</h1>
 <p>Run all tests using e.g.:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe -C reframe_config.py -c benchmarks/apps/omb/ --run --performance-report

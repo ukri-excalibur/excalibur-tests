@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/apps/sombrero/">
       
       
-        <link rel="prev" href="../hpcg/">
+        <link rel="prev" href="../hpgmg/">
       
       
         <link rel="next" href="../babelstream/">
@@ -538,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/README.md" class="md-nav__link">
+      <a href="../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -759,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/README.md" class="md-nav__link">
+      <a href="../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1111,27 +1111,31 @@ built in the relative theory.</p>
 for more information.</p>
 <p>SOMBRERO uses a pure-mpi parallelisation. </p>
 <p>There are four benchmark cases that can be chosen 
-using the <code>--tag=&lt;TAG&gt;</code> command line option of <code>reframe</code>:
-- <code>mini</code>: A debug run, on a very small lattice, on 2 processes.
-- <code>ITT-sn</code>: A run on a single node, using all the cores in each node 
-   (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).
-- <code>ITT-64n</code>: A run on 64 nodes, using all the cores in each node
+using the <code>--tag=&lt;TAG&gt;</code> command line option of <code>reframe</code>:</p>
+<ul>
+<li><code>mini</code>: A debug run, on a very small lattice, on 2 processes.</li>
+<li><code>ITT-sn</code>: A run on a single node, using all the cores in each node 
+   (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).</li>
+<li><code>ITT-64n</code>: A run on 64 nodes, using all the cores in each node
    (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).
    The number of nodes used can be changed by setting the variable <code>num_nodes</code>,
-   for example <code>reframe ... -S num_nodes=48</code>.
-- <code>scaling</code>: A large benchmarking campaign, where of the benchmarks is launched 
+   for example <code>reframe ... -S num_nodes=48</code>.</li>
+<li><code>scaling</code>: A large benchmarking campaign, where of the benchmarks is launched 
              on a range of number of processes
              (depending on the setup of the machine)
              and 4 different lattice sizes 
              (details depend on how the cases are filtered).
-In all these cases, the benchmark for each theory is launched.</p>
-<p>The following performance variables are captured:
-- 'flops' : the computing performance (Gflop/second)
-- 'time' : time spent in the CG algorithm (seconds)
-- 'communicated': number of bytes communicated via MPI (bytes)
-- 'avg_arithmetic_intensity': average arithmetic intensity (from DRAM or L3) (Flops/byte)
-- 'computation/communication': the ratio of floating point operations 
-                               over the bytes communicated.</p>
+In all these cases, the benchmark for each theory is launched.</li>
+</ul>
+<p>The following performance variables are captured:</p>
+<ul>
+<li>'flops' : the computing performance (Gflop/second)</li>
+<li>'time' : time spent in the CG algorithm (seconds)</li>
+<li>'communicated': number of bytes communicated via MPI (bytes)</li>
+<li>'avg_arithmetic_intensity': average arithmetic intensity (from DRAM or L3) (Flops/byte)</li>
+<li>'computation/communication': the ratio of floating point operations 
+                               over the bytes communicated.</li>
+</ul>
 
 
 

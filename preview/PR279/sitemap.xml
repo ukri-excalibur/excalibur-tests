@@ -56,6 +56,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/apps/hpgmg/</loc>
+         <lastmod>2024-03-19</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://ukri-excalibur.github.io/excalibur-tests/apps/hpl/</loc>
          <lastmod>2024-03-19</lastmod>
          <changefreq>daily</changefreq>
@@ -117,6 +122,11 @@
     </url>
     <url>
          <loc>https://ukri-excalibur.github.io/excalibur-tests/apps/sphng/</loc>
+         <lastmod>2024-03-19</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ukri-excalibur.github.io/excalibur-tests/apps/swift/</loc>
          <lastmod>2024-03-19</lastmod>
          <changefreq>daily</changefreq>
     </url>

@@ -629,7 +629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/README.md" class="md-nav__link">
+      <a href="../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -840,7 +840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/README.md" class="md-nav__link">
+      <a href="../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1249,11 +1249,13 @@ As usual, if these packages are available in the system and the Spack environmen
 <h3 id="hpldat-configuration-files"><code>HPL.dat</code> configuration files</h3>
 <p>Appropriate <code>HPL.dat</code> configuration files must be generated and placed in <code>&lt;repo_root&gt;/benchmarks/apps/hpl/&lt;sysname&gt;/&lt;number of tasks&gt;</code>, if not already available.
 ReFrame will copy these files into the staging directories before running a test, so changes made to these files will persist and apply to the next run.</p>
-<p>Hints:
-- Generally, set PxQ to equal number of nodes, with P equal or smaller than Q (as using 1x MPI rank per node)
-- Select problem size <em>N</em> to use e.g. 80% of total memory
-- Check <a href="https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2024-0/configuring-parameters.html">Intel documentation</a> to select appropriate block size <em>NB</em>
-- When running, check on a single node that <code>pstree</code> and <code>top</code> appear as expected.</p>
+<p>Hints:</p>
+<ul>
+<li>Generally, set PxQ to equal number of nodes, with P equal or smaller than Q (as using 1x MPI rank per node)</li>
+<li>Select problem size <em>N</em> to use e.g. 80% of total memory</li>
+<li>Check <a href="https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2024-0/configuring-parameters.html">Intel documentation</a> to select appropriate block size <em>NB</em></li>
+<li>When running, check on a single node that <code>pstree</code> and <code>top</code> appear as expected.</li>
+</ul>
 <p><strong><em>Note</em></strong>: not all systems have appropriate input data, or not for the number of tasks you want to run, so you may have to create the <code>HPL.DAT</code> file yourself.</p>
 <p>If you want to use an <code>HPL.dat</code> file in a different directory, you can pass <code>--setvar config_dir=&lt;DIRECTORY&gt;</code> as additional argument to the ReFrame invocation (see below), where <code>&lt;DIRECTORY&gt;</code> is the absolute path of the directory where <code>HPL.dat</code> is.</p>
 <h2 id="running-tests">Running tests</h2>
