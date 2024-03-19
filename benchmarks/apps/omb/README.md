@@ -1,6 +1,6 @@
 # OSU Micro-Benchmarks
 
-http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt
+[http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt](http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt)
 
 The following tests are run (extracted performance variables described in brackets):
 

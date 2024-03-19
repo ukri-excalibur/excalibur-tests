@@ -1,6 +1,6 @@
 # Intel MPI Benchmarks
 
-https://software.intel.com/en-us/imb-user-guide
+[https://software.intel.com/en-us/imb-user-guide](https://software.intel.com/en-us/imb-user-guide)
 
 Builds automatically using spack.
 
