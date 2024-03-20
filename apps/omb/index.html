@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/apps/omb/">
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/apps/omb/">
       
       
         <link rel="prev" href="../imb/">
@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
       
       
 
@@ -548,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/README.md" class="md-nav__link">
+      <a href="../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -759,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/README.md" class="md-nav__link">
+      <a href="../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1097,18 +1097,24 @@
 
 
 <h1 id="osu-micro-benchmarks">OSU Micro-Benchmarks</h1>
-<p>http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt</p>
+<p><a href="http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt">http://mvapich.cse.ohio-state.edu/static/media/mvapich/README-OMB.txt</a></p>
 <p>The following tests are run (extracted performance variables described in brackets):</p>
-<p>On 2x nodes using 1x process per node:
-- <code>osu_bw</code> - bandwidth (max value over all message sizes)
-- <code>osu_latency</code> - latency (min value over all message sizes)
-- <code>osu_bibw</code> - bi-directional bandwidth (max value over all message sizes)</p>
-<p>On 2x nodes using as many processes per node as there are physical cores:
-- <code>osu_allgather</code> - latency (mean value calculated at each message size over pairs, then min taken over all message sizes)
-- <code>osu_allreduce</code> - as above
-- <code>osu_alltoall</code> - as above</p>
-<p>The following tags are defined:
-    - Test name, as given above without the leading "osu_"</p>
+<p>On 2x nodes using 1x process per node:</p>
+<ul>
+<li><code>osu_bw</code> - bandwidth (max value over all message sizes)</li>
+<li><code>osu_latency</code> - latency (min value over all message sizes)</li>
+<li><code>osu_bibw</code> - bi-directional bandwidth (max value over all message sizes)</li>
+</ul>
+<p>On 2x nodes using as many processes per node as there are physical cores:</p>
+<ul>
+<li><code>osu_allgather</code> - latency (mean value calculated at each message size over pairs, then min taken over all message sizes)</li>
+<li><code>osu_allreduce</code> - as above</li>
+<li><code>osu_alltoall</code> - as above</li>
+</ul>
+<p>The following tags are defined:</p>
+<ul>
+<li>Test name, as given above without the leading "osu_"</li>
+</ul>
 <h1 id="running">Running</h1>
 <p>Run all tests using e.g.:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe -C reframe_config.py -c benchmarks/apps/omb/ --run --performance-report
@@ -1166,7 +1172,7 @@
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      <script src="../../assets/javascripts/bundle.bd41221c.min.js"></script>
       
     
   </body>

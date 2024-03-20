@@ -8,17 +8,17 @@
       
       
       
-        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/apps/sombrero/">
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/apps/sombrero/">
       
       
-        <link rel="prev" href="../hpcg/">
+        <link rel="prev" href="../hpgmg/">
       
       
         <link rel="next" href="../babelstream/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
       
       
 
@@ -538,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/README.md" class="md-nav__link">
+      <a href="../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -759,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/README.md" class="md-nav__link">
+      <a href="../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1111,27 +1111,31 @@ built in the relative theory.</p>
 for more information.</p>
 <p>SOMBRERO uses a pure-mpi parallelisation. </p>
 <p>There are four benchmark cases that can be chosen 
-using the <code>--tag=&lt;TAG&gt;</code> command line option of <code>reframe</code>:
-- <code>mini</code>: A debug run, on a very small lattice, on 2 processes.
-- <code>ITT-sn</code>: A run on a single node, using all the cores in each node 
-   (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).
-- <code>ITT-64n</code>: A run on 64 nodes, using all the cores in each node
+using the <code>--tag=&lt;TAG&gt;</code> command line option of <code>reframe</code>:</p>
+<ul>
+<li><code>mini</code>: A debug run, on a very small lattice, on 2 processes.</li>
+<li><code>ITT-sn</code>: A run on a single node, using all the cores in each node 
+   (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).</li>
+<li><code>ITT-64n</code>: A run on 64 nodes, using all the cores in each node
    (as described <a href="https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks">here</a>).
    The number of nodes used can be changed by setting the variable <code>num_nodes</code>,
-   for example <code>reframe ... -S num_nodes=48</code>.
-- <code>scaling</code>: A large benchmarking campaign, where of the benchmarks is launched 
+   for example <code>reframe ... -S num_nodes=48</code>.</li>
+<li><code>scaling</code>: A large benchmarking campaign, where of the benchmarks is launched 
              on a range of number of processes
              (depending on the setup of the machine)
              and 4 different lattice sizes 
              (details depend on how the cases are filtered).
-In all these cases, the benchmark for each theory is launched.</p>
-<p>The following performance variables are captured:
-- 'flops' : the computing performance (Gflop/second)
-- 'time' : time spent in the CG algorithm (seconds)
-- 'communicated': number of bytes communicated via MPI (bytes)
-- 'avg_arithmetic_intensity': average arithmetic intensity (from DRAM or L3) (Flops/byte)
-- 'computation/communication': the ratio of floating point operations 
-                               over the bytes communicated.</p>
+In all these cases, the benchmark for each theory is launched.</li>
+</ul>
+<p>The following performance variables are captured:</p>
+<ul>
+<li>'flops' : the computing performance (Gflop/second)</li>
+<li>'time' : time spent in the CG algorithm (seconds)</li>
+<li>'communicated': number of bytes communicated via MPI (bytes)</li>
+<li>'avg_arithmetic_intensity': average arithmetic intensity (from DRAM or L3) (Flops/byte)</li>
+<li>'computation/communication': the ratio of floating point operations 
+                               over the bytes communicated.</li>
+</ul>
 
 
 
@@ -1181,7 +1185,7 @@ In all these cases, the benchmark for each theory is launched.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      <script src="../../assets/javascripts/bundle.bd41221c.min.js"></script>
       
     
   </body>
