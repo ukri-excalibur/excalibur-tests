@@ -4,8 +4,14 @@ on:
   pull_request:
     types: [closed]
 
+concurrency:
+  # Same group concurrency as the `docs.yml` workflow, because they both
+  # git-push to the same branch, so we want to avoid clashes.
+  group: docs-pushing
+
 jobs:
   doc-preview-cleanup:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh-pages branch
