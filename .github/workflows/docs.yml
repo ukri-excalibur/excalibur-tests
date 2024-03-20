@@ -3,14 +3,39 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+      - 'docs/**'
+      - 'benchmarks/**/*.md'
+      - 'post-processing/**/*.md'
   pull_request:
     branches:
       - main
+    paths:
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+      - 'docs/**'
+      - 'benchmarks/**/*.md'
+      - 'post-processing/**/*.md'
+
+concurrency:
+  # Same group concurrency as the `docs_cleanup.yml` workflow, because they both
+  # git-push to the same branch, so we want to avoid clashes.  NOTE: this is
+  # different from the concurrency group below, which is to cancel successive
+  # jobs from within the branch/PR.
+  group: docs-pushing
 
 jobs:
   build:
+    timeout-minutes: 10
     name: Deploy docs
     runs-on: ubuntu-latest
+    concurrency:
+      # Skip intermediate builds: always.
+      # Cancel intermediate builds: always.
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -22,7 +47,7 @@ jobs:
 
       - name: Install mkdocs
         run: pip install mkdocs-material
-        
+
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
@@ -39,12 +64,18 @@ jobs:
           mkdocs build
 
       - name: Deploy docs
-        if: ${{ github.event_name == 'push' || ! github.event.pull_request.head.repo.fork }}
+        # Run only if push is to `main`, or if it's a PR not from a fork.
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
         run: |
           cd gh-pages
           cp -fr ../site/* .
-          git add .
           git config user.name ${{github.actor}}
           git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
-          git commit -m "Update docs from ${{ github.sha }}"
+          git add .
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+              COMMIT_MESSAGE="Update docs preview from ${{ github.sha }} for PR #${{ github.event.number }}"
+          else
+              COMMIT_MESSAGE="Update docs from ${{ github.sha }}"
+          fi
+          git commit -m "${COMMIT_MESSAGE}"
           git push origin gh-pages

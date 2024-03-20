@@ -20,3 +20,18 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 - [Supported benchmarks](https://ukri-excalibur.github.io/excalibur-tests/apps/)
 - [Supported systems](https://ukri-excalibur.github.io/excalibur-tests/systems/)
 - [ARCHER2 tutorial](https://ukri-excalibur.github.io/excalibur-tests/tutorial/tutorial/)
+
+## Acknowledgements
+
+This work was supported by the Engineering and Physical Sciences
+Research Council [EP/X031829/1].
+
+This work used the DiRAC@Durham facility managed by the Institute for Computational 
+Cosmology on behalf of the STFC DiRAC HPC Facility (www.dirac.ac.uk). The equipment 
+was funded by BEIS capital funding via STFC capital grants ST/P002293/1, ST/R002371/1
+and ST/S002502/1, Durham University and STFC operations grant ST/R000832/1. 
+DiRAC is part of the National e-Infrastructure.
+
+The main outcomes of this work were published in a [paper](https://dl.acm.org/doi/10.1145/3624062.3624133) in the HPCTESTS workshop in SC23.
+
+This work was [presented in RSECon23](https://virtual.oxfordabstracts.com/#/event/4430/submission/74). A [recording of the talk](https://youtu.be/vpTD_tJqWOA?si=zl9sWvPEQYyPhJTV) is available.

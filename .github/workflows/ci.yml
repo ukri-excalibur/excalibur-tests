@@ -4,11 +4,31 @@ on:
   push:
     branches: "main"
     tags: ["*"]
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'MANIFEST.in'
+      - 'pyproject.toml'
+      - 'benchmarks/examples/**'
+      - 'benchmarks/modules/**'
+      - 'post-processing/**'
   pull_request:
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'MANIFEST.in'
+      - 'pyproject.toml'
+      - 'benchmarks/examples/**'
+      - 'benchmarks/modules/**'
+      - 'post-processing/**'
   release:
 
 env:
   RFM_CONFIG_FILES: "${{ github.workspace }}/benchmarks/reframe_config.py"
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: always.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
