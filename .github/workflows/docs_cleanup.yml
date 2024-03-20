@@ -1,0 +1,21 @@
+name: Doc Preview Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  doc-preview-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: Delete preview and push changes
+        run: |
+          git config user.name "${{github.actor}}"
+          git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
+          git rm -rf preview/PR${{ github.event.number }}
+          git commit -m 'Cleanup docs for PR #${{ github.event.number }}'
+          git push origin gh-pages

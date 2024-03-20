@@ -1,0 +1,50 @@
+name: Publish docs via GitHub Pages
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
+          cache: 'pip'
+
+      - name: Install mkdocs
+        run: pip install mkdocs-material
+        
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build docs
+        run: |
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            export MKDOCS_SITE_DIR="site/preview/PR${{ github.event.number }}"
+          else
+            export MKDOCS_SITE_DIR="site"
+          fi
+          mkdocs build
+
+      - name: Deploy docs
+        if: ${{ github.event_name == 'push' || ! github.event.pull_request.head.repo.fork }}
+        run: |
+          cd gh-pages
+          cp -fr ../site/* .
+          git add .
+          git config user.name ${{github.actor}}
+          git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
+          git commit -m "Update docs from ${{ github.sha }}"
+          git push origin gh-pages
