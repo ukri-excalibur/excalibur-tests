@@ -36,6 +36,13 @@ jobs:
       # Cancel intermediate builds: always.
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+    permissions:
+      # See
+      # <https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token>.
+      # We need `contents: write` to push the docs to the `gh-pages` branch, and
+      # `statuses: write` to create the custom status.
+      contents: write
+      statuses: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -45,8 +52,8 @@ jobs:
           python-version: '3.10.6'
           cache: 'pip'
 
-      - name: Install mkdocs
-        run: pip install mkdocs-material
+      - name: Install Python dependencies
+        run: pip install mkdocs-material github3.py
 
       - name: Checkout gh-pages
         uses: actions/checkout@v4
@@ -79,3 +86,23 @@ jobs:
           fi
           git commit -m "${COMMIT_MESSAGE}"
           git push origin gh-pages
+
+      - name: Create custom status for pull requests
+        # Similar condition as previous step, but only for PRs
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        shell: python {0}
+        run: |
+          from github3 import login
+
+          token = "${{ github.token }}"
+          gh = login(token=token)
+
+          owner, repo_name = "${{ github.repository }}".split('/')
+          repo = gh.repository(owner, repo_name)
+
+          sha = "${{ github.event.pull_request.head.sha }}"
+          state = "success"
+          target_url = "https://ukri-excalibur.github.io/excalibur-tests/preview/PR${{ github.event.number }}/"
+          description = "Documentation deployed"
+          context = "${{ github.workflow }} / Preview"
+          repo.create_status(sha, state, target_url, description, context)
