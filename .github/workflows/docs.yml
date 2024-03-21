@@ -71,16 +71,15 @@ jobs:
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             export MKDOCS_SITE_DIR="site/preview/PR${{ github.event.number }}"
-          else
-            export MKDOCS_SITE_DIR="site"
+            export MKDOCS_SITE_URL="https://ukri-excalibur.github.io/excalibur-tests/preview/PR${{ github.event.number }}"
           fi
           mkdocs build
 
       - name: Deploy docs
         # Run only if push is to `main`, or if it's a PR not from a fork.
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
+        working-directory: gh-pages
         run: |
-          cd gh-pages
           cp -fr ../site/* .
           git config user.name ${{github.actor}}
           git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
