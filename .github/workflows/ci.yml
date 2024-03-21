@@ -8,7 +8,7 @@ on:
       - '.github/workflows/ci.yml'
       - 'MANIFEST.in'
       - 'pyproject.toml'
-      - 'reframe_config.py'
+      - 'benchmarks/reframe_config.py'
       - 'benchmarks/examples/**'
       - 'benchmarks/modules/**'
       - 'post-processing/**'
