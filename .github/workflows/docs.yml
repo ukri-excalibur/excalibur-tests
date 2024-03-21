@@ -61,6 +61,12 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
+      - name: Cleanup unrelated files
+        run: |
+          # Under `apps` we want to keep only the `README.md` files.  All other files
+          # (reframe tests, input files, etc...) should be ignored by the docs.
+          find benchmarks/apps -type f \! \( -name 'README.md' \) -print -delete
+
       - name: Build docs
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
