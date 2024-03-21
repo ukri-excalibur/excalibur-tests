@@ -268,12 +268,10 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
-        cmd_spack_spec_dict =    'from spack import environment;\
-                                spec_list = environment.active_environment().concretized_user_specs;\
-                                key_list_for_each = [[*spec_list[i].variants.dict.keys()] for i in range(len(spec_list))];\
-                                mpi_spec_dict = {"mpi" : tuple(spec["mpi"] for spec in spec_list if "mpi" in spec)};\
-                                result_dict = {spec.name:{"compiler":{"name":spec.compiler.name,"version":spec.compiler.versions},"variants" :{key: spec.variants.dict[key].value for key in key_list_for_each[i]} } for i, spec in enumerate(spec_list)};\
-                                result_dict.update(mpi_spec_dict);\
+        cmd_spack_spec_dict =   'from spack import environment;\
+                                spec_list = environment.active_environment().concrete_roots();\
+                                key_list_for_each = [spec.variants.dict.keys() for spec in spec_list];\
+                                result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":spec["mpi"] if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
                                 print(result_dict)'
         self.postrun_cmds.append(f'echo "spack_spec_dict: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec_dict}\')"')
         
@@ -286,6 +284,8 @@ class SpackTest(rfm.RegressionTest):
     def get_full_variants(self):
         with osext.change_dir(self.stagedir):
             self.spack_spec_dict = sn.extractsingle(r'spack_spec_dict: \s*(.*)', self.stdout, 1).evaluate()
+            # convert all single quotes to double quotes since JSON does not recognise it
+            self.spack_spec_dict = self.spack_spec_dict.replace("'", "\"")
 
     @run_before('compile')
     def setup_build_system(self):

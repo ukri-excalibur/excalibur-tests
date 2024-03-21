@@ -115,12 +115,49 @@ def read_perflog(path):
     # drop old column
     df.drop("display_name", axis=1, inplace=True)
 
+    
     # replace other columns with dictionary contents
     dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
     for col in dict_cols:
         results = df[col].apply(lambda x: json.loads(x))
         # insert new columns and contents
         insert_key_cols(df, df.columns.get_loc(col), results)
+        # drop old column
+        df.drop(col, axis=1, inplace=True)
+    # store the names of columns
+    old_df_columns = list(df)
+
+    dict_cols = [c for c in ["spack_spec_dict"] if c in df.columns]
+    for col in dict_cols:
+        results = df[col].apply(lambda x: json.loads(x))
+        # insert new columns and contents
+        insert_key_cols(df, df.columns.get_loc(col), results)
+        # drop old column
+        df.drop(col, axis=1, inplace=True)
+    # find the new column names from comparing the old
+    new_df_columns = list(set(df) - set(old_df_columns))
+
+    # another round for spack_spec_dict to export compiler,variants and mpi
+    dict_cols = [c for c in new_df_columns if c in df.columns]
+    for col in dict_cols:
+        results = df[col].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
+        # insert new columns and contents
+        insert_key_cols(df, df.columns.get_loc(col), results,col)
+        # drop old column
+        df.drop(col, axis=1, inplace=True)
+
+    # Generate a list of all column names in the DataFrame
+    columns = df.columns.tolist()
+
+    # Filter the list for column names ending with '_compiler'
+    compiler_columns = [col for col in columns if col.endswith('_compiler')]
+
+    # Another round to export the compiler name and version
+    dict_cols = [c for c in compiler_columns if c in df.columns]
+    for col in dict_cols:
+        results = df[col].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
+        # insert new columns and contents
+        insert_key_cols(df, df.columns.get_loc(col), results,col)
         # drop old column
         df.drop(col, axis=1, inplace=True)
 
@@ -145,19 +182,25 @@ def get_display_name_info(display_name):
     return test_name, dict(params)
 
 
-def insert_key_cols(df: pd.DataFrame, index, results):
+def insert_key_cols(df: pd.DataFrame, index, results, prefix=""):
     """
-        Modify a dataframe to include new columns (extracted from results) inserted at
-        a given index.
+    Modify a dataframe to include new columns (extracted from results) inserted at
+    a given index, with names optionally prefixed by the original column name and each key.
 
-        Args:
-            df: dataframe, to be modified by this function.
-            index: int, index as which to insert new columns into the dataframe.
-            results: dict list, contains key-value mapping information for all rows.
+    Args:
+        df: DataFrame, to be modified by this function.
+        index: int, index at which to insert new columns into the dataframe.
+        results: Series of dicts, contains key-value mapping information for all rows.
+        prefix: str, optional. The name of the original column to be used as prefix for new columns.
+                Defaults to an empty string, meaning no prefix will be added if not specified.
     """
+    # Get set of keys from all rows
+    keys = set(chain.from_iterable([r.keys() for r in results if isinstance(r, dict)]))
 
-    # get set of keys from all rows
-    keys = set(chain.from_iterable([r.keys() for r in results]))
+    # Determine the full prefix (include an underscore only if a prefix is provided)
+    full_prefix = f"{prefix}_" if prefix else ""
+
     for k in keys:
-        # insert keys as new columns
-        df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
+        # Insert keys as new columns with optional prefix
+        df.insert(index, f"{full_prefix}{k}", [r.get(k) if k in r else None for r in results])
+        index += 1  # Increment index for next column insertion to maintain order
