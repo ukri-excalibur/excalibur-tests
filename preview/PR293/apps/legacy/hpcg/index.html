@@ -8,25 +8,21 @@
       
       
       
-        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR293/install/">
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR293/apps/legacy/hpcg/">
       
       
-        <link rel="prev" href="..">
       
       
-        <link rel="next" href="../setup/">
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
     
     
       
-        <title>Installation - ExCALIBUR-tests Docs</title>
+        <title>High Performance Conjugate Gradient - Intel-optimised version - ExCALIBUR-tests Docs</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.10ba22f1.min.css">
       
       
 
@@ -45,7 +41,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,7 +60,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#high-performance-conjugate-gradient-intel-optimised-version" class="md-skip">
           Skip to content
         </a>
       
@@ -80,7 +76,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="ExCALIBUR-tests Docs" class="md-header__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+    <a href="../../.." title="ExCALIBUR-tests Docs" class="md-header__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -100,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              High Performance Conjugate Gradient - Intel-optimised version
             
           </span>
         </div>
@@ -187,7 +183,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="ExCALIBUR-tests Docs" class="md-nav__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+    <a href="../../.." title="ExCALIBUR-tests Docs" class="md-nav__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -217,7 +213,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -234,30 +230,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Installation
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -266,110 +242,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#excalibur-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      Excalibur-tests
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Excalibur-tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Requirements
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#virtual-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      Virtual environments
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installation_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#spack" class="md-nav__link">
-    <span class="md-ellipsis">
-      Spack
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Spack">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -381,7 +253,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../setup/" class="md-nav__link">
+      <a href="../../../setup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -401,7 +273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use/" class="md-nav__link">
+      <a href="../../../use/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -421,7 +293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../post-processing/" class="md-nav__link">
+      <a href="../../../post-processing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -441,7 +313,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -531,7 +403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/hpl/" class="md-nav__link">
+      <a href="../../hpl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -552,7 +424,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/imb/" class="md-nav__link">
+      <a href="../../imb/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -573,7 +445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/omb/" class="md-nav__link">
+      <a href="../../omb/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -637,7 +509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/hpcg/" class="md-nav__link">
+      <a href="../../hpcg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -658,7 +530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/hpgmg/" class="md-nav__link">
+      <a href="../../hpgmg/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -679,7 +551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/sombrero/" class="md-nav__link">
+      <a href="../../sombrero/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -700,7 +572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/babelstream/" class="md-nav__link">
+      <a href="../../babelstream/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -764,7 +636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/cp2k/" class="md-nav__link">
+      <a href="../../cp2k/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -785,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/grid/" class="md-nav__link">
+      <a href="../../grid/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -806,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/openmm/" class="md-nav__link">
+      <a href="../../openmm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -827,7 +699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/ramses/" class="md-nav__link">
+      <a href="../../ramses/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -848,7 +720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/sphng/" class="md-nav__link">
+      <a href="../../sphng/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -869,7 +741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/swift/" class="md-nav__link">
+      <a href="../../swift/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -890,7 +762,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove/" class="md-nav__link">
+      <a href="../../trove/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -911,7 +783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/trove-pdsyev/" class="md-nav__link">
+      <a href="../../trove-pdsyev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -932,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../apps/wrf/" class="md-nav__link">
+      <a href="../../wrf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1003,7 +875,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#archer2" class="md-nav__link">
+      <a href="../../../systems#archer2" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1024,7 +896,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#csd3" class="md-nav__link">
+      <a href="../../../systems#csd3" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1045,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#dial2" class="md-nav__link">
+      <a href="../../../systems#dial2" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1066,7 +938,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#dial3" class="md-nav__link">
+      <a href="../../../systems#dial3" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1087,7 +959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#isambard-2" class="md-nav__link">
+      <a href="../../../systems#isambard-2" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1108,7 +980,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#myriad" class="md-nav__link">
+      <a href="../../../systems#myriad" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1129,7 +1001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../systems#tursa" class="md-nav__link">
+      <a href="../../../systems#tursa" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1157,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/tutorial/" class="md-nav__link">
+      <a href="../../../tutorial/tutorial/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1190,98 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#excalibur-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      Excalibur-tests
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Excalibur-tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Requirements
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#virtual-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      Virtual environments
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installation_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#spack" class="md-nav__link">
-    <span class="md-ellipsis">
-      Spack
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Spack">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#notes_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1298,64 +1078,43 @@
   
 
 
-<h1 id="installation">Installation</h1>
-<h2 id="excalibur-tests">Excalibur-tests</h2>
-<h3 id="requirements">Requirements</h3>
-<p><strong>Python version 3.7</strong> or later is required. </p>
-<h3 id="virtual-environments">Virtual environments</h3>
-<p>On most systems, it is recommended to install 
-the package in a virtual environment. For example, using the python3 
-<a href="https://docs.python.org/3/library/venv.html">built-in virtual environment tool <code>venv</code></a>,
-create an environment called <code>my_environment</code> with</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>./my_environment
-</span></code></pre></div>
-<p>and activate it with</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">source</span><span class="w"> </span>./my_environment/bin/activate
-</span></code></pre></div>
-<h3 id="installation_1">Installation</h3>
-<p>First, clone the git repository</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ukri-excalibur/excalibur-tests.git
-</span></code></pre></div>
-<p>Install the <strong>excalibur-tests</strong> package and the necessary dependencies with <code>pip</code> by</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./excalibur-tests
-</span></code></pre></div>
-<h3 id="notes">Notes</h3>
-<p>The <code>-e/--editable</code> flag is recommended for two reasons.</p>
+<h1 id="high-performance-conjugate-gradient-intel-optimised-version">High Performance Conjugate Gradient - Intel-optimised version</h1>
+<p>This runs an Intel version of the High Performance Conjugate Gradient Benchmark optimised for Intel Xeon processors and linked against using Intel's MKL.</p>
+<p>Documentation is <a href="https://software.intel.com/content/www/us/en/develop/documentation/mkl-linux-developer-guide/top/intel-math-kernel-library-benchmarks/intel-optimized-high-performance-conjugate-gradient-benchmark/overview-of-the-intel-optimized-hpcg.html">here</a></p>
+<p>It follows recommendations for performance given in <a href="https://software.intel.com/content/www/us/en/develop/documentation/mkl-linux-developer-guide/top/intel-math-kernel-library-benchmarks/intel-optimized-high-performance-conjugate-gradient-benchmark/choosing-best-configuration-and-problem-sizes.html">Intel docs</a></p>
+<h1 id="installation-of-intel-hpl-using-spack">Installation of Intel-HPL using Spack</h1>
+<p>Prebuilt binaries are provided with MKL - tests here use AVX2-specific binaries so assume system is AVX2-capable.</p>
+<p>E.g.:</p>
+<div class="language-text highlight"><pre><span></span><code>spack load patch
+spack load gcc@9
+spack install intel-mpi %gcc@9: # DONE
+spack install intel-mkl %gcc@9: # NB this doesn&#39;t have threads enabled here/by default
+</code></pre></div>
+<p>Note that the executables are provided within the MKL installation directory, e.g.:</p>
+<div class="language-text highlight"><pre><span></span><code>$HOME/spack/opt/spack/linux-centos7-broadwell/gcc-9.3.0/intel-mkl-2020.1.217-5tpgp7bze633d4bybvvumfp2nhyg64xf/compilers_and_libraries_2020.1.217/linux/mkl/benchmarks/hpcg/bin/
+</code></pre></div>
+<p>which contains:</p>
+<div class="language-text highlight"><pre><span></span><code>hpcg.dat    xhpcg_avx   xhpcg_avx2  xhpcg_knl   xhpcg_skx
+</code></pre></div>
+<p>The ReFrame environment configuration(s) for this test <strong>must</strong> include two items:</p>
+<p>Firstly, to add the <code>/bin</code> directory to $PATH (as the spack-generated MKL module does not do this) include:</p>
+<div class="language-text highlight"><pre><span></span><code>[&#39;PATH&#39;, &#39;$PATH:$MKLROOT/benchmarks/hpcg/bin/&#39;]
+</code></pre></div>
+<p>(Note that <code>MKLROOT</code> is exported by the MKL module).</p>
+<p>Secondly, to select the appropriate binary for the system include:</p>
+<div class="language-text highlight"><pre><span></span><code>[&#39;XHPCG_BIN&#39;, &lt;binary&gt;]
+</code></pre></div>
+<p>where <code>&lt;binary&gt;</code> is one of the above - note <code>xhpcg_skx</code> is AVX512 (Skylake).</p>
+<h1 id="hpcg-dat-configuration-files">hpcg .dat configuration files</h1>
+<p>Appropriate HPCG configuration files named <code>hpcg-single.dat</code> and <code>hpcg-all.dat</code> for the single- and all-node cases respectively must be generated and placed in either:</p>
 <ul>
-<li>Spack installs packages in a <code>opt</code> directory under the spack environment. With <code>-e</code> the spack
-environment remains in your local directory and <code>pip</code> creates symlinks to it. Without <code>-e</code> spack
-will install packages inside your python environment.</li>
-<li>For <a href="https://setuptools.pypa.io/en/latest/userguide/development_mode.html">development</a>,
-the <code>-e</code> flag to <code>pip</code> links the installed package to the files in the local
-directory, instead of copying, to allow making changes to the installed package.</li>
+<li><code>&lt;repo_root&gt;/systems/&lt;sysname&gt;/hpl/</code></li>
+<li><code>&lt;repo_root&gt;/systems/&lt;sysname&gt;/&lt;partition&gt;/hpl/</code></li>
 </ul>
-<p>Note that to use <code>-e</code> with a project configured with a <code>pyproject.toml</code> you need <code>pip</code> version 22 or later.</p>
-<h2 id="spack">Spack</h2>
-<p>The <code>pip install</code> command will install a compatible version of <strong>ReFrame</strong> from
-<a href="https://pypi.org/project/ReFrame-HPC/">PyPi</a>. However, you will have to
-manually provide an installation of <strong>Spack</strong>.</p>
-<p><a href="https://spack.io/">Spack</a> is a package manager specifically designed for HPC
-facilities. In some HPC facilities there may be already a central Spack installation available.
-However, the version installed is most likely too old to support all the features
-used by this package. Therefore we recommend you install the latest version locally,
-following the instructions below.</p>
-<p>Follow the <a href="https://spack.readthedocs.io/en/latest/getting_started.html">official instructions</a>
-to install the latest version of Spack (summarised here for convenience, but not guaranteed to be
-up-to-date):</p>
-<h3 id="installation_2">Installation</h3>
-<p>Git clone the spack repository
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>clone<span class="w"> </span>-c<span class="w"> </span>feature.manyFiles<span class="o">=</span><span class="nb">true</span><span class="w"> </span>https://github.com/spack/spack.git
-</span></code></pre></div>
-Run spack setup script 
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">source</span><span class="w"> </span>./spack/share/spack/setup-env.sh
-</span></code></pre></div>
-Check spack is in <code>$PATH</code>, for example 
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>spack<span class="w"> </span>--version
-</span></code></pre></div></p>
-<h3 id="notes_1">Notes</h3>
-<p><em><strong>Note</strong>: if you have already installed spack locally and you want to upgrade to
-a newer version, you might first have to clear the cache to avoid conflicts:
-<code>spack clean -m</code></em></p>
+<p>Note that an example file is provided in the binary directory described above.</p>
+<h1 id="running-tests">Running tests</h1>
+<p>Requires AVX2</p>
+<h1 id="outputs">Outputs</h1>
 
 
 
@@ -1402,10 +1161,10 @@ a newer version, you might first have to clear the cache to avoid conflicts:
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.bd41221c.min.js"></script>
       
     
   </body>
