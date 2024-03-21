@@ -777,6 +777,7 @@ site_configuration = {
                         '%(check_display_name)s|'
                         '%(check_system)s|'
                         '%(check_partition)s|'
+                        '%(check_job_nodelist)s|'
                         '%(check_environ)s|'
                         '%(check_extra_resources)s|'
                         '%(check_env_vars)s|'
