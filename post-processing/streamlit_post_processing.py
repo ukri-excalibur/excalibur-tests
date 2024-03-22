@@ -17,13 +17,14 @@ type_lookup = {"datetime64[ns]": "datetime",
                "object": "str"}
 
 
-def update_ui(post: PostProcessing, config: ConfigHandler, e=None):
+def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None' = None):
     """
         Create an interactive user interface for post-processing using Streamlit.
 
         Args:
             post: PostProcessing, class containing performance log data and filter information.
             config: ConfigHandler, class containing configuration information for plotting.
+            e: Exception | None, a potential config validation error (only used for user information).
     """
 
     # stop the session state from resetting each time this function is run
@@ -31,6 +32,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e=None):
     if state.get("post") is None:
         state.post = post
         state.config = config
+        # display initial config validation error, if present, and clear upon page reload
         if e:
             st.exception(e)
 
@@ -92,12 +94,15 @@ def update_config():
     state = st.session_state
     uploaded_config = state.uploaded_config
     if uploaded_config:
+
         try:
             state.config = ConfigHandler(load_config(uploaded_config))
             # update dataframe types
             state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+
         except Exception as e:
             st.exception(e)
+            state.post = None
 
 
 def axis_options():
@@ -225,8 +230,11 @@ def update_types():
     config.parse_columns()
     # remove redundant types from config
     config.remove_redundant_types()
-    # update dataframe types
-    post.apply_df_types(config.all_columns, config.column_types)
+    try:
+        # update dataframe types
+        post.apply_df_types(config.all_columns, config.column_types)
+    except Exception as e:
+        st.exception(e)
 
 
 def filter_options():
@@ -375,6 +383,7 @@ def rerun_post_processing():
 
     except Exception as e:
         st.exception(e)
+        post.plot = None
 
 
 def read_args():
