@@ -67,13 +67,21 @@ jobs:
           # (reframe tests, input files, etc...) should be ignored by the docs.
           find benchmarks/apps -type f \! \( -name 'README.md' \) -print -delete
 
+      - name: Rewrite URLs in Markdown files for previews
+        # Run only if this is a PR for which we're going to deploy the preview.
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        run: |
+          BASE_URL="https://ukri-excalibur.github.io/excalibur-tests"
+          echo "BASE_URL=${BASE_URL}" >> "${GITHUB_ENV}"
+          PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
+          echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
+          find . -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
+
       - name: Build docs
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-              PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
-              echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
               export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
-              export MKDOCS_SITE_URL="https://ukri-excalibur.github.io/excalibur-tests/${PREVIEW_SUBDIR}"
+              export MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
           fi
           mkdocs build
 
@@ -120,8 +128,9 @@ jobs:
 
           sha = "${{ github.event.pull_request.head.sha }}"
           state = "success"
+          base_url = os.getenv("BASE_URL")
           preview_subdir = os.getenv("PREVIEW_SUBDIR")
-          target_url = f"https://ukri-excalibur.github.io/excalibur-tests/{preview_subdir}/"
+          target_url = f"{base_url}/{preview_subdir}/"
           description = "Documentation deployed"
           context = "${{ github.workflow }} / Preview"
           repo.create_status(sha, state, target_url, description, context)
