@@ -80,15 +80,25 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
         working-directory: gh-pages
         run: |
-          cp -fr ../site/* .
           git config user.name ${{github.actor}}
           git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
-          git add .
+          # Before copying the new files, delete the old ones, so that we can
+          # cleanly update the website.
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
               COMMIT_MESSAGE="Update docs preview from ${{ github.sha }} for PR #${{ github.event.number }}"
+              # Only delete files in the preview subdir, if any
+              git rm -rf "preview/PR${{ github.event.number }}"
           else
               COMMIT_MESSAGE="Update docs from ${{ github.sha }}"
+              for file in $(git ls-files); do
+                  if [[ x"${file}" != xpreview/* ]]; then
+                      # Do not delete files in the `preview/` subdir
+                      git rm ${file}
+                  fi
+              done
           fi
+          cp -fr ../site/* .
+          git add .
           git commit -m "${COMMIT_MESSAGE}"
           git push origin gh-pages
 
