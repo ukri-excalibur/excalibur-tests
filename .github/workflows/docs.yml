@@ -89,7 +89,9 @@ jobs:
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
               COMMIT_MESSAGE="Update docs preview from ${{ github.sha }}"
               # Only delete files in the preview subdir, if any
-              git rm -rf "${PREVIEW_SUBDIR}"
+              if [[ -d "${PREVIEW_SUBDIR}" ]]; then
+                  git rm -rf "${PREVIEW_SUBDIR}"
+              fi
           else
               COMMIT_MESSAGE="Update docs from ${{ github.sha }}"
               for file in $(git ls-files); do
