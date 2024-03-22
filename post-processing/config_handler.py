@@ -46,11 +46,11 @@ class ConfigHandler:
         self.parse_columns()
 
     @classmethod
-    def from_path(self, config_path: Path):
+    def from_path(self, config_path: Path, template=False):
         """
             Initialise class from a path.
         """
-        return self(open_config(config_path))
+        return self(open_config(config_path), template)
 
     @classmethod
     def from_template(self):
@@ -124,8 +124,10 @@ class ConfigHandler:
         """
 
         # axis columns
-        self.plot_columns = [self.x_axis.get("value"), self.x_axis["units"].get("column"),
-                             self.y_axis.get("value"), self.y_axis["units"].get("column")]
+        self.plot_columns = [self.x_axis.get("value"),
+                             self.x_axis["units"].get("column") if self.x_axis.get("units") else None,
+                             self.y_axis.get("value"),
+                             self.y_axis["units"].get("column") if self.y_axis.get("units") else None]
 
         # FIXME (issue #255): allow all series values to be selected with *
         # (or if only column name is supplied)

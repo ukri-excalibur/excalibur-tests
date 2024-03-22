@@ -71,6 +71,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         axis_options()
         # display filter options
         filter_options()
+        # FIXME: do we need the option to allow users to just change column types?
 
         generate_graph, download_config = st.columns(2)
         # re-run post processing and create a new plot
@@ -101,6 +102,11 @@ def update_config():
         except Exception as e:
             st.exception(e)
             state.post = None
+            # autofill some information from invalid config
+            try:
+                state.config = ConfigHandler(load_config(uploaded_config), template=True)
+            except Exception as e:
+                st.exception(e)
 
 
 def axis_options():
@@ -135,8 +141,8 @@ def axis_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis["value"] else 0
-    column_index = list(df.columns).index(axis["value"]) if axis["value"] in df.columns else None
+    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis.get("value") else 0
+    column_index = list(df.columns).index(axis["value"]) if axis.get("value") in df.columns else None
 
     # axis information drop-downs
     axis_type, axis_column = st.columns(2)
@@ -163,7 +169,10 @@ def units_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selection
-    units_index = list(df.columns).index(axis["units"]["column"]) if axis["units"].get("column") else None
+    units_index = None
+    if axis.get("units"):
+        if axis["units"].get("column"):
+            units_index = list(df.columns).index(axis["units"]["column"])
 
     units_column, units_custom = st.columns(2)
     # units select
@@ -173,7 +182,8 @@ def units_select(label: str, axis: dict):
                      key="{0}_axis_units_column".format(label), index=units_index)
     # set custom units
     with units_custom:
-        st.text_input("{0}-axis units custom".format(label), axis["units"].get("custom"),
+        st.text_input("{0}-axis units custom".format(label),
+                      axis["units"].get("custom") if axis.get("units") else None,
                       placeholder="None", key="{0}_axis_units_custom".format(label))
 
 
@@ -433,6 +443,13 @@ def main():
                 post.run_post_processing(config)
             except Exception as e:
                 err = e
+                # autofill some information from invalid config
+                try:
+                    config = ConfigHandler.from_path(args.config_path, template=True)
+                except Exception as e:
+                    print(type(e).__name__ + ":", e)
+                    print(traceback.format_exc())
+
         # display ui
         update_ui(post, config, e=err)
 
