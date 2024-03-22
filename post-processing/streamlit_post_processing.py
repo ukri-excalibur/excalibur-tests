@@ -235,6 +235,7 @@ def update_types():
         post.apply_df_types(config.all_columns, config.column_types)
     except Exception as e:
         st.exception(e)
+        post.plot = None
 
 
 def filter_options():
@@ -359,10 +360,24 @@ def add_filter(filter: list):
         state.config.column_types[filter[0]] = state.column_type
         # add filter to config and update df types
         update_filter(key)
-        # interpret filter value as filter column dtype
-        filter_value = state.post.val_as_col_dtype(state[key][-1][-1], filter[0]).iloc[0]
-        # adjust filter value after typing
-        state[key][-1][-1] = str(filter_value)
+
+        try:
+            # (re-)interpret all filter values as given dtype of filter column
+            for f in state[key]:
+                if f[0] == filter[0]:
+                    # find filter index
+                    i = state[key].index(f)
+                    filter_value = state.post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
+                    # adjust filter value after typing
+                    state[key][i][-1] = str(filter_value)
+
+        except Exception as e:
+            st.exception(e)
+            state.post.plot = None
+            # remove filter from filter list
+            state[key].remove(filter)
+            # re-update types
+            update_types()
 
 
 def rerun_post_processing():
