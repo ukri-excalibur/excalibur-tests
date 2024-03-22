@@ -30,6 +30,7 @@ class ConfigHandler:
         self.and_filters = []
         self.or_filters = []
         self.series_filters = []
+        self.to_string_filter_vals()
         self.parse_filters()
 
         # parse scaling information
@@ -76,6 +77,21 @@ class ConfigHandler:
             Return column and custom scaling information.
         """
         return self.scaling_column, self.scaling_custom
+
+    def to_string_filter_vals(self):
+        """
+            Store filter values as their string representations for internal consistency.
+        """
+
+        # filters
+        if self.filters:
+            self.filters["and"] = ([[f[0], f[1], str(f[2])] for f in self.filters["and"]]
+                                   if self.filters.get("and") else [])
+            self.filters["or"] = ([[f[0], f[1], str(f[2])] for f in self.filters["or"]]
+                                  if self.filters.get("or") else [])
+
+        # series
+        self.series = [[s[0], str(s[1])] for s in self.series] if self.series else []
 
     def parse_filters(self):
         """

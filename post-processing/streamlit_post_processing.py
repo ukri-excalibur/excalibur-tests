@@ -94,12 +94,10 @@ def update_config():
     state = st.session_state
     uploaded_config = state.uploaded_config
     if uploaded_config:
-
         try:
             state.config = ConfigHandler(load_config(uploaded_config))
             # update dataframe types
             state.post.apply_df_types(state.config.all_columns, state.config.column_types)
-
         except Exception as e:
             st.exception(e)
             state.post = None
@@ -313,7 +311,7 @@ def new_filter_options():
             filter_col = post.df[state.filter_col].drop_duplicates()
             st.selectbox("filter value", filter_col.sort_values(), key="filter_val")
 
-        current_filter = [state.filter_col, state.filter_op, state.filter_val]
+        current_filter = [state.filter_col, state.filter_op, str(state.filter_val)]
         st.button("Add Filter", on_click=add_filter, args=[current_filter])
 
 
