@@ -160,9 +160,8 @@ def test_read_perflog(run_sombrero):
                        "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node",
                        "flops_value", "flops_unit", "flops_ref", "flops_lower_thres",
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
-                       "system", "partition", "environ", "OMP_NUM_THREADS",
+                       "system", "partition", "job_nodelist", "environ", "OMP_NUM_THREADS",
                        "spack_spec_dict", "tags"]
-
 
 
     # check example perflog file is read appropriately

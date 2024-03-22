@@ -49,8 +49,9 @@ class PostProcessing:
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
 
         # FIXME (#issue #255): have an option to put this into a file (-s / --save flag?)
-        print("Selected dataframe:")
-        print(self.df[self.mask][config.plot_columns])
+        if self.debug:
+            print("Selected dataframe:")
+            print(self.df[self.mask][config.plot_columns])
 
         # call a plotting script
         self.plot = plot_generic(

@@ -19,6 +19,7 @@ SOMBRERO uses a pure-mpi parallelisation.
 
 There are four benchmark cases that can be chosen 
 using the `--tag=<TAG>` command line option of `reframe`:
+
 - `mini`: A debug run, on a very small lattice, on 2 processes.
 - `ITT-sn`: A run on a single node, using all the cores in each node 
    (as described [here](https://github.com/sa2c/sombrero/wiki/Dirac-ITT-2020-Benchmarks)).
@@ -34,6 +35,7 @@ using the `--tag=<TAG>` command line option of `reframe`:
 In all these cases, the benchmark for each theory is launched.
 
 The following performance variables are captured:
+
 - 'flops' : the computing performance (Gflop/second)
 - 'time' : time spent in the CG algorithm (seconds)
 - 'communicated': number of bytes communicated via MPI (bytes)
