@@ -110,18 +110,18 @@ def axis_options():
 
     config = st.session_state.config
     st.write("#### Axis Options")
-    with st.form(key="axis_options"):
 
+    with st.container(border=True):
         # x-axis select
         axis_select("x", config.x_axis)
         sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
+    with st.container(border=True):
         # y-axis select
         axis_select("y", config.y_axis)
-        submit = st.form_submit_button("Update Axes")
 
-        if submit:
-            update_axes()
-            config.x_axis["sort"] = "descending" if sort else "ascending"
+    # apply changes
+    update_axes()
+    config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
 def axis_select(label: str, axis: dict):
