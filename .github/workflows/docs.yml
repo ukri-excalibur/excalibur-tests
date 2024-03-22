@@ -73,9 +73,6 @@ jobs:
             export MKDOCS_SITE_DIR="site/preview/PR${{ github.event.number }}"
             export MKDOCS_SITE_URL="https://ukri-excalibur.github.io/excalibur-tests/preview/PR${{ github.event.number }}"
           fi
-          # Use `--no-name` flag to make compressed sitemap reproducible:
-          # <https://www.gnu.org/software/tar/manual/html_section/Reproducibility.html>.
-          export GZIP=--no-name
           mkdocs build
 
       - name: Deploy docs
@@ -102,7 +99,7 @@ jobs:
           fi
           cp -fr ../site/* .
           git add .
-          git commit --allow-empty --message="${COMMIT_MESSAGE}"
+          git commit -m "${COMMIT_MESSAGE}"
           git push origin gh-pages
 
       - name: Create custom status for pull requests
