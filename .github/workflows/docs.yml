@@ -70,8 +70,10 @@ jobs:
       - name: Build docs
         run: |
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-            export MKDOCS_SITE_DIR="site/preview/PR${{ github.event.number }}"
-            export MKDOCS_SITE_URL="https://ukri-excalibur.github.io/excalibur-tests/preview/PR${{ github.event.number }}"
+              PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
+              echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
+              export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
+              export MKDOCS_SITE_URL="https://ukri-excalibur.github.io/excalibur-tests/${PREVIEW_SUBDIR}"
           fi
           mkdocs build
 
@@ -87,7 +89,7 @@ jobs:
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
               COMMIT_MESSAGE="Update docs preview from ${{ github.sha }}"
               # Only delete files in the preview subdir, if any
-              git rm -rf "preview/PR${{ github.event.number }}"
+              git rm -rf "${PREVIEW_SUBDIR}"
           else
               COMMIT_MESSAGE="Update docs from ${{ github.sha }}"
               for file in $(git ls-files); do
@@ -107,6 +109,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
         shell: python {0}
         run: |
+          import os
           from github3 import login
 
           token = "${{ github.token }}"
@@ -117,7 +120,8 @@ jobs:
 
           sha = "${{ github.event.pull_request.head.sha }}"
           state = "success"
-          target_url = "https://ukri-excalibur.github.io/excalibur-tests/preview/PR${{ github.event.number }}/"
+          preview_subdir = os.getenv("PREVIEW_SUBDIR")
+          target_url = f"https://ukri-excalibur.github.io/excalibur-tests/{preview_subdir}/"
           description = "Documentation deployed"
           context = "${{ github.workflow }} / Preview"
           repo.create_status(sha, state, target_url, description, context)
