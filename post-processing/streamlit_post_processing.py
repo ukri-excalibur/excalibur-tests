@@ -95,15 +95,16 @@ def update_config():
     uploaded_config = state.uploaded_config
     if uploaded_config:
         try:
-            state.config = ConfigHandler(load_config(uploaded_config))
+            config_dict = load_config(uploaded_config)
+            state.config = ConfigHandler(config_dict)
             # update dataframe types
             state.post.apply_df_types(state.config.all_columns, state.config.column_types)
         except Exception as e:
             st.exception(e)
-            state.post = None
+            state.post.plot = None
             # autofill some information from invalid config
             try:
-                state.config = ConfigHandler(load_config(uploaded_config), template=True)
+                state.config = ConfigHandler(config_dict, template=True)
             except Exception as e:
                 st.exception(e)
 
