@@ -1,6 +1,4 @@
 ---
-#type: slide
----
 
 <style>
 .reveal {
@@ -14,7 +12,7 @@ In this tutorial you will set up the benchmarking framework on the [ARCHER2](htt
 
 ---
 
-# Getting Started
+## Getting Started
 
 To complete this tutorial, you need to [connect to ARCHER2 via ssh](https://docs.archer2.ac.uk/user-guide/connecting/). You will need
 
@@ -23,7 +21,7 @@ To complete this tutorial, you need to [connect to ARCHER2 via ssh](https://docs
 
 ----
 
-## ssh
+### ssh
 
 Once you have the above prerequisites, you have to [generate an ssh key pair](https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs) and [upload the public key to SAFE](https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe). 
 
@@ -35,7 +33,7 @@ ssh username@login.archer2.ac.uk
 
 ----
 
-## ARCHER2 MFA
+### ARCHER2 MFA
 
 ARCHER2 is deploying mandatory multi-factor authentication (MFA) **Today**!
 
@@ -52,7 +50,7 @@ Thus authentication will require two factors:
 
 ----
 
-## ARCHER2 MFA Docs and Support
+### ARCHER2 MFA Docs and Support
 
 The SAFE documentation which details how to set up MFA on machine accounts (ARCHER2) is available at:
 https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account
@@ -69,11 +67,11 @@ support@archer2.ac.uk
 
 ---
 
-# Installing the Framework
+## Installing the Framework
 
 ----
 
-## Set up python
+### Set up python
 
 We are going to use `python` and the `pip` package installer to install and run the framework. Load the `cray-python` module to get a python version that fills the requirements.
 ```bash
@@ -85,7 +83,7 @@ You can check with `python3 --version` that your python version is `3.8` or grea
 
 ----
 
-## Change to work directory
+### Change to work directory
 
 On ARCHER2, the compute nodes do not have access to your home directory, therefore it is important to install everything in a [work file system](https://docs.archer2.ac.uk/user-guide/data/#work-file-systems). Change to the work directory with
 
@@ -93,13 +91,11 @@ On ARCHER2, the compute nodes do not have access to your home directory, therefo
 cd /work/ta131/ta131/${USER}
 ```
 
-:::warning
 If you are tempted to use a symlink here, ensure you use `cd -P` when changing directory. Archer2 compute nodes cannot read from `/home`, only `/work`, so not completely following symlinks can result in a broken installation.
-:::
 
 ----
 
-## Clone the framework repository
+### Clone the framework repository
 
 In the work directory, clone the [excalibur-tests](https://github.com/ukri-excalibur/excalibur-tests) repository with
 
@@ -109,7 +105,7 @@ git clone https://github.com/ukri-excalibur/excalibur-tests.git
 
 ----
 
-## Create a virtual environment
+### Create a virtual environment
 Before proceeding to install the software, we recommend creating a python virtual environment to avoid clashes with other installed python packages. You can do this with
 ```bash
 python3 -m venv excalibur-env
@@ -125,7 +121,7 @@ You will have to activate the environment each time you login. To deactivate the
 
 ----
 
-## Install the excalibur-tests framework
+### Install the excalibur-tests framework
 Now we can use `pip` to install the package in the virtual environment. Update pip to the latest version with 
 ```bash
 pip install --upgrade pip
@@ -140,7 +136,7 @@ We included optional dependencies with `[post-processing]`. We will need those i
 
 ----
 
-## Set configuration variables
+### Set configuration variables
 
 Configure the framework by setting these environment variables
 
@@ -151,7 +147,7 @@ export RFM_USE_LOGIN_SHELL="true"
 
 ----
 
-## Install and configure spack
+### Install and configure spack
 
 Finally, we need to install the `spack` package manager. The framework will use it to build the benchmarks. Clone spack with
 
@@ -169,7 +165,7 @@ Spack should now be in the default search path.
 
 ----
 
-## Check installation was successful
+### Check installation was successful
 
 You can check everything has been installed successfully by checking that `spack` and `reframe` are in path and the path to the ReFrame config file is set correctly
 
@@ -184,7 +180,7 @@ $ ls $RFM_CONFIG_FILES
 
 ---
 
-## Environment summary
+### Environment summary
 
 If you log out and back in, you will have to run some of the above commands again to recreate your environment. These are (from your `work` directory):
 
@@ -198,7 +194,7 @@ source ./spack/share/spack/setup-env.sh
 
 ----
 
-# Run Sombrero Example
+## Run Sombrero Example
 
 You can now use ReFrame to run benchmarks from the `benchmarks/examples` and `benchmarks/apps` directories. The basic syntax is 
 ```bash
@@ -207,7 +203,7 @@ reframe -c <path/to/benchmark> -r
 
 ----
 
-## ARCHER2 specific commands
+### ARCHER2 specific commands
 
 In addition, on ARCHER2, you have to provide the quality of service (QoS) type for your job to ReFrame on the command line with `-J`. Use the "short" QoS to run the sombrero example with
 ```bash
@@ -217,9 +213,9 @@ You may notice you actually ran four benchmarks with that single command! That i
 
 ----
 
-## Output sample
+### Output sample
 
-```bash!
+```bash
 $ reframe -c benchmarks/examples/sombrero/ -r -J'--qos=short' --performance-report
 [ReFrame Setup]
   version:           4.3.0
@@ -257,7 +253,7 @@ Log file(s) saved in '/tmp/rfm-u1l6yt7f.log'
 
 ----
 
-## Benchmark output
+### Benchmark output
 
 You can find build and run logs in the `output/` directory of a successful benchmark. They record how the benchmark was built by spack and ran by ReFrame.
 
@@ -267,7 +263,7 @@ You can find the performance log file from the benchmark in `perflogs/`. The per
 
 ---
 
-# Postprocess Benchmark Results
+## Postprocess Benchmark Results
 
 Now let's look at the Benchmark performance results, and create a plot to visualise them.
 
@@ -275,7 +271,7 @@ Now let's look at the Benchmark performance results, and create a plot to visual
 
 ----
 
-## The perflog
+### The perflog
 
 After running the Sombrero benchmark once you should have a perflog in `perflogs/archer2/compute-node/SombreroBenchmark.log` that looks like this
 ```
@@ -298,7 +294,7 @@ The perflog contains
 
 ----
 
-## The plotting configuration file
+### The plotting configuration file
 
 
 The framework contains tools to plot the FOMs of benchmarks against any of the other parameters in the perflog. This generic plotting is driven by a configuration YAML file. Let's make one, and save it in `excalibur-tests/post-processing/post_processing_config.yaml`.
@@ -312,7 +308,7 @@ The file needs to include
 
 ----
 
-## Title and Axes
+### Title and Axes
 
 Axes must have a value specified with a perflog column name or a benchmark parameter name, and units specified with either a perflog column name or a custom label (including `null`).
 ```yaml
@@ -331,7 +327,7 @@ y_axis:
 
 ----
 
-## Data series
+### Data series
 
 Display several data series in the same plot and group x-axis data by specified column values. Specify an empty list if you only want one series plotted. In our sombrero example, we have two parameters. Therefore we need to either filter down to one, or make them separate series. Let's use separate series:
 
@@ -343,7 +339,7 @@ series: [["cpus_per_task", "1"], ["cpus_per_task", "2"]]
 
 ----
 
-## Filtering
+### Filtering
 
 You can filter data rows based on specified conditions. Specify an empty list for no filters.
 
@@ -357,7 +353,7 @@ filters: []
 
 ----
 
-## Data types
+### Data types
 
 All columns used in axes, filters, and series must have a user-specified type for the data they contain. This would be the pandas dtype, e.g. `str/string/object`, `int/int64`, `float/float64`, `datetime/datetime64`.
 ```yaml
@@ -370,7 +366,7 @@ column_types:
 
 ----
 
-## Run the postprocessing
+### Run the postprocessing
 
 The postprocessing package is an optional dependency of the framework. Install it with
 ```bash
@@ -392,19 +388,16 @@ python excalibur-tests/post-processing/post_processing.py perflogs excalibur-tes
 
 ----
 
-## View the Output
+### View the Output
 
 `scp` over the `Performance_vs_number_of_tasks_and_CPUs_per_task.html` file created in `excalibur-tests/post-processing`, and behold!
 
-:::spoiler Image
 ![](https://hackmd.io/_uploads/rkgyyJaa3.png)
-:::
-
 
 
 ---
 
-# Create a Benchmark
+## Create a Benchmark
 
 In this section you will create a ReFrame benchmark by writing a python class that tells ReFrame how to build and run an application and collect data from its output. 
 
@@ -412,7 +405,7 @@ For simplicity, we use the [`STREAM`](https://www.cs.virginia.edu/stream/ref.htm
 
 ----
 
-## How ReFrame works
+### How ReFrame works
 
 When ReFrame executes a test it runs a pipeline of the following stages
 
@@ -422,13 +415,13 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 ----
 
-## Getting started
+### Getting started
 
 To get started, open an empty `.py` file where you will write the ReFrame class, e.g. `stream.py`. Save the file in a new directory e.g. `excalibur-tests/benchmarks/apps/stream`.
 
 ----
 
-## Include ReFrame modules
+### Include ReFrame modules
 
 The first thing you need is include a few modules from ReFrame. These should be available if the installation step was successful.
 
@@ -439,7 +432,7 @@ import reframe.utility.sanity as sn
 
 ----
 
-## Create a Test Class
+### Create a Test Class
 
 ReFrame has built-in support for the Spack package manager.
 In the following we will use the custom class `SpackTest` we created for our `benchmarks` module, which provides a tighter integration with Spack and reduces the boilerplate code you'd otherwise have to include.
@@ -455,7 +448,7 @@ The data members and methods detailed in the following sections should be placed
 
 ----
 
-## Add Build Recipe
+### Add Build Recipe
 
 We prefer installing packages via spack whenever possible. In this exercise, the spack package for `stream` already exists in the global spack repository.
 
@@ -469,7 +462,7 @@ Note that we did not specify a compiler. Spack will use a compiler from the spac
 
 ----
 
-## Add Run Configuration
+### Add Run Configuration
 
 The ReFrame class tells ReFrame where and how to run the benchmark. We want to run on one task on a full archer2 node using 128 OpenMP threads to use the full node.
 
@@ -485,7 +478,7 @@ use_multithreading = False
 
 ----
 
-## Add environment variables
+### Add environment variables
 
 Environment variables can be added to the `env_vars` attribute.
 
@@ -496,7 +489,7 @@ env_vars['OMP_PLACES'] = 'cores'
 
 ----
 
-## Add Sanity Check
+### Add Sanity Check
 
 The rest of the benchmark follows the [Writing a Performance Test ReFrame Tutorial](https://reframe-hpc.readthedocs.io/en/latest/tutorial_basics.html#writing-a-performance-test). First we need a sanity check that ensures the benchmark ran successfully. A function decorated with the `@sanity_function` decorator is used by ReFrame to check that the test ran successfully. The sanity function can perform a number of checks, in this case we want to match a line of the expected standard output.
 
@@ -508,7 +501,7 @@ def validate_solution(self):
 
 ----
 
-## Add Performance Pattern Check
+### Add Performance Pattern Check
 
 To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the `@performance_function` decorator extracts or computes a performance metric from the test’s output.
 
@@ -516,7 +509,7 @@ To record the performance of the benchmark, ReFrame should extract a figure of m
 
 ----
 
-## Performance Pattern Check
+### Performance Pattern Check
 
 ```python
 @performance_function('MB/s', perf_key='Copy')
@@ -538,7 +531,7 @@ def extract_triad_perf(self):
 
 ----
 
-## Run Stream Benchmark
+### Run Stream Benchmark
 
 You can now run the benchmark in the same way as the previous sombrero example
 
@@ -548,8 +541,8 @@ reframe -c excalibur-tests/benchmarks/apps/stream/ -r --system archer2 -J'--qos=
 
 ----
 
-## Sample Output
-```bash=
+### Sample Output
+```bash
 $ reframe -c excalibur-tests/benchmarks/examples/stream/ -r -J'--qos=short'
 [ReFrame Setup]
   version:           4.4.1
@@ -581,7 +574,7 @@ Log file(s) saved in '/tmp/rfm-z87x4min.log'
 
 ----
 
-## Interpreting STREAM results
+### Interpreting STREAM results
 
 With default compile options, STREAM uses arrays of 10 million elements. On a full ARCHER2 node, the default array size fits into cache, and the benchmark does not report the correct memory bandwidth. Therefore the numbers from this tutorial are not comparable with other, published, results.
 
@@ -589,7 +582,7 @@ To avoid caching, increase the array size during build by adding e.g. `stream_ar
 
 ----
 
-## Parametrized tests
+### Parametrized tests
 
 You can pass a list to the `parameter()` built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example `__init__()`
 
@@ -601,8 +594,7 @@ def __init__(self):
     self.spack_spec = f"stream@5.10 +openmp stream_array_size={self.array_size}"
 ```
 
-:::spoiler Array size parametrization output
-```bash=
+```bash
 [----------] start processing checks
 [ RUN      ] StreamBenchmark %array_size=64000000 /bbfd0e71 @archer2:compute-node+default
 [ RUN      ] StreamBenchmark %array_size=32000000 /e16f9017 @archer2:compute-node+default
@@ -639,11 +631,10 @@ P: Triad: 1548666.1 MB/s (r:0, l:None, u:None)
 [  PASSED  ] Ran 5/5 test case(s) from 5 check(s) (0 failure(s), 0 skipped, 0 aborted)
 [==========] Finished on Thu Nov 30 14:34:48 2023 
 ```
-:::
 
 ----
 
-## Reference values
+### Reference values
 
 ReFrame can automate checking that the results fall within an expected range. We can use it in our previous example of increasing the array size to avoid caching. You can set a different reference value for each `perf_key` in the performance function. For example, set the test to fail if it falls outside of +-25% of the values obtained with the largest array size.
 
@@ -662,9 +653,8 @@ reference = {
 
 ----
 
-## Plotting STREAM benchmark output
+### Plotting STREAM benchmark output
 
-:::spoiler Postprocessing config
 ```yaml
 title: Stream Triad Bandwidth
 
@@ -681,13 +671,10 @@ y_axis:
 series: []
 filters: [["test_name","==","StreamBenchmark"]]
 ```
-:::
 
 ---
 
-# Portability Demo
-
-TODO: Move this to beginning
+## Portability Demo
 
 Having gone through the process of setting up the framework on multiple systems enables you to run benchmarks configured in the repository on those systems. As a proof of this concept, this demo shows how to run a benchmark (e.g. `hpgmg`) on a list of systems (ARCHER2, csd3, cosma8, isambard-macs). Note that to run this demo, you will need an account and a CPU time allocation on each of these systems.
 
@@ -703,7 +690,6 @@ That is done differently on each system. The framework attempts to automtically 
 
 ----
 
-:::spoiler setup.sh
 ```bash
 #!/bin/bash -l
 
@@ -740,11 +726,9 @@ export RFM_USE_LOGIN_SHELL="true"
 pip install --upgrade pip
 pip install -e ./excalibur-tests
 ```
-:::
 
 ----
 
-:::spoiler run.sh
 ```bash
 #!/bin/bash
 
@@ -769,15 +753,14 @@ then
     reframe -c $apps_dir/$app -r --system isambard-macs:cascadelake -S build_locally=false -S spack_spec=$spec --setvar=num_cpus_per_task=8  --setvar=num_tasks_per_node=2 --setvar=num_tasks=8
 fi
 ```
-:::
 
 ---
 
-# Useful Reading
+## Useful Reading
 
 ----
 
-## ReFrame
+### ReFrame
 
 - [ReFrame Documentation](https://reframe-hpc.readthedocs.io/)
 - ReFrame tutorials
@@ -793,7 +776,7 @@ fi
 
 ----
 
-## Spack
+### Spack
 
 - [Spack documentation](https://spack.readthedocs.io/)
 - [Spack tutorial (including YouTube recordings)](https://spack-tutorial.readthedocs.io/)

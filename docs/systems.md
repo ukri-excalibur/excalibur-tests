@@ -26,7 +26,7 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2
 
 ARCHER2 allows [choosing the CPU frequency](https://docs.archer2.ac.uk/user-guide/energy/#controlling-cpu-frequency) during jobs by setting the environment variable `SLURM_CPU_FREQ_REQ` to specific values.
 In ReFrame v3 the list of environment variables set by the framework is held by the dictionary attribute called `env_vars`, and you can initialise it on the command line when running a benchmark with `-S`/`--setvar`.
-For more details, see Setting environment variables in [`README.md`](./README.md).
+For more details, see Setting environment variables in [usage](use.md).
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use
 
 ```
@@ -38,7 +38,7 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2
 ARCHER2 is a Cray system, and they
 [recommend using a cray optimised python version](https://docs.archer2.ac.uk/user-guide/python/).
 The HPE Cray Python distribution can be loaded using `module load cray-python`.
-This is necessary to pip install excalibur-tests following the instructions in [README.md](./README.md).
+This is necessary to pip install excalibur-tests following the instructions in [install](install.md).
 
 ### Spack install path
 
