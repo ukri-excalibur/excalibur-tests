@@ -3,13 +3,21 @@ import json
 import os
 import re
 from itertools import chain
+from pathlib import Path
 
 import pandas as pd
 
 
 class PerflogHandler:
 
-    def __init__(self, log_path, debug=False):
+    def __init__(self, log_path: Path, debug=False):
+        """
+            Initialise class.
+
+            Args:
+                log_path: Path, path to performance log file or directory.
+                debug: bool, flag to print additional information to console.
+        """
 
         self.log_path = log_path
         self.debug = debug
@@ -18,6 +26,9 @@ class PerflogHandler:
         self.read_all_perflogs()
 
     def get_df(self):
+        """
+            Return dataframe containing performance log information.
+        """
         return self.df
 
     def get_log_files(self):
@@ -80,7 +91,7 @@ class PerflogHandler:
                 errno.ENOENT, "Could not find a valid perflog in path", self.log_path)
 
 
-def read_perflog(path):
+def read_perflog(path: Path):
     """
         Return a pandas dataframe from a reframe performance log. The dataframe will
         have columns for all fields in a performance log record except display name,
@@ -92,7 +103,7 @@ def read_perflog(path):
             in reframe's configuration. See code.
 
         Args:
-            path: path, path to log file.
+            path: Path, path to log file.
     """
 
     # read perflog into dataframe
@@ -127,7 +138,7 @@ def read_perflog(path):
     return df
 
 
-def get_display_name_info(display_name):
+def get_display_name_info(display_name: str):
     """
         Return a tuple containing the test name and a dictionary of parameter names
         and their values from the given input string. The parameter dictionary may be empty
@@ -145,15 +156,15 @@ def get_display_name_info(display_name):
     return test_name, dict(params)
 
 
-def insert_key_cols(df: pd.DataFrame, index, results):
+def insert_key_cols(df: pd.DataFrame, index: int, results: 'list[dict]'):
     """
         Modify a dataframe to include new columns (extracted from results) inserted at
         a given index.
 
         Args:
-            df: dataframe, to be modified by this function.
+            df: pd.DataFrame, to be modified by this function.
             index: int, index as which to insert new columns into the dataframe.
-            results: dict list, contains key-value mapping information for all rows.
+            results: list[dict], contains key-value mapping information for all rows.
     """
 
     # get set of keys from all rows
