@@ -6,14 +6,14 @@ The post-processing scripts provided with the ExCALIBUR tests package are intend
 
 There are four main post-processing components:
 
-#### **`Perflog parsing`:**
+#### **`Perflog parsing`**
 - Data from benchmark performance logs are stored in a pandas DataFrame.
-#### **`Data filtering`:**
+#### **`Data filtering`**
 - If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
 - The DataFrame is then filtered, keeping only relevant rows and columns.
-#### **`Data transformation`:**
+#### **`Data transformation`**
 - Axis value columns in the DataFrame are scaled according to user specifications.
-#### **`Plotting`:**
+#### **`Plotting`**
 - A filtered and transformed DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
 - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
 
@@ -147,10 +147,12 @@ y_axis:
       x_value: "x_val_s"
 
 filters:
-  and: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_val_2]]
+  and: [["filter_col_1", "<=", filter_val_1],
+        ["filter_col_2", "!=", filter_val_2]]
   or: []
 
-series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
+series: [["series_col", "series_val_1"],
+         ["series_col", "series_val_2"]]
 
 column_types:
   x_axis_col: "str"
@@ -296,5 +298,6 @@ All user-specified types are internally converted to their nullable incarnations
 ### Future Development
 
 The post-processing capabilities are still a work in progress. Some upcoming developments:
+
 -  Embed graphs in GitHub Pages, instead of a bare HTML file.
 -  Add scaling and regression plots.
