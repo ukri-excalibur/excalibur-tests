@@ -83,8 +83,8 @@ spack --version
 
 ### Version
 
-We recommend using spack v0.21.0 or later. Older versions of spack may work but are not 
-regularly tested.
+We recommend using the latest spack version (develop). Stable spack releases starting from v0.20.0 
+are supported. Older versions of spack may work but are not regularly tested.
 
 ### Notes
 
