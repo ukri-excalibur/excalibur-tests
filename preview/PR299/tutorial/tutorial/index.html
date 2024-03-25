@@ -1,0 +1,2707 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR299/tutorial/tutorial/">
+      
+      
+        <link rel="prev" href="../../apps/wrf/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+    
+    
+      
+        <title>ARCHER2 Tutorial - ExCALIBUR-tests Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-reframe-for-reproducible-and-portable-performance-benchmarking" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ExCALIBUR-tests Docs" class="md-header__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ExCALIBUR-tests Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ARCHER2 Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ukri-excalibur/excalibur-tests" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ExCALIBUR-tests Docs" class="md-nav__button md-logo" aria-label="ExCALIBUR-tests Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ExCALIBUR-tests Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ukri-excalibur/excalibur-tests" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../use/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../post-processing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Post-processing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Supported Benchmarks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Supported Benchmarks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Synthetic Benchmarks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Synthetic Benchmarks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/hpl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HPL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/imb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    IMB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/omb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OMB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Mini-apps
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Mini-apps
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/hpcg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    hpcg
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/hpgmg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    hpgmg
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/sombrero/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    sombrero
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/babelstream/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    babelstream
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Applications
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/cp2k/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    cp2k
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/grid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    grid
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/openmm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    openmm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/ramses/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ramses
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/sphng/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    sphng
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/swift/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    swift
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/trove/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    trove
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/trove-pdsyev/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    trove-pdsyev
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apps/wrf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    wrf
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Supported Systems
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Supported Systems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#archer2" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ARCHER2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#csd3" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CSD3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#dial2" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DIaL2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#dial3" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DIaL3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#isambard-2" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Isambard 2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#myriad" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Myriad
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../systems#tursa" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tursa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ARCHER2 Tutorial
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    ARCHER2 Tutorial
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      ssh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archer2-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 MFA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archer2-mfa-docs-and-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 MFA Docs and Support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installing the Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing the Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up python
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-to-work-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change to work directory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone-the-framework-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clone the framework repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a virtual environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-excalibur-tests-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install the excalibur-tests framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-configuration-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set configuration variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-and-configure-spack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install and configure spack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-installation-was-successful" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check installation was successful
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-sombrero-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Sombrero Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run Sombrero Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archer2-specific-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 specific commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output sample
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postprocess-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Postprocess Benchmark Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Postprocess Benchmark Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-perflog" class="md-nav__link">
+    <span class="md-ellipsis">
+      The perflog
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-plotting-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      The plotting configuration file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#title-and-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title and Axes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data series
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-postprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run the postprocessing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      View the Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create a Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-reframe-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How ReFrame works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-started_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting started
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-reframe-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Include ReFrame modules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-test-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a Test Class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-build-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Build Recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-run-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Run Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-sanity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Sanity Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-performance-pattern-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Performance Pattern Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-pattern-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Pattern Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-stream-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Stream Benchmark
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-stream-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpreting STREAM results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametrized-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parametrized tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-stream-benchmark-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plotting STREAM benchmark output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portability-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Portability Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Useful Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Useful Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spack
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      ssh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archer2-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 MFA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#archer2-mfa-docs-and-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 MFA Docs and Support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installing the Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing the Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set up python
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-to-work-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change to work directory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone-the-framework-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clone the framework repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-virtual-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a virtual environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-excalibur-tests-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install the excalibur-tests framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-configuration-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set configuration variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-and-configure-spack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install and configure spack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-installation-was-successful" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check installation was successful
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-sombrero-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Sombrero Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run Sombrero Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#archer2-specific-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      ARCHER2 specific commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output sample
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmark output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postprocess-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Postprocess Benchmark Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Postprocess Benchmark Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-perflog" class="md-nav__link">
+    <span class="md-ellipsis">
+      The perflog
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-plotting-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      The plotting configuration file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#title-and-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Title and Axes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data series
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data types
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-the-postprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run the postprocessing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-the-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      View the Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a Benchmark
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create a Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-reframe-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How ReFrame works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-started_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting started
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-reframe-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Include ReFrame modules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-test-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a Test Class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-build-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Build Recipe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-run-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Run Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-sanity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Sanity Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-performance-pattern-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add Performance Pattern Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-pattern-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Pattern Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-stream-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Stream Benchmark
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Output
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-stream-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpreting STREAM results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametrized-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parametrized tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-stream-benchmark-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plotting STREAM benchmark output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portability-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Portability Demo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Useful Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Useful Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      ReFrame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spack" class="md-nav__link">
+    <span class="md-ellipsis">
+      Spack
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<hr />
+<style>
+.reveal {
+  font-size: 30px;
+}
+</style>
+
+<h1 id="using-reframe-for-reproducible-and-portable-performance-benchmarking">Using ReFrame for reproducible and portable performance benchmarking</h1>
+<p>In this tutorial you will set up the benchmarking framework on the <a href="https://www.archer2.ac.uk">ARCHER2</a> supercomputer, build and run example benchmarks, create a new benchmark and explore benchmark data.</p>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<p>To complete this tutorial, you need to <a href="https://docs.archer2.ac.uk/user-guide/connecting/">connect to ARCHER2 via ssh</a>. You will need</p>
+<ol>
+<li>An ARCHER2 account. You can <a href="https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2">request a new account</a> if you haven't got one you can use. Use the project code <code>ta131</code> to request your account. You can use an existing ARCHER2 account to complete this workshop.</li>
+<li>A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see <a href="https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal">Connecting to ARCHER2</a> for more information and Windows instructions.</li>
+</ol>
+<hr />
+<h3 id="ssh">ssh</h3>
+<p>Once you have the above prerequisites, you have to <a href="https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs">generate an ssh key pair</a> and <a href="https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe">upload the public key to SAFE</a>. </p>
+<p>When you are done, check that you are able to connect to ARCHER2 with</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>username@login.archer2.ac.uk
+</span></code></pre></div>
+<hr />
+<h3 id="archer2-mfa">ARCHER2 MFA</h3>
+<p>ARCHER2 is deploying mandatory multi-factor authentication (MFA) <strong>Today</strong>!</p>
+<p>This was deployed between 0900 and 1000 this morning (06/12/2023).</p>
+<p>This means that once the switch has happened, SSH keys will work as before, but instead of your ARCHER2 password, a Time-based One-Time Password (TOTP) code will be requested. </p>
+<p>TOTP is a six digit number, refreshed every 30 seconds, which is generated typically by an app running on your mobile phone or laptop.</p>
+<p>Thus authentication will require two factors:</p>
+<p>1) SSH key and passphrase
+2) TOTP</p>
+<hr />
+<h3 id="archer2-mfa-docs-and-support">ARCHER2 MFA Docs and Support</h3>
+<p>The SAFE documentation which details how to set up MFA on machine accounts (ARCHER2) is available at:
+https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account</p>
+<p>The documentation includes how to set this up without the need of a personal smartphone device.</p>
+<p>We have also updated the ARCHER2 documentation with details of the new connection process:
+https://docs.archer2.ac.uk/user-guide/connecting-totp/
+https://docs.archer2.ac.uk/quick-start/quickstart-users-totp/</p>
+<p>If there are any issues or concerns please contact us at: </p>
+<p>support@archer2.ac.uk</p>
+<hr />
+<h2 id="installing-the-framework">Installing the Framework</h2>
+<hr />
+<h3 id="set-up-python">Set up python</h3>
+<p>We are going to use <code>python</code> and the <code>pip</code> package installer to install and run the framework. Load the <code>cray-python</code> module to get a python version that fills the requirements.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>module<span class="w"> </span>load<span class="w"> </span>cray-python
+</span></code></pre></div>
+You can check with <code>python3 --version</code> that your python version is <code>3.8</code> or greater. You will have to load this module every time you login.</p>
+<p>(at the time of writing, the default version was <code>3.9.13</code>).</p>
+<hr />
+<h3 id="change-to-work-directory">Change to work directory</h3>
+<p>On ARCHER2, the compute nodes do not have access to your home directory, therefore it is important to install everything in a <a href="https://docs.archer2.ac.uk/user-guide/data/#work-file-systems">work file system</a>. Change to the work directory with</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>/work/ta131/ta131/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>
+</span></code></pre></div>
+<p>If you are tempted to use a symlink here, ensure you use <code>cd -P</code> when changing directory. Archer2 compute nodes cannot read from <code>/home</code>, only <code>/work</code>, so not completely following symlinks can result in a broken installation.</p>
+<hr />
+<h3 id="clone-the-framework-repository">Clone the framework repository</h3>
+<p>In the work directory, clone the <a href="https://github.com/ukri-excalibur/excalibur-tests">excalibur-tests</a> repository with</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ukri-excalibur/excalibur-tests.git
+</span></code></pre></div>
+<hr />
+<h3 id="create-a-virtual-environment">Create a virtual environment</h3>
+<p>Before proceeding to install the software, we recommend creating a python virtual environment to avoid clashes with other installed python packages. You can do this with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>excalibur-env
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">source</span><span class="w"> </span>excalibur-env/bin/activate
+</span></code></pre></div></p>
+<p>You should now see the name of the environment in parenthesis your terminal prompt, for example:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="o">(</span>excalibur-env<span class="o">)</span><span class="w"> </span>tk-d193@ln03:/work/d193/d193/tk-d193&gt;
+</span></code></pre></div></p>
+<p>You will have to activate the environment each time you login. To deactivate the environment run <code>deactivate</code>.</p>
+<hr />
+<h3 id="install-the-excalibur-tests-framework">Install the excalibur-tests framework</h3>
+<p>Now we can use <code>pip</code> to install the package in the virtual environment. Update pip to the latest version with 
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+</span></code></pre></div>
+then install the framework with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./excalibur-tests<span class="o">[</span>post-processing<span class="o">]</span>
+</span></code></pre></div>
+We used the <code>editable</code> flag <code>-e</code> because later in the tutorial you will edit the repository to develop a new benchmark.</p>
+<p>We included optional dependencies with <code>[post-processing]</code>. We will need those in the postprocessing section.</p>
+<hr />
+<h3 id="set-configuration-variables">Set configuration variables</h3>
+<p>Configure the framework by setting these environment variables</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_CONFIG_FILES</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/excalibur-tests/benchmarks/reframe_config.py&quot;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="install-and-configure-spack">Install and configure spack</h3>
+<p>Finally, we need to install the <code>spack</code> package manager. The framework will use it to build the benchmarks. Clone spack with</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>clone<span class="w"> </span>-c<span class="w"> </span>feature.manyFiles<span class="o">=</span><span class="nb">true</span><span class="w"> </span>https://github.com/spack/spack.git
+</span></code></pre></div>
+<p>Then configure <code>spack</code> with</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">source</span><span class="w"> </span>./spack/share/spack/setup-env.sh
+</span></code></pre></div>
+<p>Spack should now be in the default search path.</p>
+<hr />
+<h3 id="check-installation-was-successful">Check installation was successful</h3>
+<p>You can check everything has been installed successfully by checking that <code>spack</code> and <code>reframe</code> are in path and the path to the ReFrame config file is set correctly</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>spack<span class="w"> </span>--version
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="m">0</span>.22.0.dev0<span class="w"> </span><span class="o">(</span>88e738c34346031ce875fdd510dd2251aa63dad7<span class="o">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>$<span class="w"> </span>reframe<span class="w"> </span>--version
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="m">4</span>.4.1
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>$<span class="w"> </span>ls<span class="w"> </span><span class="nv">$RFM_CONFIG_FILES</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>/work/d193/d193/tk-d193/excalibur-tests/benchmarks/reframe_config.py
+</span></code></pre></div>
+<hr />
+<h3 id="environment-summary">Environment summary</h3>
+<p>If you log out and back in, you will have to run some of the above commands again to recreate your environment. These are (from your <code>work</code> directory):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>module load cray-python
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>source excalibur-env/bin/activate
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>export RFM_CONFIG_FILES=&quot;$(pwd)/excalibur-tests/benchmarks/reframe_config.py&quot;
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>export RFM_USE_LOGIN_SHELL=&quot;true&quot;
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>source ./spack/share/spack/setup-env.sh
+</span></code></pre></div>
+<hr />
+<h2 id="run-sombrero-example">Run Sombrero Example</h2>
+<p>You can now use ReFrame to run benchmarks from the <code>benchmarks/examples</code> and <code>benchmarks/apps</code> directories. The basic syntax is 
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>&lt;path/to/benchmark&gt;<span class="w"> </span>-r
+</span></code></pre></div></p>
+<hr />
+<h3 id="archer2-specific-commands">ARCHER2 specific commands</h3>
+<p>In addition, on ARCHER2, you have to provide the quality of service (QoS) type for your job to ReFrame on the command line with <code>-J</code>. Use the "short" QoS to run the sombrero example with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>excalibur-tests/benchmarks/examples/sombrero<span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--qos=short&#39;</span>
+</span></code></pre></div>
+You may notice you actually ran four benchmarks with that single command! That is because the benchmark is parametrized. We will talk about this in the next section.</p>
+<hr />
+<h3 id="output-sample">Output sample</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>$<span class="w"> </span>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/examples/sombrero/<span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--qos=short&#39;</span><span class="w"> </span>--performance-report
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="o">[</span>ReFrame<span class="w"> </span>Setup<span class="o">]</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>version:<span class="w">           </span><span class="m">4</span>.3.0
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>command:<span class="w">           </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-env/bin/reframe -c benchmarks/examples/sombrero/ -r -J--qos=short&#39;</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>launched<span class="w"> </span>by:<span class="w">       </span>tk-d193@ln03
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>working<span class="w"> </span>directory:<span class="w"> </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-tests&#39;</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>settings<span class="w"> </span>files:<span class="w">    </span><span class="s1">&#39;&lt;builtin&gt;&#39;</span>,<span class="w"> </span><span class="s1">&#39;/work/d193/d193/tk-d193/excalibur-tests/benchmarks/reframe_config.py&#39;</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>check<span class="w"> </span>search<span class="w"> </span>path:<span class="w"> </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-tests/benchmarks/examples/sombrero&#39;</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>stage<span class="w"> </span>directory:<span class="w">   </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-tests/stage&#39;</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>output<span class="w"> </span>directory:<span class="w">  </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/excalibur-tests/output&#39;</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>log<span class="w"> </span>files:<span class="w">         </span><span class="s1">&#39;/tmp/rfm-u1l6yt7f.log&#39;</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="o">[==========]</span><span class="w"> </span>Running<span class="w"> </span><span class="m">4</span><span class="w"> </span>check<span class="o">(</span>s<span class="o">)</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="o">[==========]</span><span class="w"> </span>Started<span class="w"> </span>on<span class="w"> </span>Fri<span class="w"> </span>Jul<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">15</span>:47:45<span class="w"> </span><span class="m">2023</span><span class="w"> </span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>start<span class="w"> </span>processing<span class="w"> </span>checks
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">2</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">2</span><span class="w"> </span>/de04c10b<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">2</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">1</span><span class="w"> </span>/c52a123d<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">1</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">2</span><span class="w"> </span>/c1c3a3f1<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">1</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">1</span><span class="w"> </span>/52e1ce98<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">1</span>/4<span class="o">)</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">1</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">2</span><span class="w"> </span>/c1c3a3f1<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>P:<span class="w"> </span>flops:<span class="w"> </span><span class="m">0</span>.67<span class="w"> </span>Gflops/seconds<span class="w"> </span><span class="o">(</span>r:1.2,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">2</span>/4<span class="o">)</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">1</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">1</span><span class="w"> </span>/52e1ce98<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>P:<span class="w"> </span>flops:<span class="w"> </span><span class="m">0</span>.67<span class="w"> </span>Gflops/seconds<span class="w"> </span><span class="o">(</span>r:1.2,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">3</span>/4<span class="o">)</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">2</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">2</span><span class="w"> </span>/de04c10b<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>P:<span class="w"> </span>flops:<span class="w"> </span><span class="m">1</span>.27<span class="w"> </span>Gflops/seconds<span class="w"> </span><span class="o">(</span>r:1.2,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">4</span>/4<span class="o">)</span><span class="w"> </span>SombreroBenchmark<span class="w"> </span>%tasks<span class="o">=</span><span class="m">2</span><span class="w"> </span>%cpus_per_task<span class="o">=</span><span class="m">1</span><span class="w"> </span>/c52a123d<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>P:<span class="w"> </span>flops:<span class="w"> </span><span class="m">1</span>.24<span class="w"> </span>Gflops/seconds<span class="w"> </span><span class="o">(</span>r:1.2,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>all<span class="w"> </span>spawned<span class="w"> </span>checks<span class="w"> </span>have<span class="w"> </span>finished
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="o">[</span><span class="w">  </span>PASSED<span class="w">  </span><span class="o">]</span><span class="w"> </span>Ran<span class="w"> </span><span class="m">4</span>/4<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="k">case</span><span class="o">(</span>s<span class="o">)</span><span class="w"> </span>from<span class="w"> </span><span class="m">4</span><span class="w"> </span>check<span class="o">(</span>s<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">0</span><span class="w"> </span>failure<span class="o">(</span>s<span class="o">)</span>,<span class="w"> </span><span class="m">0</span><span class="w"> </span>skipped,<span class="w"> </span><span class="m">0</span><span class="w"> </span>aborted<span class="o">)</span>
+</span><span id="__span-15-32"><a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="o">[==========]</span><span class="w"> </span>Finished<span class="w"> </span>on<span class="w"> </span>Fri<span class="w"> </span>Jul<span class="w">  </span><span class="m">7</span><span class="w"> </span><span class="m">15</span>:48:23<span class="w"> </span><span class="m">2023</span><span class="w"> </span>
+</span><span id="__span-15-33"><a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>Log<span class="w"> </span>file<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>saved<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">&#39;/tmp/rfm-u1l6yt7f.log&#39;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="benchmark-output">Benchmark output</h3>
+<p>You can find build and run logs in the <code>output/</code> directory of a successful benchmark. They record how the benchmark was built by spack and ran by ReFrame.</p>
+<p>While the benchmark is running, the log files are kept in the <code>stage/</code> directory. They remain there if the benchmark fails to build or run.</p>
+<p>You can find the performance log file from the benchmark in <code>perflogs/</code>. The perflog records the captured figures of merit, environment variables and metadata about the job.</p>
+<hr />
+<h2 id="postprocess-benchmark-results">Postprocess Benchmark Results</h2>
+<p>Now let's look at the Benchmark performance results, and create a plot to visualise them.</p>
+<p><strong>NOTE:</strong> The post-processing package is currently under heavy development. Please refer to the latest <code>post-processing/README.md</code> and <code>post-processing/post_processing_config.yaml</code> to use it.</p>
+<hr />
+<h3 id="the-perflog">The perflog</h3>
+<p>After running the Sombrero benchmark once you should have a perflog in <code>perflogs/archer2/compute-node/SombreroBenchmark.log</code> that looks like this
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>job_completion_time|version|info|jobid|num_tasks|num_cpus_per_task|num_tasks_per_node|num_gpus_per_node|flops_value|flops_unit|flops_ref|flops_lower_thres|flops_upper_thres|spack_spec|display_name|system|partition|environ|extra_resources|env_vars|tags
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>2023-08-25T11:23:46|reframe 4.3.2|SombreroBenchmark %tasks=2 %cpus_per_task=2 /de04c10b @archer2:compute-node+default|4323431|2|2|1|null|1.31|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=2 %cpus_per_task=2|archer2|compute-node|default|{}|{&quot;OMP_NUM_THREADS&quot;: &quot;2&quot;}|example
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>2023-08-25T11:23:48|reframe 4.3.2|SombreroBenchmark %tasks=1 %cpus_per_task=2 /c1c3a3f1 @archer2:compute-node+default|4323433|1|2|1|null|0.67|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=1 %cpus_per_task=2|archer2|compute-node|default|{}|{&quot;OMP_NUM_THREADS&quot;: &quot;2&quot;}|example
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>2023-08-25T11:23:48|reframe 4.3.2|SombreroBenchmark %tasks=1 %cpus_per_task=1 /52e1ce98 @archer2:compute-node+default|4323434|1|1|1|null|0.67|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=1 %cpus_per_task=1|archer2|compute-node|default|{}|{&quot;OMP_NUM_THREADS&quot;: &quot;1&quot;}|example
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>2023-08-25T11:23:48|reframe 4.3.2|SombreroBenchmark %tasks=2 %cpus_per_task=1 /c52a123d @archer2:compute-node+default|4323432|2|1|1|null|1.29|Gflops/seconds|1.2|-0.2|None|sombrero@2021-08-16|SombreroBenchmark %tasks=2 %cpus_per_task=1|archer2|compute-node|default|{}|{&quot;OMP_NUM_THREADS&quot;: &quot;1&quot;}|example
+</span></code></pre></div>
+Every time the same benchmark is run, a line is appended in this perflog.</p>
+<hr />
+<p>The perflog contains
+- Some general info about the benchmark run, including system, spack, and environment info.
+- The Figure(s) Of Merit (FOM) value, units, reference value, and lower and upper limits (<code>flops</code> in this case)
+- The <code>display_name</code> field, which encodes the benchmark name and parameters (<code>SombreroBenchmark %tasks=... %cpus_per_task=...</code> in this case)
+- Other quantities the user might want to compare performance for, passed as environment variables and encoded in the <code>env_vars</code> field.
+- The benchmark <code>tag</code> - another way to encode benchmark inputs, defined by the benchmark developers.</p>
+<hr />
+<h3 id="the-plotting-configuration-file">The plotting configuration file</h3>
+<p>The framework contains tools to plot the FOMs of benchmarks against any of the other parameters in the perflog. This generic plotting is driven by a configuration YAML file. Let's make one, and save it in <code>excalibur-tests/post-processing/post_processing_config.yaml</code>.</p>
+<p>The file needs to include
+- Plot title 
+- Axis information
+- Data series
+- Filters
+- Data types</p>
+<hr />
+<h3 id="title-and-axes">Title and Axes</h3>
+<p>Axes must have a value specified with a perflog column name or a benchmark parameter name, and units specified with either a perflog column name or a custom label (including <code>null</code>).
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Performance vs number of tasks and CPUs_per_task</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nt">x_axis</span><span class="p">:</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tasks&quot;</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nt">units</span><span class="p">:</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="nt">custom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nt">y_axis</span><span class="p">:</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;flops_value&quot;</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="nt">units</span><span class="p">:</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;flops_unit&quot;</span>
+</span></code></pre></div></p>
+<hr />
+<h3 id="data-series">Data series</h3>
+<p>Display several data series in the same plot and group x-axis data by specified column values. Specify an empty list if you only want one series plotted. In our sombrero example, we have two parameters. Therefore we need to either filter down to one, or make them separate series. Let's use separate series:</p>
+<p>Format: <code>[column_name, value]</code>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nt">series</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;cpus_per_task&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cpus_per_task&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p p-Indicator">]]</span>
+</span></code></pre></div>
+<strong>NOTE:</strong> Currently, only one distinct <code>column_name</code> is supported. In the future, a second one will be allowed to be added. But in any case, unlimited number of series can be plotted for the same <code>column_name</code> but different <code>value</code>.</p>
+<hr />
+<h3 id="filtering">Filtering</h3>
+<p>You can filter data rows based on specified conditions. Specify an empty list for no filters.</p>
+<p>Format: <code>[column_name, operator, value]</code>, 
+Accepted operators: "==", "!=", "&lt;", "&gt;", "&lt;=", "&gt;="
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</span></code></pre></div></p>
+<p><strong>NOTE:</strong> After re-running the benchmarks a few times your perflog will get populated with multiple lines and you'll have to filter down to what you want to plot. Feel free to experiment with a dirtier perflog file (eg. the one in <code>excalibur-tests/tutorial</code>) or a folder with several perflog files.</p>
+<hr />
+<h3 id="data-types">Data types</h3>
+<p>All columns used in axes, filters, and series must have a user-specified type for the data they contain. This would be the pandas dtype, e.g. <code>str/string/object</code>, <code>int/int64</code>, <code>float/float64</code>, <code>datetime/datetime64</code>.
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nt">column_types</span><span class="p">:</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;int&quot;</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nt">flops_value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nt">flops_unit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="nt">cpus_per_task</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;int&quot;</span>
+</span></code></pre></div></p>
+<hr />
+<h3 id="run-the-postprocessing">Run the postprocessing</h3>
+<p>The postprocessing package is an optional dependency of the framework. Install it with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./excalibur-tests/<span class="o">[</span>post-processing<span class="o">]</span>
+</span></code></pre></div></p>
+<p>We can now run the postprocessing with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>python<span class="w"> </span>post_processing.py<span class="w"> </span>&lt;log_path&gt;<span class="w"> </span>&lt;config_path&gt;
+</span></code></pre></div>
+where
+- <code>&lt;log_path&gt;</code> is the path to a perflog file or a directory containing perflog files.
+- <code>&lt;config_path&gt;</code> is the path to the configuration YAML file.</p>
+<p>In our case,
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>excalibur-tests/post-processing/post_processing.py<span class="w"> </span>perflogs<span class="w"> </span>excalibur-tests/post-processing/post_processing_config.yaml
+</span></code></pre></div></p>
+<hr />
+<h3 id="view-the-output">View the Output</h3>
+<p><code>scp</code> over the <code>Performance_vs_number_of_tasks_and_CPUs_per_task.html</code> file created in <code>excalibur-tests/post-processing</code>, and behold!</p>
+<p><img alt="" src="https://hackmd.io/_uploads/rkgyyJaa3.png" /></p>
+<hr />
+<h2 id="create-a-benchmark">Create a Benchmark</h2>
+<p>In this section you will create a ReFrame benchmark by writing a python class that tells ReFrame how to build and run an application and collect data from its output. </p>
+<p>For simplicity, we use the <a href="https://www.cs.virginia.edu/stream/ref.html"><code>STREAM</code></a> benchmark. It is a simple memory bandwidth benchmark with minimal build dependencies.</p>
+<hr />
+<h3 id="how-reframe-works">How ReFrame works</h3>
+<p>When ReFrame executes a test it runs a pipeline of the following stages</p>
+<p><img alt="" src="https://reframe-hpc.readthedocs.io/en/stable/_images/pipeline.svg" /></p>
+<p>You can customise the behaviour of each stage or add a hook before or after each of them.  For more details, read the <a href="https://reframe-hpc.readthedocs.io/en/stable/pipeline.html">ReFrame pipeline documentation</a>.</p>
+<hr />
+<h3 id="getting-started_1">Getting started</h3>
+<p>To get started, open an empty <code>.py</code> file where you will write the ReFrame class, e.g. <code>stream.py</code>. Save the file in a new directory e.g. <code>excalibur-tests/benchmarks/apps/stream</code>.</p>
+<hr />
+<h3 id="include-reframe-modules">Include ReFrame modules</h3>
+<p>The first thing you need is include a few modules from ReFrame. These should be available if the installation step was successful.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
+</span></code></pre></div>
+<hr />
+<h3 id="create-a-test-class">Create a Test Class</h3>
+<p>ReFrame has built-in support for the Spack package manager.
+In the following we will use the custom class <code>SpackTest</code> we created for our <code>benchmarks</code> module, which provides a tighter integration with Spack and reduces the boilerplate code you'd otherwise have to include.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span> <span class="nn">benchmarks.modules.utils</span> <span class="kn">import</span> <span class="n">SpackTest</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">class</span> <span class="nc">StreamBenchmark</span><span class="p">(</span><span class="n">SpackTest</span><span class="p">):</span>
+</span></code></pre></div>
+<p>The data members and methods detailed in the following sections should be placed inside this class.</p>
+<hr />
+<h3 id="add-build-recipe">Add Build Recipe</h3>
+<p>We prefer installing packages via spack whenever possible. In this exercise, the spack package for <code>stream</code> already exists in the global spack repository.</p>
+<p>The <code>SpackTest</code> base class takes care of setting up spack as the build system ReFrame uses. We only need to instruct ReFrame to install version <code>5.10</code> of the <code>stream</code> <a href="https://spack.readthedocs.io/en/latest/package_list.html#stream">spack package</a> using the <code>openmp</code> variant.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">spack_spec</span> <span class="o">=</span> <span class="s1">&#39;stream@5.10 +openmp&#39;</span>
+</span></code></pre></div>
+<p>Note that we did not specify a compiler. Spack will use a compiler from the spack environment. The complete spec is recorded in the build log.</p>
+<hr />
+<h3 id="add-run-configuration">Add Run Configuration</h3>
+<p>The ReFrame class tells ReFrame where and how to run the benchmark. We want to run on one task on a full archer2 node using 128 OpenMP threads to use the full node.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;archer2&#39;</span><span class="p">]</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;stream_c.exe&#39;</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="n">num_tasks</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="n">num_cpus_per_task</span> <span class="o">=</span> <span class="mi">128</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="n">time_limit</span> <span class="o">=</span> <span class="s1">&#39;5m&#39;</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="n">use_multithreading</span> <span class="o">=</span> <span class="kc">False</span>
+</span></code></pre></div>
+<hr />
+<h3 id="add-environment-variables">Add environment variables</h3>
+<p>Environment variables can be added to the <code>env_vars</code> attribute.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">env_vars</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_cpus_per_task</span><span class="si">}</span><span class="s1">&#39;</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="n">env_vars</span><span class="p">[</span><span class="s1">&#39;OMP_PLACES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cores&#39;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="add-sanity-check">Add Sanity Check</h3>
+<p>The rest of the benchmark follows the <a href="https://reframe-hpc.readthedocs.io/en/latest/tutorial_basics.html#writing-a-performance-test">Writing a Performance Test ReFrame Tutorial</a>. First we need a sanity check that ensures the benchmark ran successfully. A function decorated with the <code>@sanity_function</code> decorator is used by ReFrame to check that the test ran successfully. The sanity function can perform a number of checks, in this case we want to match a line of the expected standard output.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nd">@sanity_function</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="k">def</span> <span class="nf">validate_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Solution Validates&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="add-performance-pattern-check">Add Performance Pattern Check</h3>
+<p>To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the <code>@performance_function</code> decorator extracts or computes a performance metric from the test’s output.</p>
+<blockquote>
+<p>In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the <a href="https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle"><code>extractsingle()</code></a> utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.</p>
+</blockquote>
+<hr />
+<h3 id="performance-pattern-check">Performance Pattern Check</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Copy&#39;</span><span class="p">)</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="k">def</span> <span class="nf">extract_copy_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Copy:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Scale&#39;</span><span class="p">)</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="k">def</span> <span class="nf">extract_scale_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Scale:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Add&#39;</span><span class="p">)</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="k">def</span> <span class="nf">extract_add_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Add:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>
+</span><span id="__span-30-13"><a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Triad&#39;</span><span class="p">)</span>
+</span><span id="__span-30-14"><a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="k">def</span> <span class="nf">extract_triad_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-30-15"><a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Triad:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h3 id="run-stream-benchmark">Run Stream Benchmark</h3>
+<p>You can now run the benchmark in the same way as the previous sombrero example</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>excalibur-tests/benchmarks/apps/stream/<span class="w"> </span>-r<span class="w"> </span>--system<span class="w"> </span>archer2<span class="w"> </span>-J<span class="s1">&#39;--qos=short&#39;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="sample-output">Sample Output</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>$<span class="w"> </span>reframe<span class="w"> </span>-c<span class="w"> </span>excalibur-tests/benchmarks/examples/stream/<span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--qos=short&#39;</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="o">[</span>ReFrame<span class="w"> </span>Setup<span class="o">]</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>version:<span class="w">           </span><span class="m">4</span>.4.1
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">  </span>command:<span class="w">           </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/demo-env/bin/reframe -c excalibur-tests/benchmarks/examples/stream/ -r -J--qos=short&#39;</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">  </span>launched<span class="w"> </span>by:<span class="w">       </span>tk-d193@ln03
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="w">  </span>working<span class="w"> </span>directory:<span class="w"> </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo&#39;</span>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="w">  </span>settings<span class="w"> </span>files:<span class="w">    </span><span class="s1">&#39;&lt;builtin&gt;&#39;</span>,<span class="w"> </span><span class="s1">&#39;/work/d193/d193/tk-d193/ciuk-demo/excalibur-tests/benchmarks/reframe_config.py&#39;</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="w">  </span>check<span class="w"> </span>search<span class="w"> </span>path:<span class="w"> </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/excalibur-tests/benchmarks/examples/stream&#39;</span>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="w">  </span>stage<span class="w"> </span>directory:<span class="w">   </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/stage&#39;</span>
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="w">  </span>output<span class="w"> </span>directory:<span class="w">  </span><span class="s1">&#39;/mnt/lustre/a2fs-work3/work/d193/d193/tk-d193/ciuk-demo/output&#39;</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="w">  </span>log<span class="w"> </span>files:<span class="w">         </span><span class="s1">&#39;/tmp/rfm-z87x4min.log&#39;</span>
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>
+</span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="o">[==========]</span><span class="w"> </span>Running<span class="w"> </span><span class="m">1</span><span class="w"> </span>check<span class="o">(</span>s<span class="o">)</span>
+</span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a><span class="o">[==========]</span><span class="w"> </span>Started<span class="w"> </span>on<span class="w"> </span>Thu<span class="w"> </span>Nov<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="m">14</span>:50:21<span class="w"> </span><span class="m">2023</span><span class="w"> </span>
+</span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>
+</span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>start<span class="w"> </span>processing<span class="w"> </span>checks
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>/8aeff853<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">1</span>/1<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>/8aeff853<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-32-19"><a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">1380840</span>.8<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-32-20"><a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">1369568</span>.7<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-32-21"><a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">1548666</span>.1<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-32-22"><a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">1548666</span>.1<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-32-23"><a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>all<span class="w"> </span>spawned<span class="w"> </span>checks<span class="w"> </span>have<span class="w"> </span>finished
+</span><span id="__span-32-24"><a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a>
+</span><span id="__span-32-25"><a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a><span class="o">[</span><span class="w">  </span>PASSED<span class="w">  </span><span class="o">]</span><span class="w"> </span>Ran<span class="w"> </span><span class="m">1</span>/1<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="k">case</span><span class="o">(</span>s<span class="o">)</span><span class="w"> </span>from<span class="w"> </span><span class="m">1</span><span class="w"> </span>check<span class="o">(</span>s<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">0</span><span class="w"> </span>failure<span class="o">(</span>s<span class="o">)</span>,<span class="w"> </span><span class="m">0</span><span class="w"> </span>skipped,<span class="w"> </span><span class="m">0</span><span class="w"> </span>aborted<span class="o">)</span>
+</span><span id="__span-32-26"><a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a><span class="o">[==========]</span><span class="w"> </span>Finished<span class="w"> </span>on<span class="w"> </span>Thu<span class="w"> </span>Nov<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="m">14</span>:51:13<span class="w"> </span><span class="m">2023</span><span class="w"> </span>
+</span><span id="__span-32-27"><a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a>Log<span class="w"> </span>file<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>saved<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">&#39;/tmp/rfm-z87x4min.log&#39;</span>
+</span></code></pre></div>
+<hr />
+<h3 id="interpreting-stream-results">Interpreting STREAM results</h3>
+<p>With default compile options, STREAM uses arrays of 10 million elements. On a full ARCHER2 node, the default array size fits into cache, and the benchmark does not report the correct memory bandwidth. Therefore the numbers from this tutorial are not comparable with other, published, results.</p>
+<p>To avoid caching, increase the array size during build by adding e.g. <code>stream_array_size=64000000</code> to the spack spec. </p>
+<hr />
+<h3 id="parametrized-tests">Parametrized tests</h3>
+<p>You can pass a list to the <code>parameter()</code> built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example <code>__init__()</code></p>
+<p>Example: Parametrize the array size</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="n">array_size</span> <span class="o">=</span> <span class="n">parameter</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">4e6</span><span class="p">,</span><span class="mf">8e6</span><span class="p">,</span><span class="mf">16e6</span><span class="p">,</span><span class="mf">32e6</span><span class="p">,</span><span class="mf">64e6</span><span class="p">])</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">spack_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;stream@5.10 +openmp stream_array_size=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">array_size</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>start<span class="w"> </span>processing<span class="w"> </span>checks
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">64000000</span><span class="w"> </span>/bbfd0e71<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">32000000</span><span class="w"> </span>/e16f9017<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">16000000</span><span class="w"> </span>/abc01230<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">8000000</span><span class="w"> </span>/51d83d77<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="o">[</span><span class="w"> </span>RUN<span class="w">      </span><span class="o">]</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">4000000</span><span class="w"> </span>/8399bc0b<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">1</span>/5<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">32000000</span><span class="w"> </span>/e16f9017<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">343432</span>.5<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">291065</span>.8<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">275577</span>.5<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">247425</span>.0<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">2</span>/5<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">16000000</span><span class="w"> </span>/abc01230<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-13"><a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">2538396</span>.7<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-14"><a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">2349544</span>.5<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-15"><a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">2912500</span>.4<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-16"><a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">2886402</span>.8<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-17"><a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">3</span>/5<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">8000000</span><span class="w"> </span>/51d83d77<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-18"><a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">1641807</span>.1<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-19"><a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">1362616</span>.5<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-20"><a id="__codelineno-34-20" name="__codelineno-34-20" href="#__codelineno-34-20"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">1959382</span>.9<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-21"><a id="__codelineno-34-21" name="__codelineno-34-21" href="#__codelineno-34-21"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">1940497</span>.3<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-22"><a id="__codelineno-34-22" name="__codelineno-34-22" href="#__codelineno-34-22"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">4</span>/5<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">64000000</span><span class="w"> </span>/bbfd0e71<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-23"><a id="__codelineno-34-23" name="__codelineno-34-23" href="#__codelineno-34-23"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">255622</span>.4<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-24"><a id="__codelineno-34-24" name="__codelineno-34-24" href="#__codelineno-34-24"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">235186</span>.0<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-25"><a id="__codelineno-34-25" name="__codelineno-34-25" href="#__codelineno-34-25"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">204853</span>.9<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-26"><a id="__codelineno-34-26" name="__codelineno-34-26" href="#__codelineno-34-26"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">213072</span>.2<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-27"><a id="__codelineno-34-27" name="__codelineno-34-27" href="#__codelineno-34-27"></a><span class="o">[</span><span class="w">       </span>OK<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">(</span><span class="m">5</span>/5<span class="o">)</span><span class="w"> </span>StreamBenchmark<span class="w"> </span>%array_size<span class="o">=</span><span class="m">4000000</span><span class="w"> </span>/8399bc0b<span class="w"> </span>@archer2:compute-node+default
+</span><span id="__span-34-28"><a id="__codelineno-34-28" name="__codelineno-34-28" href="#__codelineno-34-28"></a>P:<span class="w"> </span>Copy:<span class="w"> </span><span class="m">1231355</span>.3<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-29"><a id="__codelineno-34-29" name="__codelineno-34-29" href="#__codelineno-34-29"></a>P:<span class="w"> </span>Scale:<span class="w"> </span><span class="m">1086783</span>.2<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-30"><a id="__codelineno-34-30" name="__codelineno-34-30" href="#__codelineno-34-30"></a>P:<span class="w"> </span>Add:<span class="w"> </span><span class="m">1519446</span>.0<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-31"><a id="__codelineno-34-31" name="__codelineno-34-31" href="#__codelineno-34-31"></a>P:<span class="w"> </span>Triad:<span class="w"> </span><span class="m">1548666</span>.1<span class="w"> </span>MB/s<span class="w"> </span><span class="o">(</span>r:0,<span class="w"> </span>l:None,<span class="w"> </span>u:None<span class="o">)</span>
+</span><span id="__span-34-32"><a id="__codelineno-34-32" name="__codelineno-34-32" href="#__codelineno-34-32"></a><span class="o">[</span>----------<span class="o">]</span><span class="w"> </span>all<span class="w"> </span>spawned<span class="w"> </span>checks<span class="w"> </span>have<span class="w"> </span>finished
+</span><span id="__span-34-33"><a id="__codelineno-34-33" name="__codelineno-34-33" href="#__codelineno-34-33"></a>
+</span><span id="__span-34-34"><a id="__codelineno-34-34" name="__codelineno-34-34" href="#__codelineno-34-34"></a><span class="o">[</span><span class="w">  </span>PASSED<span class="w">  </span><span class="o">]</span><span class="w"> </span>Ran<span class="w"> </span><span class="m">5</span>/5<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="k">case</span><span class="o">(</span>s<span class="o">)</span><span class="w"> </span>from<span class="w"> </span><span class="m">5</span><span class="w"> </span>check<span class="o">(</span>s<span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="m">0</span><span class="w"> </span>failure<span class="o">(</span>s<span class="o">)</span>,<span class="w"> </span><span class="m">0</span><span class="w"> </span>skipped,<span class="w"> </span><span class="m">0</span><span class="w"> </span>aborted<span class="o">)</span>
+</span><span id="__span-34-35"><a id="__codelineno-34-35" name="__codelineno-34-35" href="#__codelineno-34-35"></a><span class="o">[==========]</span><span class="w"> </span>Finished<span class="w"> </span>on<span class="w"> </span>Thu<span class="w"> </span>Nov<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="m">14</span>:34:48<span class="w"> </span><span class="m">2023</span><span class="w"> </span>
+</span></code></pre></div>
+<hr />
+<h3 id="reference-values">Reference values</h3>
+<p>ReFrame can automate checking that the results fall within an expected range. We can use it in our previous example of increasing the array size to avoid caching. You can set a different reference value for each <code>perf_key</code> in the performance function. For example, set the test to fail if it falls outside of +-25% of the values obtained with the largest array size.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="n">reference</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>    <span class="s1">&#39;archer2&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>        <span class="s1">&#39;Copy&#39;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">260000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>        <span class="s1">&#39;Scale&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">230000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>        <span class="s1">&#39;Add&#39;</span><span class="p">:</span>   <span class="p">(</span><span class="mi">210000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>        <span class="s1">&#39;Triad&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">210000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">)</span>
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>    <span class="p">}</span>
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<blockquote>
+<p>The performance reference tuple consists of the reference value, the lower and upper thresholds expressed as fractional numbers relative to the reference value, and the unit of measurement. If any of the thresholds is not relevant, None may be used instead. Also, the units in this reference variable are entirely optional, since they were already provided through the @performance_function decorator.</p>
+</blockquote>
+<hr />
+<h3 id="plotting-stream-benchmark-output">Plotting STREAM benchmark output</h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stream Triad Bandwidth</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="nt">x_axis</span><span class="p">:</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;array_size&quot;</span>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">  </span><span class="nt">units</span><span class="p">:</span>
+</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="w">    </span><span class="nt">custom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>
+</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="nt">y_axis</span><span class="p">:</span>
+</span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Triad_value&quot;</span>
+</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">  </span><span class="nt">units</span><span class="p">:</span><span class="w"> </span>
+</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">    </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Triad_unit&quot;</span>
+</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>
+</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="nt">series</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="nt">filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;test_name&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;==&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;StreamBenchmark&quot;</span><span class="p p-Indicator">]]</span>
+</span></code></pre></div>
+<hr />
+<h2 id="portability-demo">Portability Demo</h2>
+<p>Having gone through the process of setting up the framework on multiple systems enables you to run benchmarks configured in the repository on those systems. As a proof of this concept, this demo shows how to run a benchmark (e.g. <code>hpgmg</code>) on a list of systems (ARCHER2, csd3, cosma8, isambard-macs). Note that to run this demo, you will need an account and a CPU time allocation on each of these systems.</p>
+<hr />
+<p>The commands to set up and run the demo are recorded in <a href="https://github.com/ukri-excalibur/excalibur-tests/tree/tk-portability-demo/demo">scripts in the exaclibur-tests repository</a>. It is not feasible to make the progress completely system-agnostic, in our case we need to manually</p>
+<ul>
+<li>Load a compatible python module</li>
+<li>Specify the user account for charging CPU time</li>
+<li>Change the working directory and select quality of service (on ARCHER2)</li>
+</ul>
+<p>That is done differently on each system. The framework attempts to automtically identify the system it is being run on, but due to ambiguity in login node names this can fail, and we also recommend specifying the system on the command line.</p>
+<hr />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="ch">#!/bin/bash -l</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="nv">system</span><span class="o">=</span><span class="nv">$1</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="c1"># System specific part of setup. Mostly load the correct python module</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>archer2<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="k">then</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>cray-python
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="w">    </span><span class="nb">cd</span><span class="w"> </span>/work/d193/d193/tk-d193
+</span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>csd3<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-37-11"><a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a><span class="k">then</span>
+</span><span id="__span-37-12"><a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a><span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>python/3.8
+</span><span id="__span-37-13"><a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>cosma<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-37-14"><a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a><span class="k">then</span>
+</span><span id="__span-37-15"><a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a><span class="w">    </span>module<span class="w"> </span>swap<span class="w"> </span>python/3.10.7
+</span><span id="__span-37-16"><a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>isambard<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-37-17"><a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a><span class="k">then</span>
+</span><span id="__span-37-18"><a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a><span class="w">    </span>module<span class="w"> </span>load<span class="w"> </span>python37
+</span><span id="__span-37-19"><a id="__codelineno-37-19" name="__codelineno-37-19" href="#__codelineno-37-19"></a><span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/home/ri-tkoskela/.local/bin:<span class="nv">$PATH</span>
+</span><span id="__span-37-20"><a id="__codelineno-37-20" name="__codelineno-37-20" href="#__codelineno-37-20"></a><span class="k">fi</span>
+</span><span id="__span-37-21"><a id="__codelineno-37-21" name="__codelineno-37-21" href="#__codelineno-37-21"></a>
+</span><span id="__span-37-22"><a id="__codelineno-37-22" name="__codelineno-37-22" href="#__codelineno-37-22"></a><span class="c1"># Setup</span>
+</span><span id="__span-37-23"><a id="__codelineno-37-23" name="__codelineno-37-23" href="#__codelineno-37-23"></a>mkdir<span class="w"> </span>demo
+</span><span id="__span-37-24"><a id="__codelineno-37-24" name="__codelineno-37-24" href="#__codelineno-37-24"></a><span class="nb">cd</span><span class="w"> </span>demo
+</span><span id="__span-37-25"><a id="__codelineno-37-25" name="__codelineno-37-25" href="#__codelineno-37-25"></a>python3<span class="w"> </span>--version
+</span><span id="__span-37-26"><a id="__codelineno-37-26" name="__codelineno-37-26" href="#__codelineno-37-26"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>demo-env
+</span><span id="__span-37-27"><a id="__codelineno-37-27" name="__codelineno-37-27" href="#__codelineno-37-27"></a><span class="nb">source</span><span class="w"> </span>./demo-env/bin/activate
+</span><span id="__span-37-28"><a id="__codelineno-37-28" name="__codelineno-37-28" href="#__codelineno-37-28"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:ukri-excalibur/excalibur-tests.git
+</span><span id="__span-37-29"><a id="__codelineno-37-29" name="__codelineno-37-29" href="#__codelineno-37-29"></a>git<span class="w"> </span>clone<span class="w"> </span>-c<span class="w"> </span>feature.manyFiles<span class="o">=</span><span class="nb">true</span><span class="w"> </span>git@github.com:spack/spack.git
+</span><span id="__span-37-30"><a id="__codelineno-37-30" name="__codelineno-37-30" href="#__codelineno-37-30"></a><span class="nb">source</span><span class="w"> </span>./spack/share/spack/setup-env.sh
+</span><span id="__span-37-31"><a id="__codelineno-37-31" name="__codelineno-37-31" href="#__codelineno-37-31"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_CONFIG_FILES</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/excalibur-tests/benchmarks/reframe_config.py&quot;</span>
+</span><span id="__span-37-32"><a id="__codelineno-37-32" name="__codelineno-37-32" href="#__codelineno-37-32"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+</span><span id="__span-37-33"><a id="__codelineno-37-33" name="__codelineno-37-33" href="#__codelineno-37-33"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+</span><span id="__span-37-34"><a id="__codelineno-37-34" name="__codelineno-37-34" href="#__codelineno-37-34"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./excalibur-tests
+</span></code></pre></div>
+<hr />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="nv">app</span><span class="o">=</span><span class="nv">$1</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="nv">compiler</span><span class="o">=</span><span class="nv">$2</span>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="nv">system</span><span class="o">=</span><span class="nv">$3</span>
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="nv">spec</span><span class="o">=</span><span class="nv">$app</span><span class="se">\%</span><span class="nv">$compiler</span>
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="nv">apps_dir</span><span class="o">=</span>excalibur-tests/benchmarks/apps
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>archer2<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="k">then</span>
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">    </span>reframe<span class="w"> </span>-c<span class="w"> </span><span class="nv">$apps_dir</span>/<span class="nv">$app</span><span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--qos=standard&#39;</span><span class="w"> </span>--system<span class="w"> </span>archer2<span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="nv">$spec</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">8</span><span class="w">  </span>--setvar<span class="o">=</span><span class="nv">num_tasks_per_node</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_tasks</span><span class="o">=</span><span class="m">8</span>
+</span><span id="__span-38-13"><a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>cosma<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-38-14"><a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a><span class="k">then</span>
+</span><span id="__span-38-15"><a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a><span class="w">    </span>reframe<span class="w"> </span>-c<span class="w"> </span><span class="nv">$apps_dir</span>/<span class="nv">$app</span><span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--account=do006&#39;</span><span class="w"> </span>--system<span class="w"> </span>cosma8<span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="nv">$spec</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">8</span><span class="w">  </span>--setvar<span class="o">=</span><span class="nv">num_tasks_per_node</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_tasks</span><span class="o">=</span><span class="m">8</span>
+</span><span id="__span-38-16"><a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>csd3<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-38-17"><a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a><span class="k">then</span>
+</span><span id="__span-38-18"><a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a><span class="w">    </span>reframe<span class="w"> </span>-c<span class="w"> </span><span class="nv">$apps_dir</span>/<span class="nv">$app</span><span class="w"> </span>-r<span class="w"> </span>-J<span class="s1">&#39;--account=DIRAC-DO006-CPU&#39;</span><span class="w"> </span>--system<span class="w"> </span>csd3-cascadelake<span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="nv">$spec</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">8</span><span class="w">  </span>--setvar<span class="o">=</span><span class="nv">num_tasks_per_node</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_tasks</span><span class="o">=</span><span class="m">8</span>
+</span><span id="__span-38-19"><a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$system</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>isambard<span class="w"> </span><span class="o">]</span>
+</span><span id="__span-38-20"><a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a><span class="k">then</span>
+</span><span id="__span-38-21"><a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a><span class="w">    </span>reframe<span class="w"> </span>-c<span class="w"> </span><span class="nv">$apps_dir</span>/<span class="nv">$app</span><span class="w"> </span>-r<span class="w"> </span>--system<span class="w"> </span>isambard-macs:cascadelake<span class="w"> </span>-S<span class="w"> </span><span class="nv">build_locally</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-S<span class="w"> </span><span class="nv">spack_spec</span><span class="o">=</span><span class="nv">$spec</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">8</span><span class="w">  </span>--setvar<span class="o">=</span><span class="nv">num_tasks_per_node</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_tasks</span><span class="o">=</span><span class="m">8</span>
+</span><span id="__span-38-22"><a id="__codelineno-38-22" name="__codelineno-38-22" href="#__codelineno-38-22"></a><span class="k">fi</span>
+</span></code></pre></div>
+<hr />
+<h2 id="useful-reading">Useful Reading</h2>
+<hr />
+<h3 id="reframe">ReFrame</h3>
+<ul>
+<li><a href="https://reframe-hpc.readthedocs.io/">ReFrame Documentation</a></li>
+<li>ReFrame tutorials<ul>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_basics.html">Tutorial 1: Getting started with ReFrame</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_advanced.html">Tutorial 2: Customizing Further a Regression Test</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_deps.html">Tutorial 3: Using Dependencies in ReFrame Tests</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_fixtures.html">Tutorial 4: Using Test Fixtures</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_build_automation.html">Tutorial 5: Using Build Automation Tools As a Build System</a></li>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial_tips_tricks.html">Tutorial 6: Tips and Tricks</a></li>
+</ul>
+</li>
+<li>Libraries of ReFrame tests<ul>
+<li><a href="https://reframe-hpc.readthedocs.io/en/stable/hpctestlib.html">Official ReFrame test library</a></li>
+<li><a href="https://github.com/reframe-hpc">ReFrame GitHub organisation with various contributed test libraries</a></li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="spack">Spack</h3>
+<ul>
+<li><a href="https://spack.readthedocs.io/">Spack documentation</a></li>
+<li><a href="https://spack-tutorial.readthedocs.io/">Spack tutorial (including YouTube recordings)</a></li>
+<li><a href="https://packages.spack.io/">Spack package searchable list</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.bd41221c.min.js"></script>
+      
+    
+  </body>
+</html>
