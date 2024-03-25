@@ -397,7 +397,7 @@
           <li class="md-nav__item">
   <a href="#perflog-parsing" class="md-nav__link">
     <span class="md-ellipsis">
-      Perflog parsing:
+      Perflog parsing
     </span>
   </a>
   
@@ -406,7 +406,7 @@
           <li class="md-nav__item">
   <a href="#data-filtering" class="md-nav__link">
     <span class="md-ellipsis">
-      Data filtering:
+      Data filtering
     </span>
   </a>
   
@@ -415,7 +415,7 @@
           <li class="md-nav__item">
   <a href="#data-transformation" class="md-nav__link">
     <span class="md-ellipsis">
-      Data transformation:
+      Data transformation
     </span>
   </a>
   
@@ -424,7 +424,7 @@
           <li class="md-nav__item">
   <a href="#plotting" class="md-nav__link">
     <span class="md-ellipsis">
-      Plotting:
+      Plotting
     </span>
   </a>
   
@@ -1360,7 +1360,7 @@
           <li class="md-nav__item">
   <a href="#perflog-parsing" class="md-nav__link">
     <span class="md-ellipsis">
-      Perflog parsing:
+      Perflog parsing
     </span>
   </a>
   
@@ -1369,7 +1369,7 @@
           <li class="md-nav__item">
   <a href="#data-filtering" class="md-nav__link">
     <span class="md-ellipsis">
-      Data filtering:
+      Data filtering
     </span>
   </a>
   
@@ -1378,7 +1378,7 @@
           <li class="md-nav__item">
   <a href="#data-transformation" class="md-nav__link">
     <span class="md-ellipsis">
-      Data transformation:
+      Data transformation
     </span>
   </a>
   
@@ -1387,7 +1387,7 @@
           <li class="md-nav__item">
   <a href="#plotting" class="md-nav__link">
     <span class="md-ellipsis">
-      Plotting:
+      Plotting
     </span>
   </a>
   
@@ -1556,20 +1556,20 @@
 <h3 id="overview">Overview</h3>
 <p>The post-processing scripts provided with the ExCALIBUR tests package are intended to grant users a quick starting point for visualising benchmark results with basic graphs and tables. Their components can also be used inside custom users' scripts.</p>
 <p>There are four main post-processing components:</p>
-<h4 id="perflog-parsing"><strong><code>Perflog parsing</code>:</strong></h4>
+<h4 id="perflog-parsing"><strong><code>Perflog parsing</code></strong></h4>
 <ul>
 <li>Data from benchmark performance logs are stored in a pandas DataFrame.</li>
 </ul>
-<h4 id="data-filtering"><strong><code>Data filtering</code>:</strong></h4>
+<h4 id="data-filtering"><strong><code>Data filtering</code></strong></h4>
 <ul>
 <li>If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.</li>
 <li>The DataFrame is then filtered, keeping only relevant rows and columns.</li>
 </ul>
-<h4 id="data-transformation"><strong><code>Data transformation</code>:</strong></h4>
+<h4 id="data-transformation"><strong><code>Data transformation</code></strong></h4>
 <ul>
 <li>Axis value columns in the DataFrame are scaled according to user specifications.</li>
 </ul>
-<h4 id="plotting"><strong><code>Plotting</code>:</strong></h4>
+<h4 id="plotting"><strong><code>Plotting</code></strong></h4>
 <ul>
 <li>A filtered and transformed DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.</li>
 <li>Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.</li>
@@ -1690,19 +1690,21 @@
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">      </span><span class="nt">x_value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;x_val_s&quot;</span>
 </span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
 </span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nt">filters</span><span class="p">:</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="nt">and</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;filter_col_1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;&lt;=&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">filter_val_1</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;filter_col_2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;!=&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">filter_val_2</span><span class="p p-Indicator">]]</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span><span class="nt">or</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nt">series</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;series_col&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;series_val_1&quot;</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;series_col&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;series_val_2&quot;</span><span class="p p-Indicator">]]</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="nt">column_types</span><span class="p">:</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span><span class="nt">x_axis_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span><span class="nt">y_axis_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="nt">unit_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="nt">scaling_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span><span class="nt">filter_col_1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;datetime&quot;</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="nt">filter_col_2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;int&quot;</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">  </span><span class="nt">series_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="nt">and</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;filter_col_1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;&lt;=&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">filter_val_1</span><span class="p p-Indicator">],</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="p p-Indicator">[</span><span class="s">&quot;filter_col_2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;!=&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">filter_val_2</span><span class="p p-Indicator">]]</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="nt">or</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nt">series</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[[</span><span class="s">&quot;series_col&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;series_val_1&quot;</span><span class="p p-Indicator">],</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">         </span><span class="p p-Indicator">[</span><span class="s">&quot;series_col&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;series_val_2&quot;</span><span class="p p-Indicator">]]</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nt">column_types</span><span class="p">:</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="nt">x_axis_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span><span class="nt">y_axis_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">  </span><span class="nt">unit_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="nt">scaling_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">  </span><span class="nt">filter_col_1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;datetime&quot;</span>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">  </span><span class="nt">filter_col_2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;int&quot;</span>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">  </span><span class="nt">series_col</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;str&quot;</span>
 </span></code></pre></div>
 <h4 id="x-axis-grouping">X-axis Grouping</h4>
 <p>The settings above will produce a graph that will have its x-axis data grouped based on the values in <code>x_axis_col</code> and <code>series_col</code>. (<code>Note: only groupings with one series column are currently supported.</code>) If we imagine that <code>x_axis_col</code> has two unique values, <code>"x_val_1"</code> and <code>"x_val_2"</code>, there will be four groups (and four bars) along the x-axis:</p>
@@ -1933,9 +1935,11 @@
 <li>Datetimes are treated as <code>datetime64[ns]</code>.</li>
 </ul>
 <h3 id="future-development">Future Development</h3>
-<p>The post-processing capabilities are still a work in progress. Some upcoming developments:
--  Embed graphs in GitHub Pages, instead of a bare HTML file.
--  Add scaling and regression plots.</p>
+<p>The post-processing capabilities are still a work in progress. Some upcoming developments:</p>
+<ul>
+<li>Embed graphs in GitHub Pages, instead of a bare HTML file.</li>
+<li>Add scaling and regression plots.</li>
+</ul>
 
 
 
