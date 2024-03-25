@@ -71,7 +71,6 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         axis_options()
         # display filter options
         filter_options()
-        # FIXME: do we need the option to allow users to just change column types?
 
         generate_graph, download_config = st.columns(2)
         # re-run post processing and create a new plot
@@ -192,7 +191,6 @@ def update_axes():
         Apply user-selected axis columns and types to session state config.
     """
 
-    # FIXME (issue #271): if both axis columns are the same, this results in incorrect behaviour
     state = st.session_state
     config = state.config
     x_column = state.x_axis_column
@@ -252,7 +250,7 @@ def filter_options():
     """
 
     st.write("#### Filter Options")
-    # FIXME: inherit max width can be too large for sidebar
+    # FIXME (issue #300): inherit max width can be too large for sidebar
     # allow wide multiselect labels
     st.markdown(
         """
@@ -298,7 +296,6 @@ def new_filter_options():
 
     state = st.session_state
     post = state.post
-    # FIXME: can/should this section be placed before displaying current filters by caching earlier components?
     st.write("###### Add New Filter")
     with st.container(border=True):
 
@@ -316,7 +313,7 @@ def new_filter_options():
                 st.selectbox("operator", ["=="], key="filter_op")
             else:
                 st.selectbox("operator", operators, key="filter_op")
-        # FIXME: user should be allowed to select values that aren't in the column as well
+        # FIXME (issue #301): user should be allowed to select values that aren't in the column as well
         with c3:
             filter_col = post.df[state.filter_col].drop_duplicates()
             st.selectbox("filter value", filter_col.sort_values(), key="filter_val")
