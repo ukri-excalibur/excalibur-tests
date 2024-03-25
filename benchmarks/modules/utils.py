@@ -271,7 +271,7 @@ class SpackTest(rfm.RegressionTest):
         cmd_spack_spec_dict =   'from spack import environment;\
                                 spec_list = environment.active_environment().concrete_roots();\
                                 key_list_for_each = [spec.variants.dict.keys() for spec in spec_list];\
-                                result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":spec["mpi"] if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
+                                result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":str(spec["mpi"]) if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
                                 print(result_dict)'
         self.postrun_cmds.append(f'echo "spack_spec_dict: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec_dict}\')"')
         
