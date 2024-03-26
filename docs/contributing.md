@@ -23,6 +23,11 @@ This is in the `spack/repo` directory, create a subdirectory inside `spack/repo/
 with the name of the package you want to add, and place into it the `package.py` Spack recipe.
 On supported HPC systems, this repo is automatically added to the provided Spack environments.
 
+In Spack recipes, please avoid cloning the head of a branch. The state of the
+branch at the time it was cloned will not get recorded by Spack or ReFrame which leads to 
+issues with reproducibility. It is strongly recommended to only build tagged versions of 
+packages with Spack.
+
 ### ReFrame benchmark
 
 New benchmarks should be added in the `apps/` directory, under the specific
