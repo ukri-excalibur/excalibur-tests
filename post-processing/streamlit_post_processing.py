@@ -81,7 +81,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
             if config.title:
                 st.download_button("Download Config", config.to_yaml(),
                                    "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
-                                   use_container_width=True)
+                                   on_click=validate_download_config, use_container_width=True)
             else:
                 st.button("Download Config", disabled=True, use_container_width=True)
 
@@ -405,6 +405,20 @@ def rerun_post_processing():
     except Exception as e:
         st.exception(e)
         post.plot = None
+
+
+def validate_download_config():
+    """
+        Warn the user if the current session state config is invalid before download.
+    """
+
+    state = st.session_state
+    try:
+        # validate config
+        read_config(state.config.to_dict())
+    except Exception as e:
+        st.warning("Download successful.\n\n" + type(e).__name__ + ": " + str(e))
+        state.post.plot = None
 
 
 def read_args():
