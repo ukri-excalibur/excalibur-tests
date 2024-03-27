@@ -1,8 +1,10 @@
+import argparse
 import traceback
+from pathlib import Path
 
 import streamlit as st
-from config_handler import ConfigHandler, load_config
-from post_processing import PostProcessing, read_args
+from config_handler import ConfigHandler, load_config, read_config
+from post_processing import PostProcessing
 
 # drop-down lists
 operators = ["==", "!=", "<", ">", "<=", ">="]
@@ -15,13 +17,14 @@ type_lookup = {"datetime64[ns]": "datetime",
                "object": "str"}
 
 
-def update_ui(post: PostProcessing, config: ConfigHandler):
+def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None' = None):
     """
         Create an interactive user interface for post-processing using Streamlit.
 
         Args:
             post: PostProcessing, class containing performance log data and filter information.
             config: ConfigHandler, class containing configuration information for plotting.
+            e: Exception | None, a potential config validation error (only used for user information).
     """
 
     # stop the session state from resetting each time this function is run
@@ -29,41 +32,58 @@ def update_ui(post: PostProcessing, config: ConfigHandler):
     if state.get("post") is None:
         state.post = post
         state.config = config
+        # display initial config validation error, if present, and clear upon page reload
+        if e:
+            st.exception(e)
 
-    post = st.session_state.post
-    config = st.session_state.config
+    post = state.post
+    config = state.config
 
     # display graph
-    st.bokeh_chart(post.plot, use_container_width=True)
+    if post.plot:
+        st.bokeh_chart(post.plot, use_container_width=True)
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        if len(config.plot_columns) > 0:
+            st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        else:
+            st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
 
-    # config file uploader
-    st.divider()
-    st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
+    # display config in current session state
+    show_config = st.toggle("Show Config", key="show_config")
+    if show_config:
+        st.write(config.to_dict())
 
-    # set plot title
-    title = st.text_input("#### Title", config.title)
-    if title != config.title:
-        config.title = title
+    # display config information
+    with st.sidebar:
 
-    # display axis options
-    axis_options()
-    # display filter options
-    filter_options()
+        # config file uploader
+        st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
-    generate_graph, download_config = st.columns(2)
-    # re-run post processing and create a new plot
-    with generate_graph:
-        st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
-    # download session state config
-    with download_config:
-        st.download_button("Download Config", config.to_yaml(),
-                           "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
-                           use_container_width=True)
+        # set plot title
+        title = st.text_input("#### Title", config.title, placeholder="None")
+        if title != config.title:
+            config.title = title
+
+        # display axis options
+        axis_options()
+        # display filter options
+        filter_options()
+
+        generate_graph, download_config = st.columns(2)
+        # re-run post processing and create a new plot
+        with generate_graph:
+            st.button("Generate Graph", on_click=rerun_post_processing, use_container_width=True)
+        # download session state config
+        with download_config:
+            if config.title:
+                st.download_button("Download Config", config.to_yaml(),
+                                   "{0}_config.yaml".format((config.title).lower().replace(" ", "_")),
+                                   on_click=validate_download_config, use_container_width=True)
+            else:
+                st.button("Download Config", disabled=True, use_container_width=True)
 
 
 def update_config():
@@ -71,9 +91,22 @@ def update_config():
         Change session state config to uploaded config file.
     """
 
-    uploaded_config = st.session_state.uploaded_config
+    state = st.session_state
+    uploaded_config = state.uploaded_config
     if uploaded_config:
-        st.session_state.config = ConfigHandler(load_config(uploaded_config))
+        try:
+            config_dict = load_config(uploaded_config)
+            state.config = ConfigHandler(config_dict)
+            # update dataframe types
+            state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+        except Exception as e:
+            st.exception(e)
+            state.post.plot = None
+            # autofill some information from invalid config
+            try:
+                state.config = ConfigHandler(config_dict, template=True)
+            except Exception as e:
+                st.exception(e)
 
 
 def axis_options():
@@ -83,18 +116,18 @@ def axis_options():
 
     config = st.session_state.config
     st.write("#### Axis Options")
-    with st.form(key="axis_options"):
 
+    with st.container(border=True):
         # x-axis select
         axis_select("x", config.x_axis)
         sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
+    with st.container(border=True):
         # y-axis select
         axis_select("y", config.y_axis)
-        submit = st.form_submit_button("Update Axes")
 
-        if submit:
-            update_axes()
-            config.x_axis["sort"] = "descending" if sort else "ascending"
+    # apply changes
+    update_axes()
+    config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
 def axis_select(label: str, axis: dict):
@@ -108,8 +141,8 @@ def axis_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype)))
-    column_index = list(df.columns).index(axis["value"])
+    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis.get("value") else 0
+    column_index = list(df.columns).index(axis["value"]) if axis.get("value") in df.columns else None
 
     # axis information drop-downs
     axis_type, axis_column = st.columns(2)
@@ -136,7 +169,10 @@ def units_select(label: str, axis: dict):
 
     df = st.session_state.post.df
     # default drop-down selection
-    units_index = list(df.columns).index(axis["units"]["column"]) if axis["units"].get("column") else None
+    units_index = None
+    if axis.get("units"):
+        if axis["units"].get("column"):
+            units_index = list(df.columns).index(axis["units"]["column"])
 
     units_column, units_custom = st.columns(2)
     # units select
@@ -146,7 +182,8 @@ def units_select(label: str, axis: dict):
                      key="{0}_axis_units_column".format(label), index=units_index)
     # set custom units
     with units_custom:
-        st.text_input("{0}-axis units custom".format(label), axis["units"].get("custom"),
+        st.text_input("{0}-axis units custom".format(label),
+                      axis["units"].get("custom") if axis.get("units") else None,
                       placeholder="None", key="{0}_axis_units_custom".format(label))
 
 
@@ -155,7 +192,6 @@ def update_axes():
         Apply user-selected axis columns and types to session state config.
     """
 
-    # FIXME (issue #271): if both axis columns are the same, this results in incorrect behaviour
     state = st.session_state
     config = state.config
     x_column = state.x_axis_column
@@ -201,8 +237,12 @@ def update_types():
     config.parse_columns()
     # remove redundant types from config
     config.remove_redundant_types()
-    # update dataframe types
-    post.apply_df_types(config.all_columns, config.column_types)
+    try:
+        # update dataframe types
+        post.apply_df_types(config.all_columns, config.column_types)
+    except Exception as e:
+        st.exception(e)
+        post.plot = None
 
 
 def filter_options():
@@ -211,6 +251,7 @@ def filter_options():
     """
 
     st.write("#### Filter Options")
+    # FIXME (issue #300): inherit max width can be too large for sidebar
     # allow wide multiselect labels
     st.markdown(
         """
@@ -256,7 +297,6 @@ def new_filter_options():
 
     state = st.session_state
     post = state.post
-    # FIXME: can/should this section be placed before displaying current filters by caching earlier components?
     st.write("###### Add New Filter")
     with st.container(border=True):
 
@@ -274,12 +314,12 @@ def new_filter_options():
                 st.selectbox("operator", ["=="], key="filter_op")
             else:
                 st.selectbox("operator", operators, key="filter_op")
-        # FIXME: user should be allowed to select values that aren't in the column as well
+        # FIXME (issue #301): user should be allowed to select values that aren't in the column as well
         with c3:
             filter_col = post.df[state.filter_col].drop_duplicates()
             st.selectbox("filter value", filter_col.sort_values(), key="filter_val")
 
-        current_filter = [state.filter_col, state.filter_op, state.filter_val]
+        current_filter = [state.filter_col, state.filter_op, str(state.filter_val)]
         st.button("Add Filter", on_click=add_filter, args=[current_filter])
 
 
@@ -312,19 +352,38 @@ def add_filter(filter: list):
             filter: list, filter column, operator, and value.
     """
 
-    # FIXME: there is a problem with filter datetime/timestamp formatting that requires further investigation
     state = st.session_state
     key = state.filter_type
+
+    # remove operator from series
+    if key == "series":
+        del filter[1]
+
     if filter not in state[key]:
-        # remove operator from series
-        if key == "series":
-            del filter[1]
         # add filter to appropriate filter list
         state[key].append(filter)
         # update column type
         state.config.column_types[filter[0]] = state.column_type
         # add filter to config and update df types
         update_filter(key)
+
+        try:
+            # (re-)interpret all filter values as given dtype of filter column
+            for f in state[key]:
+                if f[0] == filter[0]:
+                    # find filter index
+                    i = state[key].index(f)
+                    filter_value = state.post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
+                    # adjust filter value after typing
+                    state[key][i][-1] = str(filter_value)
+
+        except Exception as e:
+            st.exception(e)
+            state.post.plot = None
+            # remove filter from filter list
+            state[key].remove(filter)
+            # re-update types
+            update_types()
 
 
 def rerun_post_processing():
@@ -333,10 +392,51 @@ def rerun_post_processing():
     """
 
     post = st.session_state.post
-    # reset processed df to original state
-    post.df = post.original_df.copy()
-    # run post-processing again
-    post.run_post_processing(st.session_state.config)
+    config = st.session_state.config
+
+    try:
+        # validate config
+        read_config(config.to_dict())
+        # reset processed df to original state
+        post.df = post.original_df.copy()
+        # run post-processing again
+        post.run_post_processing(config)
+
+    except Exception as e:
+        st.exception(e)
+        post.plot = None
+
+
+def validate_download_config():
+    """
+        Warn the user if the current session state config is invalid before download.
+    """
+
+    state = st.session_state
+    try:
+        # validate config
+        read_config(state.config.to_dict())
+    except Exception as e:
+        st.warning("Download successful.\n\n" + type(e).__name__ + ": " + str(e))
+        state.post.plot = None
+
+
+def read_args():
+    """
+        Return parsed command line arguments.
+    """
+
+    parser = argparse.ArgumentParser(
+        description="Plot benchmark data. At least one perflog must be supplied.")
+
+    # required positional argument (log path)
+    parser.add_argument("log_path", type=Path,
+                        help="path to a perflog file or a directory containing perflog files")
+    # optional argument (config path)
+    parser.add_argument("-c", "--config_path", type=Path, default=None,
+                        help="path to a configuration file specifying what to plot")
+
+    return parser.parse_args()
 
 
 def main():
@@ -344,15 +444,30 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose)
-        config = ConfigHandler.from_path(args.config_path)
-        post.run_post_processing(config)
-        # FIXME (#issue #271): catch post-processing errors before they crash Streamlit
-        update_ui(post, config)
+        post = PostProcessing(args.log_path)
+        # set up empty template config
+        config, err = ConfigHandler.from_template(), None
+        # optionally load config from file path
+        if args.config_path:
+            try:
+                config = ConfigHandler.from_path(args.config_path)
+                # only run post-processing with a valid config
+                post.run_post_processing(config)
+            except Exception as e:
+                err = e
+                # autofill some information from invalid config
+                try:
+                    config = ConfigHandler.from_path(args.config_path, template=True)
+                except Exception as e:
+                    print(type(e).__name__ + ":", e)
+                    print(traceback.format_exc())
+
+        # display ui
+        update_ui(post, config, e=err)
 
     except Exception as e:
+        st.exception(e)
         print(type(e).__name__ + ":", e)
-        print("Post-processing stopped")
         print(traceback.format_exc())
 
 

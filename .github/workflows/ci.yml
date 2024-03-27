@@ -43,8 +43,8 @@ jobs:
         os:
           - ubuntu-latest
         spack_version:
-          # In README.md we claim compatibility with v0.18.0
-          - v0.18.0
+          # In README.md we claim compatibility with v0.20.0
+          - v0.20.0
           - develop
         spack_spec:
           # `example` is a package in our custom Spack repo, ensure we can build

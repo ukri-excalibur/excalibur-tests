@@ -81,6 +81,11 @@ Check spack is in `$PATH`, for example
 spack --version
 ```
 
+### Version
+
+We recommend using the latest spack version (develop). Stable spack releases starting from v0.20.0 
+are supported. Older versions of spack may work but are not regularly tested.
+
 ### Notes
 
 _**Note**: if you have already installed spack locally and you want to upgrade to
