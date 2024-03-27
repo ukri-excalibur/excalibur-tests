@@ -71,6 +71,20 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-sk
 where `<ACCOUNT>` is the project you want to charge.
 You can see the account balance of your projects with the `mybalance` command.
 
+## Cosma
+
+### Queue options
+
+When submitting jobs to compute nodes, you need to specify the job queue, with the `--account` option to the scheduler.
+To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
+
+```
+reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J'--accout=<ACCOUNT>'
+```
+
+where `<ACCOUNT>` is the project you want to charge. DiRAC users can find the account codes
+they have access to on [SAFE](https://safe.epcc.ed.ac.uk/dirac/).
+
 ## DIaL2
 
 ### Queue options
@@ -120,7 +134,7 @@ You may also need to compile GPU applications on the compute nodes, as the login
 ### Python3 module
 
 The only default Python in the system is currently Python 2.7, but this may change in the future.
-We require Python v3.7 or later so you need to have `python3` available. 
+We require Python v3.7 or later so you need to have `python3` available.
 This is provided by the `python3` module in the system. The `python3/recommended` module on myriad is built with an incompatible version of `openssl` for ReFrame. The easiest thing to do is to add the lines
 
 ```sh
