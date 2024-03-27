@@ -10,8 +10,8 @@ import reframe as rfm
 from reframe.core.exceptions import BuildSystemError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
-
-
+import reframe.utility.osext as osext
+import reframe.utility.sanity as sn
 SYSFILE = 'systems/sysinfo.json' # interpreted relative to jupyter root
 
 def get_jupyter_root():
@@ -243,6 +243,7 @@ def identify_build_environment(current_partition):
 class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
+    spack_spec_dict = variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -267,10 +268,24 @@ class SpackTest(rfm.RegressionTest):
             f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
-
+        cmd_spack_spec_dict =   'from spack import environment;\
+                                spec_list = environment.active_environment().concrete_roots();\
+                                key_list_for_each = [spec.variants.dict.keys() for spec in spec_list];\
+                                result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":str(spec["mpi"]) if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
+                                print(result_dict)'
+        self.postrun_cmds.append(f'echo "spack_spec_dict: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec_dict}\')"')
+        
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
+
+
+    @run_after('run')
+    def get_full_variants(self):
+        with osext.change_dir(self.stagedir):
+            self.spack_spec_dict = sn.extractsingle(r'spack_spec_dict: \s*(.*)', self.stdout, 1).evaluate()
+            # convert all single quotes to double quotes since JSON does not recognise it
+            self.spack_spec_dict = self.spack_spec_dict.replace("'", "\"")
 
     @run_before('compile')
     def setup_build_system(self):
@@ -307,6 +322,7 @@ class SpackTest(rfm.RegressionTest):
         # using full partitions may have lower priority.
         if not self.build_locally:
             self.build_job.num_cpus_per_task = min(16, self.current_partition.processor.num_cpus)
+
 
 
 if __name__ == '__main__':
