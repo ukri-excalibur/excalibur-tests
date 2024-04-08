@@ -75,7 +75,8 @@ jobs:
           echo "BASE_URL=${BASE_URL}" >> "${GITHUB_ENV}"
           PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
           echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
-          find . -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
+          # Edit only files, and not symlinks, to avoid double editing the same files.
+          find . -type f -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
 
       - name: Build docs
         run: |
