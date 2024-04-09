@@ -177,8 +177,7 @@ def find_key_cols(row_info: 'dict | None', key_cols={}, col_name=None):
             # otherwise add key-value pair to key columns dict
             else:
                 key_cols[new_col_name] = row_info.get(k)
-        return key_cols
-    return {}
+    return key_cols
 
 
 def insert_key_cols(df: pd.DataFrame, index: int, results: 'list[dict]'):
@@ -193,7 +192,7 @@ def insert_key_cols(df: pd.DataFrame, index: int, results: 'list[dict]'):
     """
 
     # flatten results into key columns dicts
-    key_cols = [find_key_cols(r) for r in results]
+    key_cols = [find_key_cols(r, key_cols={}) for r in results]
     # get set of keys from all rows
     keys = set(chain.from_iterable([k.keys() for k in key_cols]))
 
