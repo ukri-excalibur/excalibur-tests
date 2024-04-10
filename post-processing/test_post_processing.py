@@ -62,6 +62,23 @@ def test_display_name_parsing():
     assert len(params) == 0
 
 
+# Test that recursive unpacking of key columns works as expected
+def test_key_col_unpacking():
+
+    test_dict1 = {"benchmark": "bench1", "bench1": {"compiler": {"name": "compiler1", "version": 9.2}}}
+    test_dict2 = {"benchmark": "bench2", "compiler": {"name": "compiler2", "version": 12.1},
+                  "variants": {"cuda": True}, "mpi": ""}
+
+    # flatten test dicts into key columns dicts
+    key_cols = [log_hand.find_key_cols(r, key_cols={}) for r in [test_dict1, test_dict2]]
+
+    # expected results
+    assert key_cols == [
+        {"benchmark": "bench1", "bench1_compiler_name": "compiler1", "bench1_compiler_version": 9.2},
+        {"benchmark": "bench2", "compiler_name": "compiler2", "compiler_version": 12.1,
+         "variants_cuda": True, "mpi": ""}]
+
+
 @pytest.fixture(scope="module")
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
 def run_sombrero():
