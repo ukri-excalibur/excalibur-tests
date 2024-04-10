@@ -173,7 +173,7 @@ def find_key_cols(row_info: 'dict | None', key_cols={}, col_name=None):
             new_col_name = "{0}_{1}".format(col_name, k) if col_name else k
             # recurse if key value is also a dict
             if isinstance(row_info.get(k), dict):
-                find_key_cols(row_info.get(k), col_name=new_col_name)
+                find_key_cols(row_info.get(k), key_cols, col_name=new_col_name)
             # otherwise add key-value pair to key columns dict
             else:
                 key_cols[new_col_name] = row_info.get(k)
