@@ -1289,6 +1289,10 @@ repo for packages not yet ready to be contributed to the main Spack repository.
 This is in the <code>spack/repo</code> directory, create a subdirectory inside <code>spack/repo/packages</code>
 with the name of the package you want to add, and place into it the <code>package.py</code> Spack recipe.
 On supported HPC systems, this repo is automatically added to the provided Spack environments.</p>
+<p>In Spack recipes, please avoid cloning the head of a branch. The state of the
+branch at the time it was cloned will not get recorded by Spack or ReFrame which leads to 
+issues with reproducibility. It is strongly recommended to only build tagged versions of 
+packages with Spack.</p>
 <h3 id="reframe-benchmark">ReFrame benchmark</h3>
 <p>New benchmarks should be added in the <code>apps/</code> directory, under the specific
 application subdirectory.  Please, add also a <code>README.md</code> file explaining what
