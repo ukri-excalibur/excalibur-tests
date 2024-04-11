@@ -953,6 +953,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../systems#cosma" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cosma
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../systems#dial2" class="md-nav__link">
         
   
@@ -1189,6 +1210,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cosma" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cosma
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cosma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queue-options_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Queue options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dial2" class="md-nav__link">
     <span class="md-ellipsis">
       DIaL2
@@ -1199,7 +1244,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#queue-options_2" class="md-nav__link">
+  <a href="#queue-options_3" class="md-nav__link">
     <span class="md-ellipsis">
       Queue options
     </span>
@@ -1223,7 +1268,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#queue-options_3" class="md-nav__link">
+  <a href="#queue-options_4" class="md-nav__link">
     <span class="md-ellipsis">
       Queue options
     </span>
@@ -1319,7 +1364,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#queue-options_4" class="md-nav__link">
+  <a href="#queue-options_5" class="md-nav__link">
     <span class="md-ellipsis">
       Queue options
     </span>
@@ -1397,19 +1442,27 @@ To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.
 You can see the account balance of your projects with the <code>mybalance</code> command.</p>
-<h2 id="dial2">DIaL2</h2>
+<h2 id="cosma">Cosma</h2>
 <h3 id="queue-options_2">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+</span></code></pre></div>
+<p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge. DiRAC users can find the account codes
+they have access to on <a href="https://safe.epcc.ed.ac.uk/dirac/">SAFE</a>.</p>
+<h2 id="dial2">DIaL2</h2>
+<h3 id="queue-options_3">Queue options</h3>
+<p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
+To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <p>Note: for exclusive access require to pass -J='-l naccesspolicy=SINGLEJOB -n'</p>
 <h2 id="dial3">DIaL3</h2>
-<h3 id="queue-options_3">Queue options</h3>
+<h3 id="queue-options_4">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <h2 id="isambard-2">Isambard 2</h2>
@@ -1417,17 +1470,17 @@ To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job
 <h4 id="compilation-on-compute-nodes">Compilation on compute nodes</h4>
 <p>Login nodes on the Isambard 2 MACS partition have Intel "Broadwell" CPUs, but most of the compute nodes use CPUs of different microarchitecture, which means that you cannot directly compile optimised code for the compute nodes with Spack while on the login nodes.
 To run compilation on the compute node, you have to set the attribute <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.build_locally"><code>build_locally</code></a> to <code>false</code> with <code>-S build_locally=false</code>, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:cascadelake -S build_locally=false
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system isambard-macs:rome -S build_locally=false
 </span></code></pre></div>
 <p>You may also need to compile GPU applications on the compute nodes, as the login node does not have any GPUs (this really depends on the build system of the application at hand, whether it needs access to a GPU during the build or it is sufficient to have the GPU toolkit available).</p>
 <h2 id="myriad">Myriad</h2>
 <h3 id="python3-module">Python3 module</h3>
 <p>The only default Python in the system is currently Python 2.7, but this may change in the future.
-We require Python v3.7 or later so you need to have <code>python3</code> available. 
+We require Python v3.7 or later so you need to have <code>python3</code> available.
 This is provided by the <code>python3</code> module in the system. The <code>python3/recommended</code> module on myriad is built with an incompatible version of <code>openssl</code> for ReFrame. The easiest thing to do is to add the lines</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>module<span class="w"> </span>load<span class="w"> </span>python3/3.11
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;True&quot;</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>module<span class="w"> </span>load<span class="w"> </span>python3/3.11
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RFM_USE_LOGIN_SHELL</span><span class="o">=</span><span class="s2">&quot;True&quot;</span>
 </span></code></pre></div>
 <p>to your shell init script (e.g. <code>~/.bashrc</code>).
 The second line tells ReFrame to always load the shell init script when running the jobs, so that the Python3 module is available also during the jobs, to run Spack.</p>
@@ -1437,13 +1490,13 @@ By default on Myriad this is <code>/tmp</code>, but this directory is shared wit
 To work around this issue you can use as temporary directory the one pointed to by <code>XDG_RUNTIME_DIR</code>, which use a larger partition, reserved only to your user.
 Note that this directory is automatically cleaned up after you log all of your sessions out of the system.
 You can add the following line to your shell init script (e.g., <code>~/.bashrc</code>) to make <code>TMPDIR</code> use <code>XDG_RUNTIME_DIR</code>, unless otherwise set:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="k">:-</span><span class="si">${</span><span class="nv">XDG_RUNTIME_DIR</span><span class="k">:-</span><span class="p">/tmp</span><span class="si">}}</span><span class="s2">&quot;</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TMPDIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="k">:-</span><span class="si">${</span><span class="nv">XDG_RUNTIME_DIR</span><span class="k">:-</span><span class="p">/tmp</span><span class="si">}}</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <h2 id="tursa">Tursa</h2>
-<h3 id="queue-options_4">Queue options</h3>
+<h3 id="queue-options_5">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 
