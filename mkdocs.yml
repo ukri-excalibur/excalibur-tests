@@ -29,10 +29,11 @@ nav:
       - swift: apps/swift/README.md
       - trove: apps/trove/README.md
       - trove-pdsyev: apps/trove-pdsyev/README.md
-      - wrf: apps/wrf/README.md  
+      - wrf: apps/wrf/README.md
   - 'Supported Systems':
     - ARCHER2: systems#archer2
     - CSD3: systems#csd3
+    - Cosma: systems#cosma
     - DIaL2: systems#dial2
     - DIaL3: systems#dial3
     - Isambard 2: systems#isambard-2
