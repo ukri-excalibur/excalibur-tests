@@ -48,7 +48,7 @@ column_types:
   system: "str"
   cpus_per_task: "int"
 
-# Specify which columns to export to csv file
+# Optional setting to specify additional columns to export to csv file, in addition to
+# the ones in axes/series/filters
 additional_columns_to_csv:
-  [flops_value,
-  cpus_per_task]
+  ["spack_spec"]

@@ -39,7 +39,7 @@ python post_processing.py log_path config_path [-p plot_type]
 - `config_path` - Path to a configuration file containing plot details.
 - `plot_type` - (Optional.) Type of plot to be generated. (`Note: only a generic bar chart is currently implemented.`)
 
-Run `post_processing.py -h` for more information (including debugging flags).
+Run `post_processing.py -h` for more information (including debugging and file output flags).
 
 #### Streamlit
 
@@ -68,12 +68,13 @@ Before running post-processing, create a config file including all necessary inf
     - `Format: [column_name, value]`
 - `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
     - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
+- `additional_columns_to_csv` - (Optional.) List of additional columns to export to csv file, in addition to the ones above. Those columns are not used in plotting. (Specify an empty list if no additional columns are required.)
 
 #### A Note on Replaced ReFrame Columns
 
-A perflog contains certain columns that will not be present in the DataFrame available to the graphing script. Currently, these columns are `display_name`, `extra_resources`, and `env_vars`. Removed columns should not be referenced in a plot config file.
+A perflog contains certain columns with complex information that has to be unpacked in order to be useful. Currently, such columns are `display_name`, `extra_resources`, `env_vars`, and `spack_spec_dict`. Those columns are parsed by the postprocessing, removed from the DataFrame, and substituted by new columns with the unpacked information. Therefore they will not be present in the DataFrame available to the graphing script and should not be referenced in a plot config file.
 
-When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources` and `env_vars` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
+When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources`, `env_vars`, and `spack_spec_dict` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
 
 #### Complete Config Template
 
@@ -121,6 +122,10 @@ series: <series_list>
 # accepted types: string/object, int, float, datetime
 column_types:
   <column_name>: <column_type>
+
+# optional (default: no extra columns exported to a csv file in addition to the ones above)
+additional_columns_to_csv:
+  <columns_list>
 ```
 
 #### Example Config
@@ -162,6 +167,9 @@ column_types:
   filter_col_1: "datetime"
   filter_col_2: "int"
   series_col: "str"
+
+additional_columns_to_csv:
+  ["additional_col_1", "additional_col_2"]
 ```
 
 #### X-axis Grouping
