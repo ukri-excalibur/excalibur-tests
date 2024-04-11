@@ -178,7 +178,7 @@ def test_read_perflog(run_sombrero):
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
                        "system", "partition", "job_nodelist", "environ", "OMP_NUM_THREADS",
                        "sombrero_compiler_name", "sombrero_compiler_version",
-                       "sombrero_variants", "sombrero_mpi", "tags"]
+                       "sombrero_variants_build_system", "sombrero_mpi", "tags"]
 
     # check example perflog file is read appropriately
     # check all expected columns are present
