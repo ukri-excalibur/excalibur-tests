@@ -127,9 +127,9 @@ def read_perflog(path: Path):
     df.drop("display_name", axis=1, inplace=True)
 
     # replace other columns with dictionary contents
-    dict_cols = [c for c in ["extra_resources", "env_vars"] if c in df.columns]
+    dict_cols = [c for c in ["extra_resources", "env_vars", "spack_spec_dict"] if c in df.columns]
     for col in dict_cols:
-        results = df[col].apply(lambda x: json.loads(x))
+        results = df[col].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
         # insert new columns and contents
         insert_key_cols(df, df.columns.get_loc(col), results)
         # drop old column
@@ -156,19 +156,49 @@ def get_display_name_info(display_name: str):
     return test_name, dict(params)
 
 
-def insert_key_cols(df: pd.DataFrame, index: int, results: 'list[dict]'):
+def find_key_cols(row_info: 'dict | None', key_cols={}, col_name=None):
     """
-        Modify a dataframe to include new columns (extracted from results) inserted at
-        a given index.
+        Return key columns and their values by recursively finding the innermost
+        dictionary contents of given row information.
 
         Args:
-            df: pd.DataFrame, to be modified by this function.
-            index: int, index as which to insert new columns into the dataframe.
-            results: list[dict], contains key-value mapping information for all rows.
+            row_info: dict | None, contains key-value mapping information from one row.
+            key_cols: dict, flattened dictionary contents from row_info.
+            col_name: str | None, the name of a previous column key to be used as a prefix for new column keys.
     """
 
+    if isinstance(row_info, dict):
+        for k in row_info.keys():
+            # determine new key column name
+            new_col_name = "{0}_{1}".format(col_name, k) if col_name else k
+            # recurse if key value is also a dict
+            if isinstance(row_info.get(k), dict):
+                find_key_cols(row_info.get(k), key_cols, col_name=new_col_name)
+            # otherwise add key-value pair to key columns dict
+            else:
+                key_cols[new_col_name] = row_info.get(k)
+    return key_cols
+
+
+def insert_key_cols(df: pd.DataFrame, index: int, results: 'list[dict]'):
+    """
+    Modify a dataframe to include new columns (extracted from results) inserted at
+    a given index, with names optionally prefixed by the original column name and each key.
+
+    Args:
+        df: DataFrame, to be modified by this function.
+        index: int, index at which to insert new columns into the dataframe.
+        results: 'list[dict]', contains key-value mapping information from all rows.
+    """
+
+    # flatten results into key columns dicts
+    key_cols = [find_key_cols(r, key_cols={}) for r in results]
     # get set of keys from all rows
-    keys = set(chain.from_iterable([r.keys() for r in results]))
+    keys = set(chain.from_iterable([k.keys() for k in key_cols]))
+
     for k in keys:
-        # insert keys as new columns
-        df.insert(index, k, [r[k] if k in r.keys() else None for r in results])
+        if k not in df.columns:
+            # insert keys as new columns
+            df.insert(index, k, [c.get(k) if k in c else None for c in key_cols])
+            # increment index for next column insertion to maintain order
+            index += 1

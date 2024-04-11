@@ -62,6 +62,23 @@ def test_display_name_parsing():
     assert len(params) == 0
 
 
+# Test that recursive unpacking of key columns works as expected
+def test_key_col_unpacking():
+
+    test_dict1 = {"benchmark": "bench1", "bench1": {"compiler": {"name": "compiler1", "version": 9.2}}}
+    test_dict2 = {"benchmark": "bench2", "compiler": {"name": "compiler2", "version": 12.1},
+                  "variants": {"cuda": True}, "mpi": ""}
+
+    # flatten test dicts into key columns dicts
+    key_cols = [log_hand.find_key_cols(r, key_cols={}) for r in [test_dict1, test_dict2]]
+
+    # expected results
+    assert key_cols == [
+        {"benchmark": "bench1", "bench1_compiler_name": "compiler1", "bench1_compiler_version": 9.2},
+        {"benchmark": "bench2", "compiler_name": "compiler2", "compiler_version": 12.1,
+         "variants_cuda": True, "mpi": ""}]
+
+
 @pytest.fixture(scope="module")
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
 def run_sombrero():
@@ -159,7 +176,9 @@ def test_read_perflog(run_sombrero):
                        "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node",
                        "flops_value", "flops_unit", "flops_ref", "flops_lower_thres",
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
-                       "system", "partition", "job_nodelist", "environ", "OMP_NUM_THREADS", "tags"]
+                       "system", "partition", "job_nodelist", "environ", "OMP_NUM_THREADS",
+                       "sombrero_compiler_name", "sombrero_compiler_version",
+                       "sombrero_variants_build_system", "sombrero_mpi", "tags"]
 
     # check example perflog file is read appropriately
     # check all expected columns are present
