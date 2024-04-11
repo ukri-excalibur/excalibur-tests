@@ -5,16 +5,17 @@
 The post-processing scripts provided with the ExCALIBUR tests package are intended to grant users a quick starting point for visualising benchmark results with basic graphs and tables. Their components can also be used inside custom users' scripts.
 
 There are four main post-processing components:
-- **`Perflog parsing`:**
-  - Data from benchmark performance logs are stored in a pandas DataFrame.
-- **`Data filtering`:**
-  - If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
-  - The DataFrame is then filtered, keeping only relevant rows and columns.
-- **`Data transformation`:**
-  - Axis value columns in the DataFrame are scaled according to user specifications.
-- **`Plotting`:**
-  - A filtered and transformed DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
-  - Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
+
+#### **`Perflog parsing`**
+- Data from benchmark performance logs are stored in a pandas DataFrame.
+#### **`Data filtering`**
+- If more than one perflog is used for plotting, DataFrames from individual perflogs are concatenated together into one DataFrame.
+- The DataFrame is then filtered, keeping only relevant rows and columns.
+#### **`Data transformation`**
+- Axis value columns in the DataFrame are scaled according to user specifications.
+#### **`Plotting`**
+- A filtered and transformed DataFrame is passed to a plotting script, which produces a graph and embeds it in a simple HTML file.
+- Users may run the plotting script to generate a generic bar chart. Graph settings should be specified in a configuration YAML file.
 
 ### Installation
 
@@ -22,17 +23,31 @@ Post-processing is an optional dependency of the ExCALIBUR tests package, as it 
 
 You can include post-processing in your `pip` installation of the package with the following command:
 
-> ```pip install -e .[post-processing]```
+```sh
+pip install -e .[post-processing]
+```
 
 ### Usage
 
->```python post_processing.py log_path config_path [-p plot_type]```
+#### Command line
+
+```sh
+python post_processing.py log_path config_path [-p plot_type]
+```
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
 - `config_path` - Path to a configuration file containing plot details.
 - `plot_type` - (Optional.) Type of plot to be generated. (`Note: only a generic bar chart is currently implemented.`)
 
 Run `post_processing.py -h` for more information (including debugging flags).
+
+#### Streamlit
+
+You may also run post-processing with Streamlit to interact with your plots:
+
+>```streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
+
+The config path is optional when running with Streamlit, as the UI allows you to create a new config on the fly. If you would still like to supply a config path, make sure to include `--` before any post-processing flags to indicate that the arguments belong to the post-processing script rather than Streamlit itself.
 
 ### Configuration Structure
 
@@ -45,14 +60,14 @@ Before running post-processing, create a config file including all necessary inf
     - `scaling` - (Optional.) Scale axis values by either a column or a custom value.
     - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
 - `filters` - (Optional.) Filter data rows based on specified conditions. (Specify an empty list if no filters are required.)
-  - `and` - Filter mask is determined from a logical AND of conditions in list.
-  - `or` - Filter mask is determined from a logical OR of conditions in list.
-  - `Format: [column_name, operator, value]`
-  - `Accepted operators: "==", "!=", "<", ">", "<=", ">="`
+    - `and` - Filter mask is determined from a logical AND of conditions in list.
+    - `or` - Filter mask is determined from a logical OR of conditions in list.
+    - `Format: [column_name, operator, value]`
+    - `Accepted operators: "==", "!=", "<", ">", "<=", ">="`
 - `series` - (Optional.) Display several plots in the same graph and group x-axis data by specified column values. (Specify an empty list if there is only one series.)
-  - `Format: [column_name, value]`
+    - `Format: [column_name, value]`
 - `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
-  - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
+    - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
 
 #### A Note on Replaced ReFrame Columns
 
@@ -60,7 +75,7 @@ A perflog contains certain columns that will not be present in the DataFrame ava
 
 When the row contents of `display_name` are parsed, they are separated into their constituent benchmark names and parameters. This column is replaced with a new `test_name` column and new parameter columns (if present). Similarly, the `extra_resources` and `env_vars` columns are replaced with their respective dictionary row contents (keys become columns, values become row contents).
 
-### Complete Config Template
+#### Complete Config Template
 
 This template includes all possible config fields, some of which are optional or mutually exclusive (e.g. `column` and `custom`).
 
@@ -108,7 +123,7 @@ column_types:
   <column_name>: <column_type>
 ```
 
-### Example Config
+#### Example Config
 
 This example more accurately illustrates what an actual config file may look like.
 
@@ -132,10 +147,12 @@ y_axis:
       x_value: "x_val_s"
 
 filters:
-  and: [["filter_col_1", "<=", filter_val_1], ["filter_col_2", "!=", filter_val_2]]
+  and: [["filter_col_1", "<=", filter_val_1],
+        ["filter_col_2", "!=", filter_val_2]]
   or: []
 
-series: [["series_col", "series_val_1"], ["series_col", "series_val_2"]]
+series: [["series_col", "series_val_1"],
+         ["series_col", "series_val_2"]]
 
 column_types:
   x_axis_col: "str"
@@ -281,5 +298,6 @@ All user-specified types are internally converted to their nullable incarnations
 ### Future Development
 
 The post-processing capabilities are still a work in progress. Some upcoming developments:
+
 -  Embed graphs in GitHub Pages, instead of a bare HTML file.
 -  Add scaling and regression plots.

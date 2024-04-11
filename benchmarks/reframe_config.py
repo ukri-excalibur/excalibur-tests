@@ -38,6 +38,7 @@ site_configuration = {
             'name': 'archer2',
             'descr': 'ARCHER2',
             'hostnames': ['ln[0-9]+'],
+            'max_local_jobs': 1,
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -70,6 +71,7 @@ site_configuration = {
             'name': 'csd3-rocky8',
             'descr': 'Cambridge Service for Data Driven Discovery - Rocky Linux 8 (RHEL8 compatible) nodes',
             'hostnames': ['login-q-[0-4]+'],
+            'max_local_jobs': 1,
             'modules_system': 'tmod4',
             'partitions': [
                 {
@@ -126,6 +128,7 @@ site_configuration = {
             'name': 'csd3-centos7',
             'descr': 'Cambridge Service for Data Driven Discovery - CentOS 7 (RHEL7 compatible) nodes',
             'hostnames': ['login-p-[0-4]+'],
+            'max_local_jobs': 1,
             'modules_system': 'tmod32',
             'partitions': [
                 {
@@ -159,6 +162,7 @@ site_configuration = {
             'name': 'myriad',
             'descr': 'Myriad',
             'hostnames': ['login[0-9]+.myriad.ucl.ac.uk'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'cpu',
@@ -265,6 +269,7 @@ site_configuration = {
             'name': 'isambard-macs',
             'descr': 'Isambard 2 - Multi-Architecture Comparison System',
             'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'cascadelake',
@@ -362,6 +367,7 @@ site_configuration = {
             'name': 'isambard-a64fx',
             'descr': 'A64FX nodes of Isambard 2',
             'hostnames': ['gw4a64fxlogin[0-9]+'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'a64fx',
@@ -385,6 +391,7 @@ site_configuration = {
             'name': 'isambard-phase3',
             'descr': 'Isambard 2 Phase 3 system',
             'hostnames': ['p3-login'],
+            'max_local_jobs': 1,
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -424,7 +431,14 @@ site_configuration = {
                         'num_cpus_per_core': 2,
                         'num_sockets': 1,
                         'num_cpus_per_socket': 32,
-                    }
+                    },
+                    'resources': [
+                        {
+                            'name': 'memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
+                        },
+                    ],
                 },
                 {
                     'name': 'milan',
@@ -441,6 +455,13 @@ site_configuration = {
                         'num_sockets': 2,
                         'num_cpus_per_socket': 64,
                     },
+                    'resources': [
+                        {
+                            'name': 'memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
+                        },
+                    ],
                 },
             ]
         },  # end Isambard Phase3
@@ -449,6 +470,7 @@ site_configuration = {
             'name': 'isambard-xci',
             'descr': 'XCI - Marvell Thunder X2 nodes of Isambard 2',
             'hostnames': ['xcil0[0-1]'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'compute-node',
@@ -472,6 +494,7 @@ site_configuration = {
             'descr': 'COSMA',
             'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
             'modules_system': 'tmod4',
+            'max_local_jobs': 1,
             'partitions': [
                 # https://www.dur.ac.uk/icc/cosma/cosma7/
                 {
@@ -530,6 +553,7 @@ site_configuration = {
             'name': 'cosma8',
             'descr': 'COSMA',
             'hostnames': ['login8[a-z].pri.cosma[0-9].alces.network'],
+            'max_local_jobs': 1,
             'modules_system': 'tmod4',
             'partitions': [
                 {
@@ -571,6 +595,7 @@ site_configuration = {
             'name': 'tursa',
             'descr': 'Tursa',
             'hostnames': ['tursa-login.*'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'gpu',
@@ -604,6 +629,7 @@ site_configuration = {
             'name': 'dial2',
             'descr': 'Dirac Data Intensive @ Leicester',
             'hostnames': ['dirac0*'],
+            'max_local_jobs': 1,
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -627,6 +653,7 @@ site_configuration = {
             'name': 'dial3',
             'descr': 'Dirac Data Intensive @ Leicester',
             'hostnames': ['d3-login.*'],
+            'max_local_jobs': 1,
             'modules_system': 'lmod',
             'partitions': [
                 {
@@ -649,6 +676,7 @@ site_configuration = {
             'name': 'default',
             'descr': 'Default system',
             'hostnames': ['.*'],
+            'max_local_jobs': 1,
             'partitions': [
                 {
                     'name': 'default',
@@ -749,9 +777,11 @@ site_configuration = {
                         '%(check_display_name)s|'
                         '%(check_system)s|'
                         '%(check_partition)s|'
+                        '%(check_job_nodelist)s|'
                         '%(check_environ)s|'
                         '%(check_extra_resources)s|'
                         '%(check_env_vars)s|'
+                        '%(check_spack_spec_dict)s|'
                         '%(check_tags)s'
                     ),
                     'format_perfvars': (

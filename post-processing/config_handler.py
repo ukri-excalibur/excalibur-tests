@@ -1,12 +1,23 @@
+from pathlib import Path
+
 import yaml
 
 
 class ConfigHandler:
 
-    def __init__(self, config: dict):
+    def __init__(self, config: dict, template=False):
+        """
+            Initialise class.
 
-        # validate dict structure
-        config = read_config(config)
+            Args:
+                config: dict, plot configuration information.
+                template: bool, flag to skip config validation (unsafe).
+        """
+
+        if not template:
+            # validate dict structure
+            config = read_config(config)
+
         # extract config information
         self.title = config.get("title")
         self.x_axis = config.get("x_axis")
@@ -20,6 +31,7 @@ class ConfigHandler:
         self.and_filters = []
         self.or_filters = []
         self.series_filters = []
+        self.to_string_filter_vals()
         self.parse_filters()
 
         # parse scaling information
@@ -29,19 +41,58 @@ class ConfigHandler:
 
         # find relevant columns
         self.series_columns = []
+        self.filter_columns = []
         self.plot_columns = []
         self.all_columns = []
         self.parse_columns()
 
     @classmethod
-    def from_path(cfg_hand, config_path):
-        return cfg_hand(open_config(config_path))
+    def from_path(self, config_path: Path, template=False):
+        """
+            Initialise class from a path.
+        """
+        return self(open_config(config_path), template)
+
+    @classmethod
+    def from_template(self):
+        """
+            Initialise class from an empty template. Skips config validation.
+        """
+
+        return self(dict({
+            "title": None,
+            "x_axis": {"value": None, "units": {"custom": None}},
+            "y_axis": {"value": None, "units": {"custom": None}},
+            "filters": {"and": [], "or": []},
+            "series": [],
+            "column_types": {}}), template=True)
 
     def get_filters(self):
+        """
+            Return and, or, and series filter lists.
+        """
         return self.and_filters, self.or_filters, self.series_filters
 
     def get_y_scaling(self):
+        """
+            Return column and custom scaling information.
+        """
         return self.scaling_column, self.scaling_custom
+
+    def to_string_filter_vals(self):
+        """
+            Store filter values as their string representations for internal consistency.
+        """
+
+        # filters
+        if self.filters:
+            self.filters["and"] = ([[f[0], f[1], str(f[2])] for f in self.filters["and"]]
+                                   if self.filters.get("and") else [])
+            self.filters["or"] = ([[f[0], f[1], str(f[2])] for f in self.filters["or"]]
+                                  if self.filters.get("or") else [])
+
+        # series
+        self.series = [[s[0], str(s[1])] for s in self.series] if self.series else []
 
     def parse_filters(self):
         """
@@ -50,14 +101,11 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            if self.filters.get("and"):
-                self.and_filters = self.filters.get("and")
-            if self.filters.get("or"):
-                self.or_filters = self.filters.get("or")
+            self.and_filters = self.filters["and"] if self.filters.get("and") else []
+            self.or_filters = self.filters["or"] if self.filters.get("or") else []
 
         # series filters
-        if self.series:
-            self.series_filters = [[s[0], "==", s[1]] for s in self.series]
+        self.series_filters = [[s[0], "==", s[1]] for s in self.series] if self.series else []
 
     def parse_scaling(self):
         """
@@ -77,49 +125,94 @@ class ConfigHandler:
         """
 
         # axis columns
-        self.plot_columns = [self.x_axis.get("value"), self.x_axis["units"].get("column"),
-                             self.y_axis.get("value"), self.y_axis["units"].get("column")]
+        self.plot_columns = [self.x_axis.get("value"),
+                             self.x_axis["units"].get("column") if self.x_axis.get("units") else None,
+                             self.y_axis.get("value"),
+                             self.y_axis["units"].get("column") if self.y_axis.get("units") else None]
 
         # FIXME (issue #255): allow all series values to be selected with *
         # (or if only column name is supplied)
 
-        # series columns (duplicates not removed)
+        # series columns
         # NOTE: currently assuming there can only be one unique series column
-        self.series_columns = [s[0] for s in self.series_filters]
+        self.series_columns = (list(dict.fromkeys([s[0] for s in self.series_filters]))
+                               if self.series_filters else [])
         # add series column to plot column list
         for s in self.series_columns:
             if s not in self.plot_columns:
                 self.plot_columns.append(s)
         # drop None values
-        self.plot_columns = [c for c in self.plot_columns if c is not None]
+        self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
-        # filter columns (duplicates not removed)
-        filter_columns = [f[0] for f in self.and_filters] + [f[0] for f in self.or_filters]
+        # filter columns
+        self.filter_columns = (list(dict.fromkeys([f[0] for f in self.and_filters] +
+                                                  [f[0] for f in self.or_filters]))
+                               if self.and_filters or self.or_filters else [])
 
         # all typed columns
-        self.all_columns = set(self.plot_columns + filter_columns +
-                               ([self.scaling_column.get("name")] if self.scaling_column else []))
+        self.all_columns = list(
+            dict.fromkeys((self.plot_columns + self.filter_columns +
+                           ([self.scaling_column.get("name")] if self.scaling_column else []))))
+
+    def remove_redundant_types(self):
+        """
+            Check for columns that are no longer in use and remove them from the type dict.
+        """
+
+        column_types = self.column_types.copy()
+        for col in column_types:
+            if col not in self.all_columns:
+                self.column_types.pop(col, None)
+
+    def to_dict(self):
+        """
+            Convert information in the class to a dictionary.
+        """
+
+        return dict({
+            "title": self.title,
+            "x_axis": self.x_axis,
+            "y_axis": self.y_axis,
+            "filters": self.filters,
+            "series": self.series,
+            "column_types": self.column_types})
+
+    def to_yaml(self):
+        """
+            Convert information in the class to a yaml format.
+        """
+        return yaml.dump(self.to_dict(), default_flow_style=None, sort_keys=False)
 
 
-def open_config(path):
+def open_config(path: Path):
     """
-        Return a dictionary containing configuration information for plotting.
+        Return a dictionary containing configuration information for plotting
+        from the path to a yaml file.
 
         Args:
-            path: path, path to yaml config file.
+            path: Path, path to yaml config file.
     """
-
     with open(path, "r") as file:
-        return yaml.safe_load(file)
+        return load_config(file)
 
 
-def read_config(config):
+def load_config(file):
+    """
+        Return a loaded config dictionary from a yaml file.
+
+        Args:
+            file: file, config yaml.
+    """
+    return yaml.safe_load(file)
+
+
+def read_config(config: dict):
     """
         Check required configuration information. At least plot title, x-axis,
         y-axis, and column types must be present.
 
         Args:
-            config: dict, config information.
+            config: dict, plot configuration information.
     """
 
     # check plot title information
