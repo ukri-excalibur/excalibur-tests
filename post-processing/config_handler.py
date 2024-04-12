@@ -25,6 +25,7 @@ class ConfigHandler:
         self.filters = config.get("filters")
         self.series = config.get("series")
         self.column_types = config.get("column_types")
+        self.extra_columns = config.get("additional_columns_to_csv")
 
         # parse filter information
         self.and_filters = []
@@ -152,6 +153,13 @@ class ConfigHandler:
         self.all_columns = list(
             dict.fromkeys((self.plot_columns + self.filter_columns +
                            ([self.scaling_column.get("name")] if self.scaling_column else []))))
+
+        # remove duplicated columns from the extra_columns list
+        duplicates = set(self.all_columns) & set(self.extra_columns)
+        while len(duplicates) != 0:
+            for d in duplicates:
+                self.extra_columns.remove(d)
+            duplicates = set(self.all_columns) & set(self.extra_columns)
 
     def remove_redundant_types(self):
         """

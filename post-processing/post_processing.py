@@ -2,6 +2,7 @@ import argparse
 import operator as op
 import traceback
 from functools import reduce
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -12,7 +13,7 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, debug=False, verbose=False):
+    def __init__(self, log_path: Path, debug=False, verbose=False, save=False, plotting=True):
         """
             Initialise class.
 
@@ -20,11 +21,15 @@ class PostProcessing:
                 log_path: Path, path to performance log file or directory.
                 debug: bool, flag to print additional information to console.
                 verbose: bool, flag to print more additional information to console.
+                save: bool, flag to save the filtered dataframe in csv file
+                plotting: bool, flag to generate and store a plot in html file
         """
 
         # FIXME (issue #264): add proper logging
         self.debug = debug
         self.verbose = verbose
+        self.save = save
+        self.plotting = plotting
         # find and read perflogs
         self.original_df = PerflogHandler(log_path, self.debug).get_df()
         # copy original data for modification during post-processing
@@ -58,16 +63,18 @@ class PostProcessing:
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
-
-        # FIXME (#issue #255): have an option to put this into a file (-s / --save flag?)
         if self.debug:
             print("Selected dataframe:")
-            print(self.df[self.mask][config.plot_columns])
+            print(self.df[self.mask][config.plot_columns + config.extra_columns])
+        if self.save:
+            self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
+                path_or_buf=os.path.join(Path(__file__).parent,'output.csv'), index=True)  # Set index=False to exclude the DataFrame index from the CSV
 
         # call a plotting script
-        self.plot = plot_generic(
-            config.title, self.df[self.mask][config.plot_columns],
-            config.x_axis, config.y_axis, config.series_filters, self.debug)
+        if self.plotting:
+            self.plot = plot_generic(
+                config.title, self.df[self.mask][config.plot_columns],
+                config.x_axis, config.y_axis, config.series_filters, self.debug)
 
         # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
         if self.debug & self.verbose:
@@ -396,6 +403,11 @@ def read_args():
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="verbose flag for printing more debug information \
                               (must be used in conjunction with the debug flag)")
+    parser.add_argument("-s", "--save", action="store_true",
+                        help="save flag for saving the filtered dataframe in csv file")
+    parser.add_argument("-np", "--no_plot", action="store_true",
+                        help="no-plot flag for disabling generating and storing a plot")
+    
 
     return parser.parse_args()
 
@@ -405,7 +417,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose)
+        post = PostProcessing(args.log_path, args.debug, args.verbose, args.save, not(args.no_plot))
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 
