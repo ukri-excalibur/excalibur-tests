@@ -769,7 +769,6 @@ site_configuration = {
                         '%(check_info)s|'
                         '%(check_jobid)s|'                     
                         '%(check_num_tasks)s|'
-                        '%(check_job_nodelist)s|'
                         '%(check_num_cpus_per_task)s|'
                         '%(check_num_tasks_per_node)s|'
                         '%(check_num_gpus_per_node)s|'
