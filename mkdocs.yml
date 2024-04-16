@@ -1,0 +1,67 @@
+site_name: ExCALIBUR-tests Docs
+site_url: !ENV [MKDOCS_SITE_URL, 'https://ukri-excalibur.github.io/excalibur-tests/']
+site_dir: !ENV [MKDOCS_SITE_DIR, 'site']
+remote_branch: !ENV [MKDOCS_REMOTE_BRANCH, 'gh-pages']
+repo_url: https://github.com/ukri-excalibur/excalibur-tests
+nav:
+  - Home: index.md
+  - Installation: install.md
+  - Setup: setup.md
+  - Usage: use.md
+  - Post-processing: post-processing/README.md
+  - Contributing: contributing.md
+  - 'Supported Benchmarks':
+    - 'Synthetic Benchmarks':
+      - HPL: apps/hpl/README.md
+      - IMB: apps/imb/README.md
+      - OMB: apps/omb/README.md
+    - 'Mini-apps':
+      - hpcg: apps/hpcg/README.md
+      - hpgmg: apps/hpgmg/README.md
+      - sombrero: apps/sombrero/README.md
+      - babelstream: apps/babelstream/README.md
+    - 'Applications':
+      - cp2k: apps/cp2k/README.md
+      - grid: apps/grid/README.md
+      - openmm: apps/openmm/README.md
+      - ramses: apps/ramses/README.md
+      - sphng: apps/sphng/README.md
+      - swift: apps/swift/README.md
+      - trove: apps/trove/README.md
+      - trove-pdsyev: apps/trove-pdsyev/README.md
+      - wrf: apps/wrf/README.md
+  - 'Supported Systems':
+    - ARCHER2: systems#archer2
+    - CSD3: systems#csd3
+    - Cosma: systems#cosma
+    - DIaL2: systems#dial2
+    - DIaL3: systems#dial3
+    - Isambard 2: systems#isambard-2
+    - Myriad: systems#myriad
+    - Tursa: systems#tursa
+  - ARCHER2 Tutorial: tutorial/tutorial.md
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+  palette:
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    toggle:
+      icon: material/weather-night
+      name: Switch to light mode
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

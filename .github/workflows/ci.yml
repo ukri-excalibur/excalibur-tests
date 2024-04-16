@@ -4,11 +4,33 @@ on:
   push:
     branches: "main"
     tags: ["*"]
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'MANIFEST.in'
+      - 'pyproject.toml'
+      - 'benchmarks/reframe_config.py'
+      - 'benchmarks/examples/**'
+      - 'benchmarks/modules/**'
+      - 'post-processing/**'
   pull_request:
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'MANIFEST.in'
+      - 'pyproject.toml'
+      - 'reframe_config.py'
+      - 'benchmarks/examples/**'
+      - 'benchmarks/modules/**'
+      - 'post-processing/**'
   release:
 
 env:
   RFM_CONFIG_FILES: "${{ github.workspace }}/benchmarks/reframe_config.py"
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: always.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -21,8 +43,8 @@ jobs:
         os:
           - ubuntu-latest
         spack_version:
-          # In README.md we claim compatibility with v0.18.0
-          - v0.18.0
+          # In README.md we claim compatibility with v0.20.0
+          - v0.20.0
           - develop
         spack_spec:
           # `example` is a package in our custom Spack repo, ensure we can build
@@ -32,7 +54,7 @@ jobs:
         # Compatible ReFrame versions are set in pyproject.toml
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10.6'
           cache: 'pip'
@@ -40,7 +62,7 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          pip install .[test]
+          pip install -e .[test]
       - name: Install Spack
         shell: bash
         working-directory: ${{runner.workspace}}
@@ -58,7 +80,11 @@ jobs:
         run: reframe -V
       - name: Install OpenMPI, CMake and extra Python packages
         shell: bash
-        run: sudo apt-get install openmpi-bin libopenmpi-dev cmake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin libopenmpi-dev cmake
+        env:
+          DEBIAN_FRONTEND: noninteractive
       - name: Run sample benchmark
         shell: bash
         run: |
