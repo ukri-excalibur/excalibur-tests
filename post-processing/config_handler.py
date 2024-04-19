@@ -25,7 +25,7 @@ class ConfigHandler:
         self.filters = config.get("filters")
         self.series = config.get("series")
         self.column_types = config.get("column_types")
-        self.extra_columns = config.get("additional_columns_to_csv")
+        self.extra_columns = config.get("extra_columns_to_csv")
 
         # parse filter information
         self.and_filters = []
@@ -65,7 +65,8 @@ class ConfigHandler:
             "y_axis": {"value": None, "units": {"custom": None}},
             "filters": {"and": [], "or": []},
             "series": [],
-            "column_types": {}}), template=True)
+            "column_types": {},
+            "extra_columns_to_csv": []}), template=True)
 
     def get_filters(self):
         """
