@@ -573,7 +573,7 @@ def test_high_level_script(run_sombrero):
                               "flops_value": "float",
                               "flops_unit": "str",
                               "cpus_per_task": "int"},
-            "additional_columns_to_csv": ["spack_spec"]}
+             "additional_columns_to_csv": ["spack_spec"]}
         ))
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
@@ -603,7 +603,7 @@ def test_high_level_script(run_sombrero):
                               "flops_value": "float",
                               "flops_unit": "str",
                               "cpus_per_task": "int"},
-            "additional_columns_to_csv": ["tasks", "tasks"]}
+             "additional_columns_to_csv": ["tasks", "tasks"]}
         ))
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
