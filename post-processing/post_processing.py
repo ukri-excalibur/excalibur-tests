@@ -67,8 +67,9 @@ class PostProcessing:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
         if self.save:
+            # set index=False to exclude the dataframe index from the csv
             self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
-                path_or_buf=os.path.join(Path(__file__).parent,'output.csv'), index=True)  # Set index=False to exclude the DataFrame index from the CSV
+                path_or_buf=os.path.join(Path(__file__).parent, 'output.csv'), index=True)
 
         # call a plotting script
         if self.plotting:
@@ -406,8 +407,7 @@ def read_args():
     parser.add_argument("-s", "--save", action="store_true",
                         help="save flag for saving the filtered dataframe in csv file")
     parser.add_argument("-np", "--no_plot", action="store_true",
-                        help="no-plot flag for disabling generating and storing a plot")
-    
+                        help="no-plot flag for disabling plotting")
 
     return parser.parse_args()
 
@@ -417,7 +417,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose, args.save, not(args.no_plot))
+        post = PostProcessing(args.log_path, args.debug, args.verbose, args.save, not args.no_plot)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 

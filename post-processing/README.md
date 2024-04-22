@@ -68,7 +68,7 @@ Before running post-processing, create a config file including all necessary inf
     - `Format: [column_name, value]`
 - `column_types` - Pandas dtype for each relevant column (axes, units, filters, series). Specified with a dictionary.
     - `Accepted types: "str"/"string"/"object", "int"/"int64", "float"/"float64", "datetime"/"datetime64"`
-- `additional_columns_to_csv` - (Optional.) List of additional columns to export to csv file, in addition to the ones above. Those columns are not used in plotting. (Specify an empty list if no additional columns are required.)
+- `extra_columns_to_csv` - (Optional.) List of additional columns to include when exporting benchmark data to a CSV, in addition to the ones above. These columns are not used in plotting. (Specify an empty list if no additional columns are required.)
 
 #### A Note on Replaced ReFrame Columns
 
@@ -123,9 +123,8 @@ series: <series_list>
 column_types:
   <column_name>: <column_type>
 
-# optional (default: no extra columns exported to a csv file in addition to the ones above)
-additional_columns_to_csv:
-  <columns_list>
+# optional (default: no extra columns exported to CSV file in addition to the ones above)
+extra_columns_to_csv: <columns_list>
 ```
 
 #### Example Config
