@@ -65,13 +65,13 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
 You can see the account balance of your projects with the `mybalance` command.
 
-## Cosma
+## Cosma8
 
 ### Queue options
 
@@ -79,7 +79,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge. DiRAC users can find the account codes
@@ -93,7 +93,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -108,7 +108,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -165,7 +165,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
