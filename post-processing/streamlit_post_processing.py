@@ -67,6 +67,9 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         title = st.text_input("#### Title", config.title, placeholder="None")
         if title != config.title:
             config.title = title
+        # warn if title is blank
+        if not title:
+            st.warning("Missing plot title information.")
 
         # display axis options
         axis_options()
@@ -155,6 +158,10 @@ def axis_select(label: str, axis: dict):
     with axis_column:
         st.selectbox("{0}-axis column".format(label), df.columns,
                      key="{0}_axis_column".format(label), index=column_index)
+    # warn if no axis column is selected
+    if not st.session_state["{0}_axis_column".format(label)]:
+        st.warning("Missing {0}-axis value information.".format(label))
+
     # units select
     units_select(label, axis)
 
@@ -185,7 +192,8 @@ def units_select(label: str, axis: dict):
     with units_custom:
         st.text_input("{0}-axis units custom".format(label),
                       axis["units"].get("custom") if axis.get("units") else None,
-                      placeholder="None", key="{0}_axis_units_custom".format(label))
+                      placeholder="None", key="{0}_axis_units_custom".format(label),
+                      help="Assign a custom units label. Will clear the units column selection.")
 
 
 def update_axes():
@@ -331,9 +339,9 @@ def new_filter_options():
                                                 "Will cause column filter value to be ignored."))
 
         filter_val = state.custom_filter_val if state.custom_filter_val else state.filter_val
-        # both column and custom filter values left blank
+        # warn if both column and custom filter values are blank
         if filter_val is None:
-            st.warning("Note: Current filter cannot be added. Missing filter value information.")
+            st.warning("Note: Current new filter cannot be added. Missing filter value information.")
 
         current_filter = [state.filter_col, state.filter_op, filter_val]
         st.button("Add Filter", on_click=add_filter, args=[current_filter])
@@ -427,7 +435,7 @@ def new_extra_column_options():
 
         st.selectbox("extra column", post.df.columns, key="extra_col",
                      help="{0} {1}".format("Optional extra columns to display in the filtered DataFrame.",
-                                           "This does not affect plotting."))
+                                           "Does not affect plotting."))
         st.button("Add Extra Column", on_click=add_extra_column)
 
 
