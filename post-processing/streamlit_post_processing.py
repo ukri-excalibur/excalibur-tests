@@ -311,7 +311,7 @@ def new_filter_options():
         with c2:
             st.selectbox("column type", column_types, key="column_type")
 
-        c1, c2, c3 = st.columns(3)
+        c1, c2 = st.columns(2)
         with c1:
             st.selectbox("filter column", post.df.columns, key="filter_col")
         with c2:
@@ -319,12 +319,23 @@ def new_filter_options():
                 st.selectbox("operator", ["=="], key="filter_op")
             else:
                 st.selectbox("operator", operators, key="filter_op")
-        # FIXME (issue #301): user should be allowed to select values that aren't in the column as well
-        with c3:
-            filter_col = post.df[state.filter_col].drop_duplicates()
-            st.selectbox("filter value", filter_col.sort_values(), key="filter_val")
 
-        current_filter = [state.filter_col, state.filter_op, str(state.filter_val)]
+        c1, c2 = st.columns(2)
+        with c1:
+            # display contents of currently selected filter column
+            filter_col = post.df[state.filter_col].drop_duplicates()
+            st.selectbox("column filter value", filter_col.sort_values(), key="filter_val", index=None)
+        with c2:
+            st.text_input("custom filter value", None, placeholder="None", key="custom_filter_val",
+                          help="{0} {1}".format("Assign a filter value that isn't in the data.",
+                                                "Will cause column filter value to be ignored."))
+
+        filter_val = state.custom_filter_val if state.custom_filter_val else state.filter_val
+        # both column and custom filter values left blank
+        if filter_val is None:
+            st.warning("Note: Current filter cannot be added. Missing filter value information.")
+
+        current_filter = [state.filter_col, state.filter_op, filter_val]
         st.button("Add Filter", on_click=add_filter, args=[current_filter])
 
 
@@ -364,8 +375,9 @@ def add_filter(filter: list):
     if key == "series":
         del filter[1]
 
-    if filter not in state[key]:
+    if filter not in state[key] and filter[-1] is not None:
         # add filter to appropriate filter list
+        filter[-1] = str(filter[-1])
         state[key].append(filter)
         # update column type
         state.config.column_types[filter[0]] = state.column_type
