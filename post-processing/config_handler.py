@@ -148,6 +148,10 @@ class ConfigHandler:
         # extra columns
         if self.extra_columns is None:
             self.extra_columns = []
+        # remove duplicated columns from the extra columns list
+        extra_duplicates = set(self.plot_columns) & set(self.extra_columns)
+        for d in extra_duplicates:
+            self.extra_columns.remove(d)
 
         # filter columns
         self.filter_columns = (list(dict.fromkeys([f[0] for f in self.and_filters] +
@@ -158,13 +162,6 @@ class ConfigHandler:
         self.all_columns = list(
             dict.fromkeys((self.plot_columns + self.filter_columns +
                            ([self.scaling_column.get("name")] if self.scaling_column else []))))
-
-        # remove duplicated columns from the extra_columns list
-        duplicates = set(self.all_columns) & set(self.extra_columns)
-        while len(duplicates) != 0:
-            for d in duplicates:
-                self.extra_columns.remove(d)
-            duplicates = set(self.all_columns) & set(self.extra_columns)
 
     def remove_redundant_types(self):
         """
