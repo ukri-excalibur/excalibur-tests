@@ -339,10 +339,6 @@ def new_filter_options():
                                                 "Will cause column filter value to be ignored."))
 
         filter_val = state.custom_filter_val if state.custom_filter_val else state.filter_val
-        # warn if both column and custom filter values are blank
-        if filter_val is None:
-            st.warning("Note: Current new filter cannot be added. Missing filter value information.")
-
         current_filter = [state.filter_col, state.filter_op, filter_val]
         st.button("Add Filter", on_click=add_filter, args=[current_filter])
 
@@ -379,36 +375,47 @@ def add_filter(filter: list):
     state = st.session_state
     key = state.filter_type
 
-    # remove operator from series
-    if key == "series":
-        del filter[1]
-
-    if filter not in state[key] and filter[-1] is not None:
-        # add filter to appropriate filter list
+    if filter[-1] is not None:
+        # treat filter value as string
         filter[-1] = str(filter[-1])
-        state[key].append(filter)
-        # update column type
-        state.config.column_types[filter[0]] = state.column_type
-        # add filter to config and update df types
-        update_filter(key)
+        # remove operator from series
+        if key == "series":
+            del filter[1]
 
-        try:
-            # (re-)interpret all filter values as given dtype of filter column
-            for f in state[key]:
-                if f[0] == filter[0]:
-                    # find filter index
-                    i = state[key].index(f)
-                    filter_value = state.post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
-                    # adjust filter value after typing
-                    state[key][i][-1] = str(filter_value)
+        # FIXME: this doesn't work with some custom values (e.g. nan is internally changed to NaT)
+        if filter not in state[key]:
+            # add filter to appropriate filter list
+            state[key].append(filter)
+            # update column type
+            state.config.column_types[filter[0]] = state.column_type
+            # add filter to config and update df types
+            update_filter(key)
 
-        except Exception as e:
-            st.exception(e)
-            state.post.plot = None
-            # remove filter from filter list
-            state[key].remove(filter)
-            # re-update types
-            update_types()
+            try:
+                # (re-)interpret all filter values as given dtype of filter column
+                for f in state[key]:
+                    if f[0] == filter[0]:
+                        # find filter index
+                        i = state[key].index(f)
+                        filter_value = state.post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
+                        # adjust filter value after typing
+                        state[key][i][-1] = str(filter_value)
+
+            except Exception as e:
+                st.exception(e)
+                state.post.plot = None
+                # remove filter from filter list
+                state[key].remove(filter)
+                # re-update types
+                update_types()
+
+        else:
+            # warn if selected filter is already present
+            st.warning("Currently selected filter is already present.")
+
+    else:
+        # warn if both column and custom filter values are blank
+        st.warning("Currently selected filter cannot be added. Missing filter value information.")
 
 
 def extra_columns():
