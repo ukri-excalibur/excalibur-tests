@@ -434,8 +434,9 @@ def new_extra_column_options():
     with st.container(border=True):
 
         st.selectbox("extra column", post.df.columns, key="extra_col",
-                     help="{0} {1}".format("Optional extra columns to display in the filtered DataFrame.",
-                                           "Does not affect plotting."))
+                     help="{0} {1}".format(
+                         "Optional columns to display in the filtered DataFrame (in addition to plot columns).",
+                         "Extra columns do not affect plotting."))
         st.button("Add Extra Column", on_click=add_extra_column)
 
 
@@ -458,12 +459,14 @@ def add_extra_column():
     state = st.session_state
     config = state.config
 
+    # warn if selected extra column is already present
+    if (len(config.plot_columns + config.extra_columns + [state.extra_col]) !=
+        len(set(config.plot_columns + config.extra_columns + [state.extra_col]))):
+        st.warning("Currently selected extra column is already present in the DataFrame mask.")
+
     if state.extra_col not in state.config.extra_columns:
         # add extra column to list
         config.extra_columns.append(state.extra_col)
-        if (len(config.all_columns + config.extra_columns) !=
-            len(set(config.all_columns + config.extra_columns))):
-            st.warning("Column already present in config. Removing from extra columns list.")
         # re-parse column names
         config.parse_columns()
 
