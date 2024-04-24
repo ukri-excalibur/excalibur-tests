@@ -146,8 +146,7 @@ class ConfigHandler:
         self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
         # extra columns
-        if self.extra_columns is None:
-            self.extra_columns = []
+        self.extra_columns = (list(dict.fromkeys(self.extra_columns)) if self.extra_columns else [])
         # remove duplicated columns from the extra columns list
         extra_duplicates = set(self.plot_columns) & set(self.extra_columns)
         for d in extra_duplicates:
