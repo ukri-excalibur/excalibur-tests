@@ -25,7 +25,7 @@ class ConfigHandler:
         self.filters = config.get("filters")
         self.series = config.get("series")
         self.column_types = config.get("column_types")
-        self.extra_columns = config.get("additional_columns_to_csv")
+        self.extra_columns = config.get("extra_columns_to_csv")
 
         # parse filter information
         self.and_filters = []
@@ -65,7 +65,8 @@ class ConfigHandler:
             "y_axis": {"value": None, "units": {"custom": None}},
             "filters": {"and": [], "or": []},
             "series": [],
-            "column_types": {}}), template=True)
+            "column_types": {},
+            "extra_columns_to_csv": []}), template=True)
 
     def get_filters(self):
         """
@@ -144,6 +145,10 @@ class ConfigHandler:
         # drop None values
         self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
+        # extra columns
+        if self.extra_columns is None:
+            self.extra_columns = []
+
         # filter columns
         self.filter_columns = (list(dict.fromkeys([f[0] for f in self.and_filters] +
                                                   [f[0] for f in self.or_filters]))
@@ -182,7 +187,8 @@ class ConfigHandler:
             "y_axis": self.y_axis,
             "filters": self.filters,
             "series": self.series,
-            "column_types": self.column_types})
+            "column_types": self.column_types,
+            "extra_columns_to_csv": self.extra_columns})
 
     def to_yaml(self):
         """

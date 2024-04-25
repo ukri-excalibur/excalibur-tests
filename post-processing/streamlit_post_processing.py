@@ -46,8 +46,9 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        if len(config.plot_columns) > 0:
-            st.dataframe(post.df[post.mask][config.plot_columns], hide_index=True, use_container_width=True)
+        if len(config.plot_columns + config.extra_columns) > 0:
+            st.dataframe(post.df[post.mask][config.plot_columns + config.extra_columns],
+                         hide_index=True, use_container_width=True)
         else:
             st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
 
@@ -266,6 +267,10 @@ def filter_options():
     current_filters()
     # display new filter addition options
     new_filter_options()
+    # display current extra columns
+    extra_columns()
+    # display new extra column addition options
+    new_extra_column_options()
 
 
 def current_filters():
@@ -384,6 +389,63 @@ def add_filter(filter: list):
             state[key].remove(filter)
             # re-update types
             update_types()
+
+
+def extra_columns():
+    """
+        Display current extra columns.
+    """
+
+    config = st.session_state.config
+    st.write("###### Current Extra Columns")
+    st.multiselect("Extra Columns", config.extra_columns if config.extra_columns else [None],
+                   config.extra_columns, key="extra_columns", on_change=update_extra_column,
+                   placeholder="None", label_visibility="collapsed")
+
+
+def new_extra_column_options():
+    """
+        Display new extra column addition options interface.
+    """
+
+    state = st.session_state
+    post = state.post
+    st.write("###### Add New Extra Column")
+    with st.container(border=True):
+
+        st.selectbox("extra column", post.df.columns, key="extra_col",
+                     help="{0} {1}".format("Optional extra columns to display in the filtered DataFrame.",
+                                           "This does not affect plotting."))
+        st.button("Add Extra Column", on_click=add_extra_column)
+
+
+def update_extra_column():
+    """
+        Apply user-selected extra columns to session state config.
+    """
+
+    state = st.session_state
+    config = state.config
+    # align states
+    config.extra_columns = state.extra_columns
+
+
+def add_extra_column():
+    """
+        Allow the user to add a new extra column to session state config.
+    """
+
+    state = st.session_state
+    config = state.config
+
+    if state.extra_col not in state.config.extra_columns:
+        # add extra column to list
+        config.extra_columns.append(state.extra_col)
+        if (len(config.all_columns + config.extra_columns) !=
+            len(set(config.all_columns + config.extra_columns))):
+            st.warning("Column already present in config. Removing from extra columns list.")
+        # re-parse column names
+        config.parse_columns()
 
 
 def rerun_post_processing():
