@@ -56,6 +56,8 @@ jobs:
         run: pip install mkdocs-material github3.py
 
       - name: Checkout gh-pages
+        # Run only if push is to `main`, or if it's a PR not from a fork.
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
         uses: actions/checkout@v4
         with:
           ref: gh-pages
@@ -67,7 +69,7 @@ jobs:
           # (reframe tests, input files, etc...) should be ignored by the docs.
           find benchmarks/apps -type f \! \( -name 'README.md' \) -print -delete
 
-      - name: Rewrite URLs in Markdown files for previews
+      - name: Set environment variables for docs preview in PRs
         # Run only if this is a PR for which we're going to deploy the preview.
         if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
         run: |
@@ -75,16 +77,21 @@ jobs:
           echo "BASE_URL=${BASE_URL}" >> "${GITHUB_ENV}"
           PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
           echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
+          export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_DIR=${MKDOCS_SITE_DIR}" >> "${GITHUB_ENV}"
+          MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_URL=${MKDOCS_SITE_URL}" >> "${GITHUB_ENV}"
+
+      - name: Rewrite URLs in Markdown files for docs preview in PRs
+        # Run only if this is a PR for which we're going to deploy the preview.
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        run: |
           # Edit only files, and not symlinks, to avoid double editing the same files.
           find . -type f -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
 
       - name: Build docs
         run: |
-          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-              export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
-              export MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
-          fi
-          mkdocs build
+          mkdocs --verbose build
 
       - name: Deploy docs
         # Run only if push is to `main`, or if it's a PR not from a fork.
