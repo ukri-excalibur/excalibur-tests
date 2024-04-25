@@ -1,3 +1,4 @@
+from itertools import groupby
 from pathlib import Path
 
 import yaml
@@ -102,11 +103,14 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            self.and_filters = self.filters["and"] if self.filters.get("and") else []
-            self.or_filters = self.filters["or"] if self.filters.get("or") else []
+            self.and_filters = [f for f, _ in groupby(self.filters["and"])] if self.filters.get("and") else []
+            self.filters["and"] = self.and_filters
+            self.or_filters = [f for f, _ in groupby(self.filters["or"])] if self.filters.get("or") else []
+            self.filters["or"] = self.or_filters
 
         # series filters
-        self.series_filters = [[s[0], "==", s[1]] for s in self.series] if self.series else []
+        self.series_filters = [f for f, _ in groupby([[s[0], "==", s[1]] for s in self.series])] if self.series else []
+        self.series = [[s[0], s[-1]] for s in self.series]
 
     def parse_scaling(self):
         """
@@ -159,8 +163,8 @@ class ConfigHandler:
 
         # all typed columns
         self.all_columns = list(
-            dict.fromkeys((self.plot_columns + self.filter_columns +
-                           ([self.scaling_column.get("name")] if self.scaling_column else []))))
+            dict.fromkeys(self.plot_columns + self.filter_columns +
+                          ([self.scaling_column.get("name")] if self.scaling_column else [])))
 
     def remove_redundant_types(self):
         """
