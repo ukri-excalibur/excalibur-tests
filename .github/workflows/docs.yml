@@ -56,6 +56,8 @@ jobs:
         run: pip install mkdocs-material github3.py
 
       - name: Checkout gh-pages
+        # Run only if push is to `main`, or if it's a PR not from a fork.
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
         uses: actions/checkout@v4
         with:
           ref: gh-pages
@@ -80,11 +82,11 @@ jobs:
 
       - name: Build docs
         run: |
-          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+          if [[ ${{ github.event_name }} == 'pull_request' ]] || [[ "${{ github.event.pull_request.head.repo.fork }}" == "false" ]] ; then
               export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
               export MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
           fi
-          mkdocs build
+          mkdocs --verbose build
 
       - name: Deploy docs
         # Run only if push is to `main`, or if it's a PR not from a fork.
