@@ -292,7 +292,17 @@ class PostProcessing:
                 value: a value to by typed.
                 column: str, column name.
         """
-        return pd.Series(value, dtype=self.df[column].dtype)
+        return self.val_as_dtype(value, self.df[column].dtype)
+
+    def val_as_dtype(self, value, dtype):
+        """
+            Return a pandas series that interprets a given value as the given dtype.
+
+            Args:
+                value: a value to by typed.
+                dtype: dtype for typing.
+        """
+        return pd.Series(value, dtype=dtype)
 
     # operator lookup dictionary
     op_lookup = {
