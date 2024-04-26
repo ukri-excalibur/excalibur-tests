@@ -10,11 +10,16 @@ from post_processing import PostProcessing
 operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
 filter_types = ["and", "or", "series"]
-# internal pandas vs user type conversion
+# pandas to user type mapping
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
                "Int64": "int",
                "object": "str"}
+# user to pandas type mapping
+dtype_lookup = {"datetime": "datetime64[ns]",
+                "float": "float64",
+                "int": "Int64",
+                "str": "object"}
 
 
 def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None' = None):
@@ -317,7 +322,7 @@ def new_filter_options():
         with c1:
             st.selectbox("filter type", filter_types, key="filter_type")
         with c2:
-            st.selectbox("column type", column_types, key="column_type")
+            st.selectbox("filter column type", column_types, key="filter_column_type")
 
         c1, c2 = st.columns(2)
         with c1:
@@ -373,41 +378,47 @@ def add_filter(filter: list):
     """
 
     state = st.session_state
+    post = state.post
     key = state.filter_type
 
     if filter[-1] is not None:
+        try:
+            # type filter value as filter column type
+            filter[-1] = post.val_as_dtype(filter[-1], dtype_lookup.get(state.filter_column_type)).iloc[0]
+        except Exception as e:
+            st.exception(e)
         # treat filter value as string
         filter[-1] = str(filter[-1])
         # remove operator from series
         if key == "series":
             del filter[1]
 
-        # FIXME: this doesn't work with some custom values (e.g. nan is internally changed to NaT)
         if filter not in state[key]:
-            # add filter to appropriate filter list
-            state[key].append(filter)
-            # update column type
-            state.config.column_types[filter[0]] = state.column_type
-            # add filter to config and update df types
-            update_filter(key)
-
             try:
+                # add filter to appropriate filter list
+                state[key].append(filter)
+                # update column type
+                state.config.column_types[filter[0]] = state.filter_column_type
+                # add filter to config and update df types
+                update_filter(key)
+
                 # (re-)interpret all filter values as given dtype of filter column
+                # FIXME: should this be applied to all other filter lists too?
                 for f in state[key]:
+                    # found filter column matches current filter column
                     if f[0] == filter[0]:
                         # find filter index
                         i = state[key].index(f)
-                        filter_value = state.post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
+                        filter_value = post.val_as_col_dtype(state[key][i][-1], filter[0]).iloc[0]
                         # adjust filter value after typing
                         state[key][i][-1] = str(filter_value)
 
             except Exception as e:
                 st.exception(e)
-                state.post.plot = None
                 # remove filter from filter list
                 state[key].remove(filter)
-                # re-update types
-                update_types()
+                # re-update filter list
+                update_filter(key)
 
         else:
             # warn if selected filter is already present
