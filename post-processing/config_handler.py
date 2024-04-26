@@ -1,4 +1,3 @@
-from itertools import groupby
 from pathlib import Path
 
 import yaml
@@ -103,13 +102,23 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            self.and_filters = [f for f, _ in groupby(self.filters["and"])] if self.filters.get("and") else []
+            # FIXME: consider a better way of doing this
+            # use hashable tuples to remove duplicate filters
+            self.and_filters = (list(dict.fromkeys([tuple(f) for f in self.filters["and"]]))
+                                if self.filters.get("and") else [])
+            self.or_filters = (list(dict.fromkeys([tuple(f) for f in self.filters["or"]]))
+                               if self.filters.get("or") else [])
+            # convert back to lists to maintain mutability
+            self.and_filters = [list(f) for f in self.and_filters]
+            self.or_filters = [list(f) for f in self.or_filters]
+            # FIXME: consider the purpose of keeping multiple filter lists
             self.filters["and"] = self.and_filters
-            self.or_filters = [f for f, _ in groupby(self.filters["or"])] if self.filters.get("or") else []
             self.filters["or"] = self.or_filters
 
         # series filters
-        self.series_filters = [f for f, _ in groupby([[s[0], "==", s[1]] for s in self.series])] if self.series else []
+        self.series_filters = (list(dict.fromkeys([(s[0], "==", s[1]) for s in self.series]))
+                               if self.series else [])
+        self.series_filters = [list(s) for s in self.series_filters]
         self.series = [[s[0], s[-1]] for s in self.series]
 
     def parse_scaling(self):
