@@ -145,7 +145,7 @@ def axis_select(label: str, axis: dict):
 
         Args:
             label: str, axis label (either 'x' or 'y').
-            axis: dict, axis column and units from config.
+            axis: dict, axis column, units, and scaling from config.
     """
 
     df = st.session_state.post.df
@@ -157,7 +157,7 @@ def axis_select(label: str, axis: dict):
     axis_type, axis_column = st.columns(2)
     # type select
     with axis_type:
-        st.selectbox("{0}-axis type".format(label), column_types,
+        st.selectbox("{0}-axis column type".format(label), column_types,
                      key="{0}_axis_type".format(label), index=type_index)
     # column select
     with axis_column:
@@ -169,6 +169,10 @@ def axis_select(label: str, axis: dict):
 
     # units select
     units_select(label, axis)
+    # scaling select
+    if label == "y":
+        st.write("---")
+        scaling_select(axis)
 
 
 def units_select(label: str, axis: dict):
@@ -177,7 +181,7 @@ def units_select(label: str, axis: dict):
 
         Args:
             label: str, axis label (either 'x' or 'y').
-            axis: dict, axis column and units from config.
+            axis: dict, axis column, units, and scaling from config.
     """
 
     df = st.session_state.post.df
@@ -199,6 +203,56 @@ def units_select(label: str, axis: dict):
                       axis["units"].get("custom") if axis.get("units") else None,
                       placeholder="None", key="{0}_axis_units_custom".format(label),
                       help="Assign a custom units label. Will clear the units column selection.")
+
+
+def scaling_select(axis: dict):
+    """
+        Allow the user to select or specify axis scaling for post-processing.
+
+        Args:
+            axis: dict, axis column, units, and scaling from config.
+    """
+
+    state = st.session_state
+    df = state.post.df
+
+    # scaling value selection columns
+    series_col = list(dict.fromkeys([s[0] for s in state.config.series]))
+    x_col = df[state.x_axis_column].drop_duplicates().sort_values() if state.x_axis_column else []
+
+    # default drop-down selections
+    type_index = 0
+    scaling_index = None
+    series_index = None
+    x_index = None
+    if axis.get("scaling"):
+        if axis["scaling"].get("column"):
+            if axis["scaling"]["column"].get("name"):
+                type_index = column_types.index(type_lookup.get(str(df[axis["scaling"]["column"]["name"]].dtype)))
+                scaling_index = list(df.columns).index(axis["scaling"]["column"]["name"])
+            if axis["scaling"]["column"].get("series"):
+                series_index = axis["scaling"]["column"]["series"]
+            if axis["scaling"]["column"].get("x_value") and x_col:
+                x_index = x_col.index(axis["scaling"]["column"]["x_value"])
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.selectbox("scaling column type", column_types,
+                     key="y_axis_scaling_type", index=type_index)
+    with c2:
+        st.selectbox("scaling column", df.columns, placeholder="None",
+                     key="y_axis_scaling_column", index=scaling_index)
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.selectbox("scaling series", series_col, placeholder="None",
+                     key="y_axis_scaling_series", index=series_index)
+    with c2:
+        st.selectbox("scaling x-axis value", x_col, placeholder="None",
+                     key="y_axis_scaling_x_value", index=x_index)
+
+    st.text_input("custom scaling value", None, placeholder="None", key="custom_scaling_val",
+                  help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
 
 def update_axes():
@@ -415,6 +469,7 @@ def add_filter(filter: list):
 
             except Exception as e:
                 st.exception(e)
+                post.plot = None
                 # remove filter from filter list
                 state[key].remove(filter)
                 # re-update filter list
