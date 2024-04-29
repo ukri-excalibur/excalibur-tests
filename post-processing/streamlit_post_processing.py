@@ -232,7 +232,7 @@ def scaling_select(axis: dict):
     df = state.post.df
 
     # scaling value selection columns
-    series_col = list(dict.fromkeys([s[0] for s in state.config.series]))
+    series_col = state.config.series_filters
     x_col = (list(df[state.post.mask][state.x_axis_column].drop_duplicates().sort_values())
              if state.x_axis_column else [])
 
@@ -318,9 +318,8 @@ def update_axes():
     if not y_scaling_custom and y_scaling_column:
         # NOTE: series index needs to be kept as int for now
         config.y_axis["scaling"] = {"column": {"name": y_scaling_column,
-                                               "series": (list(dict.fromkeys(
-                                                   [s[0] for s in state.config.series])).index(y_scaling_series)
-                                                   if y_scaling_series else None),
+                                               "series": (state.config.series_filters.index(y_scaling_series)
+                                                          if y_scaling_series else None),
                                                "x_value": y_scaling_x}}
         config.column_types[y_scaling_column] = state.y_axis_scaling_type
 
