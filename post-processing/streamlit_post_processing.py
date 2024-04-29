@@ -218,7 +218,8 @@ def scaling_select(axis: dict):
 
     # scaling value selection columns
     series_col = list(dict.fromkeys([s[0] for s in state.config.series]))
-    x_col = list(df[state.x_axis_column].drop_duplicates().sort_values()) if state.x_axis_column else []
+    x_col = (list(df[state.post.mask][state.x_axis_column].drop_duplicates().sort_values())
+             if state.x_axis_column else [])
 
     # default drop-down selections
     type_index = 0
@@ -233,7 +234,8 @@ def scaling_select(axis: dict):
             if axis["scaling"]["column"].get("series") is not None:
                 series_index = int(axis["scaling"]["column"]["series"])
             if axis["scaling"]["column"].get("x_value") and len(x_col) > 0:
-                x_index = x_col.index(axis["scaling"]["column"]["x_value"])
+                if axis["scaling"]["column"]["x_value"] in x_col:
+                    x_index = x_col.index(axis["scaling"]["column"]["x_value"])
 
     c1, c2 = st.columns(2)
     with c1:
