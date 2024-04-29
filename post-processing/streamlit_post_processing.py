@@ -204,6 +204,21 @@ def units_select(label: str, axis: dict):
                       placeholder="None", key="{0}_axis_units_custom".format(label),
                       help="Assign a custom units label. Will clear the units column selection.")
 
+    st.button("Clear Units", key="clear_{0}_axis_units".format(label), on_click=clear_fields,
+              args=[["{0}_axis_units_column".format(label), "{0}_axis_units_custom".format(label)]])
+
+
+def clear_fields(field_keys: 'list[str]'):
+    """
+        Reset the state of all provided fields to None.
+
+        Args:
+            field_keys: list, keys of fields in the session state.
+    """
+
+    for k in field_keys:
+        st.session_state[k] = None
+
 
 def scaling_select(axis: dict):
     """
@@ -256,6 +271,9 @@ def scaling_select(axis: dict):
     st.text_input("custom scaling value", None, placeholder="None", key="y_axis_custom_scaling_val",
                   help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
+    st.button("Clear Scaling", on_click=clear_fields, args=[["y_axis_scaling_column", "y_axis_scaling_series",
+                                                             "y_axis_scaling_x_value", "y_axis_custom_scaling_val"]])
+
 
 def update_axes():
     """
@@ -286,8 +304,6 @@ def update_axes():
 
     # update units
     # NOTE: units are automatically interpreted as strings for simplicity
-    # FIXME (part of issue #268): currently the only way to clear column selection is to add custom units
-    # (custom units can easily be overwritten with None by leaving text input empty)
     config.x_axis["units"] = {"custom": x_units_custom}
     if not x_units_custom and x_units_column:
         config.x_axis["units"] = {"column": x_units_column}
