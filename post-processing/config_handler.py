@@ -62,7 +62,7 @@ class ConfigHandler:
         return self(dict({
             "title": None,
             "x_axis": {"value": None, "units": {"custom": None}},
-            "y_axis": {"value": None, "units": {"custom": None}},
+            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},
             "filters": {"and": [], "or": []},
             "series": [],
             "column_types": {},
@@ -273,7 +273,8 @@ def read_config(config: dict):
                     "Specify y-axis scaling information as only one of 'column' or 'custom'.")
             if not config.get("y_axis").get("scaling").get("column").get("name"):
                 raise RuntimeError("Scaling column must have a name.")
-        elif not config.get("y_axis").get("scaling").get("custom"):
+        elif (config.get("y_axis").get("scaling").get("custom") is not None and
+              not config.get("y_axis").get("scaling").get("custom")):
             raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
                                .format(config.get("y_axis").get("scaling").get("custom")))
 
