@@ -218,7 +218,7 @@ def scaling_select(axis: dict):
 
     # scaling value selection columns
     series_col = list(dict.fromkeys([s[0] for s in state.config.series]))
-    x_col = df[state.x_axis_column].drop_duplicates().sort_values() if state.x_axis_column else []
+    x_col = list(df[state.x_axis_column].drop_duplicates().sort_values()) if state.x_axis_column else []
 
     # default drop-down selections
     type_index = 0
@@ -230,9 +230,9 @@ def scaling_select(axis: dict):
             if axis["scaling"]["column"].get("name"):
                 type_index = column_types.index(type_lookup.get(str(df[axis["scaling"]["column"]["name"]].dtype)))
                 scaling_index = list(df.columns).index(axis["scaling"]["column"]["name"])
-            if axis["scaling"]["column"].get("series"):
-                series_index = axis["scaling"]["column"]["series"]
-            if axis["scaling"]["column"].get("x_value") and x_col:
+            if axis["scaling"]["column"].get("series") is not None:
+                series_index = int(axis["scaling"]["column"]["series"])
+            if axis["scaling"]["column"].get("x_value") and len(x_col) > 0:
                 x_index = x_col.index(axis["scaling"]["column"]["x_value"])
 
     c1, c2 = st.columns(2)
@@ -251,7 +251,7 @@ def scaling_select(axis: dict):
         st.selectbox("scaling x-axis value", x_col, placeholder="None",
                      key="y_axis_scaling_x_value", index=x_index)
 
-    st.text_input("custom scaling value", None, placeholder="None", key="custom_scaling_val",
+    st.text_input("custom scaling value", None, placeholder="None", key="y_axis_custom_scaling_val",
                   help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
 
@@ -262,12 +262,18 @@ def update_axes():
 
     state = st.session_state
     config = state.config
+
     x_column = state.x_axis_column
-    y_column = state.y_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+
+    y_column = state.y_axis_column
     y_units_column = state.y_axis_units_column
     y_units_custom = state.y_axis_units_custom
+    y_scaling_column = state.y_axis_scaling_column
+    y_scaling_series = state.y_axis_scaling_series
+    y_scaling_x = state.y_axis_scaling_x_value
+    y_scaling_custom = state.y_axis_custom_scaling_val
 
     # update columns
     config.x_axis["value"] = x_column
@@ -289,6 +295,18 @@ def update_axes():
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
 
+    # update scaling
+    config.y_axis["scaling"] = {"custom": y_scaling_custom if y_scaling_custom else None}
+    if not y_scaling_custom and y_scaling_column:
+        # NOTE: series index needs to be kept as int for now
+        config.y_axis["scaling"] = {"column": {"name": y_scaling_column,
+                                               "series": (list(dict.fromkeys(
+                                                   [s[0] for s in state.config.series])).index(y_scaling_series)
+                                                   if y_scaling_series else None),
+                                               "x_value": y_scaling_x}}
+        config.column_types[y_scaling_column] = state.y_axis_scaling_type
+
+    config.parse_scaling()
     # update types after changing axes
     update_types()
 
