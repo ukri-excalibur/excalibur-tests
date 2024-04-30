@@ -62,7 +62,7 @@ class ConfigHandler:
         return self(dict({
             "title": None,
             "x_axis": {"value": None, "units": {"custom": None}},
-            "y_axis": {"value": None, "units": {"custom": None}},
+            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},
             "filters": {"and": [], "or": []},
             "series": [],
             "column_types": {},
@@ -102,11 +102,24 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            self.and_filters = self.filters["and"] if self.filters.get("and") else []
-            self.or_filters = self.filters["or"] if self.filters.get("or") else []
+            # FIXME (issue #314): consider a better way of doing this
+            # use hashable tuples to remove duplicate filters
+            self.and_filters = (list(dict.fromkeys([tuple(f) for f in self.filters["and"]]))
+                                if self.filters.get("and") else [])
+            self.or_filters = (list(dict.fromkeys([tuple(f) for f in self.filters["or"]]))
+                               if self.filters.get("or") else [])
+            # convert back to lists to maintain mutability
+            self.and_filters = [list(f) for f in self.and_filters]
+            self.or_filters = [list(f) for f in self.or_filters]
+            # FIXME (issue #314): consider the purpose of keeping multiple filter lists
+            self.filters["and"] = self.and_filters
+            self.filters["or"] = self.or_filters
 
         # series filters
-        self.series_filters = [[s[0], "==", s[1]] for s in self.series] if self.series else []
+        self.series_filters = (list(dict.fromkeys([(s[0], "==", s[1]) for s in self.series]))
+                               if self.series else [])
+        self.series_filters = [list(s) for s in self.series_filters]
+        self.series = [[s[0], s[-1]] for s in self.series]
 
     def parse_scaling(self):
         """
@@ -146,8 +159,11 @@ class ConfigHandler:
         self.plot_columns = list(dict.fromkeys([c for c in self.plot_columns if c is not None]))
 
         # extra columns
-        if self.extra_columns is None:
-            self.extra_columns = []
+        self.extra_columns = (list(dict.fromkeys(self.extra_columns)) if self.extra_columns else [])
+        # remove duplicated columns from the extra columns list
+        extra_duplicates = set(self.plot_columns) & set(self.extra_columns)
+        for d in extra_duplicates:
+            self.extra_columns.remove(d)
 
         # filter columns
         self.filter_columns = (list(dict.fromkeys([f[0] for f in self.and_filters] +
@@ -156,15 +172,8 @@ class ConfigHandler:
 
         # all typed columns
         self.all_columns = list(
-            dict.fromkeys((self.plot_columns + self.filter_columns +
-                           ([self.scaling_column.get("name")] if self.scaling_column else []))))
-
-        # remove duplicated columns from the extra_columns list
-        duplicates = set(self.all_columns) & set(self.extra_columns)
-        while len(duplicates) != 0:
-            for d in duplicates:
-                self.extra_columns.remove(d)
-            duplicates = set(self.all_columns) & set(self.extra_columns)
+            dict.fromkeys(self.plot_columns + self.filter_columns +
+                          ([self.scaling_column.get("name")] if self.scaling_column else [])))
 
     def remove_redundant_types(self):
         """
@@ -264,7 +273,8 @@ def read_config(config: dict):
                     "Specify y-axis scaling information as only one of 'column' or 'custom'.")
             if not config.get("y_axis").get("scaling").get("column").get("name"):
                 raise RuntimeError("Scaling column must have a name.")
-        elif not config.get("y_axis").get("scaling").get("custom"):
+        elif (config.get("y_axis").get("scaling").get("custom") is not None and
+              not config.get("y_axis").get("scaling").get("custom")):
             raise RuntimeError("Invalid custom scaling value (cannot divide by {0})."
                                .format(config.get("y_axis").get("scaling").get("custom")))
 
