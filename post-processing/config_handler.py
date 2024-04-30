@@ -102,7 +102,7 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            # FIXME: consider a better way of doing this
+            # FIXME (issue #314): consider a better way of doing this
             # use hashable tuples to remove duplicate filters
             self.and_filters = (list(dict.fromkeys([tuple(f) for f in self.filters["and"]]))
                                 if self.filters.get("and") else [])
@@ -111,7 +111,7 @@ class ConfigHandler:
             # convert back to lists to maintain mutability
             self.and_filters = [list(f) for f in self.and_filters]
             self.or_filters = [list(f) for f in self.or_filters]
-            # FIXME: consider the purpose of keeping multiple filter lists
+            # FIXME (issue #314): consider the purpose of keeping multiple filter lists
             self.filters["and"] = self.and_filters
             self.filters["or"] = self.or_filters
 
