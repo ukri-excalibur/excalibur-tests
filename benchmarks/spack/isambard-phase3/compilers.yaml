@@ -67,19 +67,6 @@ compilers:
     environment: {}
     extra_rpaths: []
 - compiler:
-    spec: dpcpp@2021.4.0
-    paths:
-      cc: /lustre/software/x86/tools/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/icx
-      cxx: /lustre/software/x86/tools/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/dpcpp
-      f77: /lustre/software/x86/tools/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/ifx
-      fc: /lustre/software/x86/tools/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/ifx
-    flags: {}
-    operating_system: rhel8
-    target: x86_64
-    modules: []
-    environment: {}
-    extra_rpaths: []
-- compiler:
     spec: intel@2021.4.0
     paths:
       cc: /lustre/software/x86/tools/oneapi-2021.4.0/compiler/2021.4.0/linux/bin/intel64/icc

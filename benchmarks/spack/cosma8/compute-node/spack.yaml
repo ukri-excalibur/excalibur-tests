@@ -408,32 +408,6 @@ spack:
       extra_rpaths:
       - /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/compiler/lib/intel64_lin
       - /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/lib
-  - compiler:
-      spec: dpcpp@2021.3.0
-      paths:
-        cc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/icx
-        cxx: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/dpcpp
-        f77: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
-        fc: /cosma/local/intel/oneAPI_2021.3.0/compiler/2021.3.0/linux/bin/ifx
-      flags: {}
-      operating_system: centos7
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: dpcpp@2022.2.1
-      paths:
-        cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/icx
-        cxx: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/dpcpp
-        f77: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
-        fc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/ifx
-      flags: {}
-      operating_system: centos7
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
   packages:
     autoconf:
       externals:
