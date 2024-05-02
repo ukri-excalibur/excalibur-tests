@@ -479,19 +479,6 @@ spack:
       modules: []
       environment: {}
       extra_rpaths: []
-   - compiler:
-      spec: dpcpp@2023.2.0
-      paths:
-        cc: /cosma/local/intel/oneAPI_2023.2.0/compiler/2023.2.0/linux/bin/icx
-        cxx: /cosma/local/intel/oneAPI_2023.2.0/compiler/2023.2.0/linux/bin/dpcpp
-        f77: /cosma/local/intel/oneAPI_2023.2.0/compiler/2023.2.0/linux/bin/ifx
-        fc: /cosma/local/intel/oneAPI_2023.2.0/compiler/2023.2.0/linux/bin/ifx
-      flags: {}
-      operating_system: centos7
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []    
   packages:
     autoconf:
       externals:
