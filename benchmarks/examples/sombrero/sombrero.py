@@ -67,7 +67,7 @@ class SombreroBenchmark(SpackTest):
             'flops': (1.2, None, None, 'Gflops/seconds'),
         },
         'cosma8': {
-            'flops': (3.8, -0.2, None, 'Gflops/seconds'),
+            'flops': (8.0, -0.2, None, 'Gflops/seconds'),
         },
         'csd3-centos7:cascadelake': {
             'flops': (8.0, -0.2, None, 'Gflops/seconds'),
