@@ -1,8 +1,8 @@
 import argparse
 import operator as op
+import os
 import traceback
 from functools import reduce
-import os
 from pathlib import Path
 
 import pandas as pd
@@ -116,29 +116,7 @@ class PostProcessing:
         for col in all_columns:
             if column_types.get(col):
 
-                # get user input type
-                conversion_type = column_types[col]
-                # allow user to specify "datetime" as a type (internally convert to "datetime64")
-                conversion_type += "64" if conversion_type == "datetime" else ""
-
-                # internal type conversion
-                if pd.api.types.is_string_dtype(conversion_type):
-                    # all strings treated as object (nullable)
-                    conversion_type = "object"
-                elif pd.api.types.is_float_dtype(conversion_type):
-                    # all floats treated as float64 (nullable)
-                    conversion_type = "float64"
-                elif pd.api.types.is_integer_dtype(conversion_type):
-                    # all integers treated as Int64 (nullable)
-                    # NOTE: default pandas integer type is int64 (not nullable)
-                    conversion_type = "Int64"
-                elif pd.api.types.is_datetime64_any_dtype(conversion_type):
-                    # all datetimes treated as datetime64[ns] (nullable)
-                    conversion_type = "datetime64[ns]"
-                else:
-                    raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'."
-                                       .format(conversion_type, col))
-
+                conversion_type = self.convert_type_to_dtype(column_types[col], col)
                 # skip type conversion if column is already the desired type
                 if conversion_type == self.df[col].dtype:
                     continue
@@ -147,6 +125,40 @@ class PostProcessing:
 
             else:
                 raise KeyError("Could not find user-specified type for column", col)
+
+    def convert_type_to_dtype(self, user_type: str, col: str):
+        """
+            Return a valid pandas dtype converted from a user-specified type.
+
+            Args:
+                user_type: str, user-specified type for a given column.
+                col: str, column to by typed.
+        """
+
+        # get user input type
+        conversion_type = user_type
+        # allow user to specify "datetime" as a type (internally convert to "datetime64")
+        conversion_type += "64" if conversion_type == "datetime" else ""
+
+        # internal type conversion
+        if pd.api.types.is_string_dtype(conversion_type):
+            # all strings treated as object (nullable)
+            conversion_type = "object"
+        elif pd.api.types.is_float_dtype(conversion_type):
+            # all floats treated as float64 (nullable)
+            conversion_type = "float64"
+        elif pd.api.types.is_integer_dtype(conversion_type):
+            # all integers treated as Int64 (nullable)
+            # NOTE: default pandas integer type is int64 (not nullable)
+            conversion_type = "Int64"
+        elif pd.api.types.is_datetime64_any_dtype(conversion_type):
+            # all datetimes treated as datetime64[ns] (nullable)
+            conversion_type = "datetime64[ns]"
+        else:
+            raise RuntimeError("Unsupported user-specified type '{0}' for column '{1}'."
+                               .format(user_type, col))
+
+        return conversion_type
 
     def sort_df(self, x_axis: dict, series_columns: 'list[str]'):
         """
@@ -280,7 +292,17 @@ class PostProcessing:
                 value: a value to by typed.
                 column: str, column name.
         """
-        return pd.Series(value, dtype=self.df[column].dtype)
+        return self.val_as_dtype(value, self.df[column].dtype)
+
+    def val_as_dtype(self, value, dtype):
+        """
+            Return a pandas series that interprets a given value as the given dtype.
+
+            Args:
+                value: a value to by typed.
+                dtype: dtype for typing.
+        """
+        return pd.Series(value, dtype=dtype)
 
     # operator lookup dictionary
     op_lookup = {

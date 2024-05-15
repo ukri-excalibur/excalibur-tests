@@ -69,7 +69,7 @@ jobs:
           # (reframe tests, input files, etc...) should be ignored by the docs.
           find benchmarks/apps -type f \! \( -name 'README.md' \) -print -delete
 
-      - name: Rewrite URLs in Markdown files for previews
+      - name: Set environment variables for docs preview in PRs
         # Run only if this is a PR for which we're going to deploy the preview.
         if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
         run: |
@@ -77,15 +77,27 @@ jobs:
           echo "BASE_URL=${BASE_URL}" >> "${GITHUB_ENV}"
           PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
           echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
+          export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_DIR=${MKDOCS_SITE_DIR}" >> "${GITHUB_ENV}"
+          MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_URL=${MKDOCS_SITE_URL}" >> "${GITHUB_ENV}"
+
+      - name: Rewrite URLs in Markdown files for docs preview in PRs
+        # Run only if this is a PR for which we're going to deploy the preview.
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        run: |
           # Edit only files, and not symlinks, to avoid double editing the same files.
           find . -type f -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
 
       - name: Build docs
         run: |
+<<<<<<< HEAD
           if [[ ${{ github.event_name }} == 'pull_request' ]] || [[ "${{ github.event.pull_request.head.repo.fork }}" == "false" ]] ; then
               export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
               export MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
           fi
+=======
+>>>>>>> 1c15183d0c118d3b5e66bce7c3e0ee035aca1d55
           mkdocs --verbose build
 
       - name: Deploy docs
@@ -114,7 +126,7 @@ jobs:
           fi
           cp -fr ../site/* .
           git add .
-          git commit -m "${COMMIT_MESSAGE}"
+          git commit --allow-empty -m "${COMMIT_MESSAGE}"
           git push origin gh-pages
 
       - name: Create custom status for pull requests
