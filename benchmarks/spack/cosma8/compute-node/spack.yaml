@@ -484,6 +484,8 @@ spack:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
+      - spec: autoconf@2.71
+        prefix: /cosma/local/autoconf/2.71/ 
     automake:
       externals:
       - spec: automake@1.13.4
@@ -492,6 +494,8 @@ spack:
       externals:
       - spec: bash@4.2.46
         prefix: /usr
+      - spec: bash@5.2.21
+        prefix: /cosma/local/bash/5.2.21/
     boost:
       externals:
       - spec: boost@1.67.0%gcc@10.2.0 arch=linux-centos7-zen2
@@ -508,14 +512,22 @@ spack:
         prefix: /cosma/local/cmake/3.11.4/
       - spec: cmake@3.18.1
         prefix: /cosma/local/cmake/3.18.1/
+      - spec: cmake@3.25.1
+        prefix: /cosma/local/cmake/3.25.1/
+      - spec: cmake@3.28.3.
+        prefix: /cosma/local/cmake/3.28.3/    
     cpio:
       externals:
       - spec: cpio@2.11
         prefix: /usr
     cuda:
       externals:
-      - spec: cuda@10.1.243
+      - spec: cuda@10.1
         prefix: /cosma/local/cuda/10.1
+      - spec: cuda@11.0
+        prefix: /cosma/local/cuda/11.2
+      - spec: cuda@11.2
+        prefix: /cosma/local/cuda/11.2
     diffutils:
       externals:
       - spec: diffutils@3.3
