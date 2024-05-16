@@ -26,6 +26,14 @@ class ConquestBaseBenchmark(rfm.RunOnlyRegressionTest):
     def setup_variables(self):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
+        if self.current_partition.scheduler.registered_name == 'sge':
+            # `self.num_tasks` or `self.num_cpus_per_task` may be `None`, here
+            # we default to `1` if not set.
+            num_tasks = self.num_tasks or 1
+            num_cpus_per_task = self.num_cpus_per_task or 1
+            # Set the total number of CPUs to be requested for the SGE scheduler.
+            self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
+
     @sanity_function
     def validate_solution(self):
         return sn.assert_found(r'This job was run on', self.stdout)
