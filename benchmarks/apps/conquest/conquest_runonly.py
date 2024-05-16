@@ -7,7 +7,7 @@ class ConquestBaseBenchmark(rfm.RunOnlyRegressionTest):
 
     # Run configuration
     ## Mandatory ReFrame setup
-    valid_systems = ['*']
+    valid_systems = ['-gpu']
     valid_prog_environs = ['default']
 
     ## Executable
