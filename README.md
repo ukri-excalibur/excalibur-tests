@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/381099159.svg)](https://zenodo.org/doi/10.5281/zenodo.11144871)
+
 # ExCALIBUR tests
 
 Performance benchmarks and regression tests for the ExCALIBUR project.

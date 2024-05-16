@@ -49,19 +49,6 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: dpcpp@2021.2.0
-      paths:
-        cc: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-oneapi-compilers-2021.2.0-3q6eevirvd6g4brzipx22aef3imfqouj/compiler/2021.2.0/linux/bin/icx
-        cxx: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-oneapi-compilers-2021.2.0-3q6eevirvd6g4brzipx22aef3imfqouj/compiler/2021.2.0/linux/bin/dpcpp
-        f77: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-oneapi-compilers-2021.2.0-3q6eevirvd6g4brzipx22aef3imfqouj/compiler/2021.2.0/linux/bin/ifx
-        fc: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-oneapi-compilers-2021.2.0-3q6eevirvd6g4brzipx22aef3imfqouj/compiler/2021.2.0/linux/bin/ifx
-      flags: {}
-      operating_system: rocky8
-      target: x86_64
-      modules: [ intel-oneapi-compilers/2021.2.0/3q6eev ]
-      environment: {}
-      extra_rpaths: []
-  - compiler:
       spec: intel@2021.2.0
       paths:
         cc: /cm/shared/spack/opt/spack/linux-centos8-zen/gcc-8.3.1/intel-oneapi-compilers-2021.2.0-3q6eevirvd6g4brzipx22aef3imfqouj/compiler/2021.2.0/linux/bin/intel64/icc
