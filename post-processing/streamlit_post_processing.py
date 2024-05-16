@@ -320,7 +320,7 @@ def update_axes():
         config.y_axis["scaling"] = {"column": {"name": y_scaling_column,
                                                "series": (state.config.series_filters.index(y_scaling_series)
                                                           if y_scaling_series else None),
-                                               "x_value": y_scaling_x}}
+                                               "x_value": str(y_scaling_x)}}
         config.column_types[y_scaling_column] = state.y_axis_scaling_type
 
     config.parse_scaling()
