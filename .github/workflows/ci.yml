@@ -49,6 +49,7 @@ jobs:
         spack_spec:
           # `example` is a package in our custom Spack repo, ensure we can build
           # packages in it.
+          #
           - sombrero@2021-08-16
           - example@2021-08-16
         # Compatible ReFrame versions are set in pyproject.toml
