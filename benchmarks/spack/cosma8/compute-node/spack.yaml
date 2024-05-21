@@ -499,7 +499,7 @@ spack:
       - spec: cuda@10.1
         prefix: /cosma/local/cuda/10.1
       - spec: cuda@11.0
-        prefix: /cosma/local/cuda/11.2
+        prefix: /cosma/local/cuda/11.0
       - spec: cuda@11.2
         prefix: /cosma/local/cuda/11.2
     diffutils:
