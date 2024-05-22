@@ -11,6 +11,75 @@ from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
 from titlecase import titlecase
 
+def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
+    """
+        Create a bar chart for the supplied data using bokeh.
+
+        Args:
+            title: str, plot title.
+            df: dataframe, data to plot.
+            x_axis: dict, x-axis column and units.
+            y_axis: dict, y-axis column and units.
+            series_filters: list, x-axis groups used to filter graph data.
+    """
+
+    # get column names and labels for axes
+    x_column, x_label = get_axis_labels(df, x_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
+
+    # adjust axis ranges
+    min_y = (0 if min(df[y_column]) >= 0
+             else math.floor(np.nanmin(df[y_column])*1.2))
+    max_y = (0 if max(df[y_column]) <= 0
+             else math.ceil(np.nanmax(df[y_column])*1.2))
+    min_x = (0 if min(df[x_column]) >= 0
+             else math.floor(np.nanmin(df[x_column])*1.2))
+    max_x = (0 if max(df[x_column]) <= 0
+             else math.ceil(np.nanmax(df[x_column])*1.2))
+
+    # create html file to store plot in
+    output_file(filename=os.path.join(
+        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+
+    # create plot
+    plot = figure(x_range=(min_x, max_x), y_range=(min_y, max_y), title=title,
+                  width=800, toolbar_location="above")
+    
+    # configure tooltip
+    plot.add_tools(HoverTool(tooltips=[
+                                (y_label, "@{0}".format(y_column)
+                                    + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                       else ""))],
+                             formatters={"@{0}".format(y_column): "printf"}))
+
+    # create legend outside plot
+    plot.add_layout(Legend(), "right")
+
+    for filter in series_filters:
+        filtered_df = None
+        if filter[1] == '==':
+            filtered_df = df[df[filter[0]] == int(filter[2])]
+            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter), line_width=2)
+    
+    # add labels
+    plot.xaxis.axis_label = x_label
+    plot.yaxis.axis_label = y_label
+    # adjust font size
+    plot.title.text_font_size = "15pt"
+
+    # flip x-axis if sort is descending
+    if x_axis.get("sort"):
+        if x_axis["sort"] == "descending":
+            end = plot.x_range.end
+            start = plot.x_range.start
+            plot.x_range.start = end
+            plot.x_range.end = start
+
+    # save to file
+    save(plot)
+
+    return plot
+
 
 def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
     """

@@ -68,6 +68,12 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # config file uploader
         st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
+        # set plot type
+        plot_type = st.selectbox("#### Plot type", ['generic', 'line'],
+            key="plot_type")
+        if plot_type != config.plot_type:
+            config.plot_type = plot_type
+
         # set plot title
         title = st.text_input("#### Title", config.title, placeholder="None")
         if title != config.title:

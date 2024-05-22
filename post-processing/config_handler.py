@@ -19,6 +19,7 @@ class ConfigHandler:
             config = read_config(config)
 
         # extract config information
+        self.plot_type = config.get("plot_type")
         self.title = config.get("title")
         self.x_axis = config.get("x_axis")
         self.y_axis = config.get("y_axis")
@@ -60,6 +61,7 @@ class ConfigHandler:
         """
 
         return self(dict({
+            "plot_type": "generic",
             "title": None,
             "x_axis": {"value": None, "units": {"custom": None}},
             "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},
@@ -191,6 +193,7 @@ class ConfigHandler:
         """
 
         return dict({
+            "plot_type": self.plot_type,
             "title": self.title,
             "x_axis": self.x_axis,
             "y_axis": self.y_axis,
@@ -237,6 +240,13 @@ def read_config(config: dict):
             config: dict, plot configuration information.
     """
 
+    # check plot plot_type information
+    plot_type = not config.get("plot_type")
+    if not plot_type:
+        raise KeyError("Missing plot type information.")
+    elif (plot_type != 'generic') | (plot_type != 'line'):
+        raise RuntimeError("plot_type must be one of: 'generic', 'line'")
+
     # check plot title information
     if not config.get("title"):
         raise KeyError("Missing plot title information.")
@@ -280,8 +290,12 @@ def read_config(config: dict):
 
     # check optional series information
     if config.get("series"):
-        if len(config.get("series")) == 1:
-            raise RuntimeError("Number of series must be >= 2.")
+        if plot_type == 'generic':
+            if len(config.get("series")) == 1:
+                raise RuntimeError("Number of series must be >= 2 for generic plot.")
+        if plot_type == 'line':
+            if len(config.get("series")) < 1:
+                raise RuntimeError("Number of series must be >= 1 for line plot.")
         if len(set([s[0] for s in config.get("series")])) > 1:
             raise RuntimeError("Currently supporting grouping of series by only one column. \
                                Please use a single column name in your series configuration.")
