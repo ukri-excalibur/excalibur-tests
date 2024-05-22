@@ -91,13 +91,10 @@ jobs:
 
       - name: Build docs
         run: |
-<<<<<<< HEAD
           if [[ ${{ github.event_name }} == 'pull_request' ]] || [[ "${{ github.event.pull_request.head.repo.fork }}" == "false" ]] ; then
               export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
               export MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
           fi
-=======
->>>>>>> 1c15183d0c118d3b5e66bce7c3e0ee035aca1d55
           mkdocs --verbose build
 
       - name: Deploy docs
