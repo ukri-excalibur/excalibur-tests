@@ -91,7 +91,6 @@ jobs:
 
       - name: Build docs
         run: |
-          
           mkdocs --verbose build
 
       - name: Deploy docs
