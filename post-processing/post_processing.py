@@ -421,10 +421,6 @@ def read_args():
     parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
 
-    # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic",
-                        help="type of plot to be generated (default: 'generic')")
-
     # info dump flags
     parser.add_argument("-d", "--debug", action="store_true",
                         help="debug flag for printing additional information")

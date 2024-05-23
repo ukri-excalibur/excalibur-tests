@@ -61,7 +61,7 @@ class ConfigHandler:
         """
 
         return self(dict({
-            "plot_type": "generic",
+            "plot_type": None,
             "title": None,
             "x_axis": {"value": None, "units": {"custom": None}},
             "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},

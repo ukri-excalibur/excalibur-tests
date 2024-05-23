@@ -69,8 +69,10 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
         # set plot type
-        plot_type = st.selectbox("#### Plot type", ['generic', 'line'],
-            key="plot_type")
+        plot_type_options = ['generic', 'line']
+        plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else None
+        plot_type = st.selectbox("#### Plot type", plot_type_options,
+            key="plot_type", index=plot_type_index)
         if plot_type != config.plot_type:
             config.plot_type = plot_type
 
