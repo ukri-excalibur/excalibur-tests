@@ -10,10 +10,11 @@ from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
 from titlecase import titlecase
+import itertools
 
-def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
+def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
     """
-        Create a bar chart for the supplied data using bokeh.
+        Create a line chart for the supplied data using bokeh.
 
         Args:
             title: str, plot title.
@@ -22,7 +23,6 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters, deb
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
     """
-
     # get column names and labels for axes
     x_column, x_label = get_axis_labels(df, x_axis, series_filters)
     y_column, y_label = get_axis_labels(df, y_axis, series_filters)
@@ -55,11 +55,13 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters, deb
     # create legend outside plot
     plot.add_layout(Legend(), "right")
 
+    colours = itertools.cycle(viridis(len(series_filters)))
+
     for filter in series_filters:
         filtered_df = None
         if filter[1] == '==':
             filtered_df = df[df[filter[0]] == int(filter[2])]
-            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter), line_width=2)
+            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter), line_width=2, color=next(colours))
     
     # add labels
     plot.xaxis.axis_label = x_label

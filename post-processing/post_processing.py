@@ -80,7 +80,7 @@ class PostProcessing:
             elif config.plot_type == 'line':
                 self.plot = plot_line_chart(
                     config.title, self.df[self.mask][config.plot_columns],
-                    config.x_axis, config.y_axis, config.series_filters, self.debug)
+                    config.x_axis, config.y_axis, config.series_filters)
 
         # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
         if self.debug & self.verbose:

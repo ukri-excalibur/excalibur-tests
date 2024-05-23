@@ -240,11 +240,11 @@ def read_config(config: dict):
             config: dict, plot configuration information.
     """
 
-    # check plot plot_type information
-    plot_type = not config.get("plot_type")
+    # check plot_type information
+    plot_type = config.get("plot_type")
     if not plot_type:
         raise KeyError("Missing plot type information.")
-    elif (plot_type != 'generic') | (plot_type != 'line'):
+    elif (plot_type != 'generic') and (plot_type != 'line'):
         raise RuntimeError("plot_type must be one of: 'generic', 'line'")
 
     # check plot title information
