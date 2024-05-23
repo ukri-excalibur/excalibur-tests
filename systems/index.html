@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1210,13 +1210,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cosma" class="md-nav__link">
+  <a href="#cosma8" class="md-nav__link">
     <span class="md-ellipsis">
-      Cosma
+      Cosma8
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Cosma">
+    <nav class="md-nav" aria-label="Cosma8">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1438,15 +1438,15 @@ Then add  the <code>bin</code> subdirectory to <code>$PATH</code>, for example,
 <h3 id="queue-options_1">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J&#39;--account=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.
 You can see the account balance of your projects with the <code>mybalance</code> command.</p>
-<h2 id="cosma">Cosma</h2>
+<h2 id="cosma8">Cosma8</h2>
 <h3 id="queue-options_2">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J&#39;--account=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge. DiRAC users can find the account codes
 they have access to on <a href="https://safe.epcc.ed.ac.uk/dirac/">SAFE</a>.</p>
@@ -1454,7 +1454,7 @@ they have access to on <a href="https://safe.epcc.ed.ac.uk/dirac/">SAFE</a>.</p>
 <h3 id="queue-options_3">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J&#39;--account=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <p>Note: for exclusive access require to pass -J='-l naccesspolicy=SINGLEJOB -n'</p>
@@ -1462,7 +1462,7 @@ To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job
 <h3 id="queue-options_4">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J&#39;--account=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 <h2 id="isambard-2">Isambard 2</h2>
@@ -1496,7 +1496,7 @@ You can add the following line to your shell init script (e.g., <code>~/.bashrc<
 <h3 id="queue-options_5">Queue options</h3>
 <p>When submitting jobs to compute nodes, you need to specify the job queue, with the <code>--account</code> option to the scheduler.
 To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job-option</code> flag to <code>reframe</code> to specify the account, for example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J&#39;--accout=&lt;ACCOUNT&gt;&#39;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J&#39;--account=&lt;ACCOUNT&gt;&#39;
 </span></code></pre></div>
 <p>where <code>&lt;ACCOUNT&gt;</code> is the project you want to charge.</p>
 
@@ -1548,7 +1548,7 @@ To do this, when you run a benchmark you can use the <code>-J</code>/<code>--job
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.select", "content.code.annotate"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
       
     
   </body>
