@@ -139,6 +139,38 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
+      spec: aocc@3.1.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []    
+  - compiler:
+      spec: aocc@4.0.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []        
+  - compiler:
       spec: gcc@7.3.0
       paths:
         cc: /cosma/local/gcc/7.3.0/bin/gcc
@@ -216,6 +248,19 @@ spack:
       modules: []
       environment: {}
       extra_rpaths: []
+  - compiler:
+      spec: gcc@13.1.0
+      paths:
+        cc: /cosma/local/gcc/13.1.0/bin/gcc
+        cxx: /cosma/local/gcc/13.1.0/bin/g++
+        f77: /cosma/local/gcc/13.1.0/bin/gfortran
+        fc: /cosma/local/gcc/13.1.0/bin/gfortran
+      flags: {}
+      operating_system: centos7
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []    
   - compiler:
       spec: intel@17.0.2
       paths:
@@ -413,6 +458,8 @@ spack:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
+      - spec: autoconf@2.71
+        prefix: /cosma/local/autoconf/2.71/ 
     automake:
       externals:
       - spec: automake@1.13.4
@@ -421,6 +468,8 @@ spack:
       externals:
       - spec: bash@4.2.46
         prefix: /usr
+      - spec: bash@5.2.21
+        prefix: /cosma/local/bash/5.2.21/
     boost:
       externals:
       - spec: boost@1.67.0%gcc@10.2.0 arch=linux-centos7-zen2
@@ -437,14 +486,22 @@ spack:
         prefix: /cosma/local/cmake/3.11.4/
       - spec: cmake@3.18.1
         prefix: /cosma/local/cmake/3.18.1/
+      - spec: cmake@3.25.1
+        prefix: /cosma/local/cmake/3.25.1/
+      - spec: cmake@3.28.3.
+        prefix: /cosma/local/cmake/3.28.3/    
     cpio:
       externals:
       - spec: cpio@2.11
         prefix: /usr
     cuda:
       externals:
-      - spec: cuda@10.1.243
+      - spec: cuda@10.1
         prefix: /cosma/local/cuda/10.1
+      - spec: cuda@11.0
+        prefix: /cosma/local/cuda/11.0
+      - spec: cuda@11.2
+        prefix: /cosma/local/cuda/11.2
     diffutils:
       externals:
       - spec: diffutils@3.3
@@ -551,7 +608,7 @@ spack:
         prefix: /usr
     libtool:
       externals:
-      - spec: libtool@2.4
+      - spec: libtool@2.4.2
         prefix: /usr
     lustre:
       externals:
@@ -603,7 +660,7 @@ spack:
       - spec: openmpi@4.0.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%aocc@2.2.0
           fabrics=ucx schedulers=slurm
         prefix: /cosma/local/openmpi/aocc_2.2.0/4.0.5
-      - spec: openmpi@4.1.0a1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%gcc@7.3.0
+      - spec: openmpi@4.1.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%gcc@7.3.0
           fabrics=ucx schedulers=slurm
         prefix: /cosma/local/openmpi/gnu_7.3.0/20190429
       - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@9.3.0
@@ -612,6 +669,18 @@ spack:
       - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@11.1.0
           schedulers=slurm
         prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
+      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@11.1.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
+      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4    
+      - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5    
+      - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@14.1.0
+          schedulers=slurm
+        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5   
     openssh:
       externals:
       - spec: openssh@7.4p1
