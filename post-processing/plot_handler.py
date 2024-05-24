@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from bokeh.models import HoverTool, Legend
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
@@ -11,6 +12,29 @@ from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
 from titlecase import titlecase
 import itertools
+
+def get_axis_min_max(df, axis, column):
+    axis_range = axis["range"]
+    axis_min = axis_range["min"] if axis_range["min"] != 'None' else None
+    axis_max = axis_range["max"] if axis_range["max"] != 'None' else None
+        
+    #FIXME: str types and user defined datetime ranges not currently supported
+    # use defaults if type is datetime
+    axis_min_element = np.nanmin(df[column])
+    axis_max_element = np.nanmax(df[column])
+    if (is_datetime(df[column])):
+        datetime_range = axis_max_element - axis_min_element
+        buffer_time = datetime_range*0.2
+        axis_min = axis_min_element - buffer_time
+        axis_max = axis_max_element + buffer_time
+    else:
+        if not (axis_min and axis_max):
+            axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
+                    else math.floor(axis_min_element*1.2))
+            axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
+                    else math.ceil(axis_max_element*1.2))
+            
+    return axis_min, axis_max
 
 def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
     """
@@ -27,15 +51,8 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
     x_column, x_label = get_axis_labels(df, x_axis, series_filters)
     y_column, y_label = get_axis_labels(df, y_axis, series_filters)
 
-    # adjust axis ranges
-    min_y = (0 if min(df[y_column]) >= 0
-             else math.floor(np.nanmin(df[y_column])*1.2))
-    max_y = (0 if max(df[y_column]) <= 0
-             else math.ceil(np.nanmax(df[y_column])*1.2))
-    min_x = (0 if min(df[x_column]) >= 0
-             else math.floor(np.nanmin(df[x_column])*1.2))
-    max_x = (0 if max(df[x_column]) <= 0
-             else math.ceil(np.nanmax(df[x_column])*1.2))
+    min_x, max_x = get_axis_min_max(df, x_axis, x_column)
+    min_y, max_y = get_axis_min_max(df, y_axis, y_column)
 
     # create html file to store plot in
     output_file(filename=os.path.join(

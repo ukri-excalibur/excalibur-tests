@@ -63,8 +63,8 @@ class ConfigHandler:
         return self(dict({
             "plot_type": None,
             "title": None,
-            "x_axis": {"value": None, "units": {"custom": None}},
-            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},
+            "x_axis": {"value": None, "units": {"custom": None}, "range": {"use_default": True, "min": None, "max": None}},
+            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}, "range": {"use_default": True, "min": None, "max": None}},
             "filters": {"and": [], "or": []},
             "series": [],
             "column_types": {},
@@ -245,7 +245,7 @@ def read_config(config: dict):
     if not plot_type:
         raise KeyError("Missing plot type information.")
     elif (plot_type != 'generic') and (plot_type != 'line'):
-        raise RuntimeError("plot_type must be one of: 'generic', 'line'")
+        raise RuntimeError("Plot type must be one of 'generic' or 'line'.")
 
     # check plot title information
     if not config.get("title"):
@@ -258,6 +258,8 @@ def read_config(config: dict):
         raise KeyError("Missing x-axis value information.")
     if not config.get("x_axis").get("units"):
         raise KeyError("Missing x-axis units information.")
+    if not config.get("x_axis").get("range"):
+        raise KeyError("Missing x-axis range information.")
     if (config.get("x_axis").get("units").get("column") is not None and
         config.get("x_axis").get("units").get("custom") is not None):
         raise RuntimeError(
@@ -270,6 +272,8 @@ def read_config(config: dict):
         raise KeyError("Missing y-axis value information.")
     if not config.get("y_axis").get("units"):
         raise KeyError("Missing y-axis units information.")
+    if not config.get("y_axis").get("range"):
+        raise KeyError("Missing y-axis range information.")
     if (config.get("y_axis").get("units").get("column") is not None and
         config.get("y_axis").get("units").get("custom") is not None):
         raise RuntimeError(

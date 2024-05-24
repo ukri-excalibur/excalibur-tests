@@ -177,6 +177,16 @@ def axis_select(label: str, axis: dict):
 
     # units select
     units_select(label, axis)
+    
+    # axis range
+    use_default_ranges = st.checkbox("Use default ranges", axis.get("range").get("use_default"), key="{0}_axis_range_use_default".format(label))
+    if not use_default_ranges:
+        axis_range_min, axis_range_max = st.columns(2)
+        with axis_range_min:
+            st.number_input("Minimum", key="{0}_axis_range_min".format(label))
+        with axis_range_max:
+            st.number_input("Maximum", key="{0}_axis_range_max".format(label))
+
     # scaling select
     if label == "y":
         st.write("---")
@@ -294,6 +304,9 @@ def update_axes():
     x_column = state.x_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+    x_range_use_default = state.x_axis_range_use_default
+    x_range_min = None if x_range_use_default else state.x_axis_range_min
+    x_range_max = None if x_range_use_default else state.x_axis_range_max
 
     y_column = state.y_axis_column
     y_units_column = state.y_axis_units_column
@@ -302,6 +315,9 @@ def update_axes():
     y_scaling_series = state.y_axis_scaling_series
     y_scaling_x = state.y_axis_scaling_x_value
     y_scaling_custom = state.y_axis_custom_scaling_val
+    y_range_use_default = state.y_axis_range_use_default
+    y_range_min = None if y_range_use_default else state.y_axis_range_min
+    y_range_max = None if y_range_use_default else state.y_axis_range_max
 
     # update columns
     config.x_axis["value"] = x_column
@@ -320,6 +336,13 @@ def update_axes():
     if not y_units_custom and y_units_column:
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
+
+    config.x_axis["range"]["use_default"] = x_range_use_default
+    config.x_axis["range"]["min"] = x_range_min
+    config.x_axis["range"]["max"] = x_range_max
+    config.y_axis["range"]["use_default"] = y_range_use_default
+    config.y_axis["range"]["min"] = y_range_min
+    config.y_axis["range"]["max"] = y_range_max
 
     # update scaling
     config.y_axis["scaling"] = {"custom": y_scaling_custom if y_scaling_custom else None}
