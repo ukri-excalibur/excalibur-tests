@@ -27,12 +27,11 @@ def get_axis_min_max(df, axis, column):
         buffer_time = datetime_range*0.2
         axis_min = axis_min_element - buffer_time
         axis_max = axis_max_element + buffer_time
-    else:
-        if not (axis_min and axis_max):
-            axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
-                    else math.floor(axis_min_element*1.2))
-            axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
-                    else math.ceil(axis_max_element*1.2))
+    elif axis_min is None or axis_max is None:
+        axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
+                else math.floor(axis_min_element*1.2))
+        axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
+                else math.ceil(axis_max_element*1.2))
             
     return axis_min, axis_max
 
