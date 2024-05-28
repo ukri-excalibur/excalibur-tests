@@ -70,7 +70,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
 
         # set plot type
         plot_type_options = ['generic', 'line']
-        plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else None
+        plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else 0
         plot_type = st.selectbox("#### Plot type", plot_type_options,
             key="plot_type", index=plot_type_index)
         if plot_type != config.plot_type:
@@ -136,18 +136,18 @@ def axis_options():
 
     with st.container(border=True):
         # x-axis select
-        axis_select("x", config.x_axis)
+        axis_select("x", config.x_axis, config.plot_type)
         sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
     with st.container(border=True):
         # y-axis select
-        axis_select("y", config.y_axis)
+        axis_select("y", config.y_axis, config.plot_type)
 
     # apply changes
     update_axes()
     config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
-def axis_select(label: str, axis: dict):
+def axis_select(label: str, axis: dict, plot_type: str):
     """
         Allow the user to select axis column and type for post-processing.
 
@@ -178,8 +178,10 @@ def axis_select(label: str, axis: dict):
     # units select
     units_select(label, axis)
     
-    # axis range
-    use_default_ranges = st.checkbox("Use default ranges", axis.get("range").get("use_default"), key="{0}_axis_range_use_default".format(label))
+    #FIXME: add ability to use a custom value for only one of min or max
+    disable_user_range = plot_type != 'line'
+    use_default_ranges = st.checkbox("Use default ranges", axis.get("range").get("use_default") if not disable_user_range else True, key="{0}_axis_range_use_default".format(label),
+                                     disabled=disable_user_range, help="Note: Custom ranges are not implemented for datetime types")
     if not use_default_ranges:
         axis_range_min, axis_range_max = st.columns(2)
         with axis_range_min:
