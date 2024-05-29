@@ -63,8 +63,11 @@ class ConfigHandler:
         return self(dict({
             "plot_type": None,
             "title": None,
-            "x_axis": {"value": None, "units": {"custom": None}, "range": {"use_default": True, "min": None, "max": None}},
-            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}, "range": {"use_default": True, "min": None, "max": None}},
+            "x_axis": {"value": None, "units": {"custom": None},
+                       "range": {"use_default": True, "min": None, "max": None}},
+            "y_axis": {"value": None, "units": {"custom": None},
+                       "scaling": {"custom": None},
+                       "range": {"use_default": True, "min": None, "max": None}},
             "filters": {"and": [], "or": []},
             "series": [],
             "column_types": {},

@@ -72,7 +72,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         plot_type_options = ['generic', 'line']
         plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else 0
         plot_type = st.selectbox("#### Plot type", plot_type_options,
-            key="plot_type", index=plot_type_index)
+                                 key="plot_type", index=plot_type_index)
         if plot_type != config.plot_type:
             config.plot_type = plot_type
 
@@ -177,17 +177,22 @@ def axis_select(label: str, axis: dict, plot_type: str):
 
     # units select
     units_select(label, axis)
-    
-    #FIXME: add ability to use a custom value for only one of min or max
+
+    # FIXME: add ability to use a custom value for only one of min or max
     disable_user_range = plot_type != 'line'
-    use_default_ranges = st.checkbox("Use default ranges", axis.get("range").get("use_default") if not disable_user_range else True, key="{0}_axis_range_use_default".format(label),
-                                     disabled=disable_user_range, help="Note: Custom ranges are not implemented for datetime types")
+    use_default_ranges = st.checkbox("default axis range",
+                                     axis.get("range").get("use_default") if not disable_user_range else True,
+                                     key="{0}_axis_range_use_default".format(label),
+                                     disabled=disable_user_range,
+                                     help="{0} {1}".format(
+                                         "Uncheck to assign custom minimum and maximum values to axis.",
+                                         "Custom ranges are not implemented for datetime types."))
     if not use_default_ranges:
         axis_range_min, axis_range_max = st.columns(2)
         with axis_range_min:
-            st.number_input("Minimum", key="{0}_axis_range_min".format(label))
+            st.number_input("{0}-axis minimum".format(label), key="{0}_axis_range_min".format(label))
         with axis_range_max:
-            st.number_input("Maximum", key="{0}_axis_range_max".format(label))
+            st.number_input("{0}-axis maximum".format(label), key="{0}_axis_range_max".format(label))
 
     # scaling select
     if label == "y":

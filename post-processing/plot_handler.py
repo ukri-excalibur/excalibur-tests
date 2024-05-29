@@ -1,102 +1,17 @@
+import itertools
 import math
 import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from bokeh.models import HoverTool, Legend
 from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from titlecase import titlecase
-import itertools
-
-def get_axis_min_max(df, axis, column):
-    axis_range = axis["range"]
-    axis_min = axis_range["min"] if axis_range["min"] != 'None' else None
-    axis_max = axis_range["max"] if axis_range["max"] != 'None' else None
-        
-    #FIXME: str types and user defined datetime ranges not currently supported
-    # use defaults if type is datetime
-    axis_min_element = np.nanmin(df[column])
-    axis_max_element = np.nanmax(df[column])
-    if (is_datetime(df[column])):
-        datetime_range = axis_max_element - axis_min_element
-        buffer_time = datetime_range*0.2
-        axis_min = axis_min_element - buffer_time
-        axis_max = axis_max_element + buffer_time
-    elif axis_min is None or axis_max is None:
-        axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
-                else math.floor(axis_min_element*1.2))
-        axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
-                else math.ceil(axis_max_element*1.2))
-            
-    return axis_min, axis_max
-
-def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
-    """
-        Create a line chart for the supplied data using bokeh.
-
-        Args:
-            title: str, plot title.
-            df: dataframe, data to plot.
-            x_axis: dict, x-axis column and units.
-            y_axis: dict, y-axis column and units.
-            series_filters: list, x-axis groups used to filter graph data.
-    """
-    # get column names and labels for axes
-    x_column, x_label = get_axis_labels(df, x_axis, series_filters)
-    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
-
-    min_x, max_x = get_axis_min_max(df, x_axis, x_column)
-    min_y, max_y = get_axis_min_max(df, y_axis, y_column)
-
-    # create html file to store plot in
-    output_file(filename=os.path.join(
-        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
-
-    # create plot
-    plot = figure(x_range=(min_x, max_x), y_range=(min_y, max_y), title=title,
-                  width=800, toolbar_location="above")
-    
-    # configure tooltip
-    plot.add_tools(HoverTool(tooltips=[
-                                (y_label, "@{0}".format(y_column)
-                                    + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
-                                       else ""))],
-                             formatters={"@{0}".format(y_column): "printf"}))
-
-    # create legend outside plot
-    plot.add_layout(Legend(), "right")
-
-    colours = itertools.cycle(viridis(len(series_filters)))
-
-    for filter in series_filters:
-        filtered_df = None
-        if filter[1] == '==':
-            filtered_df = df[df[filter[0]] == int(filter[2])]
-            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter), line_width=2, color=next(colours))
-    
-    # add labels
-    plot.xaxis.axis_label = x_label
-    plot.yaxis.axis_label = y_label
-    # adjust font size
-    plot.title.text_font_size = "15pt"
-
-    # flip x-axis if sort is descending
-    if x_axis.get("sort"):
-        if x_axis["sort"] == "descending":
-            end = plot.x_range.end
-            start = plot.x_range.start
-            plot.x_range.start = end
-            plot.x_range.end = start
-
-    # save to file
-    save(plot)
-
-    return plot
 
 
 def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
@@ -152,10 +67,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
                   width=800, toolbar_location="above")
     # configure tooltip
-    plot.add_tools(HoverTool(tooltips=[
-                                (y_label, "@{0}_mean".format(y_column)
-                                    + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
-                                       else ""))],
+    plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
+                                        + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                           else ""))],
                              formatters={"@{0}_mean".format(y_column): "printf"}))
 
     # sort x-axis values in descending order (otherwise default sort is ascending)
@@ -266,3 +180,102 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
                                " ({0})".format(units) if units else "")
 
     return col_name, label
+
+
+def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
+    """
+        Create a line chart for the supplied data using bokeh.
+
+        Args:
+            title: str, plot title.
+            df: dataframe, data to plot.
+            x_axis: dict, x-axis column and units.
+            y_axis: dict, y-axis column and units.
+            series_filters: list, x-axis groups used to filter graph data.
+    """
+
+    # get column names and labels for axes
+    x_column, x_label = get_axis_labels(df, x_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
+
+    # adjust axis ranges
+    min_x, max_x = get_axis_min_max(df, x_axis)
+    min_y, max_y = get_axis_min_max(df, y_axis)
+
+    # create html file to store plot in
+    output_file(filename=os.path.join(
+        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+
+    # create plot
+    plot = figure(x_range=(min_x, max_x), y_range=(min_y, max_y), title=title,
+                  width=800, toolbar_location="above")
+
+    # configure tooltip
+    plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}".format(y_column)
+                                        + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                           else ""))],
+                             formatters={"@{0}".format(y_column): "printf"}))
+
+    # create legend outside plot
+    plot.add_layout(Legend(), "right")
+    colours = itertools.cycle(viridis(len(series_filters)))
+
+    for filter in series_filters:
+        filtered_df = None
+        if filter[1] == '==':
+            filtered_df = df[df[filter[0]] == int(filter[2])]
+            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter),
+                      line_width=2, color=next(colours))
+
+    # add labels
+    plot.xaxis.axis_label = x_label
+    plot.yaxis.axis_label = y_label
+    # adjust font size
+    plot.title.text_font_size = "15pt"
+
+    # flip x-axis if sort is descending
+    if x_axis.get("sort"):
+        if x_axis["sort"] == "descending":
+            end = plot.x_range.end
+            start = plot.x_range.start
+            plot.x_range.start = end
+            plot.x_range.end = start
+
+    # save to file
+    save(plot)
+
+    return plot
+
+
+def get_axis_min_max(df, axis):
+    """
+        Return the minimum and maximum numeric values for a given axis.
+
+        Args:
+            df: dataframe, data to plot.
+            axis: dict, axis column, units, and values to scale by.
+    """
+
+    column = axis["value"]
+    axis_range = axis["range"]
+    axis_min = axis_range["min"] if axis_range["min"] != 'None' else None
+    axis_max = axis_range["max"] if axis_range["max"] != 'None' else None
+
+    # FIXME: str types and user defined datetime ranges not currently supported
+    axis_min_element = np.nanmin(df[column])
+    axis_max_element = np.nanmax(df[column])
+
+    # use defaults if type is datetime
+    if (is_datetime(df[column])):
+        datetime_range = axis_max_element - axis_min_element
+        buffer_time = datetime_range*0.2
+        axis_min = axis_min_element - buffer_time
+        axis_max = axis_max_element + buffer_time
+
+    elif axis_min is None or axis_max is None:
+        axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
+                    else math.floor(axis_min_element*1.2))
+        axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
+                    else math.ceil(axis_max_element*1.2))
+
+    return axis_min, axis_max
