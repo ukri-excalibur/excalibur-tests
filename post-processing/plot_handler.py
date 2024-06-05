@@ -258,24 +258,25 @@ def get_axis_min_max(df, axis):
 
     column = axis["value"]
     axis_range = axis["range"]
-    axis_min = axis_range["min"] if axis_range["min"] != 'None' else None
-    axis_max = axis_range["max"] if axis_range["max"] != 'None' else None
+    axis_min = axis_range["min"] if axis_range["min"] else 0.0
+    axis_max = axis_range["max"] if axis_range["max"] else 0.0
 
     # FIXME: str types and user defined datetime ranges not currently supported
-    axis_min_element = np.nanmin(df[column])
-    axis_max_element = np.nanmax(df[column])
+    if (column):
+        axis_min_element = np.nanmin(df[column])
+        axis_max_element = np.nanmax(df[column])
 
-    # use defaults if type is datetime
-    if (is_datetime(df[column])):
-        datetime_range = axis_max_element - axis_min_element
-        buffer_time = datetime_range*0.2
-        axis_min = axis_min_element - buffer_time
-        axis_max = axis_max_element + buffer_time
+        # use defaults if type is datetime
+        if (is_datetime(df[column])):
+            datetime_range = axis_max_element - axis_min_element
+            buffer_time = datetime_range*0.2
+            axis_min = axis_min_element - buffer_time
+            axis_max = axis_max_element + buffer_time
 
-    elif axis_min is None or axis_max is None:
-        axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
-                    else math.floor(axis_min_element*1.2))
-        axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
-                    else math.ceil(axis_max_element*1.2))
+        elif axis_min is None or axis_max is None or axis_min == axis_max:
+            axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
+                        else math.floor(axis_min_element*1.2))
+            axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
+                        else math.ceil(axis_max_element*1.2))
 
     return axis_min, axis_max
