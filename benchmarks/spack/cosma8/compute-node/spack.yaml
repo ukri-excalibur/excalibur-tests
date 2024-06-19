@@ -488,7 +488,7 @@ spack:
         prefix: /cosma/local/cmake/3.18.1/
       - spec: cmake@3.25.1
         prefix: /cosma/local/cmake/3.25.1/
-      - spec: cmake@3.28.3.
+      - spec: cmake@3.28.3
         prefix: /cosma/local/cmake/3.28.3/    
     cpio:
       externals:
