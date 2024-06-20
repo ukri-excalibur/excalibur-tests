@@ -120,6 +120,7 @@ site_configuration = {
                         'num_sockets': 2,
                         'num_cpus_per_socket': 56,
                     },
+                },
                 {
                     'name': 'pvc',
                     'descr': 'Ponte Vecchio (Dawn) compute nodes',
@@ -148,6 +149,7 @@ site_configuration = {
                             'name': 'gpu',
                             'options': ['--gres=gpu:{num_gpus_per_node}'],
                         },
+                    ],
 
                 },
             ]
