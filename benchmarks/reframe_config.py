@@ -125,7 +125,7 @@ site_configuration = {
                     'name': 'pvc',
                     'descr': 'Ponte Vecchio (Dawn) compute nodes',
                     'scheduler': 'slurm',
-                    'launcher': 'mpirun',
+                    'launcher': 'srun',
                     'env_vars': [
                         ['I_MPI_PMI_LIBRARY', '/usr/local/software/slurm/current-rhel8/lib/libpmi2.so'],
                         ['I_MPI_OFI_PROVIDER', 'mlx'],
