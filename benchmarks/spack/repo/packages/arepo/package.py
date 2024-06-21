@@ -7,13 +7,11 @@ class Arepo(MakefilePackage):
     homepage = "https://gitlab.mpcdf.mpg.de/vrs/arepo.git"
     git = "https://gitlab.mpcdf.mpg.de/vrs/arepo.git"
     
-    
     version("master", branch="master")
    
-
     depends_on('mpi')
     depends_on('gsl')
-    depends_on('hdf5')
+    depends_on('gmp')
 
     variant('fftw', default=False, description='FFTW support')
     variant('hdf5', default=True, description='HDF5 support')
@@ -21,8 +19,6 @@ class Arepo(MakefilePackage):
         
     depends_on('fftw',  when='+fftw')
     depends_on('hwloc', when='+hwloc')
-    depends_on("mpich", when='^mpich')
-    depends_on("openmpi", when='^openmpi')
     
     def edit(self, spec, prefix):
        
@@ -50,10 +46,3 @@ class Arepo(MakefilePackage):
         mkdirp(prefix.bin)
         install('./Arepo', prefix.bin)
         
-
-    
-        
-
-
-
-  
