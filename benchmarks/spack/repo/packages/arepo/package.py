@@ -7,7 +7,7 @@ class Arepo(MakefilePackage):
     homepage = "https://gitlab.mpcdf.mpg.de/vrs/arepo.git"
     git = "https://gitlab.mpcdf.mpg.de/vrs/arepo.git"
     
-    version("master", branch="master")
+    version("2024-04-01", commit="1fc135a0")
    
     depends_on('mpi')
     depends_on('gsl')
@@ -45,4 +45,3 @@ class Arepo(MakefilePackage):
 
         mkdirp(prefix.bin)
         install('./Arepo', prefix.bin)
-        
