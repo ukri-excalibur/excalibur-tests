@@ -226,11 +226,14 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [["fake_column", "==", 2]],
                              "or": []},
                  "series": [],
@@ -247,11 +250,14 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [["tasks", "!!", 2]],
                              "or": []},
                  "series": [],
@@ -268,11 +274,14 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [["flops_value", ">", "v"]],
                              "or": []},
                  "series": [],
@@ -289,11 +298,14 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [["tasks", ">", 2]],
                              "or": []},
                  "series": [],
@@ -310,11 +322,14 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [], "or": []},
                  "series": [],
                  "column_types": {"tasks": "int",
@@ -330,11 +345,14 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_changed_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "cpus_per_task",
-                            "units": {"column": "extra_param"}},
+                            "units": {"column": "extra_param"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [], "or": []},
                  "series": [],
                  "column_types": {"tasks": "int",
@@ -352,11 +370,14 @@ def test_high_level_script(run_sombrero):
     # check correct date filtering
     df = PostProcessing(sombrero_changed_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "job_completion_time",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
-                        "units": {"column": "flops_unit"}},
+                        "units": {"column": "flops_unit"},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["job_completion_time", ">", "2000-06-01T12:30:15"]],
                          "or": []},
              "series": [],
@@ -370,11 +391,14 @@ def test_high_level_script(run_sombrero):
     # check correct or filtering
     df = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
-                        "units": {"column": "flops_unit"}},
+                        "units": {"column": "flops_unit"},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [],
                          "or": [["tasks", ">", "1"], ["tasks", "<", "2"]]},
              "series": [["cpus_per_task", "1"], ["cpus_per_task", "2"]],
@@ -389,12 +413,15 @@ def test_high_level_script(run_sombrero):
     # check correct column scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
                         "units": {"column": "flops_unit"},
-                        "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
+                        "scaling": {"column": {"name": "OMP_NUM_THREADS"}},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["cpus_per_task", "==", 2]],
                          "or": []},
              "series": [],
@@ -410,13 +437,16 @@ def test_high_level_script(run_sombrero):
     # check correct column + series scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
                         "units": {"column": "flops_unit"},
                         "scaling": {"column": {"name": "flops_value",
-                                               "series": 0}}},
+                                               "series": 0}},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [], "or": []},
              "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
              "column_types": {"tasks": "int",
@@ -434,14 +464,17 @@ def test_high_level_script(run_sombrero):
     # check correct column + series + x value scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
                         "units": {"column": "flops_unit"},
                         "scaling": {"column": {"name": "flops_value",
                                                "series": 0,
-                                               "x_value": 2}}},
+                                               "x_value": 2}},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [], "or": []},
              "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
              "column_types": {"tasks": "int",
@@ -455,12 +488,15 @@ def test_high_level_script(run_sombrero):
     # check correct custom scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
                         "units": {"column": "flops_unit"},
-                        "scaling": {"custom": 2}},
+                        "scaling": {"custom": 2},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["cpus_per_task", "==", 2]],
                          "or": []},
              "series": [],
@@ -476,12 +512,15 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
                             "units": {"column": "flops_unit"},
-                            "scaling": {"column": {"name": "OMP_NUM_THREADS"}}},
+                            "scaling": {"column": {"name": "OMP_NUM_THREADS"}},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [], "or": []},
                  "series": [["cpus_per_task", 1], ["cpus_per_task", 2]],
                  "column_types": {"tasks": "int",
@@ -497,12 +536,15 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
                             "units": {"column": "flops_unit"},
-                            "scaling": {"custom": "s"}},
+                            "scaling": {"custom": "s"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [["cpus_per_task", "==", 2]],
                              "or": []},
                  "series": [],
@@ -519,11 +561,14 @@ def test_high_level_script(run_sombrero):
         # get collated dataframe subset
         df = PostProcessing(Path(sombrero_log_path).parent).run_post_processing(
             ConfigHandler(
-                {"title": "Title",
+                {"plot_type": "generic",
+                 "title": "Title",
                  "x_axis": {"value": "tasks",
-                            "units": {"custom": None}},
+                            "units": {"custom": None},
+                            "range": {"min": None, "max": None}},
                  "y_axis": {"value": "flops_value",
-                            "units": {"column": "flops_unit"}},
+                            "units": {"column": "flops_unit"},
+                            "range": {"min": None, "max": None}},
                  "filters": {"and": [], "or": []},
                  "series": [],
                  "column_types": {"tasks": "int",
@@ -539,11 +584,14 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe subset
     df = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
-                        "units": {"column": "flops_unit"}},
+                        "units": {"column": "flops_unit"},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
                          "or": []},
              "series": [],
@@ -561,11 +609,14 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe with extra columns for csv
     df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
-                        "units": {"column": "flops_unit"}},
+                        "units": {"column": "flops_unit"},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
                          "or": []},
              "series": [],
@@ -591,11 +642,14 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe with duplicated extra columns for csv
     df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
         ConfigHandler(
-            {"title": "Title",
+            {"plot_type": "generic",
+             "title": "Title",
              "x_axis": {"value": "tasks",
-                        "units": {"custom": None}},
+                        "units": {"custom": None},
+                        "range": {"min": None, "max": None}},
              "y_axis": {"value": "flops_value",
-                        "units": {"column": "flops_unit"}},
+                        "units": {"column": "flops_unit"},
+                        "range": {"min": None, "max": None}},
              "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
                          "or": []},
              "series": [],
