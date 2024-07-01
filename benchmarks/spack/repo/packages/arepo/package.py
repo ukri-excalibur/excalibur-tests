@@ -12,11 +12,13 @@ class Arepo(MakefilePackage):
     depends_on('mpi')
     depends_on('gsl')
     depends_on('gmp')
+    depends_on('hdf5', when='+hdf5')    
+
 
     variant('fftw', default=False, description='FFTW support')
     variant('hdf5', default=True, description='HDF5 support')
     variant('hwloc', default=False, description='HWLOC support')
-        
+
     depends_on('fftw',  when='+fftw')
     depends_on('hwloc', when='+hwloc')
     
