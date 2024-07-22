@@ -172,7 +172,7 @@ def test_read_perflog(run_sombrero):
     # get dataframe from complete perflog
     df = log_hand.read_perflog(sombrero_log_path)
 
-    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks",
+    EXPECTED_FIELDS = ["job_completion_time", "reframe version", "info", "jobid", "num_tasks",
                        "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node",
                        "flops_value", "flops_unit", "flops_ref", "flops_lower_thres",
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
