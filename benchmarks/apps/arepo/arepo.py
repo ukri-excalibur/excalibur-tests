@@ -12,7 +12,7 @@ import os.path as path
 class ArepoBenchmark(SpackTest):
     valid_systems = ['-gpu']
     valid_prog_environs = ['default']
-    spack_spec = 'arepo@master'  
+    spack_spec = 'arepo@2024-04-01'  
     num_tasks = 4
     num_tasks_per_node = 1
     num_cpus_per_task = 1
