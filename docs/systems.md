@@ -26,7 +26,7 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2
 
 ARCHER2 allows [choosing the CPU frequency](https://docs.archer2.ac.uk/user-guide/energy/#controlling-cpu-frequency) during jobs by setting the environment variable `SLURM_CPU_FREQ_REQ` to specific values.
 In ReFrame v3 the list of environment variables set by the framework is held by the dictionary attribute called `env_vars`, and you can initialise it on the command line when running a benchmark with `-S`/`--setvar`.
-For more details, see Setting environment variables in [`README.md`](./README.md).
+For more details, see Setting environment variables in [usage](use.md).
 For example, to submit a benchmark using the lowest CPU frequency (1.5 GHz) you can use
 
 ```
@@ -38,7 +38,7 @@ reframe -c benchmarks/examples/sombrero -r --performance-report --system archer2
 ARCHER2 is a Cray system, and they
 [recommend using a cray optimised python version](https://docs.archer2.ac.uk/user-guide/python/).
 The HPE Cray Python distribution can be loaded using `module load cray-python`.
-This is necessary to pip install excalibur-tests following the instructions in [README.md](./README.md).
+This is necessary to pip install excalibur-tests following the instructions in [install](install.md).
 
 ### Spack install path
 
@@ -65,11 +65,25 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system csd3-skylake:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
 You can see the account balance of your projects with the `mybalance` command.
+
+## Cosma8
+
+### Queue options
+
+When submitting jobs to compute nodes, you need to specify the job queue, with the `--account` option to the scheduler.
+To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
+
+```
+reframe -c benchmarks/examples/sombrero -r --performance-report --system cosma8:compute-node -J'--account=<ACCOUNT>'
+```
+
+where `<ACCOUNT>` is the project you want to charge. DiRAC users can find the account codes
+they have access to on [SAFE](https://safe.epcc.ed.ac.uk/dirac/).
 
 ## DIaL2
 
@@ -79,7 +93,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial2:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -94,7 +108,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system dial3:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.
@@ -120,7 +134,7 @@ You may also need to compile GPU applications on the compute nodes, as the login
 ### Python3 module
 
 The only default Python in the system is currently Python 2.7, but this may change in the future.
-We require Python v3.7 or later so you need to have `python3` available. 
+We require Python v3.7 or later so you need to have `python3` available.
 This is provided by the `python3` module in the system. The `python3/recommended` module on myriad is built with an incompatible version of `openssl` for ReFrame. The easiest thing to do is to add the lines
 
 ```sh
@@ -151,7 +165,7 @@ When submitting jobs to compute nodes, you need to specify the job queue, with t
 To do this, when you run a benchmark you can use the `-J`/`--job-option` flag to `reframe` to specify the account, for example:
 
 ```
-reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--accout=<ACCOUNT>'
+reframe -c benchmarks/examples/sombrero -r --performance-report --system tursa:compute-node -J'--account=<ACCOUNT>'
 ```
 
 where `<ACCOUNT>` is the project you want to charge.

@@ -62,6 +62,23 @@ def test_display_name_parsing():
     assert len(params) == 0
 
 
+# Test that recursive unpacking of key columns works as expected
+def test_key_col_unpacking():
+
+    test_dict1 = {"benchmark": "bench1", "bench1": {"compiler": {"name": "compiler1", "version": 9.2}}}
+    test_dict2 = {"benchmark": "bench2", "compiler": {"name": "compiler2", "version": 12.1},
+                  "variants": {"cuda": True}, "mpi": ""}
+
+    # flatten test dicts into key columns dicts
+    key_cols = [log_hand.find_key_cols(r, key_cols={}) for r in [test_dict1, test_dict2]]
+
+    # expected results
+    assert key_cols == [
+        {"benchmark": "bench1", "bench1_compiler_name": "compiler1", "bench1_compiler_version": 9.2},
+        {"benchmark": "bench2", "compiler_name": "compiler2", "compiler_version": 12.1,
+         "variants_cuda": True, "mpi": ""}]
+
+
 @pytest.fixture(scope="module")
 # Fixture to run sombrero benchmark example, generate perflogs, and clean up after test
 def run_sombrero():
@@ -155,11 +172,13 @@ def test_read_perflog(run_sombrero):
     # get dataframe from complete perflog
     df = log_hand.read_perflog(sombrero_log_path)
 
-    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks",
+    EXPECTED_FIELDS = ["job_completion_time", "reframe version", "info", "jobid", "num_tasks",
                        "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node",
                        "flops_value", "flops_unit", "flops_ref", "flops_lower_thres",
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
-                       "system", "partition", "environ", "OMP_NUM_THREADS", "tags"]
+                       "system", "partition", "job_nodelist", "environ", "OMP_NUM_THREADS",
+                       "sombrero_compiler_name", "sombrero_compiler_version",
+                       "sombrero_variants_build_system", "sombrero_mpi", "tags"]
 
     # check example perflog file is read appropriately
     # check all expected columns are present
@@ -217,7 +236,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"fake_column": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except KeyError as e:
         assert e.args[1] == ["fake_column"]
     else:
@@ -237,7 +257,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except KeyError as e:
         assert e.args[1] == "!!"
     else:
@@ -257,7 +278,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except ValueError:
         assert True
     else:
@@ -277,7 +299,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except pd.errors.EmptyDataError:
         assert True
     else:
@@ -296,7 +319,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except RuntimeError:
         assert True
     else:
@@ -315,7 +339,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "cpus_per_task": "int",
-                                  "extra_param": "int"}}))
+                                  "extra_param": "int"},
+                 "extra_columns_to_csv": []}))
     except RuntimeError as e:
         # three param columns found in changed log
         EXPECTED_FIELDS = ["tasks", "cpus_per_task", "extra_param"]
@@ -337,7 +362,8 @@ def test_high_level_script(run_sombrero):
              "series": [],
              "column_types": {"job_completion_time": "datetime",
                               "flops_value": "float",
-                              "flops_unit": "str"}}))
+                              "flops_unit": "str"},
+             "extra_columns_to_csv": []}))
     # check returned subset is as expected
     assert len(df) == 2
 
@@ -355,7 +381,8 @@ def test_high_level_script(run_sombrero):
              "column_types": {"tasks": "int",
                               "cpus_per_task": "int",
                               "flops_value": "float",
-                              "flops_unit": "str"}}))
+                              "flops_unit": "str"},
+             "extra_columns_to_csv": []}))
     # check returned subset is as expected
     assert len(df) == 4
 
@@ -375,7 +402,8 @@ def test_high_level_script(run_sombrero):
                               "flops_value": "float",
                               "flops_unit": "str",
                               "cpus_per_task": "int",
-                              "OMP_NUM_THREADS": "int"}}))
+                              "OMP_NUM_THREADS": "int"},
+             "extra_columns_to_csv": []}))
     # check flops values are halved compared to previous df
     assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
 
@@ -394,7 +422,8 @@ def test_high_level_script(run_sombrero):
              "column_types": {"tasks": "int",
                               "flops_value": "float",
                               "flops_unit": "str",
-                              "cpus_per_task": "int"}}))
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": []}))
     assert (dfs[dfs["cpus_per_task"] == 1]["flops_value"].values ==
             df[df["cpus_per_task"] == 1]["flops_value"].values /
             df[df["cpus_per_task"] == 1]["flops_value"].values).all()
@@ -418,7 +447,8 @@ def test_high_level_script(run_sombrero):
              "column_types": {"tasks": "int",
                               "flops_value": "float",
                               "flops_unit": "str",
-                              "cpus_per_task": "int"}}))
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": []}))
     assert (dfs["flops_value"].values == df["flops_value"].values /
             df[(df["cpus_per_task"] == 1) & (df["tasks"] == 2)]["flops_value"].iloc[0]).all()
 
@@ -437,7 +467,8 @@ def test_high_level_script(run_sombrero):
              "column_types": {"tasks": "int",
                               "flops_value": "float",
                               "flops_unit": "str",
-                              "cpus_per_task": "int"}}))
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": []}))
     # check flops values are halved compared to previous df
     assert (dfs["flops_value"].values == df[df["cpus_per_task"] == 2]["flops_value"].values/2).all()
 
@@ -457,7 +488,8 @@ def test_high_level_script(run_sombrero):
                                   "flops_value": "float",
                                   "flops_unit": "str",
                                   "cpus_per_task": "int",
-                                  "OMP_NUM_THREADS": "str"}}))
+                                  "OMP_NUM_THREADS": "str"},
+                 "extra_columns_to_csv": []}))
     except TypeError:
         assert True
 
@@ -477,7 +509,8 @@ def test_high_level_script(run_sombrero):
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
                                   "flops_unit": "str",
-                                  "cpus_per_task": "int"}}))
+                                  "cpus_per_task": "int"},
+                 "extra_columns_to_csv": []}))
     except ValueError:
         assert True
 
@@ -495,7 +528,8 @@ def test_high_level_script(run_sombrero):
                  "series": [],
                  "column_types": {"tasks": "int",
                                   "flops_value": "float",
-                                  "flops_unit": "str"}}))
+                                  "flops_unit": "str"},
+                 "extra_columns_to_csv": []}))
     except RuntimeError as e:
         # dataframe has records from both files
         assert len(e.args[1]) == 8
@@ -516,9 +550,69 @@ def test_high_level_script(run_sombrero):
              "column_types": {"tasks": "int",
                               "flops_value": "float",
                               "flops_unit": "str",
-                              "cpus_per_task": "int"}}))
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": []}))
 
     EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
     # check returned subset is as expected
     assert df.columns.tolist() == EXPECTED_FIELDS
     assert len(df) == 1
+
+    # get filtered dataframe with extra columns for csv
+    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+        ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"}},
+             "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
+                         "or": []},
+             "series": [],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": ["spack_spec"]}
+        ))
+
+    EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
+    # check returned subset is as expected
+    assert df.columns.tolist() == EXPECTED_FIELDS
+    assert len(df) == 1
+
+    EXPECTED_FIELDS.append("spack_spec")
+    # check subset written to csv is as expected
+    output_file = "output.csv"
+    df_saved = pd.read_csv(output_file, index_col=0)
+    assert df_saved.columns.tolist() == EXPECTED_FIELDS
+    assert len(df_saved) == 1
+
+    # get filtered dataframe with duplicated extra columns for csv
+    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+        ConfigHandler(
+            {"title": "Title",
+             "x_axis": {"value": "tasks",
+                        "units": {"custom": None}},
+             "y_axis": {"value": "flops_value",
+                        "units": {"column": "flops_unit"}},
+             "filters": {"and": [["tasks", ">", 1], ["cpus_per_task", "==", 2]],
+                         "or": []},
+             "series": [],
+             "column_types": {"tasks": "int",
+                              "flops_value": "float",
+                              "flops_unit": "str",
+                              "cpus_per_task": "int"},
+             "extra_columns_to_csv": ["tasks", "tasks"]}
+        ))
+
+    EXPECTED_FIELDS = ["tasks", "flops_value", "flops_unit"]
+    # check returned subset is as expected
+    assert df.columns.tolist() == EXPECTED_FIELDS
+    assert len(df) == 1
+
+    # check subset written to csv is as expected
+    output_file = "output.csv"
+    df_saved = pd.read_csv(output_file, index_col=0)
+    assert df_saved.columns.tolist() == EXPECTED_FIELDS
+    assert len(df_saved) == 1

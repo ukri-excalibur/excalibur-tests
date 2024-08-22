@@ -121,6 +121,37 @@ site_configuration = {
                         'num_cpus_per_socket': 56,
                     },
                 },
+                {
+                    'name': 'pvc',
+                    'descr': 'Ponte Vecchio (Dawn) compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'srun',
+                    'env_vars': [
+                        ['I_MPI_PMI_LIBRARY', '/usr/local/software/slurm/current-rhel8/lib/libpmi2.so'],
+                        ['I_MPI_OFI_PROVIDER', 'mlx'],
+                        ['UCX_NET_DEVICES', 'mlx5_0:1'],
+                    ],
+                    'access': ['--partition=pvc', '--exclusive'],
+                    'sched_options': {
+                        'job_submit_timeout': 120,
+                    },
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'features': ['gpu'],
+                    'processor': {
+                        'num_cpus': 96,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 48,
+                    },
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}'],
+                        },
+                    ],
+
+                },
             ]
         },  # end CSD3 Rocky 8
         {
@@ -469,9 +500,9 @@ site_configuration = {
                     },
                     'resources': [
                         {
-                            'name': 'cpu',
-                             # TODO: memory should be a separate resource.
-                            'options': ['ncpus={num_cpus}:mem=100g'],
+                            'name': 'memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
                         },
                     ],
                 },
@@ -490,6 +521,13 @@ site_configuration = {
                         'num_sockets': 2,
                         'num_cpus_per_socket': 64,
                     },
+                    'resources': [
+                        {
+                            'name': 'memory',
+                             # TODO: memory should be a more general resource.
+                            'options': ['mem=100g'],
+                        },
+                    ],
                 },
             ]
         },  # end Isambard Phase3
@@ -805,9 +843,11 @@ site_configuration = {
                         '%(check_display_name)s|'
                         '%(check_system)s|'
                         '%(check_partition)s|'
+                        '%(check_job_nodelist)s|'
                         '%(check_environ)s|'
                         '%(check_extra_resources)s|'
                         '%(check_env_vars)s|'
+                        '%(check_spack_spec_dict)s|'
                         '%(check_tags)s'
                     ),
                     'format_perfvars': (

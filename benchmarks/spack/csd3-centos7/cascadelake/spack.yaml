@@ -158,19 +158,6 @@ spack:
       extra_rpaths:
       - /usr/local/Cluster-Apps/intel/2020.4/compilers_and_libraries_2020.4.304/linux/lib
   - compiler:
-      spec: dpcpp@=2022.0.0
-      paths:
-        cc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/icx
-        cxx: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/dpcpp
-        f77: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
-        fc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/ifx
-      flags: {}
-      operating_system: centos7
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
       spec: intel@=2021.5.0
       paths:
         cc: /usr/local/software/intel/oneapi/2022.1/compiler/2022.0.2/linux/bin/intel64/icc

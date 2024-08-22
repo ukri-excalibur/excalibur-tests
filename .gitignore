@@ -25,3 +25,6 @@ outdated/
 #ignore virtual environment
 myvenv/
 perflogs/
+
+# docs
+site/
