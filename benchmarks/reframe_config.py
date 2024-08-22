@@ -189,6 +189,41 @@ site_configuration = {
             ]
         },  # end CSD3 CentOS 7
         {
+            # https://www.rc.ucl.ac.uk/docs/Clusters/Kathleen/#node-types
+            'name': 'kathleen',
+            'descr': 'Kathleen',
+            'hostnames': ['login[0-9]+.kathleen.ucl.ac.uk'],
+            'max_local_jobs': 1,
+            'partitions': [
+                {
+                    'name': 'compute-node',
+                    'descr': 'Kathleen compute nodes',
+                    'scheduler': 'sge',
+                    'launcher': 'mpirun',
+                    'environs': ['default'],
+                    'max_jobs': 36,
+                    'processor': {
+                        'num_cpus': 40,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 20,
+                    },
+                    'resources': [
+                        {
+                            'name': 'mpi',
+                            'options': ['-pe mpi {num_slots}'],
+                        },
+                        {
+                            # Disable hyperthreading (default).
+                            # See https://www.rc.ucl.ac.uk/docs/Clusters/Kathleen/#hyperthreading for details
+                            'name': 'hyperthreads',
+                            'options': ['-l threads=2'],
+                        },
+                    ],
+                }
+            ]
+        }, # end Kathleen
+        {
             # https://www.rc.ucl.ac.uk/docs/Clusters/Myriad/#node-types
             'name': 'myriad',
             'descr': 'Myriad',
