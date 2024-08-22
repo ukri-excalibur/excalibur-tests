@@ -172,8 +172,8 @@ site_configuration = {
                     'environs': ['default'],
                     'max_jobs': 36,
                     'processor': {
-                        'num_cpus': 80,
-                        'num_cpus_per_core': 2,
+                        'num_cpus': 40,
+                        'num_cpus_per_core': 1,
                         'num_sockets': 2,
                         'num_cpus_per_socket': 20,
                     },
@@ -183,8 +183,10 @@ site_configuration = {
                             'options': ['-pe mpi {num_slots}'],
                         },
                         {
-                            'name': 'threads',
-                            'options': ['-l threads=2'], # disable hyperthreading (default). To enable, use threads=1
+                            # Disable hyperthreading (default).
+                            # See https://www.rc.ucl.ac.uk/docs/Clusters/Kathleen/#hyperthreading for details
+                            'name': 'hyperthreads',
+                            'options': ['-l threads=2'],
                         },
                     ],
                 }
