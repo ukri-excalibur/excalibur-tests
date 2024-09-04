@@ -3,6 +3,10 @@ packages:
     externals:
     - spec: cmake@3.20.4
       prefix: /usr
+  cuda:
+      externals:
+      - spec: cuda@12.2.91
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/23.9/cuda/12.2
   curl:
     externals:
     - spec: curl@8.0.1+gssapi+ldap+nghttp2
