@@ -556,6 +556,29 @@ site_configuration = {
             ]
         },  # end Isambard XCI
         {
+            # https://docs.isambard.ac.uk/user-documentation/
+            'name': 'isambard-ai',
+            'descr': 'Isambard AIRR',
+            'hostnames': ['nid00[0-9]+'],
+            'max_local_jobs': 1,
+            'partitions': [
+                {
+                    'name': 'interactive-node',
+                    'descr': 'isambard AI interactive nodes',
+                    'scheduler': 'local',
+                    'launcher': 'srun',
+                    'environs': ['default'],
+                    'max_jobs': 20,
+                    'processor': {
+                        'num_cpus': 288,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 1,
+                        'num_cpus_per_socket': 288,
+                    },
+                },
+            ]
+        },  # end Isambard AI
+        {
             'name': 'cosma7',
             'descr': 'COSMA',
             'hostnames': ['login7[a-z].pri.cosma[0-9].alces.network'],
