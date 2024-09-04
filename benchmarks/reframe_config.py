@@ -569,6 +569,7 @@ site_configuration = {
                     'launcher': 'srun',
                     'environs': ['default'],
                     'max_jobs': 20,
+                    'features': ['gpu', 'cuda'],
                     'processor': {
                         'num_cpus': 288,
                         'num_cpus_per_core': 1,
