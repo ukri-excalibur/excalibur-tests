@@ -2,13 +2,13 @@ import reframe as rfm
 import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
-#class PurifyBase(SpackTest):
-class PurifyBase(rfm.RunOnlyRegressionTest):
+class PurifyBase(SpackTest):
+#class PurifyBase(rfm.RunOnlyRegressionTest):
 
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'purify@debug+benchmarks'
+    spack_spec = 'purify@develop+benchmarks^sopt@develop'
     executable_opts = ['--benchmark_format=csv', '--benchmark_out=purify_benchmark.out', '--benchmark_out_format=csv']
 
     num_tasks = 1
