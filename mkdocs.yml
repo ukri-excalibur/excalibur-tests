@@ -37,7 +37,8 @@ nav:
     - DIaL2: systems#dial2
     - DIaL3: systems#dial3
     - Isambard 2: systems#isambard-2
-    - Myriad: systems#myriad
+    - Myriad: systems#myriad-and-kathleen
+    - Kathleen: systems#myriad-and-kathleen
     - Tursa: systems#tursa
   - ARCHER2 Tutorial: tutorial/tutorial.md
 theme:

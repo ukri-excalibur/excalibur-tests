@@ -303,7 +303,10 @@ class SpackTest(rfm.RegressionTest):
             num_tasks = self.num_tasks or 1
             num_cpus_per_task = self.num_cpus_per_task or 1
             # Set the total number of CPUs to be requested for the SGE scheduler.
-            self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
+            if self.current_system.name == 'kathleen':
+                self.extra_resources['mpi'] = {'num_slots': max(41, num_tasks * num_cpus_per_task)}
+            else:
+                self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
 
     @run_before('compile')
     def set_isambard_memory(self):
