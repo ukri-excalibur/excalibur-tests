@@ -22,6 +22,7 @@ _**Note**: at the moment the ExCALIBUR benchmarks are a work-in-progress._
 - [Supported benchmarks](https://ukri-excalibur.github.io/excalibur-tests/apps/)
 - [Supported systems](https://ukri-excalibur.github.io/excalibur-tests/systems/)
 - [ARCHER2 tutorial](https://ukri-excalibur.github.io/excalibur-tests/tutorial/archer2_tutorial/)
+- [ReFrame tutorial](https://ukri-excalibur.github.io/excalibur-tests/tutorial/durham_reframe_tutorial/)
 
 ## Acknowledgements
 
