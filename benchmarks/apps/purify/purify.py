@@ -4,6 +4,9 @@ from benchmarks.modules.utils import SpackTest
 
 class PurifyBase(SpackTest):
 
+    num_tasks = required
+    num_cpus_per_task = required
+
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
@@ -34,7 +37,7 @@ class PurifyPADMMBenchmark(PurifyBase):
     env_vars = {
         'OMP_NUM_THREADS': 1
     }
-    
+
     executable = 'mpi_benchmark_PADMM'
     time_limit = '60m'
 
@@ -56,7 +59,7 @@ class PurifyMOBenchmark(PurifyBase):
     env_vars = {
         'OMP_NUM_THREADS': 1
     }
-    
+
     executable = 'mpi_benchmark_MO'
     time_limit = '60m'
 
@@ -73,9 +76,8 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     This benchmark reproduces the results in Figure 1 of Pratley et. al. Procedia Computer Science 00 (2019) 1–25
     """
 
-    num_tasks_per_node = 1
-    num_cpus_per_task = 16
-    num_tasks = parameter([1,2,3,4,8,12])
+    threads = 16
+    tasks = parameter([1,2,3,4,8,12])
 
     executable = 'mpi_benchmark_MO'
     time_limit = '60m'
@@ -91,7 +93,10 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
                                     f'/Apply/{self.imgsize}/{self.numberOfVisibilities}')
-        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
+        self.num_tasks = self.tasks
+        self.num_cpus_per_task = self.threads
+        self.num_tasks_per_node = 1
 
 @rfm.simple_test
 class PurifyFFTBenchmark(PurifyBase):
@@ -101,7 +106,7 @@ class PurifyFFTBenchmark(PurifyBase):
     env_vars = {
         'OMP_NUM_THREADS': 1
     }
-    
+
     executable = "fft"
     time_limit = '5m'
 
