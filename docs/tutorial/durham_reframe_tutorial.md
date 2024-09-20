@@ -1,20 +1,3 @@
----
-title: Durham ReFrame Tutorial
-
----
-
----
-#type: slide
----
-
-<style>
-.reveal {
-  font-size: 30px;
-}
-</style>
-
-# ReFrame tutorial notes
-
 ## Outline
 
 1. How ReFrame executes tests
@@ -158,7 +141,6 @@ class HelloTest(rfm.RegressionTest):
 
 ----
 
-:::spoiler Basic configuration for Cosma
 ```python
 site_configuration = {
     'systems' : [
@@ -197,7 +179,6 @@ site_configuration = {
 }
 
 ```
-:::
 
 ---
 
@@ -371,7 +352,6 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 
 - [Automake Hello example](https://github.com/ntegan/amhello)
 
-:::spoiler AutoHelloTest class
 ```python
 import reframe as rfm
 import reframe.utility.sanity as sn
@@ -390,14 +370,12 @@ class AutoHelloTest(rfm.RegressionTest):
     def assert_hello(self):
         return sn.assert_found(r'Hello world\!', self.stdout)
 ```
-:::
 
 ----
 
 ## [CMake](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake)
 - [CMake Hello example](https://github.com/jameskbride/cmake-hello-world)
 
-:::spoiler CMakeHelloTest class
 ```python
 import reframe as rfm
 import reframe.utility.sanity as sn
@@ -417,7 +395,6 @@ class CMakeHelloTest(rfm.RegressionTest):
         return sn.assert_found(r'Hello, world\!', self.stdout)
 
 ```
-:::
 
 ----
 
