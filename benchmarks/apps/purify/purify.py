@@ -63,10 +63,28 @@ class PurifyMOBenchmark(PurifyMPIBase):
     executable = 'mpi_benchmark_MO'
     time_limit = '60m'
 
-    #numberOfVisibilities = parameter([10**6, 5*10**6, 10**7, 5*10**7, 10**8, 5*10**8])
-    #imgsize = parameter([1024])
-    numberOfVisibilities = parameter([10**5])
-    imgsize = parameter([256])
+    numberOfVisibilities = parameter([10**6, 5*10**6, 10**7, 5*10**7, 10**8, 5*10**8])
+    imgsize = parameter([1024])
+    FixtureName = parameter(['DirectFixtureDistr',
+                             'AdjointFixtureDistr',
+                             'DirectFixtureMPI',
+                             'AdjointFixtureMPI'])
+
+@rfm.simple_test
+class PurifyMOBenchmark_PratleyEtAl(PurifyMPIBase):
+    """
+    This benchmark reproduces the results in Figure 1 of Pratley et. al. Procedia Computer Science 00 (2019) 1–25
+    """
+
+    num_tasks_per_node = 1
+    num_cpus_per_task = 16
+    num_tasks = parameter([1,2,3,4,8,12])
+
+    executable = 'mpi_benchmark_MO'
+    time_limit = '60m'
+
+    numberOfVisibilities = parameter([10**6, 10**7])
+    imgsize = parameter([1024])
     FixtureName = parameter(['DirectFixtureDistr',
                              'AdjointFixtureDistr',
                              'DirectFixtureMPI',
@@ -76,11 +94,12 @@ class PurifyMOBenchmark(PurifyMPIBase):
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
                                     f'/Apply/{self.imgsize}/{self.numberOfVisibilities}')
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
 
 @rfm.simple_test
 class PurifyFFTBenchmark(PurifyBase):
 
-    executable = 'fft'
+    executable = "fft"
     time_limit = '5m'
 
     imgsize = parameter([2**i for i in range(7,14)])
