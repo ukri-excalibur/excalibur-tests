@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#outline" class="md-skip">
+        <a href="#automating-benchmarks-with-reframe" class="md-skip">
           Skip to content
         </a>
       
@@ -1173,6 +1173,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1200,6 +1202,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1305,9 +1309,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuring-reframe-for-hpc-systems" class="md-nav__link">
+  <a href="#configuring-reframe-for-hpc-systems-cosma" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuring ReFrame for HPC systems
+      Configuring ReFrame for HPC systems (Cosma)
     </span>
   </a>
   
@@ -1473,20 +1477,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Spack">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-only-tests" class="md-nav__link">
     <span class="md-ellipsis">
       Run-only tests
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1523,6 +1521,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1627,9 +1627,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuring-reframe-for-hpc-systems" class="md-nav__link">
+  <a href="#configuring-reframe-for-hpc-systems-cosma" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuring ReFrame for HPC systems
+      Configuring ReFrame for HPC systems (Cosma)
     </span>
   </a>
   
@@ -1795,20 +1795,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Spack">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-only-tests" class="md-nav__link">
     <span class="md-ellipsis">
       Run-only tests
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1830,8 +1824,7 @@
   
 
 
-  <h1>ReFrame Tutorial</h1>
-
+<h1 id="automating-benchmarks-with-reframe">Automating benchmarks with ReFrame</h1>
 <h2 id="outline">Outline</h2>
 <ol>
 <li>How ReFrame executes tests</li>
@@ -1850,7 +1843,8 @@ There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">n
 <p>You can customise the behaviour of each stage or add a hook before or after each of them.  For more details, read the <a href="https://reframe-hpc.readthedocs.io/en/stable/pipeline.html">ReFrame pipeline documentation</a>.</p>
 <hr />
 <h2 id="set-up-environment">Set up environment</h2>
-<p>Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. First load a newer python module.</p>
+<p>This tutorial was originally run on the <a href="https://cosma.readthedocs.io/en/latest/">Cosma</a> supercomputer. It should be straightforward to run on a different platform, the requirements are  <code>gcc</code>, <code>git</code> and <code>python3</code>. (for the later parts you also need <code>make</code>, <code>autotools</code>, <code>cmake</code> and <code>spack</code>).
+Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. First load a newer python module.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>module<span class="w"> </span>swap<span class="w"> </span>python/3.10.12
 </span></code></pre></div>
 <p>Then create an environment and activate it with</p>
@@ -1920,7 +1914,7 @@ There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">n
 <li>Builtin programming environment uses <code>cc</code> to compile</li>
 </ul>
 <hr />
-<h2 id="configuring-reframe-for-hpc-systems">Configuring ReFrame for HPC systems</h2>
+<h2 id="configuring-reframe-for-hpc-systems-cosma">Configuring ReFrame for HPC systems (Cosma)</h2>
 <blockquote>
 <p>In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its configuration file.
 - <a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world">Configuration</a>
@@ -1959,15 +1953,8 @@ There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">n
 </span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>            <span class="s1">&#39;cxx&#39;</span><span class="p">:</span> <span class="s1">&#39;mpic++&#39;</span><span class="p">,</span>
 </span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>            <span class="s1">&#39;ftn&#39;</span><span class="p">:</span> <span class="s1">&#39;mpif90&#39;</span>
 </span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>        <span class="p">},</span>
-</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1">#        {</span>
-</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="c1">#            &#39;name&#39;: &#39;intel&#39;,</span>
-</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="c1">#            &#39;modules&#39;: [&#39;intel_comp&#39;, &#39;intel_mpi&#39;],</span>
-</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="c1">#            &#39;cc&#39;: &#39;mpiicc&#39;,</span>
-</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="c1">#            &#39;cxx&#39;: &#39;mpiicpc&#39;,</span>
-</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="c1">#            &#39;ftn&#39;: &#39;mpiifort&#39;</span>
-</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="c1">#        },</span>
-</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>    <span class="p">]</span>
-</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="p">}</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    <span class="p">]</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="p">}</span>
 </span></code></pre></div>
 <hr />
 <h2 id="performance-tests">Performance tests</h2>
@@ -2142,10 +2129,10 @@ There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">n
 <li>In <code>rfm_job.out</code> you can see that it</li>
 <li>Creates a blank environment</li>
 <li>Builds all dependencies -- takes quite long</li>
-<li>[ ] Try building bzip2 with excalibur cosma environment</li>
+<li><code>excalibur-tests</code> provides utilities and settings for Spack builds in ReFrame. See the <a href="../archer2_tutorial">Next Tutorial</a> for details.</li>
 </ul>
 <hr />
-<h3 id="run-only-tests">Run-only tests</h3>
+<h2 id="run-only-tests">Run-only tests</h2>
 <ul>
 <li>Tutorial in <code>tutorials/advanced/runonly/echorand.py</code></li>
 </ul>
