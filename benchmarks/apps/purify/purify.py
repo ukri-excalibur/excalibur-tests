@@ -3,19 +3,12 @@ import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
 class PurifyBase(SpackTest):
-#class PurifyBase(rfm.RunOnlyRegressionTest):
 
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
     spack_spec = 'purify@develop+benchmarks^sopt@develop'
     executable_opts = ['--benchmark_format=csv', '--benchmark_out=purify_benchmark.out', '--benchmark_out_format=csv']
-
-    num_tasks = 1
-    num_cpus_per_task = 1
-    env_vars = {
-        'OMP_NUM_THREADS': 1
-    }
 
     @sanity_function
     def validate_solution(self):
@@ -33,17 +26,15 @@ class PurifyBase(SpackTest):
     def extract_stddev(self):
         return sn.extractsingle(r'manual_time_stddev\",\S+,(\S+),\S+,ms', self.stdout, 1, float)
 
-class PurifyMPIBase(PurifyBase):
-
-    ntasks = parameter([1,2])
-
-    @run_after('setup')
-    def set_num_tasks(self):
-        self.num_tasks = self.ntasks
-
 @rfm.simple_test
-class PurifyPADMMBenchmark(PurifyMPIBase):
+class PurifyPADMMBenchmark(PurifyBase):
 
+    num_tasks = 1
+    num_cpus_per_task = 1
+    env_vars = {
+        'OMP_NUM_THREADS': 1
+    }
+    
     executable = 'mpi_benchmark_PADMM'
     time_limit = '60m'
 
@@ -58,8 +49,14 @@ class PurifyPADMMBenchmark(PurifyMPIBase):
                                     f'/{self.imgsize}/{self.numberOfVisibilities}')
 
 @rfm.simple_test
-class PurifyMOBenchmark(PurifyMPIBase):
+class PurifyMOBenchmark(PurifyBase):
 
+    num_tasks = 1
+    num_cpus_per_task = 1
+    env_vars = {
+        'OMP_NUM_THREADS': 1
+    }
+    
     executable = 'mpi_benchmark_MO'
     time_limit = '60m'
 
@@ -71,7 +68,7 @@ class PurifyMOBenchmark(PurifyMPIBase):
                              'AdjointFixtureMPI'])
 
 @rfm.simple_test
-class PurifyMOBenchmark_PratleyEtAl(PurifyMPIBase):
+class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     """
     This benchmark reproduces the results in Figure 1 of Pratley et. al. Procedia Computer Science 00 (2019) 1–25
     """
@@ -99,6 +96,12 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyMPIBase):
 @rfm.simple_test
 class PurifyFFTBenchmark(PurifyBase):
 
+    num_tasks = 1
+    num_cpus_per_task = 1
+    env_vars = {
+        'OMP_NUM_THREADS': 1
+    }
+    
     executable = "fft"
     time_limit = '5m'
 
