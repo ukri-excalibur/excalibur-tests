@@ -18,16 +18,23 @@ def spack_root_to_path():
     spack_root = os.getenv('SPACK_ROOT')
     path = os.getenv('PATH')
     if spack_root is None:
+        # Somehow we don't know what's the Spack root, then return PATH as is,
+        # but if also PATH is not set (what a dramatic case) then return an
+        # empty string.
+        return "" if path is None else path
+
+    spack_bindir = os.path.join(spack_root, 'bin')
+    if path is None:
+        # Somehow PATH isn't set, only return `spack_bindir`
+        return spack_bindir
+
+    if spack_bindir in path.split(os.path.pathsep):
+        # `spack_bindir` is already in PATH, return the environment
+        # variable as is.
         return path
-    else:
-        spack_bindir = os.path.join(spack_root, 'bin')
-        if path is None:
-            return dir
-        else:
-            if spack_bindir in path.split(os.path.pathsep):
-                return path
-            else:
-                return spack_bindir * os.path.pathsep * path
+
+    # `spack_bindir` isn't in PATH already, prepend to it.
+    return spack_bindir + os.path.pathsep + path
 
 
 site_configuration = {
