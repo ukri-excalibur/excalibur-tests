@@ -70,6 +70,10 @@ class PurifyMOBenchmark(PurifyBase):
                              'DirectFixtureMPI',
                              'AdjointFixtureMPI'])
 
+    def filter_benchmarks(self):
+        self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
+                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}') 
+    
 @rfm.simple_test
 class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     """
