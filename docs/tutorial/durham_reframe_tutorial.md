@@ -333,7 +333,7 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 
 ----
 
-## [Make](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests) 
+### [Make](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests) 
 
 - Tutorial in `tutorials/advanced/makefiles/maketest.py`. 
 
@@ -342,7 +342,7 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 
 ----
 
-## [Autotools](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code)
+### [Autotools](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code)
 > It is often the case that a configuration step is needed before compiling a code with make. To address this kind of projects, ReFrame aims to offer specific abstractions for “configure-make” style of build systems. It supports CMake-based projects through the CMake build system, as well as Autotools-based projects through the Autotools build system.
 
 
@@ -369,7 +369,7 @@ class AutoHelloTest(rfm.RegressionTest):
 
 ----
 
-## [CMake](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake)
+### [CMake](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake)
 - [CMake Hello example](https://github.com/jameskbride/cmake-hello-world)
 
 ```python
@@ -394,7 +394,7 @@ class CMakeHelloTest(rfm.RegressionTest):
 
 ----
 
-## [Spack](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack)
+### [Spack](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack)
 
 - ReFrame will use a user-provided Spack environment in order to build and test a set of specs.
 - Tutorial in `tutorials/build_systems/spack/spack_test.py`
