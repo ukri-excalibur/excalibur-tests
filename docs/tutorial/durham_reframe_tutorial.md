@@ -1,3 +1,5 @@
+# Automating benchmarks with ReFrame
+
 ## Outline
 
 1. How ReFrame executes tests
@@ -6,7 +8,6 @@
 4. Writing performance tests -- Stream example
 5. Working with build systems -- Make, CMake, Autotools, Spack examples
 6. Avoiding build systems -- Run-only tests
-
 
 Adapted from [ReFrame 4.5 tutorials](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorials.html) that cover more features.
 There's a [new tutorial](https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html) in ReFrame 4.6
@@ -24,6 +25,8 @@ You can customise the behaviour of each stage or add a hook before or after each
 ---
 
 ## Set up environment
+
+This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer. It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
 Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. First load a newer python module.
 
 ```bash
@@ -128,7 +131,7 @@ class HelloTest(rfm.RegressionTest):
 
 ---
 
-## Configuring ReFrame for HPC systems
+## Configuring ReFrame for HPC systems (Cosma)
 > In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its configuration file.
 - [Configuration](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world)
   - Set accounting parameters with
@@ -168,13 +171,6 @@ site_configuration = {
             'cxx': 'mpic++',
             'ftn': 'mpif90'
         },
-#        {
-#            'name': 'intel',
-#            'modules': ['intel_comp', 'intel_mpi'],
-#            'cc': 'mpiicc',
-#            'cxx': 'mpiicpc',
-#            'ftn': 'mpiifort'
-#        },
     ]
 }
 
@@ -405,9 +401,9 @@ class CMakeHelloTest(rfm.RegressionTest):
 - In `rfm_job.out` you can see that it
   - Creates a blank environment
   - Builds all dependencies -- takes quite long
-- [ ] Try building bzip2 with excalibur cosma environment
+- `excalibur-tests` provides utilities and settings for Spack builds in ReFrame. See the [Next Tutorial](../archer2_tutorial) for details.
 
 ---
 
-### Run-only tests
+## Run-only tests
 - Tutorial in `tutorials/advanced/runonly/echorand.py`
