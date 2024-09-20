@@ -1441,9 +1441,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Build systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#make" class="md-nav__link">
     <span class="md-ellipsis">
       Make
@@ -1451,8 +1452,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#autotools" class="md-nav__link">
     <span class="md-ellipsis">
       Autotools
@@ -1460,8 +1461,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#cmake" class="md-nav__link">
     <span class="md-ellipsis">
       CMake
@@ -1469,13 +1470,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#spack" class="md-nav__link">
     <span class="md-ellipsis">
       Spack
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1759,9 +1765,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Build systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#make" class="md-nav__link">
     <span class="md-ellipsis">
       Make
@@ -1769,8 +1776,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#autotools" class="md-nav__link">
     <span class="md-ellipsis">
       Autotools
@@ -1778,8 +1785,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#cmake" class="md-nav__link">
     <span class="md-ellipsis">
       CMake
@@ -1787,13 +1794,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#spack" class="md-nav__link">
     <span class="md-ellipsis">
       Spack
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2067,7 +2079,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <li><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#build-systems">Build systems Reference</a></li>
 </ul>
 <hr />
-<h2 id="make"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests">Make</a></h2>
+<h3 id="make"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests">Make</a></h3>
 <ul>
 <li>Tutorial in <code>tutorials/advanced/makefiles/maketest.py</code>. </li>
 </ul>
@@ -2075,7 +2087,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <p>you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.</p>
 </blockquote>
 <hr />
-<h2 id="autotools"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code">Autotools</a></h2>
+<h3 id="autotools"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code">Autotools</a></h3>
 <blockquote>
 <p>It is often the case that a configuration step is needed before compiling a code with make. To address this kind of projects, ReFrame aims to offer specific abstractions for “configure-make” style of build systems. It supports CMake-based projects through the CMake build system, as well as Autotools-based projects through the Autotools build system.</p>
 </blockquote>
@@ -2100,7 +2112,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 </span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="cmake"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake">CMake</a></h2>
+<h3 id="cmake"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake">CMake</a></h3>
 <ul>
 <li><a href="https://github.com/jameskbride/cmake-hello-world">CMake Hello example</a></li>
 </ul>
@@ -2122,7 +2134,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 </span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello, world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="spack"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack">Spack</a></h2>
+<h3 id="spack"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack">Spack</a></h3>
 <ul>
 <li>ReFrame will use a user-provided Spack environment in order to build and test a set of specs.</li>
 <li>Tutorial in <code>tutorials/build_systems/spack/spack_test.py</code></li>
