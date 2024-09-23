@@ -264,10 +264,6 @@ To record the performance of the benchmark, ReFrame should extract a figure of m
 
 > In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the [`extractsingle()`](https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle) utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.
 
-----
-
-## Performance Pattern Check
-
 ```python
 @performance_function('MB/s', perf_key='Copy')
 def extract_copy_perf(self):
@@ -290,10 +286,10 @@ def extract_triad_perf(self):
 
 ### Perflogs
 
-- Perflogs are output in `perflogs/<system>/<partition>`
-- By default a lot of information is printed. This can be customized in the configuration file. More on this later.
-- By default not much information about build step, has to be linked back to build environment
-- See `.reframe/reports/` or use `--report-file`
+The output from performance tests is written in perflogs. They are csv files that are appended each time a test is ran. By default the perflogs are output in `perflogs/<system>/<partition>`. By default a lot of information about the test is stored. This can be customized in the configuration file. 
+By default there is not much information about build step, but ReFrame will provide a link back to build environment. A more verbose report is written in `.reframe/reports/`, you can use the `--report-file` option to direct the report to a different file.
+
+`excalibur-tests` provides tools to read and process the perflogs. See the [Next Tutorial](../archer2_tutorial) for details.
 
 ----
 
