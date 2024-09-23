@@ -1,5 +1,5 @@
 # Demo class for running the stream benchmark
-# Used for tutorial
+# Used for archer2 tutorial
 
 # Import modules from reframe and excalibur-tests
 import reframe as rfm
