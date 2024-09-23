@@ -29,8 +29,13 @@ class PurifyBase(SpackTest):
     def extract_stddev(self):
         return sn.extractsingle(r'manual_time_stddev\",\S+,(\S+),\S+,ms', self.stdout, 1, float)
 
+
+
 @rfm.simple_test
-class PurifyPADMMBenchmark(PurifyBase):
+class PurifyFFTBenchmark(PurifyBase):
+    """
+    Execute all the benchmarks in the fft benchmark on one core with one thread
+    """
 
     num_tasks = 1
     num_cpus_per_task = 1
@@ -38,26 +43,26 @@ class PurifyPADMMBenchmark(PurifyBase):
         'OMP_NUM_THREADS': 1
     }
 
-    executable = 'mpi_benchmark_PADMM'
-    time_limit = '60m'
+    executable = "fft"
+    time_limit = '5m'
 
-    algorithm = parameter([1,3])
-    numberOfVisibilities = parameter([10**5])
-    imgsize = parameter([256])
+    imgsize = parameter([2**i for i in range(7,14)])
 
     @run_after('setup')
     def filter_benchmarks(self):
-        self.executable_opts.append(f'--benchmark_filter=PadmmFixtureMPI/'
-                                    f'ApplyAlgo{self.algorithm}'
-                                    f'/{self.imgsize}/{self.numberOfVisibilities}')
+        self.executable_opts.append(f'--benchmark_filter=FFTOperatorFixture/Apply/{self.imgsize}')
 
 @rfm.simple_test
 class PurifyMOBenchmark(PurifyBase):
+    """
+    Execute all the benchmarks in mpi_benchmark_MO on one core with 16 threads
+    (Probably not the greatest idea).
+    """
 
     num_tasks = 1
     num_cpus_per_task = 1
     env_vars = {
-        'OMP_NUM_THREADS': 1
+        'OMP_NUM_THREADS': 16
     }
 
     executable = 'mpi_benchmark_MO'
@@ -72,8 +77,8 @@ class PurifyMOBenchmark(PurifyBase):
 
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
-                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}') 
-    
+                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}')
+
 @rfm.simple_test
 class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     """
@@ -103,19 +108,26 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
         self.num_tasks_per_node = 1
 
 @rfm.simple_test
-class PurifyFFTBenchmark(PurifyBase):
+class PurifyPADMMBenchmark_PratleyEtAl(PurifyBase):
+    """
+    This benchmark reproduces the results in Figure 3 of Pratley et. al. Procedia Computer Science 00 (2019) 1–25
+    """
+    threads = 16
+    tasks = parameter([1,2,3,4,8,12])
 
-    num_tasks = 1
-    num_cpus_per_task = 1
-    env_vars = {
-        'OMP_NUM_THREADS': 1
-    }
+    executable = 'mpi_benchmark_PADMM'
+    time_limit = '60m'
 
-    executable = "fft"
-    time_limit = '5m'
-
-    imgsize = parameter([2**i for i in range(7,14)])
+    algorithm = parameter([1,3])
+    numberOfVisibilities = parameter([10**6, 10**7])
+    imgsize = parameter([1024])
 
     @run_after('setup')
     def filter_benchmarks(self):
-        self.executable_opts.append(f'--benchmark_filter=FFTOperatorFixture/Apply/{self.imgsize}')
+        self.executable_opts.append(f'--benchmark_filter=PadmmFixtureMPI/'
+                                    f'ApplyAlgo{self.algorithm}'
+                                    f'/{self.imgsize}/{self.numberOfVisibilities}')
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
+        self.num_tasks = self.tasks
+        self.num_cpus_per_task = self.threads
+        self.num_tasks_per_node = 1
