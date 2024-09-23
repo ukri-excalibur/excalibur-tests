@@ -124,7 +124,7 @@ class HelloTest(rfm.RegressionTest):
 
 ----
 
-## Builting programming environment
+## Builtin programming environment
 
 - `reframe --show-config`
 - Builtin programming environment uses `cc` to compile
@@ -314,7 +314,7 @@ reference = {
 
 ----
 
-### Parametrized tests
+## Parametrized tests
 
 You can pass a list to the `parameter()` built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example `__init__()`
 
