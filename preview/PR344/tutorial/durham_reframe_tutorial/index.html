@@ -1965,10 +1965,9 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <hr />
 <h2 id="performance-tests">Performance tests</h2>
 <p>Performance tests capture data in performance variables. For simplicity, we use the <a href="https://github.com/jeffhammond/STREAM">STREAM benchmark</a> as an example. It is the de facto memory bandwidth benchmark.</p>
-<p>To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the <code>@performance_function</code> decorator extracts or computes a performance metric from the test’s output.</p>
 <hr />
 <h3 id="boilerplate">Boilerplate</h3>
-<p>Same as before. We can now specify valid systems and prog environments</p>
+<p>Same as before. We can now specify valid systems and prog environments on Cosma. You can adapt these to your platform, or use <code>'*'</code> to run on any platform.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
