@@ -187,13 +187,11 @@ site_configuration = {
 
 Performance tests capture data in performance variables. For simplicity, we use the [STREAM benchmark](https://github.com/jeffhammond/STREAM) as an example. It is the de facto memory bandwidth benchmark.
 
-To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the `@performance_function` decorator extracts or computes a performance metric from the test’s output.
-
 ----
 
 ### Boilerplate
 
-Same as before. We can now specify valid systems and prog environments
+Same as before. We can now specify valid systems and prog environments on Cosma. You can adapt these to your platform, or use `'*'` to run on any platform.
 
 ```python
 import reframe as rfm
