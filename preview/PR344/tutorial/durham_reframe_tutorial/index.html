@@ -1836,8 +1836,11 @@
 <li>Working with build systems -- Make, CMake, Autotools, Spack examples</li>
 <li>Avoiding build systems -- Run-only tests</li>
 </ol>
-<p>Adapted from <a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorials.html">ReFrame 4.5 tutorials</a> that cover more features.
-There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">new tutorial</a> in ReFrame 4.6</p>
+<p>This tutorial is adapted from <a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorials.html">ReFrame 4.5 tutorials</a>, that also cover more ReFrame features. Direct quotes from the tutorial are marked with</p>
+<blockquote>
+<p>ReFrame Tutorials</p>
+</blockquote>
+<p>There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html">new tutorial</a> with a slightly different approach in ReFrame 4.6.</p>
 <hr />
 <h2 id="how-reframe-executes-tests">How ReFrame executes tests</h2>
 <p>When ReFrame executes a test it runs a pipeline of the following stages</p>
@@ -1863,6 +1866,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>-q<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>--branch<span class="w"> </span>v4.5.2<span class="w"> </span>https://github.com/reframe-hpc/reframe.git
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">source</span><span class="w"> </span>reframe/bootstrap.sh
 </span></code></pre></div>
+<p>The ReFrame git repository also contains the source code of the ReFrame tutorials. It is recommended to run the git clone step, even if you used <code>pip install</code> to install ReFrame. We will refer to the tutorial solutions later.</p>
 <hr />
 <h2 id="hello-world-example">Hello world example</h2>
 <p><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#the-hello-world-test">Hello world example</a></p>
@@ -2074,7 +2078,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <li>Tutorial in <code>tutorials/advanced/makefiles/maketest.py</code>. </li>
 </ul>
 <blockquote>
-<p>you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.</p>
+<p>First, if you’re using any build system other than SingleSource, you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.</p>
 </blockquote>
 <hr />
 <h3 id="autotools"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code">Autotools</a></h3>
