@@ -402,8 +402,8 @@ class CMakeHelloTest(rfm.RegressionTest):
 - ReFrame will use a user-provided Spack environment in order to build and test a set of specs.
 - Tutorial in `tutorials/build_systems/spack/spack_test.py`
 - In `rfm_job.out` you can see that it
-   - Creates a blank environment
-   - Builds all dependencies -- takes quite long
+    - Creates a blank environment
+    - Builds all dependencies -- takes quite long
 - `excalibur-tests` provides utilities and settings for Spack builds in ReFrame. See the [Next Tutorial](../archer2_tutorial) for details.
 
 ---
