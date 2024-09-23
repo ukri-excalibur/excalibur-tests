@@ -9,8 +9,11 @@
 5. Working with build systems -- Make, CMake, Autotools, Spack examples
 6. Avoiding build systems -- Run-only tests
 
-Adapted from [ReFrame 4.5 tutorials](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorials.html) that cover more features.
-There's a [new tutorial](https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html) in ReFrame 4.6
+This tutorial is adapted from [ReFrame 4.5 tutorials](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorials.html), that also cover more ReFrame features. Direct quotes from the tutorial are marked with
+
+> ReFrame Tutorials
+
+There's a [new tutorial](https://reframe-hpc.readthedocs.io/en/v4.6.0/tutorial.html) with a slightly different approach in ReFrame 4.6.
 
 ---
 
@@ -58,6 +61,8 @@ Alternatively, you can
 git clone -q --depth 1 --branch v4.5.2 https://github.com/reframe-hpc/reframe.git
 source reframe/bootstrap.sh
 ```
+
+The ReFrame git repository also contains the source code of the ReFrame tutorials. It is recommended to run the git clone step, even if you used `pip install` to install ReFrame. We will refer to the tutorial solutions later.
 
 ---
 
@@ -337,14 +342,12 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 
 - Tutorial in `tutorials/advanced/makefiles/maketest.py`. 
 
-> you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.
-
+> First, if you’re using any build system other than SingleSource, you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.
 
 ----
 
 ### [Autotools](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#adding-a-configuration-step-before-compiling-the-code)
 > It is often the case that a configuration step is needed before compiling a code with make. To address this kind of projects, ReFrame aims to offer specific abstractions for “configure-make” style of build systems. It supports CMake-based projects through the CMake build system, as well as Autotools-based projects through the Autotools build system.
-
 
 - [Automake Hello example](https://github.com/ntegan/amhello)
 
