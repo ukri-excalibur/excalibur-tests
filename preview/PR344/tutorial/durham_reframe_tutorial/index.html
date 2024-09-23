@@ -1365,16 +1365,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance-pattern-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance Pattern Check
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Performance Pattern Check">
+    <nav class="md-nav" aria-label="Add Performance Pattern Check">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1704,16 +1695,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance-pattern-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance Pattern Check
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Performance Pattern Check">
+    <nav class="md-nav" aria-label="Add Performance Pattern Check">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2017,8 +1999,6 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <blockquote>
 <p>In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the <a href="https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle"><code>extractsingle()</code></a> utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.</p>
 </blockquote>
-<hr />
-<h2 id="performance-pattern-check">Performance Pattern Check</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Copy&#39;</span><span class="p">)</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">def</span> <span class="nf">extract_copy_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Copy:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
@@ -2037,12 +2017,9 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 </span></code></pre></div>
 <hr />
 <h3 id="perflogs">Perflogs</h3>
-<ul>
-<li>Perflogs are output in <code>perflogs/&lt;system&gt;/&lt;partition&gt;</code></li>
-<li>By default a lot of information is printed. This can be customized in the configuration file. More on this later.</li>
-<li>By default not much information about build step, has to be linked back to build environment</li>
-<li>See <code>.reframe/reports/</code> or use <code>--report-file</code></li>
-</ul>
+<p>The output from performance tests is written in perflogs. They are csv files that are appended each time a test is ran. By default the perflogs are output in <code>perflogs/&lt;system&gt;/&lt;partition&gt;</code>. By default a lot of information about the test is stored. This can be customized in the configuration file. 
+By default there is not much information about build step, but ReFrame will provide a link back to build environment. A more verbose report is written in <code>.reframe/reports/</code>, you can use the <code>--report-file</code> option to direct the report to a different file.</p>
+<p><code>excalibur-tests</code> provides tools to read and process the perflogs. See the <a href="../archer2_tutorial">Next Tutorial</a> for details.</p>
 <hr />
 <h2 id="reference-values">Reference values</h2>
 <p>ReFrame can automate checking that the results fall within an expected range. You can set a different reference value for each <code>perf_key</code> in the performance function. For example, set the test to fail if it falls outside of +-25% of the values obtained with the previous array size.</p>
