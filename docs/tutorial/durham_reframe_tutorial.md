@@ -87,7 +87,7 @@ import reframe.utility.sanity as sn
 
 - ReFrame uses decorators to mark classes as tests. 
 - This marks `class HelloTest` as a `rfm.simple_test`.
-- ReFrame tests ultimately derive from `RegressionTest`. There are others derived classes such as `RunOnlyRegressionTest`, we get to those later.
+- ReFrame tests ultimately derive from `RegressionTest`. There are other derived classes such as `RunOnlyRegressionTest`, we get to those later.
 
 ```python
 
@@ -129,7 +129,7 @@ class HelloTest(rfm.RegressionTest):
 
 ----
 
-## Builting programming environment
+## Builtin programming environment
 
 - `reframe --show-config`
 - Builtin programming environment uses `cc` to compile
@@ -319,7 +319,7 @@ reference = {
 
 ----
 
-### Parametrized tests
+## Parametrized tests
 
 You can pass a list to the `parameter()` built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example `__init__()`
 
