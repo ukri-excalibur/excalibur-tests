@@ -82,7 +82,7 @@ import reframe.utility.sanity as sn
 
 - ReFrame uses decorators to mark classes as tests. 
 - This marks `class HelloTest` as a `rfm.simple_test`.
-- ReFrame tests ultimately derive from `RegressionTest`. There are others derived classes such as `RunOnlyRegressionTest`, we get to those later.
+- ReFrame tests ultimately derive from `RegressionTest`. There are other derived classes such as `RunOnlyRegressionTest`, we get to those later.
 
 ```python
 
