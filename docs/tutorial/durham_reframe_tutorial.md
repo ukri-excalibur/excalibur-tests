@@ -127,6 +127,14 @@ class HelloTest(rfm.RegressionTest):
         return sn.assert_found(r'Hello, World\!', self.stdout)
 ```
 
+### Run the benchmark
+
+The basic syntax to run ReFrame benchmarks is
+
+```bash
+reframe -c path/to/benchmark -r
+```
+
 ----
 
 ## Builtin programming environment
