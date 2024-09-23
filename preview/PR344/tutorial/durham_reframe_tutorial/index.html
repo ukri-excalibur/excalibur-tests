@@ -1281,9 +1281,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#builting-programming-environment" class="md-nav__link">
+  <a href="#builtin-programming-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Builting programming environment
+      Builtin programming environment
     </span>
   </a>
   
@@ -1398,20 +1398,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reference values">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parametrized-tests" class="md-nav__link">
     <span class="md-ellipsis">
       Parametrized tests
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1626,9 +1620,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#builting-programming-environment" class="md-nav__link">
+  <a href="#builtin-programming-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Builting programming environment
+      Builtin programming environment
     </span>
   </a>
   
@@ -1743,20 +1737,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reference values">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parametrized-tests" class="md-nav__link">
     <span class="md-ellipsis">
       Parametrized tests
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1922,7 +1910,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello, World\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="builting-programming-environment">Builting programming environment</h2>
+<h2 id="builtin-programming-environment">Builtin programming environment</h2>
 <ul>
 <li><code>reframe --show-config</code></li>
 <li>Builtin programming environment uses <code>cc</code> to compile</li>
@@ -2068,7 +2056,7 @@ Before proceeding to install ReFrame, we recommend creating a python virtual env
 <p>The performance reference tuple consists of the reference value, the lower and upper thresholds expressed as fractional numbers relative to the reference value, and the unit of measurement. If any of the thresholds is not relevant, None may be used instead. Also, the units in this reference variable are entirely optional, since they were already provided through the @performance_function decorator.</p>
 </blockquote>
 <hr />
-<h3 id="parametrized-tests">Parametrized tests</h3>
+<h2 id="parametrized-tests">Parametrized tests</h2>
 <p>You can pass a list to the <code>parameter()</code> built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example <code>__init__()</code></p>
 <p>For parametrisation you can add for example
 <div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>    <span class="n">arraysize</span> <span class="o">=</span> <span class="n">parameter</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">25</span><span class="p">])</span>
