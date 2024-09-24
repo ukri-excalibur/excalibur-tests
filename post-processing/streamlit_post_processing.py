@@ -5,6 +5,7 @@ from pathlib import Path
 import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
 from post_processing import PostProcessing
+from plot_handler import get_axis_min_max
 
 # drop-down lists
 operators = ["==", "!=", "<", ">", "<=", ">="]
@@ -68,6 +69,14 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # config file uploader
         st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
+        # set plot type
+        plot_type_options = ['generic', 'line']
+        plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else 0
+        plot_type = st.selectbox("#### Plot type", plot_type_options,
+                                 key="plot_type", index=plot_type_index)
+        if plot_type != config.plot_type:
+            config.plot_type = plot_type
+
         # set plot title
         title = st.text_input("#### Title", config.title, placeholder="None")
         if title != config.title:
@@ -128,18 +137,18 @@ def axis_options():
 
     with st.container(border=True):
         # x-axis select
-        axis_select("x", config.x_axis)
+        axis_select("x", config.x_axis, config.plot_type)
         sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
     with st.container(border=True):
         # y-axis select
-        axis_select("y", config.y_axis)
+        axis_select("y", config.y_axis, config.plot_type)
 
     # apply changes
     update_axes()
     config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
-def axis_select(label: str, axis: dict):
+def axis_select(label: str, axis: dict, plot_type: str):
     """
         Allow the user to select axis column and type for post-processing.
 
@@ -169,6 +178,19 @@ def axis_select(label: str, axis: dict):
 
     # units select
     units_select(label, axis)
+
+    # FIXME: add ability to use a custom value for only one of min or max
+    range = get_axis_min_max(df, axis)
+    axis_range_min, axis_range_max = st.columns(2)
+    with axis_range_min:
+        st.number_input("{0}-axis minimum".format(label),
+                        value=range[0],
+                        key="{0}_axis_range_min".format(label))
+    with axis_range_max:
+        st.number_input("{0}-axis maximum".format(label),
+                        value=range[1],
+                        key="{0}_axis_range_max".format(label))
+
     # scaling select
     if label == "y":
         st.write("---")
@@ -286,6 +308,8 @@ def update_axes():
     x_column = state.x_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+    x_range_min = state.x_axis_range_min
+    x_range_max = state.x_axis_range_max
 
     y_column = state.y_axis_column
     y_units_column = state.y_axis_units_column
@@ -294,6 +318,8 @@ def update_axes():
     y_scaling_series = state.y_axis_scaling_series
     y_scaling_x = state.y_axis_scaling_x_value
     y_scaling_custom = state.y_axis_custom_scaling_val
+    y_range_min = state.y_axis_range_min
+    y_range_max = state.y_axis_range_max
 
     # update columns
     config.x_axis["value"] = x_column
@@ -312,6 +338,11 @@ def update_axes():
     if not y_units_custom and y_units_column:
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
+
+    config.x_axis["range"]["min"] = x_range_min
+    config.x_axis["range"]["max"] = x_range_max
+    config.y_axis["range"]["min"] = y_range_min
+    config.y_axis["range"]["max"] = y_range_max
 
     # update scaling
     config.y_axis["scaling"] = {"custom": y_scaling_custom if y_scaling_custom else None}
