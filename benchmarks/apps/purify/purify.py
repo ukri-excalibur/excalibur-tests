@@ -77,7 +77,7 @@ class PurifyMOBenchmark(PurifyBase):
 
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
-                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}')
+                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}/')
 
 @rfm.simple_test
 class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
@@ -101,7 +101,7 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     @run_after('setup')
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
-                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}')
+                                    f'/Apply/{self.imgsize}/{self.numberOfVisibilities}/')
         self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
         self.num_tasks = self.tasks
         self.num_cpus_per_task = self.threads
@@ -126,7 +126,7 @@ class PurifyPADMMBenchmark_PratleyEtAl(PurifyBase):
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter=PadmmFixtureMPI/'
                                     f'ApplyAlgo{self.algorithm}'
-                                    f'/{self.imgsize}/{self.numberOfVisibilities}')
+                                    f'/{self.imgsize}/{self.numberOfVisibilities}/')
         self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
         self.num_tasks = self.tasks
         self.num_cpus_per_task = self.threads
