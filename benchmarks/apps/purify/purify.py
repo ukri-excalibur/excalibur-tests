@@ -11,7 +11,9 @@ class PurifyBase(SpackTest):
     valid_prog_environs = ['default']
 
     spack_spec = 'purify@develop+benchmarks^sopt@develop'
-    executable_opts = ['--benchmark_format=csv', '--benchmark_out=purify_benchmark.out', '--benchmark_out_format=csv']
+    executable_opts = ['--benchmark_format=csv',
+                       '--benchmark_out=purify_benchmark.out',
+                       '--benchmark_out_format=csv']
 
     @sanity_function
     def validate_solution(self):
@@ -102,6 +104,7 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
     def filter_benchmarks(self):
         self.executable_opts.append(f'--benchmark_filter={self.FixtureName}'
                                     f'/Apply/{self.imgsize}/{self.numberOfVisibilities}/')
+        self.executable_opts.append(f'--benchmark_min_time=20s')
         self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
         self.num_tasks = self.tasks
         self.num_cpus_per_task = self.threads
