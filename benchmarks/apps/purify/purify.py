@@ -10,7 +10,7 @@ class PurifyBase(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'purify@develop+benchmarks^sopt@develop'
+    spack_spec = 'purify@4.2.0+benchmarks'
     executable_opts = ['--benchmark_format=csv',
                        '--benchmark_out=purify_benchmark.out',
                        '--benchmark_out_format=csv']
