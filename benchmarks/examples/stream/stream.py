@@ -22,11 +22,6 @@ class StreamBenchmark(SpackTest):
     num_tasks = 1
 
     time_limit = '5m'
-    num_cpus_per_task = 128
-    env_vars = {
-        'OMP_NUM_THREADS': f'{num_cpus_per_task}',
-        'OMP_PLACES': 'cores'
-    }
     use_multithreading = False
 
     ## Reference performance values for Archer2
@@ -38,6 +33,18 @@ class StreamBenchmark(SpackTest):
             'Triad': (200000, -0.25, 0.25, 'MB/s')
         }
     }
+
+
+    # Automatically set default value of `num_cpus_per_task` based on number of
+    # CPUs on a node.
+    @run_after('setup')
+    def setup_num_tasks(self):
+        self.set_var_default(
+            'num_cpus_per_task',
+            (self.current_partition.processor.num_cpus or 1) //
+            min(1, (self.current_partition.processor.num_cpus_per_core or 1)))
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
+        self.env_vars['OMP_PLACES'] = 'cores'
 
     ## Build configuration
     ## Comment/uncomment the appropriate one
