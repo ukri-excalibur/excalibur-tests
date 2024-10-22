@@ -4,6 +4,7 @@
 # Import modules from reframe and excalibur-tests
 import reframe as rfm
 import reframe.utility.sanity as sn
+from reframe.core.backends import getlauncher
 from benchmarks.modules.utils import SpackTest
 
 @rfm.simple_test
@@ -45,6 +46,19 @@ class StreamBenchmark(SpackTest):
             min(1, (self.current_partition.processor.num_cpus_per_core or 1)))
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
+
+
+    # Unlike many of the other benchmarks we support, this one doesn't use
+    # MPI. Since in principle an MPI launcher may not be available on the
+    # compute node out-of-the-box unless explicitly requested, to avoid issues
+    # in case `mpirun`/`mpiexec` aren't readily available we always force the
+    # local launcher:
+    # <https://reframe-hpc.readthedocs.io/en/v4.6.3/tutorial.html#replacing-the-launch-command>.
+    # This function is not needed for all other benchmarks which do need MPI.
+    @run_before('run')
+    def replace_launcher(self):
+        self.job.launcher = getlauncher('local')()
+
 
     ## Build configuration
     ## Comment/uncomment the appropriate one
