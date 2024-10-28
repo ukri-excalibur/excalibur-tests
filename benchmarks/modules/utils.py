@@ -7,7 +7,7 @@ import sys
 import pprint
 
 import reframe as rfm
-from reframe.core.exceptions import BuildSystemError
+from reframe.core.exceptions import BuildSystemError, CommandLineError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
 import reframe.utility.osext as osext
@@ -244,6 +244,7 @@ class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
     spack_spec_dict = variable(str, value='', loggable=True)
+    profiler = variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -274,7 +275,7 @@ class SpackTest(rfm.RegressionTest):
                                 result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":str(spec["mpi"]) if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
                                 print(result_dict)'
         self.postrun_cmds.append(f'echo "spack_spec_dict: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec_dict}\')"')
-        
+
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
@@ -287,13 +288,68 @@ class SpackTest(rfm.RegressionTest):
             # convert all single quotes to double quotes since JSON does not recognise it
             self.spack_spec_dict = self.spack_spec_dict.replace("'", "\"")
 
+
     @run_before('compile')
     def setup_build_system(self):
         # The `self.spack_spec` attribute is the user-facing and loggable
         # variable we use for setting the Spack spec, but then we need to
         # forward its value to `self.build_system.specs`, which is the way to
         # inform ReFrame which Spack specs to use.
-        self.build_system.specs = [self.spack_spec]
+        self.build_system.specs.append(self.spack_spec)
+
+
+    @run_before('compile')
+    def add_profiler(self):
+        if self.profiler:
+            # Command to use to view profiling traces
+            viewer_cmd = None
+            # Arguments to pass to the viewer
+            viewer_args = ''
+            if self.profiler == 'advisor-roofline':
+                # Spack package providing the profiler
+                self.build_system.specs.append('intel-oneapi-advisor')
+                # Name of output directory
+                output_path = 'advisor-roofline'
+                # Prepend advisor call to the executable
+                self.executable = f'advisor -collect roofline --project-dir={output_path} -- ' + self.executable
+                # Save the output directory
+                self.keep_files.append(output_path)
+                viewer_cmd = 'advisor-gui'
+                viewer_args = f'{self.outputdir}/{output_path}'
+            elif self.profiler == 'nsight':
+                # Spack package providing the profiler
+                self.build_system.specs.append('nvidia-nsight-systems')
+                # Name of output file
+                output_path = 'nsys-trace'
+                # Prepend nsys call to the executable
+                self.executable = f'nsys profile --trace=cuda,mpi,nvtx,openmp,osrt,opengl,syscall --output {output_path} ' + self.executable
+                # Save the output file
+                self.keep_files.append(f'{output_path}.nsys-rep')
+                viewer_cmd = 'nsys-ui'
+                viewer_args = f'{self.outputdir}/{output_path}.nsys-rep'
+            elif self.profiler == 'vtune':
+                # Spack package providing the profiler
+                self.build_system.specs.append('intel-oneapi-vtune')
+                # Name of output directory
+                output_path = 'vtune-profiling'
+                # Prepend VTune call to the executable
+                self.executable = f'vtune -collect hotspots -r {output_path} -- ' + self.executable
+                # Save the output directory
+                self.keep_files.append(output_path)
+                viewer_cmd = 'vtune-gui'
+                viewer_args = f'{self.outputdir}/{output_path}'
+            else:
+                raise CommandLineError(f'Unknown profiler {self.profiler}')
+
+            if viewer_cmd:
+                # Print to stdout the command to use for viewing the profiling
+                # results.
+                self.postrun_cmds.append(f'''
+if which {viewer_cmd} 2> /dev/null; then
+    echo "You can view the profiler output with the command"
+    echo "    $(which {viewer_cmd}) {viewer_args}"
+fi''')
+
 
     @run_before('compile')
     def set_sge_num_slots(self):
