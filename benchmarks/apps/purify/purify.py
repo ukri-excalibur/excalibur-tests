@@ -41,9 +41,7 @@ class PurifyFFTBenchmark(PurifyBase):
 
     num_tasks = 1
     num_cpus_per_task = 1
-    env_vars = {
-        'OMP_NUM_THREADS': 1
-    }
+    env_vars['OMP_NUM_THREADS'] = '1'
 
     executable = "fft"
     time_limit = '5m'
@@ -63,9 +61,7 @@ class PurifyMOBenchmark(PurifyBase):
 
     num_tasks = 1
     num_cpus_per_task = 1
-    env_vars = {
-        'OMP_NUM_THREADS': 16
-    }
+    env_vars['OMP_NUM_THREADS'] = '16'
 
     executable = 'mpi_benchmark_MO'
     time_limit = '60m'
