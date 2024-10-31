@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 from config_handler import ConfigHandler
 from perflog_handler import PerflogHandler
-from plot_handler import plot_generic
+from plot_handler import plot_generic, plot_line_chart
 
 
 class PostProcessing:
@@ -73,9 +73,14 @@ class PostProcessing:
 
         # call a plotting script
         if self.plotting:
-            self.plot = plot_generic(
-                config.title, self.df[self.mask][config.plot_columns],
-                config.x_axis, config.y_axis, config.series_filters, self.debug)
+            if config.plot_type == 'generic':
+                self.plot = plot_generic(
+                    config.title, self.df[self.mask][config.plot_columns],
+                    config.x_axis, config.y_axis, config.series_filters, self.debug)
+            elif config.plot_type == 'line':
+                self.plot = plot_line_chart(
+                    config.title, self.df[self.mask][config.plot_columns],
+                    config.x_axis, config.y_axis, config.series_filters)
 
         # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
         if self.debug & self.verbose:
@@ -415,10 +420,6 @@ def read_args():
                         help="path to a perflog file or a directory containing perflog files")
     parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
-
-    # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic",
-                        help="type of plot to be generated (default: 'generic')")
 
     # info dump flags
     parser.add_argument("-d", "--debug", action="store_true",
