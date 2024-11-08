@@ -142,7 +142,7 @@ class PurifyForwardBackwardBenchmark(PurifyBase):
     executable = 'mpi_benchmark_algorithms'
     time_limit = '60m'
 
-    algorithm = parameter([1,2])
+    algorithm = parameter(["DistributeImage", "DistributeGrid"])
     numberOfVisibilities = parameter([10**6, 10**7])
     imgsize = parameter([1024])
 
