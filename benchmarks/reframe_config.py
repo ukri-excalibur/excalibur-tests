@@ -338,230 +338,28 @@ site_configuration = {
             ],
         },  # end Myriad
         {
-            # https://gw4-isambard.github.io/docs/user-guide/MACS.html
-            'name': 'isambard-macs',
-            'descr': 'Isambard 2 - Multi-Architecture Comparison System',
-            'hostnames': ['login-0[12].gw4.metoffice.gov.uk'],
+            # https://docs.isambard.ac.uk/specs/#system-specifications-isambard-3-grace
+            'name': 'isambard3',
+            'descr': 'Isambard 3 Grace-Grace',
+            'hostnames': ['login[0-9]+'],
             'max_local_jobs': 1,
             'partitions': [
                 {
-                    'name': 'cascadelake',
-                    'descr': 'Intel Xeon Gold 6230 Cascade Lake computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q clxq'],
+                    'name': 'grace',
+                    'descr': 'Grace CPU Superchip',
+                    'scheduler': 'slurm',
+                    'launcher': 'srun',
                     'environs': ['default'],
-                    'max_jobs': 20,
+                    'max_jobs': 64,
                     'processor': {
-                        'num_cpus': 40,
+                        'num_cpus': 144,
                         'num_cpus_per_core': 1,
                         'num_sockets': 2,
-                        'num_cpus_per_socket': 20,
+                        'num_cpus_per_socket': 72,
                     },
                 },
-                {
-                    'name': 'knl',
-                    'descr': 'Intel Xeon Phi “Knights Landing” 7210 computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q knlq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'processor': {
-                        'num_cpus': 64,
-                        'num_cpus_per_core': 1,
-                        'num_sockets': 1,
-                        'num_cpus_per_socket': 64,
-                    },
-                },
-                {
-                    'name': 'rome',
-                    'descr': 'AMD Epyc 7742 Rome computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q romeq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 64,
-                    },
-                },
-                {
-                    'name': 'pascal',
-                    'descr': 'Broadwell computing nodes with Nvidia Pascal GPUs',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q pascalq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'features': ['gpu', 'cuda'],
-                    'processor': {
-                        'num_cpus': 36,
-                        'num_cpus_per_core': 1,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 18,
-                    },
-                    'resources': [
-                        {
-                            'name': 'gpu',
-                            'options': ['ngpus={num_gpus_per_node}'],
-                        },
-                    ],
-                },
-                {
-                    'name': 'volta',
-                    'descr': 'Cascadelake computing nodes with Nvidia Volta GPUs',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q voltaq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'features': ['gpu', 'cuda'],
-                    'processor': {
-                        'num_cpus': 40,
-                        'num_cpus_per_core': 1,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 20,
-                    },
-                    'resources': [
-                        {
-                            'name': 'gpu',
-                            'options': ['ngpus={num_gpus_per_node}'],
-                        },
-                    ],
-                },
-            ]
-        },  # end Isambard MACS
-        {
-            # https://gw4-isambard.github.io/docs/user-guide/A64FX.html
-            'name': 'isambard-a64fx',
-            'descr': 'A64FX nodes of Isambard 2',
-            'hostnames': ['gw4a64fxlogin[0-9]+'],
-            'max_local_jobs': 1,
-            'partitions': [
-                {
-                    'name': 'a64fx',
-                    'descr': 'A64FX computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q a64fx'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'processor': {
-                        'num_cpus': 48,
-                        'num_cpus_per_core': 1,
-                        'num_sockets': 1,
-                        'num_cpus_per_socket': 48,
-                    },
-                },
-            ]
-        },  # end Isambard A64FX
-        {
-            # https://gw4-isambard.github.io/docs/user-guide/PHASE3.html
-            'name': 'isambard-phase3',
-            'descr': 'Isambard 2 Phase 3 system',
-            'hostnames': ['p3-login'],
-            'max_local_jobs': 1,
-            'modules_system': 'lmod',
-            'partitions': [
-                {
-                    'name': 'ampere',
-                    'descr': 'AMD Milan computing nodes with Nvidia Ampere GPUs',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q ampereq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'features': ['gpu', 'cuda'],
-                    'processor': {
-                        'num_cpus': 64,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 1,
-                        'num_cpus_per_socket': 32,
-                    },
-                    'resources': [
-                        {
-                            'name': 'gpu',
-                             # TODO: memory should be a separate resource.
-                            'options': ['ngpus={num_gpus_per_node}:mem=20G'],
-                        },
-                    ],
-                },
-                {
-                    'name': 'instinct',
-                    'descr': 'AMD Instinct GPU nodes with 4x AMD Instinct "MI100" GPU',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpirun',
-                    'access': ['-q instinctq', '-l place=excl'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'features': ['gpu', 'rocm'],
-                    'processor': {
-                        'num_cpus': 64,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 1,
-                        'num_cpus_per_socket': 32,
-                    },
-                    'resources': [
-                        {
-                            'name': 'memory',
-                             # TODO: memory should be a more general resource.
-                            'options': ['mem=100g'],
-                        },
-                    ],
-                },
-                {
-                    'name': 'milan',
-                    'descr': 'AMD EPYC 7713 64-Core Processor "Milan" compute nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'mpiexec',
-                    'modules': ['cray-pals'],
-                    'access': ['-q milanq'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 2,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 64,
-                    },
-                    'resources': [
-                        {
-                            'name': 'memory',
-                             # TODO: memory should be a more general resource.
-                            'options': ['mem=100g'],
-                        },
-                    ],
-                },
-            ]
-        },  # end Isambard Phase3
-        {
-            # https://gw4-isambard.github.io/docs/user-guide/XCI.html
-            'name': 'isambard-xci',
-            'descr': 'XCI - Marvell Thunder X2 nodes of Isambard 2',
-            'hostnames': ['xcil0[0-1]'],
-            'max_local_jobs': 1,
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'descr': 'XCI computing nodes',
-                    'scheduler': 'pbs',
-                    'launcher': 'alps',
-                    'access': ['-q arm'],
-                    'environs': ['default'],
-                    'max_jobs': 20,
-                    'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 4,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 128,
-                    },
-                },
-            ]
-        },  # end Isambard XCI
+            ],
+        }, # end Isambard-3
         {
             'name': 'cosma7',
             'descr': 'COSMA',
