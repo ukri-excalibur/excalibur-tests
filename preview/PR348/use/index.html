@@ -1472,10 +1472,11 @@ variable <code>EXCALIBUR_SPACK_ENV</code>, as described in <a href="../setup/#se
 </span></code></pre></div>
 <p>Tests can contain multiple tags. To create a custom set of benchmarks, add a new tag to the tests you want to include in the set.</p>
 <h2 id="running-a-benchmark-with-a-profiler-experimental">Running a benchmark with a profiler (experimental)</h2>
-<p>!!! note "Experimental feature"</p>
-<div class="language-text highlight"><pre><span></span><code>This is an experimental feature and its interface may be changed in the future on short notice.
-Feedback to improve it is welcome!
-</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Experimental feature</p>
+<p>This is an experimental feature and its interface may be changed in the future on short notice.
+Feedback to improve it is welcome!</p>
+</div>
 <p>This framework allows you to run a profiler together with a benchmark application.
 To do this, you can set the <code>profiler</code> attribute on the command line, e.g.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/<span class="w"> </span>-R<span class="w"> </span>-r<span class="w"> </span>-t<span class="w"> </span>example<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>vtune
@@ -1486,10 +1487,11 @@ To do this, you can set the <code>profiler</code> attribute on the command line,
 <li><code>nsight</code>: it runs the code with the <a href="https://developer.nvidia.com/nsight-systems">NVIDIA Nsight Systems</a> profiler;</li>
 <li><code>vtune</code>: it runs the code with the <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html">Intel VTune</a> profiler.</li>
 </ul>
-<p>!!! info "Availability and requirements"</p>
-<div class="language-text highlight"><pre><span></span><code>Most profilers are available only on some platforms (e.g. Intel profilers are only available on x86_64), double check if the desired profiler is available for the system you want to use.
-Furthermore, to collect useful information with some profilers you may need specific values of the Linux `perf_event_paranoid` setting, typically less than or equal to 2, you can check the value on a specific node by reading the content of the file `/proc/sys/kernel/perf_event_paranoid`.
-</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Availability and requirements</p>
+<p>Most profilers are available only on some platforms (e.g. Intel profilers are only available on x86_64), double check if the desired profiler is available for the system you want to use.
+Furthermore, to collect useful information with some profilers you may need specific values of the Linux <code>perf_event_paranoid</code> setting, typically less than or equal to 2, you can check the value on a specific node by reading the content of the file <code>/proc/sys/kernel/perf_event_paranoid</code>.</p>
+</div>
 <p>The standard output of the benchmark, stored in the output directory after a successful run, should contain towards the bottom some information about how to visualise the profiling trace using the tools corresponding to the profiler used.</p>
 
 
