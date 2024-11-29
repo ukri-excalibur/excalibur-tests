@@ -1481,7 +1481,7 @@ Feedback to improve it is welcome!</p>
 To do this, you can set the <code>profiler</code> attribute on the command line using the <code>-S profiler=...</code> syntax, e.g.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/<span class="w"> </span>-R<span class="w"> </span>-r<span class="w"> </span>-t<span class="w"> </span>example<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>vtune
 </span></code></pre></div>
-<p>Supported values for the profiler attribute are:</p>
+<p>Currently supported values for the profiler attribute are:</p>
 <ul>
 <li><code>advisor-roofline</code>: it produces a <a href="https://en.wikipedia.org/wiki/Roofline_model">roofline model</a> of your program using <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/advisor.html">Intel Advisor</a>;</li>
 <li><code>nsight</code>: it runs the code with the <a href="https://developer.nvidia.com/nsight-systems">NVIDIA Nsight Systems</a> profiler;</li>
@@ -1489,11 +1489,16 @@ To do this, you can set the <code>profiler</code> attribute on the command line 
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Availability and requirements</p>
-<p>Most profilers are available only on some platforms (e.g. Intel profilers are only available on the x86 architecture), double check if the desired profiler is available for the system you want to use.
+<p>Many profilers, especially those provided by vendors, are available only on some platforms (e.g. Intel profilers are only available on the x86 architecture), double check if the Spack package for your desired profiler is available for the system you want to use.
 Furthermore, to collect useful information with some profilers you may need specific values of the Linux <code>perf_event_paranoid</code> setting, typically less than or equal to 2, you can check the value on a specific node by reading the content of the file <code>/proc/sys/kernel/perf_event_paranoid</code>.</p>
 </div>
 <p>The profiler trace collected during the run will be automatically copied to the output directory after a successful run.
-Toward the bottom of the standard output file you should find some information about how to visualise the profiling trace with the tools corresponding to the profiler used.</p>
+Toward the bottom of the standard output file (<code>rfm_job.out</code>) you should find some information about how to visualise the profiling trace with the tools corresponding to the profiler used.</p>
+<div class="admonition tip">
+<p class="admonition-title">Running graphic visualisers</p>
+<p>Note that using graphic visualisers requires being able to run graphic applications on the machine where you ran the benchmakrs, in the case of remote ones you will need to ensure your connection supports forwarding graphic applications, and consider that the interaction may be slow due to the network latency.
+An alternative is to copy the profile trace to your local machine and using a locally-installed visualiser.</p>
+</div>
 
 
 
