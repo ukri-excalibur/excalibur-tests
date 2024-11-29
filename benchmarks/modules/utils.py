@@ -306,8 +306,9 @@ class SpackTest(rfm.RegressionTest):
             # Arguments to pass to the viewer
             viewer_args = ''
             if self.profiler == 'advisor-roofline':
+                pkg_spec = 'intel-oneapi-advisor'
                 # Spack package providing the profiler
-                self.build_system.specs.append('intel-oneapi-advisor')
+                self.build_system.specs.append(pkg_spec)
                 # Name of output directory
                 output_path = 'advisor-roofline'
                 # Prepend advisor call to the executable
@@ -328,8 +329,9 @@ class SpackTest(rfm.RegressionTest):
                 viewer_cmd = 'nsys-ui'
                 viewer_args = f'{self.outputdir}/{output_path}.nsys-rep'
             elif self.profiler == 'vtune':
+                pkg_spec = 'intel-oneapi-vtune'
                 # Spack package providing the profiler
-                self.build_system.specs.append('intel-oneapi-vtune')
+                self.build_system.specs.append(pkg_spec)
                 # Name of output directory
                 output_path = 'vtune-profiling'
                 # Prepend VTune call to the executable
@@ -340,6 +342,20 @@ class SpackTest(rfm.RegressionTest):
                 viewer_args = f'{self.outputdir}/{output_path}'
             else:
                 raise CommandLineError(f'Unknown profiler {self.profiler}')
+
+            # Hack time! On ARCHER2 the home partition isn't mounted on compute
+            # nodes, but due to a longstanding upstream bug
+            # (<https://community.intel.com/t5/Intel-MPI-Library/How-to-install-beta8-without-it-getting-near-home-directory/m-p/1211465>),
+            # Intel tools want to *write* into the home directory at any cost.
+            # We trick them by setting the HOME env var to their installation
+            # directory.  Note: we use `prerun_cmds` instead of `env_vars` so
+            # that we do this only right before running the benchmark command
+            # and not also before compilation, where `spack location` wouldn't
+            # even work.  Let's hope nothing else relies on HOME being set to
+            # the actual home directory (also because it isn't accessible, you
+            # know).
+            if self.profiler in ('advisor-roofline', 'vtune') and self.current_system.name == 'archer2':
+                self.prerun_cmds.append(f'export HOME=$(spack -e {self.build_system.environment} location --install-dir {pkg_spec})')
 
             if viewer_cmd:
                 # Print to stdout the command to use for viewing the profiling
