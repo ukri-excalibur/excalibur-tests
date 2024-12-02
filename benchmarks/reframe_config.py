@@ -342,13 +342,14 @@ site_configuration = {
             'name': 'isambard3',
             'descr': 'Isambard 3 Grace-Grace',
             'hostnames': ['login[0-9]+'],
-            'max_local_jobs': 1,
+            'max_local_jobs': 8,
             'partitions': [
                 {
                     'name': 'grace',
                     'descr': 'Grace CPU Superchip',
                     'scheduler': 'slurm',
                     'launcher': 'srun',
+                    'access': ['--mem=0'],
                     'environs': ['default'],
                     'max_jobs': 64,
                     'processor': {

@@ -5,7 +5,7 @@
 spack:
   # add package specs to the `specs` list
   specs:
-  - purify ^fftw
+  - purify+mpi
   view: false
   include:
   - ../../common.yaml
@@ -141,7 +141,7 @@ spack:
         - cray-libsci/24.03.0
     cray-mpich:
       externals:
-      - spec: mpich@3.4a2~hydra device=ch4 netmod=ofi
+      - spec: cray-mpich@8.1.29%gcc@12.3
         prefix: /opt/cray/pe/mpich/8.1.29/ofi/gnu/12.3
         modules:
         - craype-network-ofi
