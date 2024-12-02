@@ -337,9 +337,9 @@ class SpackTest(rfm.RegressionTest):
                 # Prepend VTune call to the executable
                 self.executable = f'vtune -collect hotspots -r {output_path} -- ' + self.executable
                 # Save the output directory
-                self.keep_files.append(output_path)
+                self.keep_files.append(f'{output_path}*')
                 viewer_cmd = 'vtune-gui'
-                viewer_args = f'{self.outputdir}/{output_path}'
+                viewer_args = f'{self.outputdir}/{output_path}*'
             else:
                 raise CommandLineError(f'Unknown profiler {self.profiler}')
 
