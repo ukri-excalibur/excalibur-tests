@@ -40,7 +40,9 @@ nav:
     - Myriad: systems#myriad-and-kathleen
     - Kathleen: systems#myriad-and-kathleen
     - Tursa: systems#tursa
-  - ARCHER2 Tutorial: tutorial/tutorial.md
+  - 'Tutorials':
+    - ReFrame Tutorial: tutorial/durham_reframe_tutorial.md
+    - ARCHER2 Tutorial: tutorial/archer2_tutorial.md
 theme:
   name: material
   features:
