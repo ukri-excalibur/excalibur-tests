@@ -59,6 +59,8 @@ theme:
       icon: material/weather-night
       name: Switch to light mode
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
