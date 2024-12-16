@@ -29,12 +29,27 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 ## Set up environment
 
-This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer. It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
-Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. First load a newer python module.
+=== "Cosma"
 
-```bash
-module swap python/3.10.12
-```
+	This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer. 
+	It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
+	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. 
+	First load a newer python module.
+
+	```bash
+	module swap python/3.10.12
+	```
+
+=== "ARCHER2"
+
+	This tutorial is run on ARCHER2, you should have signed up for a training account before starting. 
+	It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
+	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. 
+	First load the system python module.
+
+	```bash
+	module load cray-python
+	```
 
 Then create an environment and activate it with
 
