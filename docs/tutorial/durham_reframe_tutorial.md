@@ -27,29 +27,27 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 ---
 
-## Set up environment
+## Set up python environment
 
 === "Cosma"
 
-    This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer.
+    This tutorial is run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer.
     It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
-	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-	First load a newer python module.
-
-	```bash
-	module swap python/3.10.12
-	```
+    Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
+    First load a newer python module.
+    ```bash
+    module swap python/3.10.12
+    ```
 
 === "ARCHER2"
 
-	This tutorial is run on ARCHER2, you should have signed up for a training account before starting.
-	It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
-	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-	First load the system python module.
-
-	```bash
-	module load cray-python
-	```
+    This tutorial is run on ARCHER2, you should have signed up for a training account before starting.
+    It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
+    Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
+    First load the system python module.
+    ```bash
+    module load cray-python
+    ```
 
 Then create an environment and activate it with
 
@@ -173,30 +171,21 @@ compiling a C++ or Fortran code will fail
 ## Configuring ReFrame for HPC systems
 > In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its [configuration file](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world).
 
-=== "Cosma"
-
-	To configure ReFrame for Cosma
-	- Create a system with a name and a description
-	- Set the module system
-	- Create a compute node partition
-	 - Set a scheduler and a MPI launcher to run on compute nodes
-		- On Cosma, the scheduler rejects jobs that don't set a time limit. Add `time_limit = 1m` to ReFrame tests to run on Cosma or set from command line with `-S time_limit='1m'`
-     - Set accounting parameters with `'access': ['--partition=bluefield1', '--account=do009'],`
-	- Create at least one programming environment to set compilers
-
-=== "ARCHER2"
-
-	To configure ReFrame for ARCHER2
-	- Create a system with a name and a description
-	- Set the module system
-	- Create a compute node partition
-	  - Set a scheduler and a MPI launcher to run on compute nodes
-	  - Set accounting parameters with `'access': ['--partition=standard', '--qos=short'],`
-	- Create at least one programming environment to set compilers
-
-----
+For the minimum configuration to run jobs on the system we need to
 
 === "Cosma"
+
+    - Create a system with a name and a description
+    - Set the module system for accessing centrally installed modules
+    - Create a compute node partition
+      - Set a scheduler and a MPI launcher to run on compute nodes
+        - On Cosma, the scheduler rejects jobs that don't set a time limit. Add `time_limit = 1m` to ReFrame tests to run on Cosma or set from command line with `-S time_limit='1m'`
+      - Set access options
+	```
+	'access': ['--partition=bluefield1', '--account=do009'],
+	```
+    - Create at least one programming environment to set compilers
+
 	```python
     site_configuration = {
         'systems' : [
@@ -226,9 +215,19 @@ compiling a C++ or Fortran code will fail
             },
         ]
     }
-```
+	```
 
 === "ARCHER2"
+
+	- Create a system with a name and a description
+	- Set the module system for accessing centrally installed modules
+	- Create a compute node partition
+	  - Set a scheduler and a MPI launcher to run on compute nodes
+	  - Set access options with 
+    ```
+	'access': ['--partition=standard', '--qos=short'],
+	```
+	- Create at least one programming environment to set compilers
 
     ```python
     site_configuration = {
@@ -257,7 +256,7 @@ compiling a C++ or Fortran code will fail
             },
         ]
     }
-```
+	```
 
 ---
 
@@ -269,17 +268,32 @@ Performance tests capture data in performance variables. For simplicity, we use 
 
 ### Boilerplate
 
-Same as before. We can now specify valid systems and prog environments on Cosma. You can adapt these to your platform, or use `'*'` to run on any platform.
+Same as before. We can now specify valid systems and programming environments to run on the system we just configured. 
+You can adapt these to your system, or keep using `'*'` to run on any platform.
 
-```python
-import reframe as rfm
-import reframe.utility.sanity as sn
 
-@rfm.simple_test
-class StreamTest(rfm.RegressionTest):
-    valid_systems = ['cosma']
-    valid_prog_environs = ['gnu', 'intel']
-```
+=== "Cosma"
+	```python
+    import reframe as rfm
+    import reframe.utility.sanity as sn
+
+    @rfm.simple_test
+    class StreamTest(rfm.RegressionTest):
+        valid_systems = ['cosma']
+        valid_prog_environs = ['gnu']
+	```
+	
+=== "ARCHER2"
+
+	```python
+    import reframe as rfm
+    import reframe.utility.sanity as sn
+
+    @rfm.simple_test
+    class StreamTest(rfm.RegressionTest):
+        valid_systems = ['archer2']
+        valid_prog_environs = ['cray']
+	```
 
 ----
 
