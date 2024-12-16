@@ -1212,9 +1212,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#set-up-environment" class="md-nav__link">
+  <a href="#set-up-python-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Set up environment
+      Set up python environment
     </span>
   </a>
   
@@ -1551,9 +1551,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#set-up-environment" class="md-nav__link">
+  <a href="#set-up-python-environment" class="md-nav__link">
     <span class="md-ellipsis">
-      Set up environment
+      Set up python environment
     </span>
   </a>
   
@@ -1847,22 +1847,25 @@
 <p><img alt="" src="https://reframe-hpc.readthedocs.io/en/stable/_images/pipeline.svg" /></p>
 <p>You can customise the behaviour of each stage or add a hook before or after each of them.  For more details, read the <a href="https://reframe-hpc.readthedocs.io/en/stable/pipeline.html">ReFrame pipeline documentation</a>.</p>
 <hr />
-<h2 id="set-up-environment">Set up environment</h2>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Cosma</label><div class="tabbed-content">
-<p>This tutorial was originally run on the <a href="https://cosma.readthedocs.io/en/latest/">Cosma</a> supercomputer.
+<h2 id="set-up-python-environment">Set up python environment</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Cosma</label><label for="__tabbed_1_2">ARCHER2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>This tutorial is run on the <a href="https://cosma.readthedocs.io/en/latest/">Cosma</a> supercomputer.
 It should be straightforward to run on a different platform, the requirements are  <code>gcc</code>, <code>git</code> and <code>python3</code>. (for the later parts you also need <code>make</code>, <code>autotools</code>, <code>cmake</code> and <code>spack</code>).
 Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-First load a newer python module.</p>
+First load a newer python module.
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>module<span class="w"> </span>swap<span class="w"> </span>python/3.10.12
-</span></code></pre></div>
+</span></code></pre></div></p>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">ARCHER2</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>This tutorial is run on ARCHER2, you should have signed up for a training account before starting.
 It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
 Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-First load the system python module.</p>
+First load the system python module.
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>module<span class="w"> </span>load<span class="w"> </span>cray-python
-</span></code></pre></div>
+</span></code></pre></div></p>
+</div>
 </div>
 </div>
 <p>Then create an environment and activate it with</p>
@@ -1945,117 +1948,137 @@ compiling a C++ or Fortran code will fail</p>
 <blockquote>
 <p>In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its <a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world">configuration file</a>.</p>
 </blockquote>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">Cosma</label><div class="tabbed-content">
-<p>To configure ReFrame for Cosma
-- Create a system with a name and a description
-- Set the module system
-- Create a compute node partition
- - Set a scheduler and a MPI launcher to run on compute nodes
-    - On Cosma, the scheduler rejects jobs that don't set a time limit. Add <code>time_limit = 1m</code> to ReFrame tests to run on Cosma or set from command line with <code>-S time_limit='1m'</code>
- - Set accounting parameters with <code>'access': ['--partition=bluefield1', '--account=do009'],</code>
-- Create at least one programming environment to set compilers</p>
+<p>For the minimum configuration to run jobs on the system we need to</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Cosma</label><label for="__tabbed_2_2">ARCHER2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li>Create a system with a name and a description</li>
+<li>Set the module system for accessing centrally installed modules</li>
+<li>Create a compute node partition</li>
+<li>Set a scheduler and a MPI launcher to run on compute nodes<ul>
+<li>On Cosma, the scheduler rejects jobs that don't set a time limit. Add <code>time_limit = 1m</code> to ReFrame tests to run on Cosma or set from command line with <code>-S time_limit='1m'</code></li>
+</ul>
+</li>
+<li>Set access options
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&#39;access&#39;: [&#39;--partition=bluefield1&#39;, &#39;--account=do009&#39;],
+</span></code></pre></div></li>
+<li>Create at least one programming environment to set compilers</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">site_configuration</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="s1">&#39;systems&#39;</span> <span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="p">{</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;cosma&#39;</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>            <span class="s1">&#39;descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Cosma for performance workshop&#39;</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>            <span class="s1">&#39;hostnames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;login[0-9][a-z].pri.cosma[0-9].alces.network&#39;</span><span class="p">],</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>            <span class="s1">&#39;modules_system&#39;</span><span class="p">:</span> <span class="s1">&#39;tmod4&#39;</span><span class="p">,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>            <span class="s1">&#39;partitions&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                <span class="p">{</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;compute-node&#39;</span><span class="p">,</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>                    <span class="s1">&#39;scheduler&#39;</span><span class="p">:</span> <span class="s1">&#39;slurm&#39;</span><span class="p">,</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>                    <span class="s1">&#39;launcher&#39;</span><span class="p">:</span> <span class="s1">&#39;mpiexec&#39;</span><span class="p">,</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>                    <span class="s1">&#39;environs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gnu&#39;</span><span class="p">],</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>                    <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--partition=bluefield1&#39;</span><span class="p">,</span> <span class="s1">&#39;--account=do009&#39;</span><span class="p">],</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                <span class="p">}</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>            <span class="p">]</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>        <span class="p">}</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="p">],</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="s1">&#39;environments&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        <span class="p">{</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;gnu&#39;</span><span class="p">,</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>            <span class="s1">&#39;modules&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gnu_comp&#39;</span><span class="p">,</span> <span class="s1">&#39;openmpi&#39;</span><span class="p">],</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>            <span class="s1">&#39;cc&#39;</span><span class="p">:</span> <span class="s1">&#39;mpicc&#39;</span><span class="p">,</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>            <span class="s1">&#39;cxx&#39;</span><span class="p">:</span> <span class="s1">&#39;mpic++&#39;</span><span class="p">,</span>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>            <span class="s1">&#39;ftn&#39;</span><span class="p">:</span> <span class="s1">&#39;mpif90&#39;</span>
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>        <span class="p">},</span>
+</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>    <span class="p">]</span>
+</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="p">}</span>
+</span></code></pre></div>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">ARCHER2</label><div class="tabbed-content">
-<p>To configure ReFrame for ARCHER2
-- Create a system with a name and a description
-- Set the module system
-- Create a compute node partition
-  - Set a scheduler and a MPI launcher to run on compute nodes
-  - Set accounting parameters with <code>'access': ['--partition=standard', '--qos=short'],</code>
-- Create at least one programming environment to set compilers</p>
+<div class="tabbed-block">
+<ul>
+<li>Create a system with a name and a description</li>
+<li>Set the module system for accessing centrally installed modules</li>
+<li>Create a compute node partition</li>
+<li>Set a scheduler and a MPI launcher to run on compute nodes</li>
+<li>Set access options with 
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>&#39;access&#39;: [&#39;--partition=standard&#39;, &#39;--qos=short&#39;],
+</span></code></pre></div></li>
+<li>Create at least one programming environment to set compilers</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">site_configuration</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="s1">&#39;systems&#39;</span> <span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="p">{</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;archer2&#39;</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>            <span class="s1">&#39;descr&#39;</span><span class="p">:</span> <span class="s1">&#39;ARCHER2 config for CIUK workshop&#39;</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>            <span class="s1">&#39;hostnames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ln[0-9]+&#39;</span><span class="p">],</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>            <span class="s1">&#39;partitions&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>                <span class="p">{</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;compute-node&#39;</span><span class="p">,</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>                    <span class="s1">&#39;scheduler&#39;</span><span class="p">:</span> <span class="s1">&#39;slurm&#39;</span><span class="p">,</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>                    <span class="s1">&#39;launcher&#39;</span><span class="p">:</span> <span class="s1">&#39;srun&#39;</span><span class="p">,</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>                    <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--partition=standard&#39;</span><span class="p">,</span> <span class="s1">&#39;--qos=short&#39;</span><span class="p">],</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>                    <span class="s1">&#39;environs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cray&#39;</span><span class="p">],</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>                <span class="p">}</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>            <span class="p">]</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>        <span class="p">}</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>    <span class="p">],</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="s1">&#39;environments&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>        <span class="p">{</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;cray&#39;</span><span class="p">,</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>            <span class="s1">&#39;cc&#39;</span><span class="p">:</span> <span class="s1">&#39;mpicc&#39;</span><span class="p">,</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>            <span class="s1">&#39;cxx&#39;</span><span class="p">:</span> <span class="s1">&#39;mpic++&#39;</span><span class="p">,</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>            <span class="s1">&#39;ftn&#39;</span><span class="p">:</span> <span class="s1">&#39;mpif90&#39;</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>        <span class="p">},</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>    <span class="p">]</span>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="p">}</span>
+</span></code></pre></div>
 </div>
 </div>
-<hr />
-<div class="tabbed-set" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">Cosma</label><div class="tabbed-content">
-<p>```python
-site_configuration = {
-    'systems' : [
-        {
-            'name': 'cosma',
-            'descr': 'Cosma for performance workshop',
-            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
-            'modules_system': 'tmod4',
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'scheduler': 'slurm',
-                    'launcher': 'mpiexec',
-                    'environs': ['gnu'],
-                    'access': ['--partition=bluefield1', '--account=do009'],
-                }
-            ]
-        }
-    ],
-    'environments': [
-        {
-            'name': 'gnu',
-            'modules': ['gnu_comp', 'openmpi'],
-            'cc': 'mpicc',
-            'cxx': 'mpic++',
-            'ftn': 'mpif90'
-        },
-    ]
-}</p>
 </div>
-</div>
-<p>```</p>
-<div class="tabbed-set" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">ARCHER2</label><div class="tabbed-content">
-<p>```python
-site_configuration = {
-    'systems' : [
-        {
-            'name': 'archer2',
-            'descr': 'ARCHER2 config for CIUK workshop',
-            'hostnames': ['ln[0-9]+'],
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'scheduler': 'slurm',
-                    'launcher': 'srun',
-                    'access': ['--partition=standard', '--qos=short'],
-                    'environs': ['cray'],
-                }
-            ]
-        }
-    ],
-    'environments': [
-        {
-            'name': 'cray',
-            'cc': 'mpicc',
-            'cxx': 'mpic++',
-            'ftn': 'mpif90'
-        },
-    ]
-}</p>
-</div>
-</div>
-<p>```</p>
 <hr />
 <h2 id="performance-tests">Performance tests</h2>
 <p>Performance tests capture data in performance variables. For simplicity, we use the <a href="https://github.com/jeffhammond/STREAM">STREAM benchmark</a> as an example. It is the de facto memory bandwidth benchmark.</p>
 <hr />
 <h3 id="boilerplate">Boilerplate</h3>
-<p>Same as before. We can now specify valid systems and prog environments on Cosma. You can adapt these to your platform, or use <code>'*'</code> to run on any platform.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">class</span> <span class="nc">StreamTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cosma&#39;</span><span class="p">]</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gnu&#39;</span><span class="p">,</span> <span class="s1">&#39;intel&#39;</span><span class="p">]</span>
+<p>Same as before. We can now specify valid systems and programming environments to run on the system we just configured. 
+You can adapt these to your system, or keep using <code>'*'</code> to run on any platform.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Cosma</label><label for="__tabbed_3_2">ARCHER2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">class</span> <span class="nc">StreamTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cosma&#39;</span><span class="p">]</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gnu&#39;</span><span class="p">]</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="k">class</span> <span class="nc">StreamTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;archer2&#39;</span><span class="p">]</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cray&#39;</span><span class="p">]</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="git-cloning-the-source">Git Cloning the source</h3>
 <p>we can retrieve specifically a Git repository by assigning its URL directly to the sourcesdir attribute:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>    <span class="n">sourcesdir</span><span class="o">=</span><span class="s1">&#39;https://github.com/jeffhammond/STREAM&#39;</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>    <span class="n">sourcesdir</span><span class="o">=</span><span class="s1">&#39;https://github.com/jeffhammond/STREAM&#39;</span>
 </span></code></pre></div>
 <hr />
 <h3 id="environment-variables">Environment variables</h3>
 <p>We can set environment variables by defining the <code>env_vars</code> attribute</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>    <span class="n">env_vars</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>        <span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">:</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>        <span class="s1">&#39;OMP_PLACES&#39;</span><span class="p">:</span> <span class="s1">&#39;cores&#39;</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="p">}</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>    <span class="n">env_vars</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>        <span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">:</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>        <span class="s1">&#39;OMP_PLACES&#39;</span><span class="p">:</span> <span class="s1">&#39;cores&#39;</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="p">}</span>
 </span></code></pre></div>
 <hr />
 <h3 id="building">Building</h3>
@@ -2063,21 +2086,21 @@ site_configuration = {
 <li>Remember the pipeline ReFrame executes. We can run arbitrary functions in the pipeline by decorating them with <code>@run_before</code> or <code>@run_after</code></li>
 <li>Here we can insert compiler flags before compiling</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>    <span class="n">build_system</span><span class="o">=</span><span class="s1">&#39;SingleSource&#39;</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">sourcepath</span><span class="o">=</span><span class="s1">&#39;stream.c&#39;</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">arraysize</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nd">@run_before</span><span class="p">(</span><span class="s1">&#39;compile&#39;</span><span class="p">)</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="k">def</span> <span class="nf">set_compiler_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cppflags</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;-DSTREAM_ARRAY_SIZE=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arraysize</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cflags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-fopenmp&#39;</span><span class="p">,</span> <span class="s1">&#39;-O3&#39;</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>    <span class="n">build_system</span><span class="o">=</span><span class="s1">&#39;SingleSource&#39;</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">sourcepath</span><span class="o">=</span><span class="s1">&#39;stream.c&#39;</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">arraysize</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="nd">@run_before</span><span class="p">(</span><span class="s1">&#39;compile&#39;</span><span class="p">)</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="k">def</span> <span class="nf">set_compiler_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cppflags</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;-DSTREAM_ARRAY_SIZE=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arraysize</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cflags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-fopenmp&#39;</span><span class="p">,</span> <span class="s1">&#39;-O3&#39;</span><span class="p">]</span>
 </span></code></pre></div>
 <hr />
 <h3 id="sanity-function">Sanity function</h3>
 <p>Similar to before, we can check a line in stdout for validation.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>     <span class="nd">@sanity_function</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>     <span class="k">def</span> <span class="nf">validate_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Solution Validates&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>     <span class="nd">@sanity_function</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>     <span class="k">def</span> <span class="nf">validate_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Solution Validates&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h2 id="add-performance-pattern-check">Add Performance Pattern Check</h2>
@@ -2085,21 +2108,21 @@ site_configuration = {
 <blockquote>
 <p>In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the <a href="https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle"><code>extractsingle()</code></a> utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.</p>
 </blockquote>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Copy&#39;</span><span class="p">)</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">def</span> <span class="nf">extract_copy_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Copy:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Scale&#39;</span><span class="p">)</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">def</span> <span class="nf">extract_scale_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Scale:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Add&#39;</span><span class="p">)</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="k">def</span> <span class="nf">extract_add_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Add:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Triad&#39;</span><span class="p">)</span>
-</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="k">def</span> <span class="nf">extract_triad_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Triad:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Copy&#39;</span><span class="p">)</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">def</span> <span class="nf">extract_copy_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Copy:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Scale&#39;</span><span class="p">)</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="k">def</span> <span class="nf">extract_scale_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Scale:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Add&#39;</span><span class="p">)</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="k">def</span> <span class="nf">extract_add_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Add:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="nd">@performance_function</span><span class="p">(</span><span class="s1">&#39;MB/s&#39;</span><span class="p">,</span> <span class="n">perf_key</span><span class="o">=</span><span class="s1">&#39;Triad&#39;</span><span class="p">)</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="k">def</span> <span class="nf">extract_triad_perf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">extractsingle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Triad:\s+(\S+)\s+.*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="perflogs">Perflogs</h3>
@@ -2109,14 +2132,14 @@ By default there is not much information about build step, but ReFrame will prov
 <hr />
 <h2 id="reference-values">Reference values</h2>
 <p>ReFrame can automate checking that the results fall within an expected range. You can set a different reference value for each <code>perf_key</code> in the performance function. For example, set the test to fail if it falls outside of +-25% of the values obtained with the previous array size.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">reference</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="s1">&#39;cosma&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="s1">&#39;Copy&#39;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">40000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="s1">&#39;Scale&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="s1">&#39;Add&#39;</span><span class="p">:</span>   <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>        <span class="s1">&#39;Triad&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">)</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="p">}</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">}</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">reference</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    <span class="s1">&#39;cosma&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>        <span class="s1">&#39;Copy&#39;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">40000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>        <span class="s1">&#39;Scale&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="s1">&#39;Add&#39;</span><span class="p">:</span>   <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">),</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>        <span class="s1">&#39;Triad&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;MB/s&#39;</span><span class="p">)</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="p">}</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="p">}</span>
 </span></code></pre></div>
 <blockquote>
 <p>The performance reference tuple consists of the reference value, the lower and upper thresholds expressed as fractional numbers relative to the reference value, and the unit of measurement. If any of the thresholds is not relevant, None may be used instead. Also, the units in this reference variable are entirely optional, since they were already provided through the @performance_function decorator.</p>
@@ -2125,8 +2148,8 @@ By default there is not much information about build step, but ReFrame will prov
 <h2 id="parametrized-tests">Parametrized tests</h2>
 <p>You can pass a list to the <code>parameter()</code> built-in function in the class body to create a parametrized test. You cannot access the individual parameter value within the class body, so any reference to them should be placed in the appropriate function, for example <code>__init__()</code></p>
 <p>For parametrisation you can add for example
-<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>    <span class="n">arraysize</span> <span class="o">=</span> <span class="n">parameter</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">25</span><span class="p">])</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cppflags</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;-DSTREAM_ARRAY_SIZE=$((2 ** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arraysize</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>    <span class="n">arraysize</span> <span class="o">=</span> <span class="n">parameter</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">25</span><span class="p">])</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">build_system</span><span class="o">.</span><span class="n">cppflags</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;-DSTREAM_ARRAY_SIZE=$((2 ** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arraysize</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">]</span>
 </span></code></pre></div></p>
 <p>You can have multiple parameters. ReFrame will run all parameter combinations by default.</p>
 <hr />
@@ -2150,44 +2173,44 @@ By default there is not much information about build step, but ReFrame will prov
 <ul>
 <li><a href="https://github.com/ntegan/amhello">Automake Hello example</a></li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">class</span> <span class="nc">AutoHelloTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="n">sourcesdir</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/ntegan/amhello.git&#39;</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="n">build_system</span> <span class="o">=</span> <span class="s1">&#39;Autotools&#39;</span>
-</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;./src/hello&#39;</span>
-</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="n">prebuild_cmds</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;autoreconf --install .&#39;</span><span class="p">]</span>
-</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>    <span class="n">time_limit</span> <span class="o">=</span> <span class="s1">&#39;5m&#39;</span>
-</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
-</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="nd">@sanity_function</span>
-</span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    <span class="k">def</span> <span class="nf">assert_hello</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">class</span> <span class="nc">AutoHelloTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="n">sourcesdir</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/ntegan/amhello.git&#39;</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>    <span class="n">build_system</span> <span class="o">=</span> <span class="s1">&#39;Autotools&#39;</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>    <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;./src/hello&#39;</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>    <span class="n">prebuild_cmds</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;autoreconf --install .&#39;</span><span class="p">]</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    <span class="n">time_limit</span> <span class="o">=</span> <span class="s1">&#39;5m&#39;</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a>    <span class="nd">@sanity_function</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>    <span class="k">def</span> <span class="nf">assert_hello</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="cmake"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.CMake">CMake</a></h3>
 <ul>
 <li><a href="https://github.com/jameskbride/cmake-hello-world">CMake Hello example</a></li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">class</span> <span class="nc">CMakeHelloTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="n">sourcesdir</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/jameskbride/cmake-hello-world.git&#39;</span>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">build_system</span> <span class="o">=</span> <span class="s1">&#39;CMake&#39;</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;./CMakeHelloWorld&#39;</span>
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="n">time_limit</span> <span class="o">=</span> <span class="s1">&#39;5m&#39;</span>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    <span class="nd">@sanity_function</span>
-</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="k">def</span> <span class="nf">assert_hello</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello, world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kn">import</span> <span class="nn">reframe</span> <span class="k">as</span> <span class="nn">rfm</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kn">import</span> <span class="nn">reframe.utility.sanity</span> <span class="k">as</span> <span class="nn">sn</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="nd">@rfm</span><span class="o">.</span><span class="n">simple_test</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="k">class</span> <span class="nc">CMakeHelloTest</span><span class="p">(</span><span class="n">rfm</span><span class="o">.</span><span class="n">RegressionTest</span><span class="p">):</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    <span class="n">valid_systems</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>    <span class="n">valid_prog_environs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    <span class="n">sourcesdir</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/jameskbride/cmake-hello-world.git&#39;</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>    <span class="n">build_system</span> <span class="o">=</span> <span class="s1">&#39;CMake&#39;</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>    <span class="n">executable</span> <span class="o">=</span> <span class="s1">&#39;./CMakeHelloWorld&#39;</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>    <span class="n">time_limit</span> <span class="o">=</span> <span class="s1">&#39;5m&#39;</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>    <span class="nd">@sanity_function</span>
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>    <span class="k">def</span> <span class="nf">assert_hello</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Hello, world\!&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
 <h3 id="spack"><a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack">Spack</a></h3>
