@@ -31,9 +31,9 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 === "Cosma"
 
-	This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer. 
-	It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
-	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. 
+    This tutorial was originally run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer.
+    It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
+	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
 	First load a newer python module.
 
 	```bash
@@ -42,9 +42,9 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 === "ARCHER2"
 
-	This tutorial is run on ARCHER2, you should have signed up for a training account before starting. 
+	This tutorial is run on ARCHER2, you should have signed up for a training account before starting.
 	It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
-	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages. 
+	Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
 	First load the system python module.
 
 	```bash
@@ -64,10 +64,10 @@ You will have to activate the environment each time you login. To deactivate the
 
 ## Install ReFrame
 
-Then install ReFrame with `pip`. I am installing version `4.5.2` because we will follow tutorials that have been changed in the latest `4.6.0` version.
+Then install ReFrame with `pip`.
 
 ```bash
-pip install reframe-hpc==4.5.2
+pip install reframe-hpc
 ```
 
 Alternatively, you can
@@ -77,19 +77,26 @@ git clone -q --depth 1 --branch v4.5.2 https://github.com/reframe-hpc/reframe.gi
 source reframe/bootstrap.sh
 ```
 
-The ReFrame git repository also contains the source code of the ReFrame tutorials. It is recommended to run the git clone step, even if you used `pip install` to install ReFrame. We will refer to the tutorial solutions later.
+You can also clone the ReFrame git repository to get the source code of the ReFrame tutorials.
+We will refer to some of the tutorial solutions later.
+ReFrame rewrote their tutorials in v4.6 and some of the examples we are using are not there anymore,
+therefore it's best to clone ReFrame v4.5.
 
 ---
 
 ## Hello world example
 
-[Hello world example](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#the-hello-world-test)
+There's a [Hello world example](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#the-hello-world-test) in the ReFrame 4.5 tutorial that explains how to create a simple ReFrame test.
+
+ReFrame tests are python classes that describe how a test is run.
 
 ----
 
-### Include ReFrame modules
+### Include ReFrame module
 
-The first thing you need is include a few modules from ReFrame. These should be available if the installation step was successful.
+The first thing you need is to include ReFrame.
+We separately import sanity to simplify the syntax.
+These should be available if the installation step was successful.
 
 ```python
 import reframe as rfm
@@ -100,9 +107,10 @@ import reframe.utility.sanity as sn
 
 ### Create a Test Class
 
-- ReFrame uses decorators to mark classes as tests. 
-- This marks `class HelloTest` as a `rfm.simple_test`.
-- ReFrame tests ultimately derive from `RegressionTest`. There are other derived classes such as `RunOnlyRegressionTest`, we get to those later.
+ReFrame uses decorators to mark classes as tests.
+This marks `class HelloTest` as a `rfm.simple_test`.
+ReFrame tests ultimately derive from `RegressionTest`.
+There are other derived classes such as `RunOnlyRegressionTest`, we get to those later.
 
 ```python
 
@@ -110,16 +118,16 @@ import reframe.utility.sanity as sn
 class HelloTest(rfm.RegressionTest):
 ```
 
-- The data members and methods detailed in the following sections should be placed inside this class.
+The data members and methods detailed in the following sections should be placed inside this class.
 
 ----
 
 ### Add mandatory attributes
 
-- `valid_systems` for where this test can run
+- `valid_systems` for where this test can run. For now we haven't defined any systems so we leave it as `'*'` (any system)
 - `valid_prog_environs` for what compilers this test can build with. More on it later.
-- `sourcepath` for source file in a single source test. More on build systems later.
-- Could add `sourcesdir` but it defaults to `src/`
+- In a test with a single source file, it is enough to define `sourcepath`. More on build systems later.
+- We could add `sourcesdir` to point to the source directory, but it defaults to `src/`
 
 ```python
     valid_systems = ['*']
@@ -132,8 +140,8 @@ class HelloTest(rfm.RegressionTest):
 ### Add sanity check
 
 - ReFrame, by default, makes no assumption about whether a test is successful or not.
-- A test must provide a validation function
-- ReFrame provides a rich set of utility functions that help matching patterns and extract values from the test’s output
+- A test must provide a validation function that asserts whether the test was successful
+- ReFrame provides utility functions that help matching patterns and extract values from the test’s output
 - Here we match a string from stdout
 
 ```python
@@ -154,54 +162,101 @@ reframe -c path/to/benchmark -r
 
 ## Builtin programming environment
 
-- `reframe --show-config`
-- Builtin programming environment uses `cc` to compile
+We didn't tell reframe anything about how to compile the hello world example. How did it compile?
+ReFrame uses a buitin programming environment by default.
+You can see this with `reframe --show-config`
+The builtin programming environment only contains the `cc` compiler,
+compiling a C++ or Fortran code will fail
 
 ---
 
-## Configuring ReFrame for HPC systems (Cosma)
-> In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its configuration file.
-- [Configuration](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world)
-  - Set accounting parameters with
-    - `'access': ['--partition=bluefield1', '--account=do009'],`
-  - Create at least one programming environment to set compilers
-    - `-p` flag filters tests by programming environment
-  - Scheduler to run on compute nodes
-    - Add `time_limit = 1m` to ReFrame tests to run on Cosma
-    - Set from command line with `-S time_limit='1m'`
+## Configuring ReFrame for HPC systems
+> In ReFrame, all the details of the various interactions of a test with the system environment are handled transparently and are set up in its [configuration file](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#more-of-hello-world).
+
+=== "Cosma"
+
+	To configure ReFrame for Cosma
+	- Create a system with a name and a description
+	- Set the module system
+	- Create a compute node partition
+	 - Set a scheduler and a MPI launcher to run on compute nodes
+		- On Cosma, the scheduler rejects jobs that don't set a time limit. Add `time_limit = 1m` to ReFrame tests to run on Cosma or set from command line with `-S time_limit='1m'`
+     - Set accounting parameters with `'access': ['--partition=bluefield1', '--account=do009'],`
+	- Create at least one programming environment to set compilers
+
+=== "ARCHER2"
+
+	To configure ReFrame for ARCHER2
+	- Create a system with a name and a description
+	- Set the module system
+	- Create a compute node partition
+	  - Set a scheduler and a MPI launcher to run on compute nodes
+	  - Set accounting parameters with `'access': ['--partition=standard', '--qos=short'],`
+	- Create at least one programming environment to set compilers
 
 ----
 
-```python
-site_configuration = {
-    'systems' : [
-        {
-            'name': 'cosma',
-            'descr': 'Cosma for performance workshop',
-            'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
-            'modules_system': 'tmod4',
-            'partitions': [
-                {
-                    'name': 'compute-node',
-                    'scheduler': 'slurm',
-                    'launcher': 'mpiexec',
-                    'environs': ['gnu'],
-                    'access': ['--partition=bluefield1', '--account=do009'],
-                }
-            ]
-        }
-    ],
-    'environments': [
-        {
-            'name': 'gnu',
-            'modules': ['gnu_comp', 'openmpi'],
-            'cc': 'mpicc',
-            'cxx': 'mpic++',
-            'ftn': 'mpif90'
-        },
-    ]
-}
+=== "Cosma"
+	```python
+    site_configuration = {
+        'systems' : [
+            {
+                'name': 'cosma',
+                'descr': 'Cosma for performance workshop',
+                'hostnames': ['login[0-9][a-z].pri.cosma[0-9].alces.network'],
+                'modules_system': 'tmod4',
+                'partitions': [
+                    {
+                        'name': 'compute-node',
+                        'scheduler': 'slurm',
+                        'launcher': 'mpiexec',
+                        'environs': ['gnu'],
+                        'access': ['--partition=bluefield1', '--account=do009'],
+                    }
+                ]
+            }
+        ],
+        'environments': [
+            {
+                'name': 'gnu',
+                'modules': ['gnu_comp', 'openmpi'],
+                'cc': 'mpicc',
+                'cxx': 'mpic++',
+                'ftn': 'mpif90'
+            },
+        ]
+    }
+```
 
+=== "ARCHER2"
+
+    ```python
+    site_configuration = {
+        'systems' : [
+            {
+                'name': 'archer2',
+                'descr': 'ARCHER2 config for CIUK workshop',
+                'hostnames': ['ln[0-9]+'],
+                'partitions': [
+                    {
+                        'name': 'compute-node',
+                        'scheduler': 'slurm',
+                        'launcher': 'srun',
+                        'access': ['--partition=standard', '--qos=short'],
+                        'environs': ['cray'],
+                    }
+                ]
+            }
+        ],
+        'environments': [
+            {
+                'name': 'cray',
+                'cc': 'mpicc',
+                'cxx': 'mpic++',
+                'ftn': 'mpif90'
+            },
+        ]
+    }
 ```
 
 ---
@@ -260,7 +315,7 @@ We can set environment variables by defining the `env_vars` attribute
     build_system='SingleSource'
     sourcepath='stream.c'
     arraysize = 2**20
-    
+
     @run_before('compile')
     def set_compiler_flags(self):
         self.build_system.cppflags = [f'-DSTREAM_ARRAY_SIZE={self.arraysize}']
@@ -309,7 +364,7 @@ def extract_triad_perf(self):
 
 ### Perflogs
 
-The output from performance tests is written in perflogs. They are csv files that are appended each time a test is ran. By default the perflogs are output in `perflogs/<system>/<partition>`. By default a lot of information about the test is stored. This can be customized in the configuration file. 
+The output from performance tests is written in perflogs. They are csv files that are appended each time a test is ran. By default the perflogs are output in `perflogs/<system>/<partition>`. By default a lot of information about the test is stored. This can be customized in the configuration file.
 By default there is not much information about build step, but ReFrame will provide a link back to build environment. A more verbose report is written in `.reframe/reports/`, you can use the `--report-file` option to direct the report to a different file.
 
 `excalibur-tests` provides tools to read and process the perflogs. See the [Next Tutorial](../archer2_tutorial) for details.
@@ -355,9 +410,9 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 
 ----
 
-### [Make](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests) 
+### [Make](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests)
 
-- Tutorial in `tutorials/advanced/makefiles/maketest.py`. 
+- Tutorial in `tutorials/advanced/makefiles/maketest.py`.
 
 > First, if you’re using any build system other than SingleSource, you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.
 
@@ -381,7 +436,7 @@ class AutoHelloTest(rfm.RegressionTest):
     executable = './src/hello'
     prebuild_cmds = ['autoreconf --install .']
     time_limit = '5m'
-    
+
     @sanity_function
     def assert_hello(self):
         return sn.assert_found(r'Hello world\!', self.stdout)
@@ -405,7 +460,7 @@ class CMakeHelloTest(rfm.RegressionTest):
     build_system = 'CMake'
     executable = './CMakeHelloWorld'
     time_limit = '5m'
-    
+
     @sanity_function
     def assert_hello(self):
         return sn.assert_found(r'Hello, world\!', self.stdout)
