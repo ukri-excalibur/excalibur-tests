@@ -4,7 +4,7 @@
 
 1. How ReFrame executes tests
 2. Structure of a ReFrame test -- Hello world example
-3. Configuring ReFrame to run tests on Cosma
+3. Configuring ReFrame to run tests on HPC systems
 4. Writing performance tests -- Stream example
 5. Working with build systems -- Make, CMake, Autotools, Spack examples
 6. Avoiding build systems -- Run-only tests
@@ -262,13 +262,19 @@ For the minimum configuration to run jobs on the system we need to
 
 ## Performance tests
 
-Performance tests capture data in performance variables. For simplicity, we use the [STREAM benchmark](https://github.com/jeffhammond/STREAM) as an example. It is the de facto memory bandwidth benchmark.
+Performance tests capture data in performance variables. For simplicity, we use the [STREAM benchmark](https://github.com/jeffhammond/STREAM) as an example. It is the de facto memory bandwidth benchmark. It has four kernels that stream arrays from memory and
+perform different floating point operations on them.
+- Copy: `A = B`
+- Scale: `C = a * B`
+- Add: `C = A + B`
+- Triad: `C = a * A + B`
 
 ----
 
 ### Boilerplate
 
-Same as before. We can now specify valid systems and programming environments to run on the system we just configured. 
+The imports and the class declaration look the same as before. 
+We can now specify valid systems and programming environments to run on the system we just configured. 
 You can adapt these to your system, or keep using `'*'` to run on any platform.
 
 
@@ -299,7 +305,7 @@ You can adapt these to your system, or keep using `'*'` to run on any platform.
 
 ### Git Cloning the source
 
-we can retrieve specifically a Git repository by assigning its URL directly to the sourcesdir attribute:
+We can retrieve specifically a Git repository by assigning its URL directly to the sourcesdir attribute:
 
 ```python
     sourcesdir='https://github.com/jeffhammond/STREAM'
@@ -309,21 +315,22 @@ we can retrieve specifically a Git repository by assigning its URL directly to t
 
 ### Environment variables
 
-We can set environment variables by defining the `env_vars` attribute
+We can set environment variables in the `env_vars` dictionary.
 
 ```python
-    env_vars = {
-        'OMP_NUM_THREADS': '4',
-        'OMP_PLACES': 'cores'
-    }
+    self.env_vars['OMP_NUM_THREADS'] = 4
+    self.env_vars['OMP_PLACES'] = 'cores'
 ```
 
 ----
 
 ### Building
 
-- Remember the pipeline ReFrame executes. We can run arbitrary functions in the pipeline by decorating them with `@run_before` or `@run_after`
-- Here we can insert compiler flags before compiling
+Recall the pipeline ReFrame executes when running a test. 
+We can insert arbitrary functions between any steps in in the pipeline by decorating them with `@run_before` or `@run_after`
+Here we can set compiler flags before compiling.
+The STREAM benchmark takes the array size as a compile time argument. 
+It should be large enough to overflow all levels of cache so that there is no data reuse and we measure the main memory bandwidth.
 
 ```python
     build_system='SingleSource'
@@ -350,7 +357,7 @@ Similar to before, we can check a line in stdout for validation.
 
 ----
 
-## Add Performance Pattern Check
+### Add Performance Pattern Check
 
 To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the `@performance_function` decorator extracts or computes a performance metric from the test’s output.
 
@@ -389,6 +396,8 @@ By default there is not much information about build step, but ReFrame will prov
 
 ReFrame can automate checking that the results fall within an expected range. You can set a different reference value for each `perf_key` in the performance function. For example, set the test to fail if it falls outside of +-25% of the values obtained with the previous array size.
 
+
+=== "Cosma"
 ```python
 reference = {
     'cosma': {
@@ -396,6 +405,18 @@ reference = {
         'Scale': (20000, -0.25, 0.25, 'MB/s'),
         'Add':   (20000, -0.25, 0.25, 'MB/s'),
         'Triad': (20000, -0.25, 0.25, 'MB/s')
+    }
+}
+```
+
+=== "Archer2"
+```python
+reference = {
+    'archer2': {
+        'Copy':  (260000, -0.25, 0.25, 'MB/s'),
+        'Scale': (200000, -0.25, 0.25, 'MB/s'),
+        'Add':   (200000, -0.25, 0.25, 'MB/s'),
+        'Triad': (200000, -0.25, 0.25, 'MB/s')
     }
 }
 ```
@@ -420,13 +441,16 @@ You can have multiple parameters. ReFrame will run all parameter combinations by
 ---
 
 ## [Build systems](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests)
-- [Build systems Reference](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#build-systems)
+
+ReFrame supports many commonly used build systems, include Cmake, Autotools, Spack and Easybuild. See the
+[Build systems Reference](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#build-systems) for details.
+Here we show a few examples.
 
 ----
 
 ### [Make](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests)
 
-- Tutorial in `tutorials/advanced/makefiles/maketest.py`.
+- [Tutorial in `tutorials/advanced/makefiles/maketest.py`.](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#more-on-building-tests)
 
 > First, if you’re using any build system other than SingleSource, you must set the executable attribute of the test, because ReFrame cannot know what is the actual executable to be run. We then set the build system to Make and set the preprocessor flags as we would do with the SingleSource build system.
 
@@ -486,7 +510,7 @@ class CMakeHelloTest(rfm.RegressionTest):
 ### [Spack](https://reframe-hpc.readthedocs.io/en/v4.5.2/regression_test_api.html#reframe.core.buildsystems.Spack)
 
 - ReFrame will use a user-provided Spack environment in order to build and test a set of specs.
-- Tutorial in `tutorials/build_systems/spack/spack_test.py`
+- [Tutorial in `tutorials/build_systems/spack/spack_test.py`](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_build_automation.html#using-spack-to-build-the-test-code)
 - In `rfm_job.out` you can see that it
     - Creates a blank environment
     - Builds all dependencies -- takes quite long
@@ -495,4 +519,8 @@ class CMakeHelloTest(rfm.RegressionTest):
 ---
 
 ## Run-only tests
-- Tutorial in `tutorials/advanced/runonly/echorand.py`
+
+If you don't wish to build your application in ReFrame (we recommend that you do!), you can define a run-only test.
+Run-only tests derive from the `rfm.RunOnlyRegressionTest` class instead of `rfm.RegressionTest`.
+Instead of a build system, you define an executable which reframe expects to find in `$PATH`.
+See [tutorial in `tutorials/advanced/runonly/echorand.py`](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_advanced.html#writing-a-run-only-regression-test)
