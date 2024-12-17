@@ -398,28 +398,28 @@ ReFrame can automate checking that the results fall within an expected range. Yo
 
 
 === "Cosma"
-```python
-reference = {
-    'cosma': {
-        'Copy':  (40000, -0.25, 0.25, 'MB/s'),
-        'Scale': (20000, -0.25, 0.25, 'MB/s'),
-        'Add':   (20000, -0.25, 0.25, 'MB/s'),
-        'Triad': (20000, -0.25, 0.25, 'MB/s')
+	```python
+    reference = {
+        'cosma': {
+            'Copy':  (40000, -0.25, 0.25, 'MB/s'),
+            'Scale': (20000, -0.25, 0.25, 'MB/s'),
+            'Add':   (20000, -0.25, 0.25, 'MB/s'),
+            'Triad': (20000, -0.25, 0.25, 'MB/s')
+        }
     }
-}
-```
+	```
 
 === "Archer2"
-```python
-reference = {
-    'archer2': {
-        'Copy':  (260000, -0.25, 0.25, 'MB/s'),
-        'Scale': (200000, -0.25, 0.25, 'MB/s'),
-        'Add':   (200000, -0.25, 0.25, 'MB/s'),
-        'Triad': (200000, -0.25, 0.25, 'MB/s')
+	```python
+    reference = {
+        'archer2': {
+            'Copy':  (260000, -0.25, 0.25, 'MB/s'),
+            'Scale': (200000, -0.25, 0.25, 'MB/s'),
+            'Add':   (200000, -0.25, 0.25, 'MB/s'),
+            'Triad': (200000, -0.25, 0.25, 'MB/s')
+        }
     }
-}
-```
+	```
 
 > The performance reference tuple consists of the reference value, the lower and upper thresholds expressed as fractional numbers relative to the reference value, and the unit of measurement. If any of the thresholds is not relevant, None may be used instead. Also, the units in this reference variable are entirely optional, since they were already provided through the @performance_function decorator.
 
