@@ -388,7 +388,7 @@ def extract_triad_perf(self):
 The output from performance tests is written in perflogs. They are csv files that are appended each time a test is ran. By default the perflogs are output in `perflogs/<system>/<partition>`. By default a lot of information about the test is stored. This can be customized in the configuration file.
 By default there is not much information about build step, but ReFrame will provide a link back to build environment. A more verbose report is written in `.reframe/reports/`, you can use the `--report-file` option to direct the report to a different file.
 
-`excalibur-tests` provides tools to read and process the perflogs. See the [Next Tutorial](../archer2_tutorial) for details.
+`excalibur-tests` provides tools to read and process the perflogs. See the [Next Tutorial](../excalibur-tests_tutorial) for details.
 
 ----
 
@@ -514,7 +514,7 @@ class CMakeHelloTest(rfm.RegressionTest):
 - In `rfm_job.out` you can see that it
     - Creates a blank environment
     - Builds all dependencies -- takes quite long
-- `excalibur-tests` provides utilities and settings for Spack builds in ReFrame. See the [Next Tutorial](../archer2_tutorial) for details.
+- `excalibur-tests` provides utilities and settings for Spack builds in ReFrame. See the [Next Tutorial](../excalibur-tests_tutorial) for details.
 
 ---
 
