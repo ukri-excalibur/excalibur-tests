@@ -1362,20 +1362,14 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#add-performance-pattern-check" class="md-nav__link">
     <span class="md-ellipsis">
       Add Performance Pattern Check
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Add Performance Pattern Check">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#perflogs" class="md-nav__link">
@@ -1701,20 +1695,14 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#add-performance-pattern-check" class="md-nav__link">
     <span class="md-ellipsis">
       Add Performance Pattern Check
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Add Performance Pattern Check">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#perflogs" class="md-nav__link">
@@ -2108,7 +2096,7 @@ It should be large enough to overflow all levels of cache so that there is no da
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>        <span class="k">return</span> <span class="n">sn</span><span class="o">.</span><span class="n">assert_found</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Solution Validates&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="add-performance-pattern-check">Add Performance Pattern Check</h2>
+<h3 id="add-performance-pattern-check">Add Performance Pattern Check</h3>
 <p>To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the <code>@performance_function</code> decorator extracts or computes a performance metric from the test’s output.</p>
 <blockquote>
 <p>In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the <a href="https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle"><code>extractsingle()</code></a> utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.</p>
