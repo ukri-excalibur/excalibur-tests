@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#connecting-to-archer2" class="md-skip">
+        <a href="#getting-started-on-hpc-systems" class="md-skip">
           Skip to content
         </a>
       
@@ -1154,6 +1154,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1182,6 +1184,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1190,13 +1194,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#connecting-to-archer2" class="md-nav__link">
+  <a href="#connecting" class="md-nav__link">
     <span class="md-ellipsis">
-      Connecting to ARCHER2
+      Connecting
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Connecting to ARCHER2">
+    <nav class="md-nav" aria-label="Connecting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1251,7 +1255,7 @@
         
   
   <span class="md-ellipsis">
-    ReFrame Tutorial
+    Writing benchmarks in ReFrame
   </span>
   
 
@@ -1272,7 +1276,7 @@
         
   
   <span class="md-ellipsis">
-    ExCALIBUR-tests Tutorial
+    Automation in excalibur-tests
   </span>
   
 
@@ -1293,7 +1297,7 @@
         
   
   <span class="md-ellipsis">
-    Postprocessing Tutorial
+    Postprocessing ReFrame output
   </span>
   
 
@@ -1314,7 +1318,7 @@
         
   
   <span class="md-ellipsis">
-    Profiling Tutorial
+    Profiling benchmarks
   </span>
   
 
@@ -1348,6 +1352,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1356,13 +1362,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#connecting-to-archer2" class="md-nav__link">
+  <a href="#connecting" class="md-nav__link">
     <span class="md-ellipsis">
-      Connecting to ARCHER2
+      Connecting
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Connecting to ARCHER2">
+    <nav class="md-nav" aria-label="Connecting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1415,20 +1421,42 @@
   
 
 
-  <h1>Getting started</h1>
-
-<h2 id="connecting-to-archer2">Connecting to ARCHER2</h2>
-<p>To complete this tutorial, you need to <a href="https://docs.archer2.ac.uk/user-guide/connecting/">connect to ARCHER2 via ssh</a>. You will need</p>
+<h1 id="getting-started-on-hpc-systems">Getting Started on HPC systems</h1>
+<p>These tutorials have been ran in in-person workshops on various HPC systems in the UK. It should be possible to run on any of the <a href="../../systems/">supported systems</a>, or to <a href="../../setup/">set up the tools</a> on a local machine. If you have access to one of the systems we've previously used, this tutorial helps you get set up. Otherwise, please consult the <a href="../../install/">documentation</a></p>
+<h2 id="connecting">Connecting</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Cosma</label><label for="__tabbed_1_2">ARCHER2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>To run these tutorials on Cosma, you need to <a href="https://cosma.readthedocs.io/en/latest/ssh.html">connect to Cosma via ssh</a>. You will need</p>
 <ol>
-<li>An ARCHER2 account. You can <a href="https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2">request a new account</a> if you haven't got one you can use. Use the project code <code>ta131</code> to request your account. You can use an existing ARCHER2 account to complete this workshop.</li>
+<li>A Cosma account. You can <a href="https://cosma.readthedocs.io/en/latest/account.html">request a new account</a> if you haven't got one you can use. You can use an existing Cosma account to complete the tutorials.</li>
 <li>A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see <a href="https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal">Connecting to ARCHER2</a> for more information and Windows instructions.</li>
 </ol>
+</div>
+<div class="tabbed-block">
+<p>To run these tutorials on ARCHER2, you need to <a href="https://docs.archer2.ac.uk/user-guide/connecting/">connect to ARCHER2 via ssh</a>. You will need</p>
+<ol>
+<li>An ARCHER2 account. You can <a href="https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2">request a new account</a> if you haven't got one you can use. You can use an existing ARCHER2 account to complete the tutorials.</li>
+<li>A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see <a href="https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal">Connecting to ARCHER2</a> for more information and Windows instructions.</li>
+</ol>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="ssh">ssh</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Cosma</label><label for="__tabbed_2_2">ARCHER2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Please see [SSH access to Cosma[(https://cosma.readthedocs.io/en/latest/ssh.html) for more information</p>
+</div>
+<div class="tabbed-block">
 <p>Once you have the above prerequisites, you have to <a href="https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs">generate an ssh key pair</a> and <a href="https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe">upload the public key to SAFE</a>. </p>
 <p>When you are done, check that you are able to connect to ARCHER2 with</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>username@login.archer2.ac.uk
 </span></code></pre></div>
+</div>
+</div>
+</div>
 <hr />
 <h3 id="archer2-mfa">ARCHER2 MFA</h3>
 <p>ARCHER2 has deployed mandatory multi-factor authentication (MFA)</p>
