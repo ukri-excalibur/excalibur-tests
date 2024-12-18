@@ -16,10 +16,6 @@ To record the performance of the benchmark, ReFrame should extract a figure of m
 
 > In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the [`extractsingle()`](https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle) utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.
 
-----
-
-### Performance Pattern Check
-
 ```python
 @performance_function('MB/s', perf_key='Copy')
 def extract_copy_perf(self):
