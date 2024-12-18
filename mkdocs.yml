@@ -42,10 +42,10 @@ nav:
     - Tursa: systems#tursa
   - 'Tutorials':
     - Getting started: tutorial/getting-started.md
-    - ReFrame Tutorial: tutorial/reframe_tutorial.md
-    - ExCALIBUR-tests Tutorial: tutorial/excalibur-tests_tutorial.md
-    - Postprocessing Tutorial: tutorial/postprocessing_tutorial.md
-    - Profiling Tutorial: tutorial/profiling_tutorial.md
+    - Writing benchmarks in ReFrame: tutorial/reframe_tutorial.md
+    - Automation in excalibur-tests: tutorial/excalibur-tests_tutorial.md
+    - Postprocessing ReFrame output: tutorial/postprocessing_tutorial.md
+    - Profiling benchmarks: tutorial/profiling_tutorial.md
 theme:
   name: material
   features:

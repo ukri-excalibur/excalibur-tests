@@ -1,21 +1,38 @@
-## Connecting to ARCHER2
+# Getting Started on HPC systems
 
-To complete this tutorial, you need to [connect to ARCHER2 via ssh](https://docs.archer2.ac.uk/user-guide/connecting/). You will need
+These tutorials have been ran in in-person workshops on various HPC systems in the UK. It should be possible to run on any of the [supported systems](../systems.md), or to [set up the tools](../setup.md) on a local machine. If you have access to one of the systems we've previously used, this tutorial helps you get set up. Otherwise, please consult the [documentation](../install.md)
 
-1. An ARCHER2 account. You can [request a new account](https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2) if you haven't got one you can use. Use the project code `ta131` to request your account. You can use an existing ARCHER2 account to complete this workshop.
-2. A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see [Connecting to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal) for more information and Windows instructions.
+## Connecting
+
+=== "Cosma"
+
+	To run these tutorials on Cosma, you need to [connect to Cosma via ssh](https://cosma.readthedocs.io/en/latest/ssh.html). You will need
+	
+	1. A Cosma account. You can [request a new account](https://cosma.readthedocs.io/en/latest/account.html) if you haven't got one you can use. You can use an existing Cosma account to complete the tutorials.
+	2. A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see [Connecting to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal) for more information and Windows instructions.
+
+=== "ARCHER2"
+	To run these tutorials on ARCHER2, you need to [connect to ARCHER2 via ssh](https://docs.archer2.ac.uk/user-guide/connecting/). You will need
+
+	1. An ARCHER2 account. You can [request a new account](https://docs.archer2.ac.uk/quick-start/quickstart-users/#request-an-account-on-archer2) if you haven't got one you can use. You can use an existing ARCHER2 account to complete the tutorials.
+	2. A command line terminal with an ssh client. Most Linux and Mac systems come with these preinstalled. Please see [Connecting to ARCHER2](https://docs.archer2.ac.uk/user-guide/connecting/#command-line-terminal) for more information and Windows instructions.
 
 ----
 
 ### ssh
 
-Once you have the above prerequisites, you have to [generate an ssh key pair](https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs) and [upload the public key to SAFE](https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe). 
+=== "Cosma"
 
-When you are done, check that you are able to connect to ARCHER2 with
+	Please see [SSH access to Cosma](https://cosma.readthedocs.io/en/latest/ssh.html) for more information
 
-```bash
-ssh username@login.archer2.ac.uk
-```
+=== "ARCHER2"
+	Once you have the above prerequisites, you have to [generate an ssh key pair](https://docs.archer2.ac.uk/user-guide/connecting/#ssh-key-pairs) and [upload the public key to SAFE](https://docs.archer2.ac.uk/user-guide/connecting/#upload-public-part-of-key-pair-to-safe). 
+
+	When you are done, check that you are able to connect to ARCHER2 with
+
+	```bash
+	ssh username@login.archer2.ac.uk
+	```
 
 ----
 
