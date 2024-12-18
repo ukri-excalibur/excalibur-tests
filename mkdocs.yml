@@ -41,8 +41,11 @@ nav:
     - Kathleen: systems#myriad-and-kathleen
     - Tursa: systems#tursa
   - 'Tutorials':
+    - Getting started: tutorial/getting-started.md
     - ReFrame Tutorial: tutorial/reframe_tutorial.md
-    - excalibur-tests Tutorial: tutorial/excalibur-tests_tutorial.md
+    - ExCALIBUR-tests Tutorial: tutorial/excalibur-tests_tutorial.md
+    - Postprocessing Tutorial: tutorial/postprocessing_tutorial.md
+    - Profiling Tutorial: tutorial/profiling_tutorial.md
 theme:
   name: material
   features:

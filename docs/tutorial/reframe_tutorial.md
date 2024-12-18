@@ -87,6 +87,7 @@ therefore it's best to clone ReFrame v4.5.
 There's a [Hello world example](https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#the-hello-world-test) in the ReFrame 4.5 tutorial that explains how to create a simple ReFrame test.
 
 ReFrame tests are python classes that describe how a test is run.
+To get started, open an empty `.py` file where you will write the ReFrame class, e.g. `hello.py`.
 
 ----
 
@@ -271,9 +272,9 @@ perform different floating point operations on them.
 
 ----
 
-### Boilerplate
+### Create the Test Class
 
-The imports and the class declaration look the same as before. 
+The imports and the class declaration look the same as in the hello world example. 
 We can now specify valid systems and programming environments to run on the system we just configured. 
 You can adapt these to your system, or keep using `'*'` to run on any platform.
 
