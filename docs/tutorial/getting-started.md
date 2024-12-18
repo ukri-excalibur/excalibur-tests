@@ -36,32 +36,32 @@ These tutorials have been ran in in-person workshops on various HPC systems in t
 
 ----
 
-### ARCHER2 MFA
+### MFA
 
-ARCHER2 has deployed mandatory multi-factor authentication (MFA)
+=== "Cosma"
 
-SSH keys will work as before, but instead of your ARCHER2 password, a Time-based One-Time Password (TOTP) code will be requested. 
+	Cosma does not require MFA at present
 
-TOTP is a six digit number, refreshed every 30 seconds, which is generated typically by an app running on your mobile phone or laptop.
+=== "ARCHER2"
 
-Thus authentication will require two factors:
+	ARCHER2 has deployed mandatory multi-factor authentication (MFA)
 
-1) SSH key and passphrase
-2) TOTP
+	SSH keys will work as before, but instead of your ARCHER2 password, a Time-based One-Time Password (TOTP) code will be requested. 
 
-----
+	TOTP is a six digit number, refreshed every 30 seconds, which is generated typically by an app running on your mobile phone or laptop.
 
-### ARCHER2 MFA Docs and Support
+	Thus authentication will require two factors:
 
-The SAFE documentation which details how to set up MFA on machine accounts (ARCHER2) is available at:
-https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account
+	1) SSH key and passphrase
+	2) TOTP
 
-The documentation includes how to set this up without the need of a personal smartphone device.
+	The SAFE documentation which details how to set up MFA on machine accounts (ARCHER2) is available at:  
+	[https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account](https://epcced.github.io/safe-docs/safe-for-users/#how-to-turn-on-mfa-on-your-machine-account)
 
-We have also updated the ARCHER2 documentation with details of the new connection process:
-https://docs.archer2.ac.uk/user-guide/connecting-totp/
-https://docs.archer2.ac.uk/quick-start/quickstart-users-totp/
+	The documentation includes how to set this up without the need of a personal smartphone device.
 
-If there are any issues or concerns please contact us at: 
+	We have also updated the ARCHER2 documentation with details of the new connection process:  
+	[https://docs.archer2.ac.uk/user-guide/connecting-totp/](https://docs.archer2.ac.uk/user-guide/connecting-totp/)  
+	[https://docs.archer2.ac.uk/quick-start/quickstart-users-totp/](https://docs.archer2.ac.uk/quick-start/quickstart-users-totp/)  
 
-support@archer2.ac.uk
+	If there are any issues or concerns please contact support@archer2.ac.uk
