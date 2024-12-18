@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#profiling-tutorial" class="md-skip">
+        <a href="#profiling-tutorial-work-in-progress" class="md-skip">
           Skip to content
         </a>
       
@@ -1239,6 +1239,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Profiling Tutorial
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1248,6 +1259,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#outline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profilers-in-excalibur-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profilers in excalibur-tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-nsight" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with Nsight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-vtune" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with VTune
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roofline-analysis-with-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Roofline analysis with Advisor
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1281,6 +1356,59 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#outline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profilers-in-excalibur-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profilers in excalibur-tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-nsight" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with Nsight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-vtune" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with VTune
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roofline-analysis-with-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Roofline analysis with Advisor
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1297,7 +1425,67 @@
   
 
 
-<h1 id="profiling-tutorial">Profiling tutorial</h1>
+<h1 id="profiling-tutorial-work-in-progress">Profiling tutorial -- !Work in progress!</h1>
+<h2 id="outline">Outline</h2>
+<ol>
+<li>Running a benchmark with a profiler</li>
+<li>Sampling profilers (Nsight &amp; Vtune)</li>
+<li>Collecting roofline data (advisor-roofline)</li>
+</ol>
+<h2 id="profilers-in-excalibur-tests">Profilers in excalibur-tests</h2>
+<p>The <code>excalibur-tests</code> framework allows you to run a profiler together with a benchmark application. To do this, you can set the profiler attribute on the command line using the <code>-S profiler=...</code> syntax</p>
+<p>We support profilers that can be spack installed without a lincense and don't require modifying the source code or the build system. Currently supported values for the profiler attribute are:</p>
+<ul>
+<li><code>advisor-roofline</code>: it produces a roofline model of your program using Intel Advisor;</li>
+<li><code>nsight</code>: it runs the code with the NVIDIA Nsight Systems profiler;</li>
+<li><code>vtune</code>: it runs the code with the Intel VTune profiler.</li>
+</ul>
+<p>For more details, see the <a href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR344/use/">User documentation</a></p>
+<h2 id="profiling-with-nsight">Profiling with Nsight</h2>
+<ul>
+<li>NVIDIA Nsight Systems is a low-overhead sampling profiler that supports both CPU and GPU applications.</li>
+<li>Supports both x86 and ARM architectures</li>
+<li>We collect <code>nsys profile --trace=cuda,mpi,nvtx,openmp,osrt,opengl,syscall</code></li>
+</ul>
+<p>Run Nsight profiling with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/application<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>nsight
+</span></code></pre></div></p>
+<ul>
+<li>Spack installs the <code>nvidia-nsight-systems</code> package in the background, including the GUI</li>
+<li>The paths to the collected profile data, and to the GUI launcher are written into <code>rfm_job.out</code></li>
+<li>To run the GUI remotely, you need to login with <code>ssh -X</code>. It may be slow on a remote system.</li>
+<li>You can (spack) install the GUI locally to view the data.</li>
+</ul>
+<h2 id="profiling-with-vtune">Profiling with VTune</h2>
+<ul>
+<li>Intel VTune is a low-overhead sampling profiler that supports CPU applications</li>
+<li>Only runs on x86 architectures</li>
+</ul>
+<p>Run VTune profiling with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/application<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>vtune
+</span></code></pre></div>
+- Spack installs <code>intel-oneapi-vtune</code> package in the background, including the GUI</p>
+<h2 id="roofline-analysis-with-advisor">Roofline analysis with Advisor</h2>
+<ul>
+<li>Intel Advisor is a tool for on-node performance optimisation. It does analysis for efficient Vectorization, Threading, Memory Usage, and Accelerator Offloading</li>
+<li>Since ~2018 it has had support for automated roofline analysis</li>
+<li>Is only supports x86 CPU architecture</li>
+<li>Won't run on the MPI launcher (because it does on-node analysis). In our benchmarks we have to override it. It can run inside an MPI job on a single rank but we don't currently support it, hopefully will be available in the future.</li>
+</ul>
+<p>To run on a single MPI rank without <code>mpirun</code>, add the following decorated function to the test class
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="nd">@run_before</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">def</span> <span class="nf">replace_launcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">launcher</span> <span class="o">=</span> <span class="n">getlauncher</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)()</span>
+</span></code></pre></div></p>
+<ul>
+<li>We collect <code>advisor -collect roofline</code></li>
+</ul>
+<p>Run Advisor roofline collection with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/stream<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>advisor-roofline
+</span></code></pre></div></p>
+<ul>
+<li>Similar to Nsight, the GUI is installed by Spack but is slow to run remotely.</li>
+</ul>
 
 
 
