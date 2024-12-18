@@ -29,34 +29,7 @@ You can customise the behaviour of each stage or add a hook before or after each
 
 ## Set up python environment
 
-=== "Cosma"
-
-    This tutorial is run on the [Cosma](https://cosma.readthedocs.io/en/latest/) supercomputer.
-    It should be straightforward to run on a different platform, the requirements are  `gcc`, `git` and `python3`. (for the later parts you also need `make`, `autotools`, `cmake` and `spack`).
-    Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-    First load a newer python module.
-    ```bash
-    module swap python/3.10.12
-    ```
-
-=== "ARCHER2"
-
-    This tutorial is run on ARCHER2, you should have signed up for a training account before starting.
-    It can be ran on other HPC systems with a batch scheduler but will require making some changes to the config.
-    Before proceeding to install ReFrame, we recommend creating a python virtual environment to avoid clashes with other installed python packages.
-    First load the system python module.
-    ```bash
-    module load cray-python
-    ```
-
-Then create an environment and activate it with
-
-```bash
-python3 -m venv reframe_tutorial
-source reframe_tutorial/bin/activate
-```
-
-You will have to activate the environment each time you login. To deactivate the environment run `deactivate`.
+{!tutorial/setup-python.md!}
 
 ----
 
@@ -325,7 +298,7 @@ We can set environment variables in the `env_vars` dictionary.
 
 ----
 
-### Building
+### Building the STREAM benchmark
 
 Recall the pipeline ReFrame executes when running a test. 
 We can insert arbitrary functions between any steps in in the pipeline by decorating them with `@run_before` or `@run_after`
@@ -346,41 +319,7 @@ It should be large enough to overflow all levels of cache so that there is no da
 
 ----
 
-### Sanity function
-
-Similar to before, we can check a line in stdout for validation.
-
-```python
-     @sanity_function
-     def validate_solution(self):
-        return sn.assert_found(r'Solution Validates', self.stdout)
-```
-
-----
-
-### Add Performance Pattern Check
-
-To record the performance of the benchmark, ReFrame should extract a figure of merit from the output of the test. A function decorated with the `@performance_function` decorator extracts or computes a performance metric from the test’s output.
-
-> In this example, we extract four performance variables, namely the memory bandwidth values for each of the “Copy”, “Scale”, “Add” and “Triad” sub-benchmarks of STREAM, where each of the performance functions use the [`extractsingle()`](https://reframe-hpc.readthedocs.io/en/latest/deferrable_functions_reference.html#reframe.utility.sanity.extractsingle) utility function. For each of the sub-benchmarks we extract the “Best Rate MB/s” column of the output (see below) and we convert that to a float.
-
-```python
-@performance_function('MB/s', perf_key='Copy')
-def extract_copy_perf(self):
-    return sn.extractsingle(r'Copy:\s+(\S+)\s+.*', self.stdout, 1, float)
-
-@performance_function('MB/s', perf_key='Scale')
-def extract_scale_perf(self):
-    return sn.extractsingle(r'Scale:\s+(\S+)\s+.*', self.stdout, 1, float)
-
-@performance_function('MB/s', perf_key='Add')
-def extract_add_perf(self):
-    return sn.extractsingle(r'Add:\s+(\S+)\s+.*', self.stdout, 1, float)
-
-@performance_function('MB/s', perf_key='Triad')
-def extract_triad_perf(self):
-    return sn.extractsingle(r'Triad:\s+(\S+)\s+.*', self.stdout, 1, float)
-```
+{!tutorial/stream-sanity-and-performance.md!}
 
 ----
 

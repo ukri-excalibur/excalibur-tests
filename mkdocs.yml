@@ -65,6 +65,8 @@ theme:
       name: Switch to light mode
 markdown_extensions:
   - admonition
+  - markdown_include.include:
+      base_path: docs
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true

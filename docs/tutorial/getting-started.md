@@ -1,4 +1,4 @@
-## Getting Started on ARCHER2
+## Connecting to ARCHER2
 
 To complete this tutorial, you need to [connect to ARCHER2 via ssh](https://docs.archer2.ac.uk/user-guide/connecting/). You will need
 
