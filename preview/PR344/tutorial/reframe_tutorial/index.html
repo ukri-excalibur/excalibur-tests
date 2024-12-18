@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR344/tutorial/reframe_tutorial/">
       
       
-        <link rel="prev" href="../../apps/wrf/">
+        <link rel="prev" href="../getting-started/">
       
       
         <link rel="next" href="../excalibur-tests_tutorial/">
@@ -1145,6 +1145,27 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1318,9 +1339,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#boilerplate" class="md-nav__link">
+  <a href="#create-the-test-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Boilerplate
+      Create the Test Class
     </span>
   </a>
   
@@ -1483,7 +1504,49 @@
         
   
   <span class="md-ellipsis">
-    excalibur-tests Tutorial
+    ExCALIBUR-tests Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postprocessing_tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Postprocessing Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../profiling_tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Profiling Tutorial
   </span>
   
 
@@ -1651,9 +1714,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#boilerplate" class="md-nav__link">
+  <a href="#create-the-test-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Boilerplate
+      Create the Test Class
     </span>
   </a>
   
@@ -1877,7 +1940,8 @@ therefore it's best to clone ReFrame v4.5.</p>
 <hr />
 <h2 id="hello-world-example">Hello world example</h2>
 <p>There's a <a href="https://reframe-hpc.readthedocs.io/en/v4.5.2/tutorial_basics.html#the-hello-world-test">Hello world example</a> in the ReFrame 4.5 tutorial that explains how to create a simple ReFrame test.</p>
-<p>ReFrame tests are python classes that describe how a test is run.</p>
+<p>ReFrame tests are python classes that describe how a test is run.
+To get started, open an empty <code>.py</code> file where you will write the ReFrame class, e.g. <code>hello.py</code>.</p>
 <hr />
 <h3 id="include-reframe-module">Include ReFrame module</h3>
 <p>The first thing you need is to include ReFrame.
@@ -2033,8 +2097,8 @@ perform different floating point operations on them.
 - Add: <code>C = A + B</code>
 - Triad: <code>C = a * A + B</code></p>
 <hr />
-<h3 id="boilerplate">Boilerplate</h3>
-<p>The imports and the class declaration look the same as before. 
+<h3 id="create-the-test-class">Create the Test Class</h3>
+<p>The imports and the class declaration look the same as in the hello world example. 
 We can now specify valid systems and programming environments to run on the system we just configured. 
 You can adapt these to your system, or keep using <code>'*'</code> to run on any platform.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Cosma</label><label for="__tabbed_3_2">ARCHER2</label></div>
