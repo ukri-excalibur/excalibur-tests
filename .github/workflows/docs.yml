@@ -53,7 +53,7 @@ jobs:
           cache: 'pip'
 
       - name: Install Python dependencies
-        run: pip install mkdocs-material github3.py
+        run: pip install mkdocs-material github3.py markdown-include
 
       - name: Checkout gh-pages
         # Run only if push is to `main`, or if it's a PR not from a fork.
