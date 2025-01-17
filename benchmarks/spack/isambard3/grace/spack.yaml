@@ -30,8 +30,6 @@ spack:
     python:
       externals:
       - spec: python@3.11.7+bz2+crypt+ctypes+dbm+lzma+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
-        prefix: /lfs1i3/home/lexci-i3/tkoskela.lexci-i3/python_envs/test
-      - spec: python@3.11.7+bz2+crypt+ctypes+dbm+lzma+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /opt/cray/pe/python/3.11.7
       - spec: python@3.6.15+bz2+crypt+ctypes+dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
         prefix: /usr
