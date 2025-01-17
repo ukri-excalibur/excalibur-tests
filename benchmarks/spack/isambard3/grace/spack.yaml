@@ -152,21 +152,21 @@ spack:
         - cray-mpich/8.1.29
     py-numpy:
       externals:
-      - spec: py-numpy@1.24.4
+      - spec: py-numpy@1.24.4 ^python@3.11.7
         modules:
         - cray-python
         prefix: /opt/cray/pe/python/3.11.7
       buildable: false
     py-scipy:
       externals:
-      - spec: py-scipy@1.10.1
+      - spec: py-scipy@1.10.1 ^python@3.11.7
         modules:
         - cray-python
         prefix: /opt/cray/pe/python/3.11.7
       buildable: false
     py-mpi4py:
       externals:
-      - spec: py-mpi4py@3.1.4
+      - spec: py-mpi4py@3.1.4 ^python@3.11.7
         modules:
         - cray-python
         prefix: /opt/cray/pe/python/3.11.7
