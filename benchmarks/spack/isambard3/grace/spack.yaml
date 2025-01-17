@@ -4,8 +4,6 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs:
-  - purify+mpi
   view: false
   include:
   - ../../common.yaml
@@ -25,6 +23,16 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
+    cmake:
+      externals:
+      - spec: cmake@3.20.4
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@3.11.7+bz2+crypt+ctypes+dbm+lzma+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /opt/cray/pe/python/3.11.7
+      - spec: python@3.6.15+bz2+crypt+ctypes+dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
+        prefix: /usr
     groff:
       externals:
       - spec: groff@1.22.4
@@ -80,10 +88,6 @@ spack:
     automake:
       externals:
       - spec: automake@1.15.1
-        prefix: /usr
-    cmake:
-      externals:
-      - spec: cmake@3.20.4
         prefix: /usr
     pkg-config:
       externals:
@@ -146,9 +150,23 @@ spack:
         modules:
         - craype-network-ofi
         - cray-mpich/8.1.29
-    # cray-fftw:
-    #   externals:
-    #   - spec: cray-fftw@3.3.10.7
-    #     prefix: /opt/cray/pe/fftw/3.3.10.7/arm_grace/
-    #     modules:
-    #     - brics/cray-fftw/3.3.10.7
+    py-numpy:
+      externals:
+      - spec: py-numpy@1.24.4 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+    py-scipy:
+      externals:
+      - spec: py-scipy@1.10.1 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+    py-mpi4py:
+      externals:
+      - spec: py-mpi4py@3.1.4 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+  specs:
+  - purify+onnxrt
