@@ -1,0 +1,37 @@
+From 7944d57cb0710938106096bd8d3206d5496410c0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mos=C3=A8=20Giordano?= <m.giordano@ucl.ac.uk>
+Date: Tue, 28 Jan 2025 10:48:46 +0000
+Subject: [PATCH] Add missing `sys/time.h` header file
+
+---
+ ziaprobe.c | 1 +
+ ziatest.c  | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/ziaprobe.c b/ziaprobe.c
+index 739ec41..0974730 100644
+--- a/ziaprobe.c
++++ b/ziaprobe.c
+@@ -11,6 +11,7 @@
+  */
+ #include <stdio.h>
+ #include <stdbool.h>
++#include <sys/time.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+diff --git a/ziatest.c b/ziatest.c
+index 317c3a2..2e7784c 100644
+--- a/ziatest.c
++++ b/ziatest.c
+@@ -13,6 +13,7 @@
+  */
+ #include <stdio.h>
+ #include <stdbool.h>
++#include <sys/time.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+-- 
+2.45.2
+
