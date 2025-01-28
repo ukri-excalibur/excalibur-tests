@@ -32,12 +32,11 @@ pip install -e .[post-processing]
 #### Command line
 
 ```sh
-python post_processing.py log_path config_path [-p plot_type]
+python post_processing.py log_path config_path
 ```
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
 - `config_path` - Path to a configuration file containing plot details.
-- `plot_type` - (Optional.) Type of plot to be generated. (`Note: only a generic bar chart is currently implemented.`)
 
 Run `post_processing.py -h` for more information (including debugging and file output flags).
 
