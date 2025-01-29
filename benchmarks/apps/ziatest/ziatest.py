@@ -30,11 +30,16 @@ class ZiatestBenchmark(SpackTest):
     def set_perf_patterns(self):
 
         def time_to_sec(s):
-            minutes, seconds = s.split(":")
-            return int(minutes) * 60 + int(seconds)
+            if ":" in s:
+                # Time reported as minutes:seconds, convert to seconds
+                minutes, seconds = s.split(":")
+                return float(minutes) * 60 + float(seconds)
+
+            # Time reported in milliseconds, convert to seconds
+            return float(s) / 1000.0
 
         self.perf_patterns = {
             'time': sn.extractsingle(
-                r'Time test was completed in +(\d+:\d+) +min:sec',
+                r'Time test was completed in +(\d+:\d+|\d+\.\d+)',
                 self.stderr, 1, time_to_sec)
         }
