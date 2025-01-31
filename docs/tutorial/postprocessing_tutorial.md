@@ -8,7 +8,8 @@ Now let's browse the benchmark performance results, and create plots to visualis
 
 ### Postprocessing features 
 
-The postprocessing can be performed either on a GUI or a CLI. It takes as input either a single perflog or a path that contains perflogs, and it is driven by a configuration YAML file (more on this later). Its outputs can be csv files of the whole or filtered perflog contents, as well as plots.
+The postprocessing can be performed either on a GUI or a CLI. It takes as input either a single perflog or a path that contains perflogs, and it is driven by a configuration YAML file (more on this later). 
+Its outputs can be csv files of the whole or filtered perflog contents, as well as plots.
 
 ![Screenshot from 2024-04-25 17-01-41](https://hackmd.io/_uploads/HkWxlWOZ0.png)
 

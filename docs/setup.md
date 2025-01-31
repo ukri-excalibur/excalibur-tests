@@ -81,7 +81,8 @@ configuration.  The numbers you need to watch out for are:
 
 When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
-its tests. Follow these steps to create a Spack environment for a new system:
+its tests. The Spack environment is separate and independent of the python
+virtual environment. Follow these steps to create a Spack environment for a new system:
 
 #### Create the environment
 ```sh
