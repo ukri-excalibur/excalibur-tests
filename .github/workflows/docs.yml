@@ -1,0 +1,146 @@
+name: Publish docs via GitHub Pages
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+      - 'docs/**'
+      - 'benchmarks/**/*.md'
+      - 'post-processing/**/*.md'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
+      - 'docs/**'
+      - 'benchmarks/**/*.md'
+      - 'post-processing/**/*.md'
+
+concurrency:
+  # Same group concurrency as the `docs_cleanup.yml` workflow, because they both
+  # git-push to the same branch, so we want to avoid clashes.  NOTE: this is
+  # different from the concurrency group below, which is to cancel successive
+  # jobs from within the branch/PR.
+  group: docs-pushing
+
+jobs:
+  build:
+    timeout-minutes: 10
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    concurrency:
+      # Skip intermediate builds: always.
+      # Cancel intermediate builds: always.
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      # See
+      # <https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token>.
+      # We need `contents: write` to push the docs to the `gh-pages` branch, and
+      # `statuses: write` to create the custom status.
+      contents: write
+      statuses: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install mkdocs-material github3.py
+
+      - name: Checkout gh-pages
+        # Run only if push is to `main`, or if it's a PR not from a fork.
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Cleanup unrelated files
+        run: |
+          # Under `apps` we want to keep only the `README.md` files.  All other files
+          # (reframe tests, input files, etc...) should be ignored by the docs.
+          find benchmarks/apps -type f \! \( -name 'README.md' \) -print -delete
+
+      - name: Set environment variables for docs preview in PRs
+        # Run only if this is a PR for which we're going to deploy the preview.
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        run: |
+          BASE_URL="https://ukri-excalibur.github.io/excalibur-tests"
+          echo "BASE_URL=${BASE_URL}" >> "${GITHUB_ENV}"
+          PREVIEW_SUBDIR="preview/PR${{ github.event.number }}"
+          echo "PREVIEW_SUBDIR=${PREVIEW_SUBDIR}" >> "${GITHUB_ENV}"
+          export MKDOCS_SITE_DIR="site/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_DIR=${MKDOCS_SITE_DIR}" >> "${GITHUB_ENV}"
+          MKDOCS_SITE_URL="${BASE_URL}/${PREVIEW_SUBDIR}"
+          echo "MKDOCS_SITE_URL=${MKDOCS_SITE_URL}" >> "${GITHUB_ENV}"
+
+      - name: Rewrite URLs in Markdown files for docs preview in PRs
+        # Run only if this is a PR for which we're going to deploy the preview.
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        run: |
+          # Edit only files, and not symlinks, to avoid double editing the same files.
+          find . -type f -name '*.md' -print -exec sed -i "s|${BASE_URL}|${BASE_URL}/${PREVIEW_SUBDIR}|g" '{}' \;
+
+      - name: Build docs
+        run: |
+          mkdocs --verbose build
+
+      - name: Deploy docs
+        # Run only if push is to `main`, or if it's a PR not from a fork.
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
+        working-directory: gh-pages
+        run: |
+          git config user.name ${{github.actor}}
+          git config user.email "${{github.actor_id}}+${{github.actor}}@users.noreply.github.com"
+          # Before copying the new files, delete the old ones, so that we can
+          # cleanly update the website.
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+              COMMIT_MESSAGE="Update docs preview from ${{ github.sha }}"
+              # Only delete files in the preview subdir, if any
+              if [[ -d "${PREVIEW_SUBDIR}" ]]; then
+                  git rm -rf "${PREVIEW_SUBDIR}"
+              fi
+          else
+              COMMIT_MESSAGE="Update docs from ${{ github.sha }}"
+              for file in $(git ls-files); do
+                  if [[ x"${file}" != xpreview/* ]]; then
+                      # Do not delete files in the `preview/` subdir
+                      git rm ${file}
+                  fi
+              done
+          fi
+          cp -fr ../site/* .
+          git add .
+          git commit --allow-empty -m "${COMMIT_MESSAGE}"
+          git push origin gh-pages
+
+      - name: Create custom status for pull requests
+        # Similar condition as previous step, but only for PRs
+        if: ${{ github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork }}
+        shell: python {0}
+        run: |
+          import os
+          from github3 import login
+
+          token = "${{ github.token }}"
+          gh = login(token=token)
+
+          owner, repo_name = "${{ github.repository }}".split('/')
+          repo = gh.repository(owner, repo_name)
+
+          sha = "${{ github.event.pull_request.head.sha }}"
+          state = "success"
+          base_url = os.getenv("BASE_URL")
+          preview_subdir = os.getenv("PREVIEW_SUBDIR")
+          target_url = f"{base_url}/{preview_subdir}/"
+          description = "Documentation deployed"
+          context = "${{ github.workflow }} / Preview"
+          repo.create_status(sha, state, target_url, description, context)

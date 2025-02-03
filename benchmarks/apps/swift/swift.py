@@ -21,13 +21,16 @@ class SwiftBenchmark(SpackTest):
     time_limit = '20m'
     reference = {
         'cosma8': {
-            'duration': (50, None, 0.2, 'seconds'),
+            'duration': (40, None, 0.2, 'seconds'),
         },
-        'csd3-skylake': {
-            'duration': (50, None, 0.2, 'seconds'),
+        'csd3-centos7:cascadelake': {
+            'duration': (37, None, 0.2, 'seconds'),
         },
-        'csd3-icelake': {
-            'duration': (350, None, 0.2, 'seconds'),
+        'csd3-rocky8:icelake': {
+            'duration': (35, None, 0.2, 'seconds'),
+        },
+        'csd3-rocky8:sapphirerapids': {
+            'duration': (32, None, 0.2, 'seconds'),
         },
         'dial3': {
             'duration': (150, None, 0.2, 'seconds'),
