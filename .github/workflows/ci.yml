@@ -85,6 +85,10 @@ jobs:
           sudo apt-get install -y openmpi-bin libopenmpi-dev cmake
         env:
           DEBIAN_FRONTEND: noninteractive
+      - name: Populate Spack environment
+        run: |
+          spack -e benchmarks/spack/github-actions/default compiler find
+          spack -e benchmarks/spack/github-actions/default external find cmake openmpi
       - name: Run sample benchmark
         shell: bash
         run: |
