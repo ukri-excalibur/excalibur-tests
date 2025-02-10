@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
+          - ubuntu-24.04
         spack_version:
           # In README.md we claim compatibility with v0.20.0
           - v0.20.0
