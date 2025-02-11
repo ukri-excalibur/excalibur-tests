@@ -10,7 +10,7 @@ class PurifyBase(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'purify@4.2.0+benchmarks'
+    spack_spec = 'purify@5.0.0+mpi+openmp+benchmarks ^fftw'
     executable_opts = ['--benchmark_format=csv',
                        '--benchmark_out=purify_benchmark.out',
                        '--benchmark_out_format=csv']
@@ -104,7 +104,7 @@ class PurifyMOBenchmark_PratleyEtAl(PurifyBase):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
         self.num_tasks = self.tasks
         self.num_cpus_per_task = self.threads
-        self.num_tasks_per_node = 1
+        self.num_tasks_per_node = max(1,self.current_partition.processor.num_sockets)
 
 @rfm.simple_test
 class PurifyPADMMBenchmark_PratleyEtAl(PurifyBase):
@@ -114,19 +114,71 @@ class PurifyPADMMBenchmark_PratleyEtAl(PurifyBase):
     threads = 16
     tasks = parameter([1,2,3,4,8,12])
 
-    executable = 'mpi_benchmark_PADMM'
+    executable = 'mpi_benchmark_algorithms'
     time_limit = '60m'
 
-    algorithm = parameter([1,3])
+    algorithm = parameter(["PadmmDistributeImage", "PadmmDistributeGrid"])
     numberOfVisibilities = parameter([10**6, 10**7])
     imgsize = parameter([1024])
 
     @run_after('setup')
     def filter_benchmarks(self):
-        self.executable_opts.append(f'--benchmark_filter=PadmmFixtureMPI/'
-                                    f'ApplyAlgo{self.algorithm}'
+        self.executable_opts.append(f'--benchmark_filter=AlgoFixtureMPI/'
+                                    f'{self.algorithm}'
+                                    f'/{self.imgsize}/{self.numberOfVisibilities}/')
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
+        self.num_tasks = self.tasks
+        self.num_cpus_per_task = self.threads
+        self.num_tasks_per_node = max(1,self.current_partition.processor.num_sockets)
+
+@rfm.simple_test
+class PurifyForwardBackwardBenchmark(PurifyBase):
+    """
+    This benchmark uses the Forward Backward algorithm, otherwise it's similar to PurifyPADMMBenchmark.
+    """
+    threads = 16
+    tasks = parameter([1,2,4,8,16])
+
+    executable = 'mpi_benchmark_algorithms'
+    time_limit = '60m'
+
+    algorithm = parameter(["FbDistributeImage", "FbDistributeGrid"])
+    numberOfVisibilities = parameter([10**6, 10**7])
+    imgsize = parameter([1024])
+
+    @run_after('setup')
+    def filter_benchmarks(self):
+        self.executable_opts.append(f'--benchmark_filter=AlgoFixtureMPI/'
+                                    f'{self.algorithm}'
                                     f'/{self.imgsize}/{self.numberOfVisibilities}/')
         self.env_vars['OMP_NUM_THREADS'] = f'{self.threads}'
         self.num_tasks = self.tasks
         self.num_cpus_per_task = self.threads
         self.num_tasks_per_node = 1
+
+@rfm.simple_test
+class PurifyForwardBackwardOnnxBenchmark(PurifyBase):
+    """
+    This benchmark uses the Forward Backward algorithm, otherwise it's similar to PurifyPADMMBenchmark.
+    """
+    omp_threads = parameter([16])
+    ort_threads = parameter([16])
+    tasks = parameter([1,2,4,8,16])
+    
+    executable = 'mpi_benchmark_algorithms'
+    time_limit = '60m'
+
+    algorithm = parameter(["FbOnnxDistributeImage", "FbOnnxDistributeGrid"])
+    numberOfVisibilities = parameter([10**6, 10**7])
+    imgsize = parameter([1024])
+
+    @run_after('setup')
+    def filter_benchmarks(self):
+        self.executable_opts.append(f'--benchmark_filter=AlgoFixtureMPI/'
+                                    f'{self.algorithm}/{self.imgsize}/{self.numberOfVisibilities}/')
+        self.env_vars['OMP_NUM_THREADS'] = f'{self.omp_threads}'
+        self.env_vars['ORT_NUM_THREADS'] = f'{self.ort_threads}'
+        self.num_tasks = self.tasks
+        self.num_cpus_per_task = max(self.omp_threads, self.ort_threads)
+        self.num_tasks_per_node = max(1,self.current_partition.processor.num_sockets)
+        self.spack_spec = 'purify@5.0.0+mpi+openmp+benchmarks+onnxrt ^fftw'
