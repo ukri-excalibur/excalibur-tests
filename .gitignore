@@ -9,6 +9,7 @@ reframe.log
 reframe.out
 stage/
 output/
+perflogs/
 apps/castep/downloads/
 apps/wrf/downloads/
 apps/gromacs/downloads/
@@ -24,7 +25,9 @@ outdated/
 
 #ignore virtual environment
 myvenv/
-perflogs/
 
 # docs
 site/
+
+#emacs backups
+*~

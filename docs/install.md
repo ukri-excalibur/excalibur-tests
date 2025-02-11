@@ -92,3 +92,8 @@ _**Note**: if you have already installed spack locally and you want to upgrade t
 a newer version, you might first have to clear the cache to avoid conflicts:
 `spack clean -m`_
 
+It is recommended to always have the python virtual environment active when working with `excalibur-tests`.
+However, it should be noted that since `Spack` is not installed via `pip`, it will be installed outside of the
+python virtual environment. Also, keep in mind that the Spack environments that are discussed in the next section 
+are different and independent of the python virtual environment.
+
