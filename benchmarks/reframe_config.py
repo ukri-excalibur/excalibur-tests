@@ -351,7 +351,7 @@ site_configuration = {
                     'launcher': 'srun',
                     'access': ['--mem=0'],
                     'environs': ['default'],
-                    'max_jobs': 64,
+                    'max_jobs': 16,
                     'processor': {
                         'num_cpus': 144,
                         'num_cpus_per_core': 1,
