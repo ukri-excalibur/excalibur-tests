@@ -130,10 +130,6 @@ spack:
         prefix: /mnt/lustre/tursafs1/apps/basestack/cuda-11.0.2/openmpi/4.1.1
       - spec: openmpi@4.0.4+cuda~cxx~cxx_exceptions~java~memchecker~pmi~sqlite3~thread_multiple~wrapper-rpath %gcc@8.4.1
         prefix: /mnt/lustre/tursafs1/apps/openmpi/4.0.4
-    perl:
-      externals:
-      - spec: perl@5.26.3~cpanm~open+shared+threads
-        prefix: /usr
     tar:
       externals:
       - spec: tar@1.30
