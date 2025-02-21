@@ -1,0 +1,3 @@
+upstreams:
+  spack-system-2024-01-01:
+    install_tree: /usr/local/software/spack/csd3/opt-2024-06-01
