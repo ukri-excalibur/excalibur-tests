@@ -9,10 +9,10 @@ spack:
   include:
   - ../../common.yaml
   - ../compilers.yaml
-  - ../packages.yaml
+  - ../upstreams.yaml
   packages:
     all:
       providers:
         mpi: [intel-oneapi-mpi] # Prefer Intel MPI
       compiler: [intel] # Prefer Intel Classic Compilers
-      require: 'target=icelake'
+      target: [cascadelake] # Prefer targetting cascadelake

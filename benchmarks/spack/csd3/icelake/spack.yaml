@@ -9,14 +9,10 @@ spack:
   include:
   - ../../common.yaml
   - ../compilers.yaml
-  - ../packages.yaml
+  - ../upstreams.yaml
   packages:
     all:
       providers:
         mpi: [intel-oneapi-mpi] # Prefer Intel MPI
       compiler: [intel] # Prefer Intel Classic Compilers
-      require: 'target=sapphirerapids'
-  concretizer:
-    targets:
-      # Allow targetting sapphirerapids when building on icelake login node
-      host_compatible: false
+      target: [icelake] # Prefer targetting icelake
