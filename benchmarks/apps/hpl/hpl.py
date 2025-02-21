@@ -28,13 +28,13 @@ class Hpl(SpackTest):
     # Dictionary of reference values, indexed by number of tasks.
     full_reference = {
         1: {
-            'csd3-centos7:cascadelake': {
+            'csd3:cascadelake': {
                 'Gflops': (2600, -0.2, None, 'Gflops'),
             },
-            'csd3-rocky8:icelake': {
+            'csd3:icelake': {
                 'Gflops': (4500, -0.2, None, 'Gflops'),
             },
-            'csd3-rocky8:sapphirerapids': {
+            'csd3:sapphirerapids': {
                 'Gflops': (6200, -0.2, None, 'Gflops'),
             },
         },
