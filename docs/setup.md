@@ -81,7 +81,8 @@ configuration.  The numbers you need to watch out for are:
 
 When using Spack as build system, ReFrame needs a [Spack
 environment](https://spack.readthedocs.io/en/latest/environments.html) to run
-its tests. Follow these steps to create a Spack environment for a new system:
+its tests. The Spack environment is separate and independent of the python
+virtual environment. Follow these steps to create a Spack environment for a new system:
 
 #### Create the environment
 ```sh
@@ -148,3 +149,15 @@ it to the spack environment with
 ```sh
 spack -e /path/to/environment repo add /path/to/repo
 ```
+
+#### (optional) Override default spack cache path
+
+Spack also, by default, keeps various caches and user data in `~/.spack`, but users may want to override these locations. Spack provides environment variables that allow you to override or opt out of configuration locations:
+
+`SPACK_USER_CONFIG_PATH`: Override the path to use for the user scope (`~/.spack` by default).
+
+`SPACK_SYSTEM_CONFIG_PATH`: Override the path to use for the system scope (`/etc/spack` by default).
+
+`SPACK_USER_CACHE_PATH`: Override the default path to use for user data (misc_cache, tests, reports, etc.)
+
+For more details, see [spack docs](https://spack.readthedocs.io/en/latest/configuration.html#overriding-local-configuration).
