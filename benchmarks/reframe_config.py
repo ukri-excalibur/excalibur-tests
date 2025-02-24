@@ -75,12 +75,36 @@ site_configuration = {
         },  # end ARCHER2
         {
             # https://www.hpc.cam.ac.uk/index.php/high-performance-computing
-            'name': 'csd3-rocky8',
-            'descr': 'Cambridge Service for Data Driven Discovery - Rocky Linux 8 (RHEL8 compatible) nodes',
-            'hostnames': ['login-q-[0-4]+'],
+            'name': 'csd3',
+            'descr': 'Cambridge Service for Data Driven Discovery',
+            'hostnames': ['login-[pq]-[1-4]'],
             'max_local_jobs': 1,
             'modules_system': 'tmod4',
             'partitions': [
+                {
+                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
+                    'name': 'cascadelake',
+                    'descr': 'Cascade Lake compute nodes',
+                    'scheduler': 'slurm',
+                    'launcher': 'mpirun',
+                    'env_vars': [
+                        ['I_MPI_PMI_LIBRARY', '/usr/local/software/slurm/current-rhel8/lib/libpmi2.so'],
+                        ['I_MPI_OFI_PROVIDER', 'mlx'],
+                        ['UCX_NET_DEVICES', 'mlx5_0:1'],
+                    ],
+                    'access': ['--partition=cclake', '--exclusive'],
+                    'sched_options': {
+                        'job_submit_timeout': 120,
+                    },
+                    'environs': ['default'],
+                    'max_jobs': 64,
+                    'processor': {
+                        'num_cpus': 56,
+                        'num_cpus_per_core': 1,
+                        'num_sockets': 2,
+                        'num_cpus_per_socket': 28,
+                    }
+                },
                 {
                     # https://docs.hpc.cam.ac.uk/hpc/user-guide/icelake.html
                     'name': 'icelake',
@@ -160,41 +184,7 @@ site_configuration = {
 
                 },
             ]
-        },  # end CSD3 Rocky 8
-        {
-            # https://www.hpc.cam.ac.uk/index.php/high-performance-computing
-            'name': 'csd3-centos7',
-            'descr': 'Cambridge Service for Data Driven Discovery - CentOS 7 (RHEL7 compatible) nodes',
-            'hostnames': ['login-p-[0-4]+'],
-            'max_local_jobs': 1,
-            'modules_system': 'tmod32',
-            'partitions': [
-                {
-                    # https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html
-                    'name': 'cascadelake',
-                    'descr': 'Cascade Lake compute nodes',
-                    'scheduler': 'slurm',
-                    'launcher': 'mpirun',
-                    'env_vars': [
-                        ['I_MPI_PMI_LIBRARY', '/usr/local/software/slurm/current/lib/libpmi2.so'],
-                        ['I_MPI_OFI_PROVIDER', 'mlx'],
-                        ['UCX_NET_DEVICES', 'mlx5_0:1'],
-                    ],
-                    'access': ['--partition=cclake', '--exclusive'],
-                    'sched_options': {
-                        'job_submit_timeout': 120,
-                    },
-                    'environs': ['default'],
-                    'max_jobs': 64,
-                    'processor': {
-                        'num_cpus': 56,
-                        'num_cpus_per_core': 1,
-                        'num_sockets': 2,
-                        'num_cpus_per_socket': 28,
-                    }
-                },
-            ]
-        },  # end CSD3 CentOS 7
+        },  # end CSD3
         {
             # https://www.rc.ucl.ac.uk/docs/Clusters/Kathleen/#node-types
             'name': 'kathleen',
