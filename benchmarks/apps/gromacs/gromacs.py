@@ -27,6 +27,8 @@ class GROMACSBenchmark(SpackTest):
         '*': {'Rate': (1, None, None, 'ns/day')}
     }
 
+    expected_output_file = 'md.log'
+
     @run_after('setup')
     def setup_variables(self):
         self.num_tasks = self.num_tasks_param
@@ -43,14 +45,14 @@ class GROMACSBenchmark(SpackTest):
     def set_sanity_patterns(self):
         """Set the required string in the output for a sanity check"""
         self.sanity_patterns = sn.assert_found(
-            'GROMACS reminds you', self.stderr
+            'Finished mdrun"', self.expected_output_file
         )
 
     @run_before('performance')
     def set_perf_patterns(self):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
-            'Rate': sn.extractsingle('Performance.+', self.stderr, 0,
+            'Rate': sn.extractsingle('Performance.+', self.expected_output_file, 0,
                                      lambda x: float(x.split()[1]))
         }
 
