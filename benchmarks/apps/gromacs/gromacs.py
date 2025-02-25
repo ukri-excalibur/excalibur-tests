@@ -58,10 +58,8 @@ class GROMACSBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingBenchmark(GROMACSBenchmark):
-    variant = parameter([4 * i for i in range(1, 6)])
-    num_tasks_param = parameter([2,4])
-    num_cpus_per_task_param = parameter([1,2,4,8])
-    num_omp_threads = 4
+    num_tasks_param = parameter([4 * i for i in range(1, 6)])
+    num_cpus_per_task_param = 4
 
 
 @rfm.simple_test
