@@ -75,6 +75,13 @@ reframe -c benchmarks/apps/sombrero -r --performance-report -S env_vars=OMP_PLAC
 runs the `benchmarks/apps/sombrero` benchmark setting the environment variable `OMP_PLACES`
 to `threads`.
 
+### Output directories
+
+By default `reframe` creates three output directories (`stage`, `output` and `perflogs`) in the directory 
+where it is run. Output can be written to a different base directory using the [`--prefix` command-line option](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-prefix).
+
+The individual output directories can also be changed using the `--stage`, `--outputdir` and `--perflogdir` options.
+
 ## Usage on unsupported systems
 
 The configuration provided in [`reframe_config.py`](https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/reframe_config.py) lets you run the

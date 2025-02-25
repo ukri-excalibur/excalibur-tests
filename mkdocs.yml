@@ -40,7 +40,12 @@ nav:
     - Myriad: systems#myriad-and-kathleen
     - Kathleen: systems#myriad-and-kathleen
     - Tursa: systems#tursa
-  - ARCHER2 Tutorial: tutorial/tutorial.md
+  - 'Tutorials':
+    - Getting started: tutorial/getting-started.md
+    - Writing benchmarks in ReFrame: tutorial/reframe_tutorial.md
+    - Automation in excalibur-tests: tutorial/excalibur-tests_tutorial.md
+    - Postprocessing ReFrame output: tutorial/postprocessing_tutorial.md
+    - Profiling benchmarks: tutorial/profiling_tutorial.md
 theme:
   name: material
   features:
@@ -60,6 +65,8 @@ theme:
       name: Switch to light mode
 markdown_extensions:
   - admonition
+  - markdown_include.include:
+      base_path: docs
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
@@ -68,3 +75,5 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
