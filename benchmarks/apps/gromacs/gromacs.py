@@ -29,7 +29,6 @@ class GROMACSBenchmark(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
-        self.num_nodes = 4
         self.num_tasks = self.num_tasks_param
         self.num_cpus_per_task = self.num_cpus_per_task_param
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
@@ -58,12 +57,5 @@ class GROMACSBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingBenchmark(GROMACSBenchmark):
-    num_tasks_param = parameter([4 * i for i in range(1, 6)])
-    num_cpus_per_task_param = 4
-
-
-@rfm.simple_test
-class ThreadAndRankVariationTest(GROMACSBenchmark):
-    num_tasks_param = parameter([2,4,8,16,32])
-    num_cpus_per_task_param = parameter([1,2,4,8])
-    num_omp_threads = 4
+    num_tasks_param = parameter([2, 4, 8, 16, 32])
+    num_cpus_per_task_param = 1
