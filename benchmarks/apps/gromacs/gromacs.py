@@ -16,7 +16,7 @@ class GROMACSBenchmark(SpackTest):
     valid_prog_environs = ['default']
     spack_spec = 'gromacs@2019' 
     executable = 'gmx_mpi'
-    executable_opt = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', 'gromacs_1400k_atoms.tpr']
+    executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', 'gromacs_1400k_atoms.tpr']
     time_limit = '120m'
     exclusive_access = True
 
