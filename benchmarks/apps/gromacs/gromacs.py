@@ -56,14 +56,6 @@ class GROMACSBenchmark(SpackTest):
         }
 
 @rfm.simple_test
-class StrongScalingBenchmark(GROMACSBenchmark):
-    num_tasks_param = parameter([2, 4, 8, 16, 32])
-
-@rfm.simple_test
-class StrongScalingBenchmarkAcrossNodes(GROMACSBenchmark):
-    num_tasks_param = parameter([i * current_partition.processor.num_cpus for i in [1, 2, 3, 4]])
-
-@rfm.simple_test
 class StrongScalingCPUBenchmark(GROMACSBenchmark):
     num_tasks_param = parameter([i * current_partition.processor.num_cpus for i in [1, 2, 3, 4]])
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', 'gromacs_1400k_atoms.tpr']
