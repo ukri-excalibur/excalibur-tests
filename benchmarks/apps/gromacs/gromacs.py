@@ -30,7 +30,7 @@ class GROMACSBenchmark(SpackTest):
 
     @run_after('setup')
     def setup_variables(self):
-        self.num_tasks = self.num_tasks_param
+        self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
         self.num_cpus_per_task = 1
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
@@ -57,12 +57,12 @@ class GROMACSBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingCPUBenchmark(GROMACSBenchmark):
-    num_tasks_param = parameter([i * current_partition.processor.num_cpus for i in [1, 2, 3, 4]])
+    num_nodes_param = parameter([1, 2, 3, 4])
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', 'gromacs_1400k_atoms.tpr']
 
 
 @rfm.simple_test
 class StrongScalingGPUBenchmark(GROMACSBenchmark):
-    num_tasks_param = parameter([i * current_partition.processor.num_cpus for i in [1, 2, 3, 4]])
+    num_nodes_param = parameter([1, 2, 3, 4])
     executable_opts = ['mdrun', '-s', 'gromacs_1400k_atoms.tpr', '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
 
