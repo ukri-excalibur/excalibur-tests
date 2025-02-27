@@ -11,12 +11,15 @@ class FenicsGpuBenchmark(CMakePackage, CudaPackage, ROCmPackage):
     homepage = "https://github.com/FEniCS/performance-test"
     git = "https://github.com/FEniCS/performance-test.git"
 
+    version("main", tag="chris/gpu")
+
     depends_on("fenics-dolfinx@main")
     depends_on("py-fenics-ffcx@main", type="build")
     depends_on("py-setuptools", type="build")
     depends_on("py-fenics-ufl@main", type="build")
     depends_on("mpi")
     depends_on("hip", when="+rocm")
+    depends_on("cuda", when="+cuda")
 
     with when("+rocm"):
         depends_on("rocm-core")
@@ -25,9 +28,16 @@ class FenicsGpuBenchmark(CMakePackage, CudaPackage, ROCmPackage):
         depends_on("rocthrust")
         depends_on("rocprim")
 
-    version("main", tag="chris/gpu")
+    with when("+cuda"):
+        depends_on("thrust")
 
     root_cmakelists_dir = "gpu"
 
     def cmake_args(self):
-        return [self.define("amd", True)]
+        opts = []
+        if "+rocm" in self.spec:
+            opts += [self.define("amd", True)]
+        if "+cuda" in self.spec:
+            opts += [self.define("nvidia", True)]
+
+        return opts
