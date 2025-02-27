@@ -13,6 +13,7 @@ class FenicsGpuBenchmark(CMakePackage, CudaPackage, ROCmPackage):
 
     version("main", tag="chris/gpu")
 
+    variant("float32", default=False)
     depends_on("fenics-dolfinx@main")
     depends_on("py-fenics-ffcx@main", type="build")
     depends_on("py-setuptools", type="build")
@@ -39,5 +40,6 @@ class FenicsGpuBenchmark(CMakePackage, CudaPackage, ROCmPackage):
             opts += [self.define("amd", True)]
         if "+cuda" in self.spec:
             opts += [self.define("nvidia", True)]
-
+        if "+float32" in self.spec:
+            opts += [self.define("SCALAR_TYPE", "float32")]
         return opts
