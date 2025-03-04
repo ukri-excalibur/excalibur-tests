@@ -9,13 +9,14 @@ import reframe.utility.sanity as sn
 
 from benchmarks.modules.utils import SpackTest
 
-class GROMACSSpackBenchmark(SpackTest):
-    """Base class for a GROMACS benchmark using the spack build system"""
+class GROMACSCMakeBenchmark(rfm.RegressionTest):
+    """Base class for a GROMACS benchmark using the CMake build system"""
 
+    build_system = 'CMake'
     valid_systems = ['*']
     valid_prog_environs = ['default']
-    spack_spec = 'gromacs@2024 + mpi' 
-    executable = 'gmx_mpi'
+    spack_spec = 'gromacs@2024 +mpi +double' 
+    executable = 'gmx_mpi_d'
     time_limit = '240m'
     exclusive_access = True
 
@@ -27,6 +28,27 @@ class GROMACSSpackBenchmark(SpackTest):
     }
 
     expected_output_file = 'md.log'
+
+    @run_before('compile')
+    def setup_cmake_env(self):
+        self.builddir = 'build'
+        self.config_opts = [
+            f'-DCMAKE_C_COMPILER={self.current_environ.cxx}',
+            f'-DCMAKE_CXX_COMPILER={self.current_environ.cxx}',
+            '-DGMX_BUILD_OWN_FFTW=ON',
+            '-DGMX_GPU=OFF',
+            '-DGMX_MPI=ON',
+            '-DGMX_OPENMP=ON',
+            '-DGMX_DOUBLE=ON',
+            '-DGMX_FFT_LIBRARY=fftw3',
+            '-DGMX_EXTERNAL_BLAS=OFF',
+            '-DGMX_EXTERNAL_LAPACK=OFF',
+            '-DGMX_USE_RDTSCP=ON',
+            '-DGMX_PREFER_STATIC_LIBS=ON',
+            '-DGMX_BINARY_SUFFIX=_d',
+            f'-DGMX_INSTALL_PREFIX={self.stagedir}',
+            '-DGMX_DEFAULT_SUFFIX=OFF'
+        ]
 
     @run_after('setup')
     def setup_variables(self):
