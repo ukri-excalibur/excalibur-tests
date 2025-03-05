@@ -31,8 +31,6 @@ def setup_variables(self):
     }
     self.sourcesdir = os.path.dirname(__file__)
     self.time_limit = '45m'
-    self.valid_prog_environs = ['default']
-    self.valid_systems = ['*']
 
 def test_variables(self):
     """Set the variables required after setup, specific to each test"""
@@ -41,7 +39,6 @@ def test_variables(self):
     self.env_vars['OMP_PLACES'] = 'cores'
     self.num_cpus_per_task = 1
     self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
-    self.outputdir = self.dir_prefix + str(self.num_nodes_param)
 
     if self.current_partition.scheduler.registered_name == 'sge':
         # Set the total number of CPUs to be requested for the SGE scheduler.
@@ -67,6 +64,9 @@ def set_perf_patterns(self):
 class GROMACSSpackBenchmark(SpackTest):
     """Base class for a GROMACS benchmark using the spack build system"""
 
+    valid_systems = ['*']
+    valid_prog_environs = ['default']
+
     spack_spec = 'gromacs@2024.4 +mpi+double'
 
     @run_before('setup')
@@ -90,14 +90,12 @@ class GROMACSSpackBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingSpackCPUBenchmark(GROMACSSpackBenchmark):
-    dir_prefix = 'StrongScalingCPUBenchmark_'
     executable_opts = get_cpu_executable_opts()
     num_nodes_param = parameter([1, 2, 3, 4])
 
 
 @rfm.simple_test
 class StrongScalingSpackGPUBenchmark(GROMACSSpackBenchmark):
-    dir_prefix = 'StrongScalingGPUBenchmark_'
     executable_opts = get_gpu_executable_opts()
     num_nodes_param = parameter([1, 2, 3, 4])
 
@@ -106,6 +104,9 @@ class StrongScalingSpackGPUBenchmark(GROMACSSpackBenchmark):
 
 class GROMACSRunOnlyBenchmark(rfm.RunOnlyRegressionTest):
     """Base class for a GROMACS benchmark using a pre-built executable"""
+
+    valid_systems = ['*']
+    valid_prog_environs = ['default']
 
     @run_before('setup')
     def setup_run_only_setup_variables(self):
@@ -126,14 +127,12 @@ class GROMACSRunOnlyBenchmark(rfm.RunOnlyRegressionTest):
 
 @rfm.simple_test
 class StrongScalingRunOnlyCPUBenchmark(GROMACSRunOnlyBenchmark):
-    dir_prefix = 'StrongScalingRunOnlyCPUBenchmark_'
     executable_opts = get_cpu_executable_opts()
     num_nodes_param = parameter([1, 2, 3, 4])
 
 
 @rfm.simple_test
 class StrongScalingRunOnlyGPUBenchmark(GROMACSRunOnlyBenchmark):
-    dir_prefix = 'StrongScalingRunOnlyGPUBenchmark_'
     executable_opts = get_gpu_executable_opts()
     num_nodes_param = parameter([1, 2, 3, 4])
 
