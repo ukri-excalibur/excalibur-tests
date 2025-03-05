@@ -22,7 +22,7 @@ def setup_variables(self):
     """Set the variables common to all tests"""
     # Variables consistent in all tests
     self.exclusive_access = True
-    self.executable = 'gmx_mpi'
+    self.executable = 'gmx_mpi_d'
     self.expected_output_file = 'md.log'
     self.keep_files = [self.expected_output_file]
     self.readonly_files = ['gromacs_1400k_atoms.tpr']
@@ -65,10 +65,13 @@ def set_perf_patterns(self):
 class GROMACSSpackBenchmark(SpackTest):
     """Base class for a GROMACS benchmark using the spack build system"""
 
-    spack_spec = 'gromacs@2024 +mpi +double'
+    spack_spec = 'gromacs@2024.4 +mpi+double'
 
     @run_after('setup')
     def setup_spack_testvariables(self):
+        if (self.current_system.name == "kathleen"):
+            self.spack_spec += ' ^intel-oneapi-mpi'
+        
         setup_variables(self)
 
     @run_before('sanity')
