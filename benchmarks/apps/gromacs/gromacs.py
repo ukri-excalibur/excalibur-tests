@@ -19,7 +19,7 @@ def get_gpu_executable_opts():
     return ['mdrun', '-s', 'gromacs_1400k_atoms.tpr', '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
 
 def setup_variables(self):
-    """Set the variables common to all tests"""
+    """Set the variables required before setup that are common to all tests"""
     # Variables consistent in all tests
     self.exclusive_access = True
     self.executable = 'gmx_mpi_d'
@@ -34,6 +34,8 @@ def setup_variables(self):
     self.valid_prog_environs = ['default']
     self.valid_systems = ['*']
 
+def test_variables(self):
+    """Set the variables required after setup, specific to each test"""
     # Test specific variables
     self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
     self.env_vars['OMP_PLACES'] = 'cores'
@@ -67,12 +69,16 @@ class GROMACSSpackBenchmark(SpackTest):
 
     spack_spec = 'gromacs@2024.4 +mpi+double'
 
-    @run_after('setup')
-    def setup_spack_testvariables(self):
+    @run_before('setup')
+    def setup_spack_setup_variables(self):
         if (self.current_system.name == "kathleen"):
             self.spack_spec += ' ^intel-oneapi-mpi'
         
         setup_variables(self)
+
+    @run_after('setup')
+    def setup_spack_test_variables(self):
+        test_variables(self)
 
     @run_before('sanity')
     def set_spack_test_sanity_patterns(self):
@@ -101,16 +107,20 @@ class StrongScalingSpackGPUBenchmark(GROMACSSpackBenchmark):
 class GROMACSRunOnlyBenchmark(rfm.RunOnlyRegressionTest):
     """Base class for a GROMACS benchmark using a pre-built executable"""
 
-    @run_after('setup')
-    def setup_spack_testvariables(self):
+    @run_before('setup')
+    def setup_run_only_setup_variables(self):
         setup_variables(self)
 
+    @run_after('setup')
+    def setup_run_only_test_variables(self):
+        test_variables(self)
+
     @run_before('sanity')
-    def set_spack_test_sanity_patterns(self):
+    def set_run_only_test_sanity_patterns(self):
         set_sanity_patterns(self)
 
     @run_before('performance')
-    def set_spack_test_perf_patterns(self):
+    def set_run_only_test_perf_patterns(self):
         set_perf_patterns(self)
 
 
