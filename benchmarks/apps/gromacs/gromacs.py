@@ -30,7 +30,7 @@ def setup_variables(self):
         '*': {'Rate': (1, None, None, 'ns/day')}
     }
     self.sourcesdir = os.path.dirname(__file__)
-    self.time_limit = '240m'
+    self.time_limit = '45m'
     self.valid_prog_environs = ['default']
     self.valid_systems = ['*']
 
