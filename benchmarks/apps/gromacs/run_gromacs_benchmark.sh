@@ -63,4 +63,4 @@ export RFM_USE_LOGIN_SHELL="true"
 # Activate excalibur env
 source "$excalibur_tests_dir/.venv/bin/activate"
 
-reframe "--system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs -r $test_flags"
+reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs -r $test_flags
