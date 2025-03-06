@@ -249,7 +249,7 @@ spack:
         prefix: /shared/ucl/apps/intel/2020
     intel-oneapi-mpi:
       externals:
-      - spec: intel-oneapi-mpi@2021.6.0
+      - spec: intel-oneapi-mpi@2021.6.0 +generic-names
         prefix: /shared/ucl/apps/intel/2022.2/
     libtool:
       externals:
