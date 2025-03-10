@@ -140,4 +140,4 @@ else
   source "$excalibur_tests_dir/.venv/bin/activate"
 fi
 
-echo "reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs -r $test_flags"
+echo "reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags"
