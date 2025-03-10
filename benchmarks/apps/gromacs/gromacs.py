@@ -12,11 +12,13 @@ from benchmarks.modules.utils import SpackTest
 #---------------------------------------------------------
 # Shared definitions
 
+input_data_file = 'gromacs_1400k_atoms.tpr'
+
 def get_cpu_executable_opts():
-    return ['mdrun', '-noconfout', '-dlb', 'yes', '-s', 'gromacs_1400k_atoms.tpr']
+    return ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
 
 def get_gpu_executable_opts():
-    return ['mdrun', '-s', 'gromacs_1400k_atoms.tpr', '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
+    return ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
 
 def setup_variables(self):
     """Set the variables required before setup that are common to all tests"""
@@ -25,7 +27,7 @@ def setup_variables(self):
     self.executable = 'gmx_mpi_d'
     self.expected_output_file = 'md.log'
     self.keep_files = [self.expected_output_file]
-    self.readonly_files = ['gromacs_1400k_atoms.tpr']
+    self.readonly_files = [input_data_file]
     self.reference = {
         '*': {'Rate': (1, None, None, 'ns/day')}
     }
@@ -35,10 +37,11 @@ def setup_variables(self):
 def test_variables(self):
     """Set the variables required after setup, specific to each test"""
     # Test specific variables
+    self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
+    self.num_cpus_per_task = 1
+    
     self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
     self.env_vars['OMP_PLACES'] = 'cores'
-    self.num_cpus_per_task = 1
-    self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
 
     if self.current_partition.scheduler.registered_name == 'sge':
         # Set the total number of CPUs to be requested for the SGE scheduler.
@@ -67,7 +70,7 @@ class GROMACSSpackBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'gromacs@2024.4 +mpi+double'
+    spack_spec = 'gromacs@2024 +mpi+double'
 
     @run_before('setup')
     def setup_spack_setup_variables(self):
