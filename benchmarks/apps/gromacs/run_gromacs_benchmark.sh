@@ -93,9 +93,11 @@ then
       # Verify CC and CXX are set
       if [ -z "${CC}" ]; then
           echo "Env var CC is unset or set to the empty string"
+          exit 1
       fi
       if [ -z "${CXX}" ]; then
           echo "Env var CXX is unset or set to the empty string"
+          exit 1
       fi
 
       echo "Extracting GROMACS src to $gmx_dir"
@@ -111,7 +113,7 @@ then
 
       echo "Building GROMACS with cmake"
       cmake_command=$(cat <<-END 
-				cmake -B
+				cmake ..
 				  -DGMX_BUILD_OWN_FFTW=ON 
 				  -DCMAKE_C_COMPILER=$CC 
 				  -DCMAKE_CXX_COMPILER=$CXX 
