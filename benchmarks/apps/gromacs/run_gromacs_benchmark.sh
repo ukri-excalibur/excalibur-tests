@@ -23,7 +23,7 @@ help() {
   echo "    -b <build_type>      The type of build desired, spack, cmake or run_only. Defaults to spack."
   echo "                         Note: for the cmake build, the C and C++ compilers are extracted from"
   echo "                         the environment variables CC and CXX."
-  echo "    -p <gmx_dir>         The path where GROMACS should be installed. Defaults to current"
+  echo "    -d <gmx_dir>         The path where GROMACS should be installed. Defaults to current"
   echo "                         working directory." 
   echo "    -g <gpu_flavour>     The flavour of GPU offloading to use, NONE, CUDA, OpenCL or SYCL."
   echo "                         Defaults to NONE (CPU)."
@@ -44,14 +44,14 @@ then
 fi
 
 # parse input arguments
-while getopts "hs:p:b:p:g:v:e:f:" opt
+while getopts "hs:p:b:d:g:v:e:f:" opt
 do
   case ${opt} in
     h  ) help;;
     s  ) system=$OPTARG;;
     p  ) partition=$OPTARG;;
     b  ) build_system=$OPTARG;;
-    p  ) gmx_dir=$OPTARG;;
+    d  ) gmx_dir=$OPTARG;;
     g  ) gpu_flavour=$OPTARG;;
     v  ) simd_flavour=$OPTARG;;
     e  ) excalibur_tests_dir=$OPTARG;;
@@ -108,7 +108,7 @@ then
       cd gromacs-2024.4
       mkdir build
       cd build
-      
+
       echo "Building GROMACS with cmake"
       cmake_command=$(cat <<-END 
 				cmake -B
