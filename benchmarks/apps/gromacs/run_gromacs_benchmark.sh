@@ -90,24 +90,44 @@ then
       echo "Error: $gmx_dir does not exist"
       exit 1
     else
-      # Build GROMACS
+      # Verify CC and CXX are set
+      if [ -z "${CC}" ]; then
+          echo "Env var CC is unset or set to the empty string"
+      fi
+      if [ -z "${CXX}" ]; then
+          echo "Env var CXX is unset or set to the empty string"
+      fi
+
+      echo "Extracting GROMACS src to $gmx_dir"
       cd $gmx_dir
       curl -o "gromacs-2024.4.tar.gz" "https://ftp.gromacs.org/gromacs/gromacs-2024.4.tar.gz"
       tar xfz gromacs-2024.4.tar.gz
       rm gromacs-2024.4.tar.gz
+      
+      echo "Changing into gromacs-2024.4/build"
       cd gromacs-2024.4
       mkdir build
       cd build
-      cmake .. \
-        -DGMX_BUILD_OWN_FFTW=ON \
-        -DCMAKE_C_COMPILER=$CC \
-        -DCMAKE_CXX_COMPILER=$CXX \
-        -DGMX_MPI=on \
-        -DGMX_SIMD=$simd_flavour \
-        -DGMX_DOUBLE=on \
-        -DGMX_FFT_LIBRARY=fftw3 \
-        $gpu_flags
-      make -j
+      
+      echo "Building GROMACS with cmake"
+      cmake_command=$(cat <<-END 
+				cmake -B
+				  -DGMX_BUILD_OWN_FFTW=ON 
+				  -DCMAKE_C_COMPILER=$CC 
+				  -DCMAKE_CXX_COMPILER=$CXX 
+				  -DGMX_MPI=on 
+				  -DGMX_SIMD=$simd_flavour 
+				  -DGMX_DOUBLE=on 
+				  -DGMX_FFT_LIBRARY=fftw3 
+				  $gpu_flags
+			END
+			)
+      echo "$cmake_command"
+      eval "$cmake_command"
+      
+      make_command="make -j"
+      echo "$make_command"
+      eval "$make_command"
     fi
 fi
 
@@ -133,9 +153,14 @@ fi
 
 test_flags="${test_flags}Benchmark"
 
-export TMPDIR="${TMPDIR:-${XDG_RUNTIME_DIR:-/tmp}}"
-export RFM_CONFIG_FILES="$excalibur_tests_dir/benchmarks/reframe_config.py"
-export RFM_USE_LOGIN_SHELL="true"
+export_commands=$(cat <<-END 
+export TMPDIR="${TMPDIR:-${XDG_RUNTIME_DIR:-/tmp}}";
+export RFM_CONFIG_FILES="$excalibur_tests_dir/benchmarks/reframe_config.py";
+export RFM_USE_LOGIN_SHELL="true";
+END
+)
+echo "$export_commands"
+eval "$export_commands"
 
 # Activate excalibur env
 if [ ! -d "$excalibur_tests_dir/.venv" ]
@@ -143,7 +168,11 @@ then
   echo "Error: no .venv found in $excalibur_tests_dir"
   exit 1
 else
-  source "$excalibur_tests_dir/.venv/bin/activate"
+  activate_command="source "$excalibur_tests_dir/.venv/bin/activate""
+  echo "$activate_command"
+  eval "$activate_command"
 fi
 
-reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $extra_flags
+reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $extra_flags"
+echo "$reframe_command"
+eval "$reframe_command"
