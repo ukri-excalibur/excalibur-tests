@@ -1,5 +1,7 @@
 #!/bin/bash -l
 
+set -e
+
 system=""
 partition=""
 build_system="spack"
@@ -7,6 +9,7 @@ gmx_dir="$PWD"
 gpu_flavour="NONE"
 simd_flavour="NONE"
 excalibur_tests_dir="$HOME/excalibur-tests"
+extra_flags=""
 
 help() {
   echo "Usage: $0 -s <system> [-p <partition>] [-b <build_type>] [-r] [-p <gmx_dir>] [-g] [-e <excalibur_dir>]"
@@ -28,6 +31,7 @@ help() {
   echo "                         Defaults to NONE."
   echo "    -e <excalibur_dir>   The directory where the excalibur-tests dir is located. If not set,"
   echo "                         the default is $HOME/excalibur-tests."
+  echo "    -f <extra_flags>     Extra flags to pass to the reframe command."
   echo "    -h                   Display this help message."
   exit 0
 }
@@ -40,7 +44,7 @@ then
 fi
 
 # parse input arguments
-while getopts "hs:p:b:p:g:v:e:" opt
+while getopts "hs:p:b:p:g:v:e:f:" opt
 do
   case ${opt} in
     h  ) help;;
@@ -51,6 +55,7 @@ do
     g  ) gpu_flavour=$OPTARG;;
     v  ) simd_flavour=$OPTARG;;
     e  ) excalibur_tests_dir=$OPTARG;;
+    f  ) extra_flags=$OPTARG;;
     \? ) echo "Invalid option: $OPTARG" >&2; exit 1;;
   esac
 done
@@ -94,6 +99,7 @@ then
       mkdir build
       cd build
       cmake .. \
+        -DGMX_BUILD_OWN_FFTW=ON \
         -DCMAKE_C_COMPILER=$CC \
         -DCMAKE_CXX_COMPILER=$CXX \
         -DGMX_MPI=on \
@@ -101,7 +107,7 @@ then
         -DGMX_DOUBLE=on \
         -DGMX_FFT_LIBRARY=fftw3 \
         $gpu_flags
-      make
+      make -j
     fi
 fi
 
@@ -140,4 +146,4 @@ else
   source "$excalibur_tests_dir/.venv/bin/activate"
 fi
 
-reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags
+reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $extra_flags
