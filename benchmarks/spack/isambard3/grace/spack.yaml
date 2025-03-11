@@ -1,0 +1,172 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  view: false
+  include:
+  - ../../common.yaml
+  compilers:
+  - compiler:
+      spec: gcc@=12.3.0
+      paths:
+        cc: /usr/bin/gcc-12
+        cxx: /usr/bin/g++-12
+        f77: /usr/bin/gfortran-12
+        fc: /usr/bin/gfortran-12
+      flags: {}
+      operating_system: sles15
+      target: aarch64
+      modules:
+      - PrgEnv-gnu
+      environment: {}
+      extra_rpaths: []
+  packages:
+    cmake:
+      externals:
+      - spec: cmake@3.20.4
+        prefix: /usr
+    python:
+      externals:
+      - spec: python@3.11.7+bz2+crypt+ctypes+dbm+lzma+pyexpat+pythoncmd+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /opt/cray/pe/python/3.11.7
+      - spec: python@3.6.15+bz2+crypt+ctypes+dbm+lzma+pyexpat~pythoncmd+readline+sqlite3+ssl~tkinter+uuid+zlib
+        prefix: /usr
+    groff:
+      externals:
+      - spec: groff@1.22.4
+        prefix: /usr
+    bison:
+      externals:
+      - spec: bison@3.0.4
+        prefix: /usr
+    zlib:
+      externals:
+      - spec: zlib@1.2.13
+        prefix: /usr
+    perl:
+      externals:
+      - spec: perl@5.26.1~cpanm+opcode+open+shared+threads
+        prefix: /usr
+    sed:
+      externals:
+      - spec: sed@4.4
+        prefix: /usr
+    openssh:
+      externals:
+      - spec: openssh@8.4p1
+        prefix: /usr
+    curl:
+      externals:
+      - spec: curl@8.0.1+gssapi+ldap+nghttp2
+        prefix: /usr
+    m4:
+      externals:
+      - spec: m4@1.4.18
+        prefix: /usr
+    tar:
+      externals:
+      - spec: tar@1.34
+        prefix: /usr
+    gawk:
+      externals:
+      - spec: gawk@4.2.1
+        prefix: /usr
+    gettext:
+      externals:
+      - spec: gettext@0.20.2
+        prefix: /usr
+    findutils:
+      externals:
+      - spec: findutils@4.8.0
+        prefix: /usr
+    gmake:
+      externals:
+      - spec: gmake@4.2.1
+        prefix: /usr
+    automake:
+      externals:
+      - spec: automake@1.15.1
+        prefix: /usr
+    pkg-config:
+      externals:
+      - spec: pkg-config@0.29.2
+        prefix: /usr
+    autoconf:
+      externals:
+      - spec: autoconf@2.69
+        prefix: /usr
+    meson:
+      externals:
+      - spec: meson@1.3.1
+        prefix: /opt/cray/pe/python/3.11.7
+    flex:
+      externals:
+      - spec: flex@2.6.4+lex
+        prefix: /usr
+    diffutils:
+      externals:
+      - spec: diffutils@3.6
+        prefix: /usr
+    git:
+      externals:
+      - spec: git@2.35.3+tcltk
+        prefix: /usr
+    binutils:
+      externals:
+      - spec: binutils@2.39.0~gold~headers
+        prefix: /usr
+    libtool:
+      externals:
+      - spec: libtool@2.4.6
+        prefix: /usr
+    coreutils:
+      externals:
+      - spec: coreutils@8.32
+        prefix: /usr
+    openssl:
+      externals:
+      - spec: openssl@1.1.1l
+        prefix: /usr
+    subversion:
+      externals:
+      - spec: subversion@1.14.1
+        prefix: /usr
+    cvs:
+      externals:
+      - spec: cvs@1.12.13
+        prefix: /usr
+    cray-libsci:
+      externals:
+      - spec: cray-libsci@24.03.0%gcc@12.3
+        prefix: /opt/cray/pe/libsci/24.03.0/GNU/12.3/aarch64
+        modules:
+        - cray-libsci/24.03.0
+    cray-mpich:
+      externals:
+      - spec: cray-mpich@8.1.29%gcc@12.3
+        prefix: /opt/cray/pe/mpich/8.1.29/ofi/gnu/12.3
+        modules:
+        - craype-network-ofi
+        - cray-mpich/8.1.29
+    py-numpy:
+      externals:
+      - spec: py-numpy@1.24.4 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+    py-scipy:
+      externals:
+      - spec: py-scipy@1.10.1 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+    py-mpi4py:
+      externals:
+      - spec: py-mpi4py@3.1.4 ^python@3.11.7
+        modules:
+        - cray-python
+        prefix: /opt/cray/pe/python/3.11.7
+  specs:
+  - purify+onnxrt
