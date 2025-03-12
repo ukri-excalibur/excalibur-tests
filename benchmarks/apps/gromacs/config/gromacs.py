@@ -24,7 +24,7 @@ def setup_variables(self):
     """Set the variables required before setup that are common to all tests"""
     # Variables consistent in all tests
     self.exclusive_access = True
-    self.executable = 'gmx_mpi_d'
+    self.executable = './gmx_mpi_d'
     self.expected_output_file = 'md.log'
     self.keep_files = [self.expected_output_file]
     self.readonly_files = [input_data_file]

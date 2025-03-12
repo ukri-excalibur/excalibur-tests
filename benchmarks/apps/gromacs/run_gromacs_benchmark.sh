@@ -67,6 +67,12 @@ then
     echo "System must be set"
     exit 1
 fi
+gromacs_config_dir="$excalibur_tests_dir/benchmarks/apps/gromacs/config"
+if [ ! -d "$gromacs_config_dir" ]
+then
+    echo "Error: Could not find gromacs config in $excalibur_tests_dir. Searched $gromacs_config_dir."
+    exit 1
+fi
 
 # Set the system we are running on
 system_partition="$system"
@@ -113,14 +119,13 @@ then
 
       echo "Building GROMACS with cmake"
       cmake_command=$(cat <<-END 
-				cmake ..
-				  -DGMX_BUILD_OWN_FFTW=ON 
-				  -DCMAKE_C_COMPILER=$CC 
-				  -DCMAKE_CXX_COMPILER=$CXX 
-				  -DGMX_MPI=on 
-				  -DGMX_SIMD=$simd_flavour 
-				  -DGMX_DOUBLE=on 
-				  -DGMX_FFT_LIBRARY=fftw3 
+				cmake .. \
+				  -DCMAKE_C_COMPILER=$CC \
+				  -DCMAKE_CXX_COMPILER=$CXX \
+				  -DGMX_MPI=on \
+				  -DGMX_SIMD=$simd_flavour \
+				  -DGMX_DOUBLE=on \
+				  -DGMX_BUILD_OWN_FFTW=ON \
 				  $gpu_flags
 			END
 			)
@@ -130,6 +135,9 @@ then
       make_command="make -j"
       echo "$make_command"
       eval "$make_command"
+
+      echo "Copying gmx_mpi_d executable into $gromacs_config_dir"
+      cp "$gmx_dir/gromacs-2024.4/build/bin/gmx_mpi_d" "$gromacs_config_dir/gmx_mpi_d"
     fi
 fi
 
