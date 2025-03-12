@@ -136,18 +136,15 @@ then
       cd build
 
       echo "Building GROMACS with cmake"
-      cmake_command=$(cat <<-END 
-				cmake .. \
-				  -DCMAKE_C_COMPILER=$c_compiler \
-				  -DCMAKE_CXX_COMPILER=$cxx_compiler \
-				  -DGMX_MPI=on \
-				  -DGMX_SIMD=$simd_flavour \
-				  -DGMX_DOUBLE=on \
-				  -DGMX_BUILD_OWN_FFTW=ON \
-          -DGMX_FFT_LIBRARY=fftw3 \
-				  $gpu_flags
-			END
-			)
+      cmake_command="cmake .."
+      cmake_command="$cmake_command -DCMAKE_C_COMPILER=$c_compiler"
+      cmake_command="$cmake_command -DCMAKE_CXX_COMPILER=$cxx_compiler"
+      cmake_command="$cmake_command -DGMX_MPI=on"
+      cmake_command="$cmake_command -DGMX_SIMD=$simd_flavour"
+      cmake_command="$cmake_command -DGMX_DOUBLE=on"
+      cmake_command="$cmake_command -DGMX_BUILD_OWN_FFTW=ON"
+      cmake_command="$cmake_command -DGMX_FFT_LIBRARY=fftw3"
+      cmake_command="$cmake_command $gpu_flags"
       echo "$cmake_command"
       eval "$cmake_command"
       
