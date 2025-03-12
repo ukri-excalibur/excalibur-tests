@@ -5,37 +5,47 @@ set -e
 system=""
 partition=""
 build_system="spack"
-compiler_path=""
+c_compiler=""
+cxx_compiler=""
 gmx_dir="$PWD"
 gpu_flavour="NONE"
 simd_flavour="NONE"
 excalibur_tests_dir="$HOME/excalibur-tests"
-extra_flags=""
+reframe_flags=""
 
 help() {
-  echo "Usage: $0 -s <system> [-p <partition>] [-b <build_type>] [-r] [-p <gmx_dir>] [-g] [-e <excalibur_dir>]"
+  echo "Usage: $0 -s <system> [-p <partition>] [-b <build_system>] [-c <c_compiler>] [-x <cxx_compiler>] [-d <gmx_dir>] [-g <gpu_flavour>] [-v <simd_flavour>] [-e <excalibur_tests_dir>] [-f <reframe_flags>]"
   echo ""
   echo "Flags:"
-  echo "    -s <system>          The name of the system to set for reframe."
+  echo "    -s|--system <system>                The name of the system to set for reframe."
   echo ""
   echo "  Optional:"
-  echo "    -p <partition>       The name of the system partition to set for reframe. If not set, just"
-  echo "                         the system name will be used."
-  echo "    -b <build_type>      The type of build desired, spack, cmake or run_only. Defaults to spack."
-  echo "                         Note: for the cmake build, the C and C++ compilers are extracted from"
-  echo "                         the environment variables CC and CXX."
-  echo "    -c <compiler_path>   The path to the compiler to use. Defaults to CC and CXX in env."
-  echo "    -d <gmx_dir>         The path where GROMACS should be installed. Defaults to current"
-  echo "                         working directory." 
-  echo "    -g <gpu_flavour>     The flavour of GPU offloading to use, NONE, CUDA, OpenCL or SYCL."
-  echo "                         Defaults to NONE (CPU)."
-  echo "    -v <simd_flavour>    The flavour of SIMD to use. See gromacs documentation for options."
-  echo "                         Defaults to NONE."
-  echo "    -e <excalibur_dir>   The directory where the excalibur-tests dir is located. If not set,"
-  echo "                         the default is $HOME/excalibur-tests."
-  echo "    -f <extra_flags>     Extra flags to pass to the reframe command."
-  echo "    -h                   Display this help message."
+  echo "    -p|--partition <partition>          The name of the system partition to set for reframe. If not set, just"
+  echo "                                        the system name will be used."
+  echo "    -b|--build-type <build_type>        The type of build desired, spack, cmake or run_only. Defaults to spack."
+  echo "                                        Note: for the cmake build, the C and C++ compilers are extracted from"
+  echo "                                        the environment variables CC and CXX."
+  echo "    -c|--c-compiler <compiler_path>     The path to the c compiler to use. Defaults to CC in env."
+  echo "    -x|--cxx-compiler <compiler_path>   The path to the c++ compiler to use. Defaults to CXX in env."
+  echo "    -d|--gmx-dir <gmx_dir>              The path where GROMACS should be installed. Defaults to current"
+  echo "                                        working directory." 
+  echo "    -g|--gpu-flavour <gpu_flavour>      The flavour of GPU offloading to use, NONE, CUDA, OpenCL or SYCL."
+  echo "                                        Defaults to NONE (CPU)."
+  echo "    -v|--simd-flavour <simd_flavour>    The flavour of SIMD to use. See gromacs documentation for options."
+  echo "                                        Defaults to NONE."
+  echo "    -e|--excalibur-dir <excalibur_dir>  The directory where the excalibur-tests dir is located. If not set,"
+  echo "                                        the default is $HOME/excalibur-tests."
+  echo "    -f|--reframe-flags <reframe_flags>  Extra flags to pass to the reframe command."
+  echo "    -h                                  Display this help message."
   exit 0
+}
+
+expect_option() {
+  if [ "$2" == "" ]
+  then
+      echo "Invalid option: $1 requires an argument" >&2
+      help
+  fi
 }
 
 # check for no input arguments and show help
@@ -46,23 +56,23 @@ then
 fi
 
 # parse input arguments
-while getopts "hs:p:b:c:d:g:v:e:f:" opt
+while [ $# -gt 0 ]
 do
-  case ${opt} in
-    h  ) help;;
-    s  ) system=$OPTARG;;
-    p  ) partition=$OPTARG;;
-    b  ) build_system=$OPTARG;;
-    c  ) compiler_path=$OPTARG;;
-    d  ) gmx_dir=$OPTARG;;
-    g  ) gpu_flavour=$OPTARG;;
-    v  ) simd_flavour=$OPTARG;;
-    e  ) excalibur_tests_dir=$OPTARG;;
-    f  ) extra_flags=$OPTARG;;
-    \? ) echo "Invalid option: $OPTARG" >&2; exit 1;;
+  case $1 in
+    -h | --help                ) help;;
+    -s | --system              ) expect_option "$1" "$2"; system=$2; shift 2;;
+    -p | --partition           ) expect_option "$1" "$2"; partition=$2; shift 2;;
+    -b | --build-system        ) expect_option "$1" "$2"; build_system=$2; shift 2;;
+    -c | --c-compiler          ) expect_option "$1" "$2"; c_compiler=$2; shift 2;;
+    -x | --cxx-compiler        ) expect_option "$1" "$2"; cxx_compiler=$2; shift 2;;
+    -d | --gmx-dir             ) expect_option "$1" "$2"; gmx_dir=$2; shift 2;;
+    -g | --gpu-flavour         ) expect_option "$1" "$2"; gpu_flavour=$2; shift 2;;
+    -v | --simd-flavour        ) expect_option "$1" "$2"; simd_flavour=$2; shift 2;;
+    -e | --excalibur-tests-dir ) expect_option "$1" "$2"; excalibur_tests_dir=$2; shift 2;;
+    -f | --reframe-flags       ) expect_option "$1" "$2"; reframe_flags=$2; shift 2;;
+    *                          ) echo "Invalid option: $1" >&2; help;;
   esac
 done
-shift $((OPTIND -1))
 
 # Verify required inputs
 if [ "$system" == "" ]
@@ -99,21 +109,25 @@ then
       echo "Error: $gmx_dir does not exist"
       exit 1
     else
-      # Verify CC and CXX are set
-      c_compiler="$CC"
-      cxx_compiler="$CXX"
-      if [ "$compiler_path" != "" ]; then
-          export c_compiler="$compiler_path/bin/gcc"
-          export cxx_compiler="$compiler_path/bin/g++"
-      else 
-        if [ "$CC" == "" ]; then
-            echo "Env var CC is unset or set to the empty string"
+      # Verify compilers are set
+      if [ "$c_compiler" == "" ]; then
+          if [ $CC == "" ]
+          then
+            echo "Unable to determine c compiler"
             exit 1
-        fi
-        if [ -z "${CXX}" ]; then
-            echo "Env var CXX is unset or set to the empty string"
+          else
+            c_compiler="$CC"
+          fi
+      fi
+
+      if [ "$cxx_compiler" == "" ]; then
+          if [ $CXX == "" ]
+          then
+            echo "Unable to determine c++ compiler"
             exit 1
-        fi
+          else
+            cxx_compiler="$CXX"
+          fi
       fi
 
       cd $gmx_dir
@@ -199,6 +213,6 @@ else
   eval "$activate_command"
 fi
 
-reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $extra_flags"
+reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $reframe_flags"
 echo "$reframe_command"
 eval "$reframe_command"
