@@ -116,14 +116,22 @@ then
         fi
       fi
 
-      echo "Extracting GROMACS src to $gmx_dir"
       cd $gmx_dir
-      curl -o "gromacs-2024.4.tar.gz" "https://ftp.gromacs.org/gromacs/gromacs-2024.4.tar.gz"
-      tar xfz gromacs-2024.4.tar.gz
-      rm gromacs-2024.4.tar.gz
+      if [ ! -d "gromacs-2024.4" ]; then
+        echo "Extracting GROMACS src to $gmx_dir"
+        curl -o "gromacs-2024.4.tar.gz" "https://ftp.gromacs.org/gromacs/gromacs-2024.4.tar.gz"
+        tar xfz gromacs-2024.4.tar.gz
+        rm gromacs-2024.4.tar.gz
+      else
+        echo "Found existing gromacs-2024.4 directory, $gmx_dir/gromacs-2024.4"
+      fi
       
-      echo "Changing into gromacs-2024.4/build"
       cd gromacs-2024.4
+      if [ -d "build" ]; then
+        echo "Replacing existing build directory"
+        rm -rf build
+      fi
+      echo "Changing into gromacs-2024.4/build"
       mkdir build
       cd build
 
