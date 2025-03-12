@@ -103,8 +103,8 @@ then
       c_compiler="$CC"
       cxx_compiler="$CXX"
       if [ "$compiler_path" != "" ]; then
-          export c_compiler="$compiler_path/bin/mpicc"
-          export cxx_compiler="$compiler_path/bin/mpicxx"
+          export c_compiler="$compiler_path/bin/gcc"
+          export cxx_compiler="$compiler_path/bin/g++"
       else 
         if [ "$CC" == "" ]; then
             echo "Env var CC is unset or set to the empty string"
