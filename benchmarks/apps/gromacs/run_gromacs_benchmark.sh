@@ -5,6 +5,7 @@ set -e
 system=""
 partition=""
 build_system="spack"
+compiler_path=""
 gmx_dir="$PWD"
 gpu_flavour="NONE"
 simd_flavour="NONE"
@@ -23,6 +24,7 @@ help() {
   echo "    -b <build_type>      The type of build desired, spack, cmake or run_only. Defaults to spack."
   echo "                         Note: for the cmake build, the C and C++ compilers are extracted from"
   echo "                         the environment variables CC and CXX."
+  echo "    -c <compiler_path>   The path to the compiler to use. Defaults to CC and CXX in env."
   echo "    -d <gmx_dir>         The path where GROMACS should be installed. Defaults to current"
   echo "                         working directory." 
   echo "    -g <gpu_flavour>     The flavour of GPU offloading to use, NONE, CUDA, OpenCL or SYCL."
@@ -44,13 +46,14 @@ then
 fi
 
 # parse input arguments
-while getopts "hs:p:b:d:g:v:e:f:" opt
+while getopts "hs:p:b:c:d:g:v:e:f:" opt
 do
   case ${opt} in
     h  ) help;;
     s  ) system=$OPTARG;;
     p  ) partition=$OPTARG;;
     b  ) build_system=$OPTARG;;
+    c  ) compiler_path=$OPTARG;;
     d  ) gmx_dir=$OPTARG;;
     g  ) gpu_flavour=$OPTARG;;
     v  ) simd_flavour=$OPTARG;;
@@ -97,13 +100,20 @@ then
       exit 1
     else
       # Verify CC and CXX are set
-      if [ -z "${CC}" ]; then
-          echo "Env var CC is unset or set to the empty string"
-          exit 1
-      fi
-      if [ -z "${CXX}" ]; then
-          echo "Env var CXX is unset or set to the empty string"
-          exit 1
+      c_compiler="$CC"
+      cxx_compiler="$CXX"
+      if [ "$compiler_path" != "" ]; then
+          export c_compiler="$compiler_path/bin/mpicc"
+          export cxx_compiler="$compiler_path/bin/mpicxx"
+      else 
+        if [ "$CC" == "" ]; then
+            echo "Env var CC is unset or set to the empty string"
+            exit 1
+        fi
+        if [ -z "${CXX}" ]; then
+            echo "Env var CXX is unset or set to the empty string"
+            exit 1
+        fi
       fi
 
       echo "Extracting GROMACS src to $gmx_dir"
@@ -120,8 +130,8 @@ then
       echo "Building GROMACS with cmake"
       cmake_command=$(cat <<-END 
 				cmake .. \
-				  -DCMAKE_C_COMPILER=$CC \
-				  -DCMAKE_CXX_COMPILER=$CXX \
+				  -DCMAKE_C_COMPILER=$c_compiler \
+				  -DCMAKE_CXX_COMPILER=$cxx_compiler \
 				  -DGMX_MPI=on \
 				  -DGMX_SIMD=$simd_flavour \
 				  -DGMX_DOUBLE=on \
