@@ -144,6 +144,7 @@ then
 				  -DGMX_SIMD=$simd_flavour \
 				  -DGMX_DOUBLE=on \
 				  -DGMX_BUILD_OWN_FFTW=ON \
+          -DGMX_FFT_LIBRARY=fftw3 \
 				  $gpu_flags
 			END
 			)
