@@ -2,6 +2,9 @@
 
 set -e
 
+# Store starting directory
+initial_working_dir="$PWD"
+
 system=""
 partition=""
 build_system="spack"
@@ -212,6 +215,9 @@ else
   echo "$activate_command"
   eval "$activate_command"
 fi
+
+# Ensure we run reframe command from the initial working directory
+cd "$initial_working_dir"
 
 reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $reframe_flags"
 echo "$reframe_command"
