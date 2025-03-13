@@ -7,6 +7,7 @@ initial_working_dir="$PWD"
 
 system=""
 partition=""
+module_list=""
 build_system="spack"
 c_compiler=""
 cxx_compiler=""
@@ -21,6 +22,7 @@ help() {
   echo ""
   echo "Flags:"
   echo "    -s|--system <system>                The name of the system to set for reframe."
+  echo "    -m|--module-list <module_list>      A comma seperated list of modules to load before running the benchmark."
   echo ""
   echo "  Optional:"
   echo "    -p|--partition <partition>          The name of the system partition to set for reframe. If not set, just"
@@ -65,6 +67,7 @@ do
     -h | --help                ) help;;
     -s | --system              ) expect_option "$1" "$2"; system=$2; shift 2;;
     -p | --partition           ) expect_option "$1" "$2"; partition=$2; shift 2;;
+    -m | --module-list         ) expect_option "$1" "$2"; module_list=${2//,/ }; shift 2;;
     -b | --build-system        ) expect_option "$1" "$2"; build_system=$2; shift 2;;
     -c | --c-compiler          ) expect_option "$1" "$2"; c_compiler=$2; shift 2;;
     -x | --cxx-compiler        ) expect_option "$1" "$2"; cxx_compiler=$2; shift 2;;
@@ -80,14 +83,28 @@ done
 # Verify required inputs
 if [ "$system" == "" ]
 then
-    echo "System must be set"
-    exit 1
+    echo "Error: System must be set"
+    help
 fi
 gromacs_config_dir="$excalibur_tests_dir/benchmarks/apps/gromacs/config"
 if [ ! -d "$gromacs_config_dir" ]
 then
     echo "Error: Could not find gromacs config in $excalibur_tests_dir. Searched $gromacs_config_dir."
     exit 1
+fi
+if [ "$module_list" == "" ]
+then
+    if [ $system != "local" ]
+    then
+        echo "Error: module list must be set"
+        help
+    fi
+    echo "Running local build, no modules required"
+else
+    echo "Unloading all modules"
+    module purge
+    echo "Loading user provided modules: $module_list"
+    module load $module_list
 fi
 
 # Set the system we are running on
