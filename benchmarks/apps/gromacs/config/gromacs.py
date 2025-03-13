@@ -46,7 +46,10 @@ def test_variables(self):
     if self.current_partition.scheduler.registered_name == 'sge':
         # Set the total number of CPUs to be requested for the SGE scheduler.
         # Set to a full node size to reduce runtime variance.
-        self.extra_resources['mpi'] = {'num_slots': self.num_tasks}
+        if self.current_system.name == 'kathleen':
+            self.extra_resources['mpi'] = {'num_slots': max(41, self.num_tasks)}
+        else:
+            self.extra_resources['mpi'] = {'num_slots': self.num_tasks}
 
 def set_sanity_patterns(self):
     """Set the required string in the output for a sanity check"""
@@ -110,6 +113,11 @@ class GROMACSRunOnlyBenchmark(rfm.RunOnlyRegressionTest):
 
     valid_systems = ['*']
     valid_prog_environs = ['default']
+    modules = [
+        'mpi',
+        'cmake',
+        'python'
+    ]
 
     @run_before('setup')
     def setup_run_only_setup_variables(self):
