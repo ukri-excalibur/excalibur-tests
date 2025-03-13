@@ -10,48 +10,6 @@ spack:
   - ../../common.yaml
   compilers:
   - compiler:
-      spec: aocc@1.3.0
-      paths:
-        cc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang
-        cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
-        f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
-        fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
-      flags:
-        cflags: null
-        cxxflags: null
-        fflags: null
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: clang@7.0.0
-      paths:
-        cc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang
-        cxx: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/clang++
-        f77: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
-        fc: /cosma/local/aocc/AOCC-1.3.0-Compiler/bin/flang
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: gcc@4.4.7
-      paths:
-        cc: /usr/bin/gcc44
-        cxx: /usr/bin/g++44
-        f77: /usr/bin/gfortran44
-        fc: /usr/bin/gfortran44
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
       spec: gcc@4.8.2
       paths:
         cc: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gcc
@@ -71,35 +29,6 @@ spack:
         cxx: /usr/bin/g++
         f77: /usr/bin/gfortran
         fc: /usr/bin/gfortran
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: aocc@2.0.0
-      paths:
-        cc: /cosma/local/aocc/2.0.0/bin/clang
-        cxx: /cosma/local/aocc/2.0.0/bin/clang++
-        f77: /cosma/local/aocc/2.0.0/bin/flang
-        fc: /cosma/local/aocc/2.0.0/bin/flang
-      flags:
-        cflags: null
-        cxxflags: null
-        fflags: null
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: clang@8.0.0
-      paths:
-        cc: /cosma/local/aocc/2.0.0/bin/clang
-        cxx: /cosma/local/aocc/2.0.0/bin/clang++
-        f77: /cosma/local/aocc/2.0.0/bin/flang
-        fc: /cosma/local/aocc/2.0.0/bin/flang
       flags: {}
       operating_system: rocky9
       target: x86_64
@@ -153,7 +82,7 @@ spack:
       target: x86_64
       modules: []
       environment: {}
-      extra_rpaths: []    
+      extra_rpaths: []
   - compiler:
       spec: aocc@4.0.0
       paths:
@@ -169,7 +98,7 @@ spack:
       target: x86_64
       modules: []
       environment: {}
-      extra_rpaths: []        
+      extra_rpaths: []
   - compiler:
       spec: gcc@7.3.0
       paths:
@@ -255,123 +184,6 @@ spack:
         cxx: /cosma/local/gcc/13.1.0/bin/g++
         f77: /cosma/local/gcc/13.1.0/bin/gfortran
         fc: /cosma/local/gcc/13.1.0/bin/gfortran
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []    
-  - compiler:
-      spec: intel@17.0.2
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@18.0.2
-      paths:
-        cc: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/icc
-        cxx: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/icpc
-        f77: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/ifort
-        fc: /cosma/local/Intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.0.3.199
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.0.1.144
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.0.2.187
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.0.4.243
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.1.0.166
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.1.1.217
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/bin/intel64/ifort
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: intel@19.1.2.254
-      paths:
-        cc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/icc
-        cxx: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/icpc
-        f77: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/ifort
-        fc: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/bin/intel64/ifort
       flags: {}
       operating_system: rocky9
       target: x86_64
@@ -469,13 +281,26 @@ spack:
           LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
       extra_rpaths:
       - /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
+  - compiler:
+      spec: gcc@=11.5.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
   packages:
     autoconf:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
       - spec: autoconf@2.71
-        prefix: /cosma/local/autoconf/2.71/ 
+        prefix: /cosma/local/autoconf/2.71/
     automake:
       externals:
       - spec: automake@1.13.4
@@ -505,7 +330,7 @@ spack:
       - spec: cmake@3.25.1
         prefix: /cosma/local/cmake/3.25.1/
       - spec: cmake@3.28.3
-        prefix: /cosma/local/cmake/3.28.3/    
+        prefix: /cosma/local/cmake/3.28.3/
     cpio:
       externals:
       - spec: cpio@2.11
@@ -696,13 +521,13 @@ spack:
         prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
       - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4    
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
       - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5    
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5
       - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@14.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5   
+        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5
     openssh:
       externals:
       - spec: openssh@7.4p1
