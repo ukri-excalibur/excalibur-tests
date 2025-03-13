@@ -82,7 +82,7 @@ spack:
       target: x86_64
       modules: []
       environment: {}
-      extra_rpaths: []    
+      extra_rpaths: []
   - compiler:
       spec: aocc@4.0.0
       paths:
@@ -98,7 +98,7 @@ spack:
       target: x86_64
       modules: []
       environment: {}
-      extra_rpaths: []        
+      extra_rpaths: []
   - compiler:
       spec: gcc@7.3.0
       paths:
@@ -189,7 +189,7 @@ spack:
       target: x86_64
       modules: []
       environment: {}
-      extra_rpaths: []    
+      extra_rpaths: []
   - compiler:
       spec: intel@2021.1
       paths:
@@ -281,13 +281,26 @@ spack:
           LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
       extra_rpaths:
       - /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
+  - compiler:
+      spec: gcc@=11.5.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
   packages:
     autoconf:
       externals:
       - spec: autoconf@2.69
         prefix: /usr
       - spec: autoconf@2.71
-        prefix: /cosma/local/autoconf/2.71/ 
+        prefix: /cosma/local/autoconf/2.71/
     automake:
       externals:
       - spec: automake@1.13.4
@@ -317,7 +330,7 @@ spack:
       - spec: cmake@3.25.1
         prefix: /cosma/local/cmake/3.25.1/
       - spec: cmake@3.28.3
-        prefix: /cosma/local/cmake/3.28.3/    
+        prefix: /cosma/local/cmake/3.28.3/
     cpio:
       externals:
       - spec: cpio@2.11
@@ -508,13 +521,13 @@ spack:
         prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
       - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4    
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
       - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@13.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5    
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5
       - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath%gcc@14.1.0
           schedulers=slurm
-        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5   
+        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5
     openssh:
       externals:
       - spec: openssh@7.4p1
