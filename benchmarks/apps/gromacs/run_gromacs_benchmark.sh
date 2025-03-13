@@ -7,8 +7,8 @@ initial_working_dir="$PWD"
 
 system=""
 partition=""
-module_list=""
-build_system="spack"
+module_file=""
+build_type="spack"
 c_compiler=""
 cxx_compiler=""
 gmx_dir="$PWD"
@@ -18,15 +18,15 @@ excalibur_tests_dir="$HOME/excalibur-tests"
 reframe_flags=""
 
 help() {
-  echo "Usage: $0 -s <system> [-p <partition>] [-b <build_system>] [-c <c_compiler>] [-x <cxx_compiler>] [-d <gmx_dir>] [-g <gpu_flavour>] [-v <simd_flavour>] [-e <excalibur_tests_dir>] [-f <reframe_flags>]"
+  echo "Usage: $0 -s <system> [-m <module_file] [-p <partition>] [-b <build_type>] [-c <c_compiler>] [-x <cxx_compiler>] [-d <gmx_dir>] [-g <gpu_flavour>] [-v <simd_flavour>] [-e <excalibur_tests_dir>] [-f <reframe_flags>]"
   echo ""
   echo "Flags:"
   echo "    -s|--system <system>                The name of the system to set for reframe."
-  echo "    -m|--module-list <module_list>      A comma seperated list of modules to load before running the benchmark."
   echo ""
   echo "  Optional:"
   echo "    -p|--partition <partition>          The name of the system partition to set for reframe. If not set, just"
   echo "                                        the system name will be used."
+  echo "    -m|--module-file <module_file>      A path to a file containing module mappings for the reframe test."
   echo "    -b|--build-type <build_type>        The type of build desired, spack, cmake or run_only. Defaults to spack."
   echo "                                        Note: for the cmake build, the C and C++ compilers are extracted from"
   echo "                                        the environment variables CC and CXX."
@@ -67,8 +67,8 @@ do
     -h | --help                ) help;;
     -s | --system              ) expect_option "$1" "$2"; system=$2; shift 2;;
     -p | --partition           ) expect_option "$1" "$2"; partition=$2; shift 2;;
-    -m | --module-list         ) expect_option "$1" "$2"; module_list=${2//,/ }; shift 2;;
-    -b | --build-system        ) expect_option "$1" "$2"; build_system=$2; shift 2;;
+    -m | --module-file         ) expect_option "$1" "$2"; module_file=$2; shift 2;;
+    -b | --build-system        ) expect_option "$1" "$2"; build_type=$2; shift 2;;
     -c | --c-compiler          ) expect_option "$1" "$2"; c_compiler=$2; shift 2;;
     -x | --cxx-compiler        ) expect_option "$1" "$2"; cxx_compiler=$2; shift 2;;
     -d | --gmx-dir             ) expect_option "$1" "$2"; gmx_dir=$2; shift 2;;
@@ -92,19 +92,24 @@ then
     echo "Error: Could not find gromacs config in $excalibur_tests_dir. Searched $gromacs_config_dir."
     exit 1
 fi
-if [ "$module_list" == "" ]
+if [ "$build_system" == "cmake" ]
 then
-    if [ $system != "local" ]
+    if [ $module_file == "" ]
     then
-        echo "Error: module list must be set"
-        help
+        if [ "$system" != "local" ]
+        then
+            echo "Error: module list must be set for non-local cmake builds"
+            help
+        else
+            echo "Running local build, no modules required"
+        fi
+    else
+        if [ ! -f "$module_file" ]
+        then
+            echo "Error: Could not find module file: $module_file"
+            exit 1
+        fi
     fi
-    echo "Running local build, no modules required"
-else
-    echo "Unloading all modules"
-    module purge
-    echo "Loading user provided modules: $module_list"
-    module load $module_list
 fi
 
 # Set the system we are running on
@@ -115,7 +120,7 @@ then
 fi
 
 # Build GROMACS if build type is cmake
-if [ "$build_system" == "cmake" ]
+if [ "$build_type" == "cmake" ]
 then
     # Build GPU flags
     gpu_flags=""
@@ -193,14 +198,14 @@ fi
 
 # Determine the reframe test we wish to run
 test_flags="-n StrongScaling"
-if [ "$build_system" == "run_only" ] || [ "$build_system" == "cmake" ]
+if [ "$build_type" == "run_only" ] || [ "$build_type" == "cmake" ]
 then
     test_flags="${test_flags}RunOnly"
-elif [ "$build_system" == "spack" ]
+elif [ "$build_type" == "spack" ]
 then
     test_flags="${test_flags}Spack"
 else
-    echo "Invalid build system: $build_system"
+    echo "Invalid build system: $build_type"
     exit 1
 fi
 
@@ -236,6 +241,6 @@ fi
 # Ensure we run reframe command from the initial working directory
 cd "$initial_working_dir"
 
-reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags $reframe_flags"
+reframe_command="reframe --system $system_partition -c $excalibur_tests_dir/benchmarks/apps/gromacs/config -r $test_flags --module-mappings $module_file $reframe_flags"
 echo "$reframe_command"
 eval "$reframe_command"
