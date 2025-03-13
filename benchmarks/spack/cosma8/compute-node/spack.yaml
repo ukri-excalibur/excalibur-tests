@@ -552,17 +552,17 @@ spack:
         prefix: /usr
     python:
       externals:
-      - spec: python@3.7.10+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      - spec: python@3.7.10+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /cosma/local/intel/oneAPI_2021.3.0/intelpython/latest
-      - spec: python@3.7.7+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      - spec: python@3.7.7+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
-      - spec: python@3.7.9+bz2+ctypes+dbm+lzma+nis+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      - spec: python@3.7.9+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /cosma/local/intel/oneAPI_2021.1.0/intelpython/latest
-      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /usr
-      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+      - spec: python@3.6.8+bz2+ctypes+dbm+lzma+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /usr
-      - spec: python@2.7.15+bz2+ctypes+dbm~lzma+nis+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+      - spec: python@2.7.15+bz2+ctypes+dbm~lzma+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /cosma/local/Python/2.7.15
     rsync:
       externals:
