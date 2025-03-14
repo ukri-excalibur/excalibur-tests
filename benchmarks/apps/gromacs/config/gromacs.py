@@ -22,7 +22,7 @@ class GROMACSSpackBenchmark(SpackTest):
 
     # Variables consistent in all tests
     exclusive_access = True
-    executable = './gmx_mpi_d'
+    executable = 'gmx_mpi_d'
     time_limit = '45m'
 
     expected_output_file = 'md.log'
