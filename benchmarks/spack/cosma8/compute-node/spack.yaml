@@ -321,18 +321,8 @@ spack:
         prefix: /usr
     cmake:
       externals:
-      - spec: cmake@2.8.12.2
-        prefix: /usr
-      - spec: cmake@3.11.4
-        prefix: /cosma/local/cmake/3.11.4/
-      - spec: cmake@3.18.1
-        prefix: /cosma/local/cmake/3.18.1/
-      - spec: cmake@3.25.1
-        prefix: /cosma/local/cmake/3.25.1/
       - spec: cmake@3.26.5
         prefix: /usr
-      - spec: cmake@3.28.3
-        prefix: /cosma/local/cmake/3.28.3/
     cpio:
       externals:
       - spec: cpio@2.11
