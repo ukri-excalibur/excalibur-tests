@@ -28,6 +28,7 @@ class GROMACSSpackBenchmark(SpackTest):
     expected_output_file = 'md.log'
     keep_files = [expected_output_file]
     readonly_files = [input_data_file]
+    sourcesdir = os.path.dirname(__file__)
     
     reference = {
         '*': {'Rate': (1, None, None, 'ns/day')}
