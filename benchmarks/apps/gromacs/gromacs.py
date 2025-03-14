@@ -33,12 +33,6 @@ class GROMACSSpackBenchmark(SpackTest):
     reference = {
         '*': {'Rate': (1, None, None, 'ns/day')}
     }
-
-    @run_before('setup')
-    def setup_spack_setup_variables(self):
-        """Set the variables required before setup that are common to all tests"""
-        if (self.current_system.name == "kathleen"):
-            self.spack_spec += ' ^intel-oneapi-mpi'
         
     @run_after('setup')
     def setup_spack_test_variables(self):
