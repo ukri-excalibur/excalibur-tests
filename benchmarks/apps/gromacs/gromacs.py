@@ -44,14 +44,6 @@ class GROMACSSpackBenchmark(SpackTest):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 
-        if self.current_partition.scheduler.registered_name == 'sge':
-            # Set the total number of CPUs to be requested for the SGE scheduler.
-            # Set to a full node size to reduce runtime variance.
-            if self.current_system.name == 'kathleen':
-                self.extra_resources['mpi'] = {'num_slots': max(41, self.num_tasks)}
-            else:
-                self.extra_resources['mpi'] = {'num_slots': self.num_tasks}
-
     @run_before('sanity')
     def set_spack_test_sanity_patterns(self):
         """Set the required string in the output for a sanity check"""
