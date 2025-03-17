@@ -67,6 +67,8 @@ packages:
     externals:
     - spec: groff@1.22.2
       prefix: /usr
+  gromacs:
+    require: "^intel-oneapi-mpi"
   hwloc:
     externals:
     - spec: hwloc@1.11.12
