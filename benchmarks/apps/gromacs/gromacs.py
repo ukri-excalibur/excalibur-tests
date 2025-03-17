@@ -18,8 +18,6 @@ class GROMACSSpackBenchmark(SpackTest):
     valid_systems = ['*']
     valid_prog_environs = ['default']
 
-    spack_spec = 'gromacs@2024 +mpi+double'
-
     # Variables consistent in all tests
     exclusive_access = True
     executable = 'gmx_mpi_d'
@@ -61,11 +59,15 @@ class GROMACSSpackBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingSpackCPUBenchmark(GROMACSSpackBenchmark):
+    spack_spec = 'gromacs@2024 +mpi+double'
+
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
 
 
 @rfm.simple_test
 class StrongScalingSpackGPUBenchmark(GROMACSSpackBenchmark):
+    spack_spec = 'gromacs@2024 +mpi+double+cuda'
+
     executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
     num_nodes_param = parameter([1, 2, 3, 4])
