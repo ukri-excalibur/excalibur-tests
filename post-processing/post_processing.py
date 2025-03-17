@@ -85,16 +85,13 @@ class PostProcessing:
             print("Saved {0} dataframe to {1}".format(self.save, self.output_path))
 
         # call a plotting script
-        if self.plotting:
-            self.plot = plot_generic(
-                config.title, self.df[self.mask][config.plot_columns],
-                config.x_axis, config.y_axis, config.series_filters, self.debug)
-
-        # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
-        if self.debug & self.verbose:
-            print("")
-            print("Full dataframe:")
-            print(self.df.to_json(orient="columns", indent=2))
+        if self.plot_type:
+            os.makedirs(self.output_path, exist_ok=True)
+            if self.plot_type == "generic":
+                self.plot = plot_generic(
+                    config.title, self.df[self.mask][config.plot_columns],
+                    config.x_axis, config.y_axis, config.series_filters, self.output_path, self.debug)
+            print("Saved {0} dataframe to {1}".format(self.plot_type, self.output_path))
 
         return self.df[self.mask][config.plot_columns]
 
