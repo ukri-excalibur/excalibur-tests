@@ -13,23 +13,23 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, debug=False, verbose=False, save=False, plotting=True):
+    def __init__(self, log_path: Path, plot_type=None, save=None, output_path=Path(__file__).parent, debug=False):
         """
             Initialise class.
 
             Args:
                 log_path: Path, path to performance log file or directory.
+                plot_type: str, type of plot to be generated and stored in an html file.
+                save: str, state of dataframe to save to csv file.
+                output_path: Path, path to a directory for storing outputs.
                 debug: bool, flag to print additional information to console.
-                verbose: bool, flag to print more additional information to console.
-                save: bool, flag to save the filtered dataframe in csv file
-                plotting: bool, flag to generate and store a plot in html file
         """
 
         # FIXME (issue #264): add proper logging
-        self.debug = debug
-        self.verbose = verbose
+        self.plot_type = plot_type
         self.save = save
-        self.plotting = plotting
+        self.output_path = output_path
+        self.debug = debug
         # find and read perflogs
         self.original_df = PerflogHandler(log_path, self.debug).get_df()
         # copy original data for modification during post-processing
@@ -345,9 +345,8 @@ class PostProcessing:
                 e.args = (e.args[0] + " for column '{0}' and value '{1}'".format(column, value),)
                 raise
 
-        if self.debug & self.verbose:
-            print(mask)
         if self.debug:
+            print(mask)
             print("")
 
         return mask
@@ -410,26 +409,22 @@ def read_args():
     parser = argparse.ArgumentParser(
         description="Plot benchmark data. At least one perflog must be supplied.")
 
-    # required positional arguments (log path, config path)
+    # required positional arguments
     parser.add_argument("log_path", type=Path,
                         help="path to a perflog file or a directory containing perflog files")
     parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
 
-    # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic",
-                        help="type of plot to be generated (default: 'generic')")
-
-    # info dump flags
+    # optional arguments
+    parser.add_argument("-p", "--plot_type", type=str,
+                        help="type of plot to be generated")
+    parser.add_argument("-s", "--save", type=str,
+                        help="one of 'original', 'filtered', or 'transformed' states in which \
+                            to save perflog data to a csv file")
+    parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
+                        help="path to a directory for storing outputs")
     parser.add_argument("-d", "--debug", action="store_true",
                         help="debug flag for printing additional information")
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="verbose flag for printing more debug information \
-                              (must be used in conjunction with the debug flag)")
-    parser.add_argument("-s", "--save", action="store_true",
-                        help="save flag for saving the filtered dataframe in csv file")
-    parser.add_argument("-np", "--no_plot", action="store_true",
-                        help="no-plot flag for disabling plotting")
 
     return parser.parse_args()
 
@@ -439,7 +434,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose, args.save, not args.no_plot)
+        post = PostProcessing(args.log_path, args.plot_type, args.save, args.output_path, args.debug)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 
