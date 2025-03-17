@@ -11,6 +11,7 @@ on:
       - 'benchmarks/reframe_config.py'
       - 'benchmarks/examples/**'
       - 'benchmarks/modules/**'
+      - 'benchmarks/spack/github-actions/**'
       - 'post-processing/**'
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - 'reframe_config.py'
       - 'benchmarks/examples/**'
       - 'benchmarks/modules/**'
+      - 'benchmarks/spack/github-actions/**'
       - 'post-processing/**'
   release:
 
