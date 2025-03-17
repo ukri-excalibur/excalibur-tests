@@ -126,6 +126,10 @@ packages:
     # # it so that we can use GCC 10.2 out-of-the-box.
     # - spec: openmpi@4.1.1%gcc@4.9.2
     #   prefix: /shared/ucl/apps/openmpi/4.1.1/gnu-4.9.2
+  intel-oneapi-mpi:
+    externals:
+    - spec: intel-oneapi-mpi@2021.6.0 +generic-names
+      prefix: /shared/ucl/apps/intel/2022.2
   openssh:
     externals:
     - spec: openssh@7.4p1
