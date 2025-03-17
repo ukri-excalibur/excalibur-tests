@@ -83,6 +83,6 @@ spack:
         prefix: /usr/local
     openmpi:
       externals:
-      - spec: openmpi@4.1.6%gcc@=13.3.0~cuda+cxx~cxx_exceptions+java~memchecker+pmi~static~wrapper-rpath
-          fabrics=ofi,psm,psm2,ucx schedulers=slurm
+      - spec: openmpi@4.1.6~cuda+cxx~cxx_exceptions+java~memchecker+pmi~static~wrapper-rpath
+          fabrics=ofi,psm,psm2,ucx schedulers=slurm %gcc@=13.3.0
         prefix: /usr
