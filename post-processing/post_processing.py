@@ -66,10 +66,23 @@ class PostProcessing:
         if self.debug:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
+
         if self.save:
-            # set index=False to exclude the dataframe index from the csv
-            self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
-                path_or_buf=os.path.join(Path(__file__).parent, 'output.csv'), index=True)
+            os.makedirs(self.output_path, exist_ok=True)
+            csv_path = os.path.join(self.output_path, "output.csv")
+            # save original dataframe with no filters or transformations applied
+            if self.save == "original":
+                self.original_df.to_csv(path_or_buf=csv_path, index=True)
+            # save original filtered dataframe with no transformations applied
+            elif self.save == "filtered":
+                self.original_df[self.mask][config.plot_columns + config.extra_columns].to_csv(
+                    path_or_buf=csv_path, index=True)
+            # save processed dataframe
+            elif self.save == "transformed":
+                # set index=False to exclude the dataframe index from the csv
+                self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
+                    path_or_buf=csv_path, index=True)
+            print("Saved {0} dataframe to {1}".format(self.save, self.output_path))
 
         # call a plotting script
         if self.plotting:
