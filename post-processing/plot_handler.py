@@ -12,7 +12,8 @@ from bokeh.transform import factor_cmap
 from titlecase import titlecase
 
 
-def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
+def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
+                 output_path=Path(__file__).parent, debug=False):
     """
         Create a bar chart for the supplied data using bokeh.
 
@@ -22,6 +23,8 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             x_axis: dict, x-axis column and units.
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
+            output_path: Path, path to a directory for storing the generated plot.
+            debug: bool, flag to print additional information to console.
     """
 
     # get column names and labels for axes
@@ -59,7 +62,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
 
     # create html file to store plot in
     output_file(filename=os.path.join(
-        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+        output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
     # create plot
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
