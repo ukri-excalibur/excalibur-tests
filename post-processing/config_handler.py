@@ -19,6 +19,7 @@ class ConfigHandler:
             config = read_config(config)
 
         # extract config information
+        self.plot_type = config.get("plot_type")
         self.title = config.get("title")
         self.x_axis = config.get("x_axis")
         self.y_axis = config.get("y_axis")
@@ -60,9 +61,13 @@ class ConfigHandler:
         """
 
         return self(dict({
+            "plot_type": None,
             "title": None,
-            "x_axis": {"value": None, "units": {"custom": None}},
-            "y_axis": {"value": None, "units": {"custom": None}, "scaling": {"custom": None}},
+            "x_axis": {"value": None, "units": {"custom": None},
+                       "range": {"min": None, "max": None}},
+            "y_axis": {"value": None, "units": {"custom": None},
+                       "scaling": {"custom": None},
+                       "range": {"min": None, "max": None}},
             "filters": {"and": [], "or": []},
             "series": [],
             "column_types": {},
@@ -191,6 +196,7 @@ class ConfigHandler:
         """
 
         return dict({
+            "plot_type": self.plot_type,
             "title": self.title,
             "x_axis": self.x_axis,
             "y_axis": self.y_axis,
@@ -237,6 +243,13 @@ def read_config(config: dict):
             config: dict, plot configuration information.
     """
 
+    # check plot_type information
+    plot_type = config.get("plot_type")
+    if not plot_type:
+        raise KeyError("Missing plot type information.")
+    elif (plot_type != 'generic') and (plot_type != 'line'):
+        raise RuntimeError("Plot type must be one of 'generic' or 'line'.")
+
     # check plot title information
     if not config.get("title"):
         raise KeyError("Missing plot title information.")
@@ -248,6 +261,8 @@ def read_config(config: dict):
         raise KeyError("Missing x-axis value information.")
     if not config.get("x_axis").get("units"):
         raise KeyError("Missing x-axis units information.")
+    if not config.get("x_axis").get("range"):
+        raise KeyError("Missing x-axis range information.")
     if (config.get("x_axis").get("units").get("column") is not None and
         config.get("x_axis").get("units").get("custom") is not None):
         raise RuntimeError(
@@ -260,6 +275,8 @@ def read_config(config: dict):
         raise KeyError("Missing y-axis value information.")
     if not config.get("y_axis").get("units"):
         raise KeyError("Missing y-axis units information.")
+    if not config.get("y_axis").get("range"):
+        raise KeyError("Missing y-axis range information.")
     if (config.get("y_axis").get("units").get("column") is not None and
         config.get("y_axis").get("units").get("custom") is not None):
         raise RuntimeError(
@@ -280,8 +297,12 @@ def read_config(config: dict):
 
     # check optional series information
     if config.get("series"):
-        if len(config.get("series")) == 1:
-            raise RuntimeError("Number of series must be >= 2.")
+        if plot_type == 'generic':
+            if len(config.get("series")) == 1:
+                raise RuntimeError("Number of series must be >= 2 for generic plot.")
+        if plot_type == 'line':
+            if len(config.get("series")) < 1:
+                raise RuntimeError("Number of series must be >= 1 for line plot.")
         if len(set([s[0] for s in config.get("series")])) > 1:
             raise RuntimeError("Currently supporting grouping of series by only one column. \
                                Please use a single column name in your series configuration.")
