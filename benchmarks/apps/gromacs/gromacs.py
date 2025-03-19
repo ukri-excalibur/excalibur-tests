@@ -12,7 +12,7 @@ from benchmarks.modules.utils import SpackTest
 
 input_data_file = 'gromacs_1400k_atoms.tpr'
 
-class GROMACSSpackBenchmark(SpackTest):
+class GROMACSBenchmark(SpackTest):
     """Base class for a GROMACS benchmark using the spack build system"""
 
     valid_systems = ['*']
@@ -40,7 +40,7 @@ class GROMACSSpackBenchmark(SpackTest):
     }
         
     @run_after('setup')
-    def setup_spack_test_variables(self):
+    def setup_test_variables(self):
         """Set the variables required after setup, specific to each test"""
         # Test specific variables
         self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
@@ -50,14 +50,14 @@ class GROMACSSpackBenchmark(SpackTest):
         self.env_vars['OMP_PLACES'] = 'cores'
 
     @run_before('sanity')
-    def set_spack_test_sanity_patterns(self):
+    def set_test_sanity_patterns(self):
         """Set the required string in the output for a sanity check"""
         self.sanity_patterns = sn.assert_found(
             'Finished mdrun', self.expected_output_file
         )
 
     @run_before('performance')
-    def set_spack_test_perf_patterns(self):
+    def set_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
             'Rate': sn.extractsingle(r'Performance:\s+(?P<rate>\S+)(\s+\S+){1}',
@@ -69,7 +69,7 @@ class GROMACSSpackBenchmark(SpackTest):
         }
 
 @rfm.simple_test
-class StrongScalingSpackCPUBenchmark(GROMACSSpackBenchmark):
+class StrongScalingCPU(GROMACSBenchmark):
     spack_spec = 'gromacs@2024 +mpi+double'
     executable = 'gmx_mpi_d'
 
@@ -78,7 +78,7 @@ class StrongScalingSpackCPUBenchmark(GROMACSSpackBenchmark):
 
 
 @rfm.simple_test
-class StrongScalingSpackGPUBenchmark(GROMACSSpackBenchmark):
+class StrongScalingSpackGPU(GROMACSBenchmark):
     spack_spec = 'gromacs@2024 +mpi+cuda'
     executable = 'gmx_mpi'
 
