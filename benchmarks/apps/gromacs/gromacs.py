@@ -60,11 +60,11 @@ class GROMACSSpackBenchmark(SpackTest):
     def set_spack_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
-            'Rate': sn.extractsingle('Performance:\s+(?P<rate>\S+)(\s+\S+){1}',
+            'Rate': sn.extractsingle(r'Performance:\s+(?P<rate>\S+)(\s+\S+){1}',
                                      self.expected_output_file, 'rate', float),
-            'Energy': sn.extractsingle('\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
-                                       '(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
-                                       '\s+Pressure \(bar\)\s+Constr\. rmsd',
+            'Energy': sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
+                                       r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
+                                       r'\s+Pressure \(bar\)\s+Constr\. rmsd',
                                        self.expected_output_file, 'energy', float),
         }
 
