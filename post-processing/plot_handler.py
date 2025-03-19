@@ -109,7 +109,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.add_layout(Legend(), "right")
     # add bars
     plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
-              line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
+              line_color=index_cmap, fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
     # add labels
     plot.xaxis.axis_label = x_label
     plot.yaxis.axis_label = y_label
