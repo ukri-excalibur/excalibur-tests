@@ -27,8 +27,16 @@ class GROMACSSpackBenchmark(SpackTest):
     readonly_files = [input_data_file]
     sourcesdir = os.path.dirname(__file__)
     
+    energy_ref = -1206540.0
     reference = {
-        '*': {'Rate': (1, None, None, 'ns/day')}
+        'kathleen:compute-node': {
+            'Rate': (1, -0.1, None, 'ns/day'),
+            'Energy': (energy_ref, -1.0, 1.0, 'kJ/mol')
+        },
+        '*': {
+            'Rate': (1, None, None, 'ns/day'),
+            'Energy': (energy_ref, -1.0, 1.0, 'kJ/mol')
+        }
     }
         
     @run_after('setup')
@@ -52,8 +60,12 @@ class GROMACSSpackBenchmark(SpackTest):
     def set_spack_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
-            'Rate': sn.extractsingle('Performance.+', self.expected_output_file, 0,
-                                        lambda x: float(x.split()[1]))
+            'Rate': sn.extractsingle('Performance:\s+(?P<rate>\S+)(\s+\S+){1}',
+                                     self.expected_output_file, 'rate', float),
+            'Energy': sn.extractsingle('\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
+                                       '(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
+                                       '\s+Pressure \(bar\)\s+Constr\. rmsd',
+                                       self.expected_output_file, 'energy', float),
         }
 
 @rfm.simple_test
