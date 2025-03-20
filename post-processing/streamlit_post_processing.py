@@ -129,14 +129,12 @@ def axis_options():
     with st.container(border=True):
         # x-axis select
         axis_select("x", config.x_axis)
-        sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
     with st.container(border=True):
         # y-axis select
         axis_select("y", config.y_axis)
 
     # apply changes
     update_axes()
-    config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
 def axis_select(label: str, axis: dict):
@@ -173,6 +171,23 @@ def axis_select(label: str, axis: dict):
     if label == "y":
         st.write("---")
         scaling_select(axis)
+
+    # sort checkbox
+    if label == "x":
+        st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
+                    key="{0}_axis_sort".format(label))
+
+    # log checkbox
+    if (st.session_state["{0}_axis_type".format(label)] == "int" or
+        st.session_state["{0}_axis_type".format(label)] == "float"):
+        st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
+                    key="{0}_axis_log".format(label))
+    else:
+        # set checkbox to false if already in session state
+        if "{0}_axis_log".format(label) in st.session_state:
+            st.session_state["{0}_axis_log".format(label)] = False
+        # disable for non-numeric axis types
+        st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
 
 
 def units_select(label: str, axis: dict):
@@ -286,6 +301,8 @@ def update_axes():
     x_column = state.x_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+    x_sort = state.x_axis_sort
+    x_log = state.x_axis_log
 
     y_column = state.y_axis_column
     y_units_column = state.y_axis_units_column
@@ -294,6 +311,7 @@ def update_axes():
     y_scaling_series = state.y_axis_scaling_series
     y_scaling_x = state.y_axis_scaling_x_value
     y_scaling_custom = state.y_axis_custom_scaling_val
+    y_log = state.y_axis_log
 
     # update columns
     config.x_axis["value"] = x_column
@@ -326,6 +344,11 @@ def update_axes():
     config.parse_scaling()
     # update types after changing axes
     update_types()
+
+    # update sort and log
+    config.x_axis["sort"] = "descending" if x_sort else "ascending"
+    config.x_axis["logarithmic"] = x_log
+    config.y_axis["logarithmic"] = y_log
 
 
 def update_types():
