@@ -23,11 +23,21 @@ class HemepureBenchmark(SpackTest):
     time_limit = '45m'
 
     expected_output_file = 'md.log'
-    readonly_files = [input_data_file]
+    readonly_files = [
+        input_data_file,
+        'ArteryTriangleSet.stl',
+        'hemepure.py',
+        'pipe.gmy',
+        'pipe.stl',
+        'pipe.xml'
+    ]
     sourcesdir = os.path.dirname(__file__)
     
-    energy_ref = -1206540.0
-    reference = {}
+    reference = {
+        '*': {
+            'Timestep': (100, None, None, 's'),
+        }
+    }
         
     @run_after('setup')
     def setup_spack_test_variables(self):
@@ -42,18 +52,22 @@ class HemepureBenchmark(SpackTest):
         self.keep_files = [self.output_file_prefix + '_NN' + str(self.num_nodes_param) + '_NP' + str(self.num_tasks)]
         self.executable_opts = ['-in', input_data_file, '-out', self.keep_files[0]]
 
-    @run_before('sanity')
-    def set_test_sanity_patterns(self):
-        """Set the required string in the output for a sanity check"""
+    # @run_before('sanity')
+    # def set_test_sanity_patterns(self):
+    #     """Set the required string in the output for a sanity check"""
 
     @run_before('performance')
     def set_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
+        self.perf_patterns = {
+            'Timestep': sn.extractsingle(r'\[Rank \d+, \S+ s, \d+ kB] :: time step 0*(?P<timestep>\d+)(\s+\S+)+',
+                                     self.expected_output_file, 'timestep', float, item=-1)
+        }
 
 @rfm.simple_test
 class StrongScalingCPU(HemepureBenchmark):
     spack_spec = "hemepure +pressure_bc"
-    num_nodes_param = parameter([4])#1, 2, 4, 8])
+    num_nodes_param = parameter([1, 2, 3, 4])
     
     output_file_prefix = 'PipeCPU_PBC'
 
