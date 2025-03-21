@@ -10,7 +10,7 @@ import reframe.utility.sanity as sn
 from benchmarks.modules.utils import SpackTest
 
 
-input_data_file = 'input.xml'
+input_data = 'input_data/pipe'
 
 class HemepureBenchmark(SpackTest):
     """Base class for a Hemepure benchmark using the spack build system"""
@@ -22,15 +22,8 @@ class HemepureBenchmark(SpackTest):
     exclusive_access = True
     time_limit = '45m'
 
-    expected_output_file = 'md.log'
-    readonly_files = [
-        input_data_file,
-        'ArteryTriangleSet.stl',
-        'hemepure.py',
-        'pipe.gmy',
-        'pipe.stl',
-        'pipe.xml'
-    ]
+    # expected_output_file = 'md.log'
+    readonly_files = [input_data]
     sourcesdir = os.path.dirname(__file__)
     
     reference = {
@@ -50,18 +43,21 @@ class HemepureBenchmark(SpackTest):
         self.env_vars['OMP_PLACES'] = 'cores'
 
         self.keep_files = [self.output_file_prefix + '_NN' + str(self.num_nodes_param) + '_NP' + str(self.num_tasks)]
-        self.executable_opts = ['-in', input_data_file, '-out', self.keep_files[0]]
+        self.executable_opts = ['-in', input_data + '/input.xml', '-out', self.keep_files[0]]
 
-    # @run_before('sanity')
-    # def set_test_sanity_patterns(self):
-    #     """Set the required string in the output for a sanity check"""
+    @run_before('sanity')
+    def set_test_sanity_patterns(self):
+        """Set the required string in the output for a sanity check"""
+        self.sanity_patterns = sn.assert_found(
+            'SIMULATION FINISHED', self.stdout
+        )
 
     @run_before('performance')
     def set_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
             'Timestep': sn.extractsingle(r'\[Rank \d+, \S+ s, \d+ kB] :: time step 0*(?P<timestep>\d+)(\s+\S+)+',
-                                     self.expected_output_file, 'timestep', float, item=-1)
+                                     self.stdout, 'timestep', float, item=-1)
         }
 
 @rfm.simple_test
