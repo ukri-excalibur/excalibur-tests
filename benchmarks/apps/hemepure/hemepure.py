@@ -60,10 +60,18 @@ class HemepureBenchmark(SpackTest):
         }
 
 @rfm.simple_test
-class StrongScalingCPU(HemepureBenchmark):
+class StrongScalingPipeCPU(HemepureBenchmark):
     spack_spec = "hemepure +pressure_bc"
-    num_nodes_param = parameter([1, 2, 3, 4])
-    
-    output_file_prefix = 'PipeCPU_PBC'
-
     executable = 'hemepure'
+    output_file_prefix = 'PipeCPU_PBC'
+    
+    num_nodes_param = parameter([1, 2, 3, 4])
+
+@rfm.simple_test
+class StrongScalingPipeGPU(HemepureBenchmark):
+    spack_spec = "hemepure-gpu +pressure_bc"
+    executable = 'hemepure_gpu'
+    output_file_prefix = 'PipeGPU_PBC'
+    
+    num_nodes_param = parameter([1, 2, 3, 4])    
+
