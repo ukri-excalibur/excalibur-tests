@@ -9,7 +9,6 @@ import reframe.utility.sanity as sn
 
 from benchmarks.modules.utils import SpackTest
 
-
 input_data = 'input_data/pipe'
 
 class HemepureBenchmark(SpackTest):
@@ -57,7 +56,7 @@ class HemepureBenchmark(SpackTest):
         """Set the regex performance pattern to locate"""
         self.perf_patterns = {
             'Runtime': sn.extractsingle(r'\[Rank \d+, (?P<runtime>\S+) s, \d+ kB] :: SIMULATION FINISHED',
-                                     self.stdout, 'runtime', int, item=-1)
+                                     self.stdout, 'runtime', float, item=-1)
         }
 
 @rfm.simple_test
