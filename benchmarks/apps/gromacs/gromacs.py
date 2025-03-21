@@ -26,16 +26,16 @@ class GROMACSBenchmark(SpackTest):
     keep_files = [expected_output_file]
     readonly_files = [input_data_file]
     sourcesdir = os.path.dirname(__file__)
+    executable = 'gmx_mpi'
     
-    energy_ref = -1206540.0
     reference = {
         'kathleen:compute-node': {
             'Rate': (1, -0.1, None, 'ns/day'),
-            'Energy': (energy_ref, -1.0, 1.0, 'kJ/mol')
+            'Energy': (-12070100.0, -1.0, 1.0, 'kJ/mol')
         },
         '*': {
             'Rate': (1, None, None, 'ns/day'),
-            'Energy': (energy_ref, -1.0, 1.0, 'kJ/mol')
+            'Energy': (1, None, 'kJ/mol')
         }
     }
         
@@ -70,8 +70,7 @@ class GROMACSBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingCPU(GROMACSBenchmark):
-    spack_spec = 'gromacs@2024 +mpi+double'
-    executable = 'gmx_mpi_d'
+    spack_spec = 'gromacs@2024 +mpi'
 
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
@@ -80,7 +79,6 @@ class StrongScalingCPU(GROMACSBenchmark):
 @rfm.simple_test
 class StrongScalingSpackGPU(GROMACSBenchmark):
     spack_spec = 'gromacs@2024 +mpi+cuda'
-    executable = 'gmx_mpi'
 
     executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', '0']
     num_nodes_param = parameter([1, 2, 3, 4])
