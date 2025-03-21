@@ -35,7 +35,7 @@ class GROMACSBenchmark(SpackTest):
         },
         '*': {
             'Rate': (1, None, None, 'ns/day'),
-            'Energy': (1, None, 'kJ/mol')
+            'Energy': (1, None, None, 'kJ/mol')
         }
     }
         
