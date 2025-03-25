@@ -52,9 +52,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             print(grouped_df.get_group(key))
 
     # adjust y-axis range
-    min_y = (0 if min(df[y_column]) >= 0
+    min_y = (0 if np.nanmin(df[y_column]) >= 0
              else math.floor(np.nanmin(df[y_column])*1.2))
-    max_y = (0 if max(df[y_column]) <= 0
+    max_y = (0 if np.nanmax(df[y_column]) <= 0
              else math.ceil(np.nanmax(df[y_column])*1.2))
 
     # create html file to store plot in
