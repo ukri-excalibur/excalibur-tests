@@ -31,6 +31,10 @@ spack:
       externals:
       - spec: automake@1.16.1
         prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@3.27.4
+        prefix: /home/y07/shared/utils/core/cmake/3.27.4
     cuda:
       externals:
       - spec: cuda@11.0.2
