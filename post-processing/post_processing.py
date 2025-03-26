@@ -66,10 +66,10 @@ class PostProcessing:
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
         # log axes
         if (config.x_axis.get("logarithmic") and
-            pd.api.types.is_numeric_dtype(self.df[config.x_axis["value"]].dtype)):
+            pd.api.types.is_float_dtype(self.df[config.x_axis["value"]].dtype)):
             self.df[config.x_axis["value"]] = np.log10(self.df[config.x_axis["value"]])
         if (config.y_axis.get("logarithmic") and
-            pd.api.types.is_numeric_dtype(self.df[config.y_axis["value"]].dtype)):
+            pd.api.types.is_float_dtype(self.df[config.y_axis["value"]].dtype)):
             self.df[config.y_axis["value"]] = np.log10(self.df[config.y_axis["value"]])
         if self.debug:
             print("Selected dataframe:")

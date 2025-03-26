@@ -178,15 +178,14 @@ def axis_select(label: str, axis: dict):
                     key="{0}_axis_sort".format(label))
 
     # log checkbox
-    if (st.session_state["{0}_axis_type".format(label)] == "int" or
-        st.session_state["{0}_axis_type".format(label)] == "float"):
+    if (st.session_state["{0}_axis_type".format(label)] == "float"):
         st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
                     key="{0}_axis_log".format(label))
     else:
         # set checkbox to false if already in session state
         if "{0}_axis_log".format(label) in st.session_state:
             st.session_state["{0}_axis_log".format(label)] = False
-        # disable for non-numeric axis types
+        # disable for non-float axis types
         st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
 
 
