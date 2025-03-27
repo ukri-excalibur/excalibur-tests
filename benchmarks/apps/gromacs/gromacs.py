@@ -28,7 +28,7 @@ class GROMACSBenchmark(SpackTest):
     executable = 'gmx_mpi'
     
     reference = {
-        'tursa:gpu': {
+        'tursa:gpu-a100-40': {
             'Rate': (3.5, -0.1, None, 'ns/day'),
             'Energy': (-12067200.0, -1.0, 1.0, 'kJ/mol')
         },
@@ -78,10 +78,6 @@ class StrongScalingCPU(GROMACSBenchmark):
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
 
-    @run_before('compile')
-    def set_num_tasks(self):
-        self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
-
 
 @rfm.simple_test
 class StrongScalingSpackGPU(GROMACSBenchmark):
@@ -91,6 +87,7 @@ class StrongScalingSpackGPU(GROMACSBenchmark):
     num_nodes_param = parameter([2, 4, 8, 16])
     num_gpus_per_node_param = parameter([1, 2, 3, 4])
 
-    @run_before('compile')
+    @run_after('setup')
     def set_num_tasks(self):
+        self.setup_test_variables()
         self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node_param}
