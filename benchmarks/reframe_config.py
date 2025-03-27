@@ -470,11 +470,11 @@ site_configuration = {
             'max_local_jobs': 1,
             'partitions': [
                 {
-                    'name': 'gpu',
+                    'name': 'gpu-a100-40',
                     'descr': 'GPU computing nodes',
                     'scheduler': 'slurm',
                     'launcher': 'mpirun',
-                    'access': ['--partition=gpu', '--qos=standard'],
+                    'access': ['--partition=gpu-a100-40', '--qos=standard'],
                     'environs': ['default'],
                     'features': ['gpu', 'cuda'],
                     'sched_options': {

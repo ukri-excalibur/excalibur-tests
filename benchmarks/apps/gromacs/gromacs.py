@@ -45,11 +45,9 @@ class GROMACSBenchmark(SpackTest):
     @run_after('setup')
     def setup_test_variables(self):
         """Set the variables required after setup, specific to each test"""
-        # Test specific variables
-        self.num_tasks_per_node = self.current_partition.processor.num_cpus
+        self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
+        self.num_nodes = self.num_nodes_param
         self.num_cpus_per_task = 1
-        self.num_tasks = self.num_tasks_per_node * self.num_nodes_param
-        self.num_gpus_per_node = self.num_gpus_per_node_param
         
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
@@ -80,6 +78,10 @@ class StrongScalingCPU(GROMACSBenchmark):
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
 
+    @run_before('compile')
+    def set_num_tasks(self):
+        self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
+
 
 @rfm.simple_test
 class StrongScalingSpackGPU(GROMACSBenchmark):
@@ -88,3 +90,7 @@ class StrongScalingSpackGPU(GROMACSBenchmark):
     executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v']
     num_nodes_param = parameter([2, 4, 8, 16])
     num_gpus_per_node_param = parameter([1, 2, 3, 4])
+
+    @run_before('compile')
+    def set_num_tasks(self):
+        self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node_param}
