@@ -49,6 +49,7 @@ class GROMACSBenchmark(SpackTest):
         self.num_tasks_per_node = self.current_partition.processor.num_cpus
         self.num_cpus_per_task = 1
         self.num_tasks = self.num_tasks_per_node * self.num_nodes_param
+        self.num_gpus_per_node = self.num_gpus_per_node_param
         
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
@@ -86,4 +87,4 @@ class StrongScalingSpackGPU(GROMACSBenchmark):
 
     executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v']
     num_nodes_param = parameter([2, 4, 8, 16])
-    num_gpus_per_node = parameter([1, 2, 3, 4])
+    num_gpus_per_node_param = parameter([1, 2, 3, 4])
