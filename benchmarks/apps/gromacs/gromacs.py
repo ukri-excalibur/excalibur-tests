@@ -29,8 +29,8 @@ class GROMACSBenchmark(SpackTest):
     
     reference = {
         'tursa:gpu-a100-40': {
-            'Rate': (3.5, -0.1, None, 'ns/day'),
-            'Energy': (-12067200.0, -1.0, 1.0, 'kJ/mol')
+            'Rate': (6.8, -0.1, None, 'ns/day'),
+            'Energy': (-12070100.0, -1.0, 1.0, 'kJ/mol')
         },
         'kathleen:compute-node': {
             'Rate': (1, -0.1, None, 'ns/day'),
