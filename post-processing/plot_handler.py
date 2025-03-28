@@ -173,10 +173,10 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling = str(custom) if custom else ""
 
     # determine axis label
-    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               " [Log Scale]" if axis.get("logarithmic") else "",
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                               if scaling else "",
-                               " ({0})".format(units) if units else "")
+    label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
+                                  " [Log Scale]" if axis.get("logarithmic") else "",
+                                  titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
+                                  if scaling else "",
+                                  " ({0})".format(units) if units else "")
 
     return col_name, label
