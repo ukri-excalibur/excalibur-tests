@@ -23,13 +23,13 @@ class SwiftBenchmark(SpackTest):
         'cosma8': {
             'duration': (40, None, 0.2, 'seconds'),
         },
-        'csd3-centos7:cascadelake': {
+        'csd3:cascadelake': {
             'duration': (37, None, 0.2, 'seconds'),
         },
-        'csd3-rocky8:icelake': {
+        'csd3:icelake': {
             'duration': (35, None, 0.2, 'seconds'),
         },
-        'csd3-rocky8:sapphirerapids': {
+        'csd3:sapphirerapids': {
             'duration': (32, None, 0.2, 'seconds'),
         },
         'dial3': {
