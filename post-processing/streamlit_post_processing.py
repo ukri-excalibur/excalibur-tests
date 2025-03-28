@@ -13,6 +13,8 @@ filter_types = ["and", "or", "series"]
 # pandas to user type mapping
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
+               "Float64": "float",
+               "int64": "int",
                "Int64": "int",
                "object": "str"}
 # user to pandas type mapping
@@ -178,14 +180,15 @@ def axis_select(label: str, axis: dict):
                     key="{0}_axis_sort".format(label))
 
     # log checkbox
-    if (st.session_state["{0}_axis_type".format(label)] == "float"):
+    if (st.session_state["{0}_axis_type".format(label)] == "float" or
+        st.session_state["{0}_axis_type".format(label)] == "int"):
         st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
                     key="{0}_axis_log".format(label))
     else:
         # set checkbox to false if already in session state
         if "{0}_axis_log".format(label) in st.session_state:
             st.session_state["{0}_axis_log".format(label)] = False
-        # disable for non-float axis types
+        # disable for non-numeric axis types
         st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
 
 
