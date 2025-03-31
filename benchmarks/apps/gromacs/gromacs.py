@@ -93,4 +93,4 @@ class StrongScalingSpackGPU(GROMACSBenchmark):
         gpu_ids = ""
         for i in range(0, self.num_gpus_per_node_param):
             gpu_ids += str(i)
-        self.executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-npme', '1', '-bonded', 'gpu', '-dlb', 'no', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', gpu_ids]
+        self.executable_opts = ['mdrun', '-s', input_data_file, '-nb', 'gpu', '-pme', 'gpu', '-npme', '1', '-bonded', 'gpu', '-dlb', 'auto', '-nstlist', '300', '-pin', 'on', '-v', '-gpu_id', gpu_ids]
