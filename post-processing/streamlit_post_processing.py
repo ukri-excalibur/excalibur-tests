@@ -72,7 +72,9 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
         # set plot title
-        title = st.text_input("#### Title", config.title, placeholder="None")
+        if "title" not in state:
+            state["title"] = config.title
+        title = st.text_input("#### Title", placeholder="None", key="title")
         if title != config.title:
             config.title = title
         # warn if title is blank
@@ -216,10 +218,14 @@ def axis_select(label: str, axis: dict):
             axis: dict, axis column, units, and scaling from config.
     """
 
-    df = st.session_state.post.df
+    state = st.session_state
+    df = state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis.get("value") else 0
-    column_index = list(df.columns).index(axis["value"]) if axis.get("value") in df.columns else None
+    type_index = 0
+    column_index = None
+    if axis.get("value") in df.columns:
+        type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype)))
+        column_index = list(df.columns).index(axis["value"])
 
     # axis information drop-downs
     axis_type, axis_column = st.columns(2)
@@ -229,8 +235,10 @@ def axis_select(label: str, axis: dict):
                      key="{0}_axis_type".format(label), index=type_index)
     # column select
     with axis_column:
-        st.selectbox("{0}-axis column".format(label), df.columns,
-                     key="{0}_axis_column".format(label), index=column_index)
+        if "{0}_axis_column".format(label) not in state:
+            state["{0}_axis_column".format(label)] = df.columns[column_index] if column_index is not None else None
+        st.selectbox("{0}-axis column".format(label), df.columns, placeholder="None",
+                     key="{0}_axis_column".format(label))
     # warn if no axis column is selected
     if not st.session_state["{0}_axis_column".format(label)]:
         st.warning("Missing {0}-axis value information.".format(label))
@@ -252,24 +260,27 @@ def units_select(label: str, axis: dict):
             axis: dict, axis column, units, and scaling from config.
     """
 
-    df = st.session_state.post.df
+    state = st.session_state
+    df = state.post.df
     # default drop-down selection
     units_index = None
     if axis.get("units"):
-        if axis["units"].get("column"):
+        if axis["units"].get("column") in df.columns:
             units_index = list(df.columns).index(axis["units"]["column"])
 
     units_column, units_custom = st.columns(2)
     # units select
     with units_column:
-        # NOTE: initialising with index=None allows value to be cleared, but doesn't allow a default value
+        if "{0}_axis_units_column".format(label) not in state:
+            state["{0}_axis_units_column".format(label)] = df.columns[units_index] if units_index is not None else None
         st.selectbox("{0}-axis units column".format(label), df.columns, placeholder="None",
-                     key="{0}_axis_units_column".format(label), index=units_index)
+                     key="{0}_axis_units_column".format(label))
     # set custom units
     with units_custom:
-        st.text_input("{0}-axis units custom".format(label),
-                      axis["units"].get("custom") if axis.get("units") else None,
-                      placeholder="None", key="{0}_axis_units_custom".format(label),
+        if "{0}_axis_units_custom".format(label) not in state:
+            state["{0}_axis_units_custom".format(label)] = axis["units"].get("custom") if axis.get("units") else None
+        st.text_input("{0}-axis units custom".format(label), placeholder="None",
+                      key="{0}_axis_units_custom".format(label),
                       help="Assign a custom units label. Will clear the units column selection.")
 
     st.button("Clear Units", key="clear_{0}_axis_units".format(label), on_click=clear_fields,
@@ -311,11 +322,12 @@ def scaling_select(axis: dict):
     x_index = None
     if axis.get("scaling"):
         if axis["scaling"].get("column"):
-            if axis["scaling"]["column"].get("name"):
+            if axis["scaling"]["column"].get("name") in df.columns:
                 type_index = column_types.index(type_lookup.get(str(df[axis["scaling"]["column"]["name"]].dtype)))
                 scaling_index = list(df.columns).index(axis["scaling"]["column"]["name"])
-            if axis["scaling"]["column"].get("series") is not None:
-                series_index = int(axis["scaling"]["column"]["series"])
+            if isinstance(axis["scaling"]["column"].get("series"), int):
+                if 0 <= axis["scaling"]["column"].get("series") < len(series_col):
+                    series_index = int(axis["scaling"]["column"]["series"])
             if axis["scaling"]["column"].get("x_value") and len(x_col) > 0:
                 if axis["scaling"]["column"]["x_value"] in x_col:
                     x_index = x_col.index(axis["scaling"]["column"]["x_value"])
@@ -325,18 +337,26 @@ def scaling_select(axis: dict):
         st.selectbox("scaling column type", column_types,
                      key="y_axis_scaling_type", index=type_index)
     with c2:
+        if "y_axis_scaling_column" not in state:
+            state["y_axis_scaling_column"] = df.columns[scaling_index] if scaling_index is not None else None
         st.selectbox("scaling column", df.columns, placeholder="None",
-                     key="y_axis_scaling_column", index=scaling_index)
+                     key="y_axis_scaling_column")
 
     c1, c2 = st.columns(2)
     with c1:
+        if "y_axis_scaling_series" not in state:
+            state["y_axis_scaling_series"] = series_col[series_index] if series_index is not None else None
         st.selectbox("scaling series", series_col, placeholder="None",
-                     key="y_axis_scaling_series", index=series_index)
+                     key="y_axis_scaling_series")
     with c2:
+        if "y_axis_scaling_x_value" not in state:
+            state["y_axis_scaling_x_value"] = x_col[x_index] if x_index is not None else None
         st.selectbox("scaling x-axis value", x_col, placeholder="None",
-                     key="y_axis_scaling_x_value", index=x_index)
+                     key="y_axis_scaling_x_value")
 
-    st.text_input("custom scaling value", None, placeholder="None", key="y_axis_custom_scaling_val",
+    if "y_axis_custom_scaling_val" not in state:
+        state["y_axis_custom_scaling_val"] = axis["scaling"].get("custom") if axis.get("scaling") else None
+    st.text_input("custom scaling value", placeholder="None", key="y_axis_custom_scaling_val",
                   help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
     st.button("Clear Scaling", on_click=clear_fields, args=[["y_axis_scaling_column", "y_axis_scaling_series",
