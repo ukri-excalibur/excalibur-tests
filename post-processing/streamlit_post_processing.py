@@ -496,7 +496,8 @@ def new_filter_options():
         with c1:
             # display contents of currently selected filter column
             filter_col = post.df[state.filter_col].drop_duplicates()
-            st.selectbox("column filter value", filter_col.sort_values(), key="filter_val", index=None)
+            st.selectbox("column filter value", filter_col.sort_values(), placeholder="None",
+                         key="filter_val", index=None)
         with c2:
             st.text_input("custom filter value", None, placeholder="None", key="custom_filter_val",
                           help="{0} {1}".format("Assign a filter value that isn't in the data.",
