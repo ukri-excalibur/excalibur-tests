@@ -32,12 +32,13 @@ class HemepureBenchmark(SpackTest):
     }
         
     @run_after('setup')
-    def setup_spack_test_variables(self):
+    def setup_test_variables(self):
         """Set the variables required after setup, specific to each test"""
-        # Test specific variables
-        self.num_tasks = self.current_partition.processor.num_cpus * self.num_nodes_param
+        self.num_tasks_per_node = int(self.current_partition.processor.num_cpus / self.current_partition.processor.num_cpus_per_core)
+        self.num_tasks = self.num_tasks_per_node * self.num_nodes_param
+        self.num_nodes = self.num_nodes_param
         self.num_cpus_per_task = 1
-        
+
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 
@@ -61,6 +62,7 @@ class HemepureBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingPipeCPU(HemepureBenchmark):
+    tags = {"cpu"}
     spack_spec = "hemepure +pressure_bc"
     executable = 'hemepure'
     output_file_prefix = 'PipeCPU_PBC'
@@ -69,9 +71,14 @@ class StrongScalingPipeCPU(HemepureBenchmark):
 
 @rfm.simple_test
 class StrongScalingPipeGPU(HemepureBenchmark):
+    tags = {"gpu"}
     spack_spec = "hemepure-gpu +pressure_bc"
     executable = 'hemepure_gpu'
     output_file_prefix = 'PipeGPU_PBC'
     
-    num_nodes_param = parameter([1, 2, 3, 4])    
-
+    num_nodes_param = parameter([2, 4, 8, 16])
+    num_gpus_per_node_param = parameter([1, 2, 4])
+    
+    @run_before('compile')
+    def set_num_tasks(self):
+        self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node_param}
