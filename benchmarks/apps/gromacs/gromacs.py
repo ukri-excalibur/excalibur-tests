@@ -75,6 +75,7 @@ class GROMACSBenchmark(SpackTest):
 @rfm.simple_test
 class StrongScalingCPU(GROMACSBenchmark):
     spack_spec = 'gromacs@2024 +mpi'
+    tags = {"cpu"}
 
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
@@ -83,6 +84,7 @@ class StrongScalingCPU(GROMACSBenchmark):
 @rfm.simple_test
 class StrongScalingSpackGPU(GROMACSBenchmark):
     spack_spec = 'gromacs@2024 +mpi+cuda'
+    tags = {"gpu"}
 
     num_nodes_param = parameter([2, 4, 8, 16])
     num_gpus_per_node_param = parameter([1, 2, 4])
