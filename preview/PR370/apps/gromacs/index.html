@@ -14,11 +14,11 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.10">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
-        <title>Gromacs benchmark - ExCALIBUR-tests Docs</title>
+        <title>GROMACS benchmark - ExCALIBUR-tests Docs</title>
       
     
     
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Gromacs benchmark
+              GROMACS benchmark
             
           </span>
         </div>
@@ -144,11 +144,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -180,6 +182,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -1357,6 +1360,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-the-benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtering the benchmarks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#figure-of-merit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Figure of Merit
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1374,8 +1418,33 @@
   
 
 
-<h1 id="gromacs-benchmark">Gromacs benchmark</h1>
-<p>The data file, gromacs_1400k_atoms.tpr, for this benchmark was taken from https://www.hecbiosim.ac.uk/access-hpc/benchmarks</p>
+<h1 id="gromacs-benchmark">GROMACS benchmark</h1>
+<p><a href="">GROMACS</a> is a free and open-source software suite for high-performance molecular dynamics and output analysis.
+This directory includes a data file, <code>gromacs_1400k_atoms.tpr</code>, which can be used to benchmark both GPU and CPU machines. This data file was taken from https://www.hecbiosim.ac.uk/access-hpc/benchmarks.</p>
+<p>The benchmarks are designed as strong scaling tests which run across multiple full nodes for a given system.</p>
+<h2 id="usage">Usage</h2>
+<p>Without filtering, all benchmarks (CPU and GPU) will be run. This is unlikely to be what we want. Therefore, from the top-level directory of the repository, you can run the benchmarks using tags to filter for CPU benchmarks.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>cpu<span class="w"> </span>--performance-report
+</span></code></pre></div>
+<p>Or GPU benchmarks.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>gpu<span class="w"> </span>--performance-report
+</span></code></pre></div>
+<h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
+<p>Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be further filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the <code>-n</code> option like so</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>cpu<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*&#39;</span>
+</span></code></pre></div>
+<p>Again, depending on the system's rules/machine size, additional filtering may be needed for GPU tests i.e.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--tag<span class="w"> </span>gpu<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*num_gpus_per_node_param=&lt;1|2|4&gt;&#39;</span>
+</span></code></pre></div>
+<h2 id="figure-of-merit">Figure of Merit</h2>
+<p>The figure of merit captured by these benchmarks is the performance metric Rate, measured in ns/day. Here, ns/day refers to the number of nanoseconds of simulation that you can do in a day of computation.</p>
+<p>This output can be found in the <code>md.log</code> file within the output directory produced by Reframe. If the end of this file resembles was as below, the Rate <code>4.892</code> would be captured.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>               Core t (s)   Wall t (s)        (%)
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>       Time:    28258.913      353.239     7999.9
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                 (ns/day)    (hour/ns)
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Performance:        4.892        4.906
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Finished mdrun on rank 0 Tue Apr  1 13:43:36 2025
+</span></code></pre></div></p>
 
 
 
