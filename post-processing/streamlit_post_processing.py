@@ -5,6 +5,7 @@ from pathlib import Path
 import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
 from post_processing import PostProcessing
+from streamlit_bokeh import streamlit_bokeh
 
 # drop-down lists
 operators = ["==", "!=", "<", ">", "<=", ">="]
@@ -46,7 +47,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
 
     # display graph
     if post.plot:
-        st.bokeh_chart(post.plot, use_container_width=True)
+        streamlit_bokeh(post.plot, use_container_width=True, theme="streamlit")
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
