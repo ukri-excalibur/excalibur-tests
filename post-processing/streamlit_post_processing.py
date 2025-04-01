@@ -14,6 +14,8 @@ filter_types = ["and", "or", "series"]
 # pandas to user type mapping
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
+               "Float64": "float",
+               "int64": "int",
                "Int64": "int",
                "object": "str"}
 # user to pandas type mapping
@@ -103,12 +105,77 @@ def update_config():
 
     state = st.session_state
     uploaded_config = state.uploaded_config
+    df = state.post.df
+
     if uploaded_config:
         try:
             config_dict = load_config(uploaded_config)
             state.config = ConfigHandler(config_dict)
+            config = state.config
+
+            # inputs that may have a default None value should be changed here
+            state.title = config.title
+
+            # x-axis
+            if config.x_axis.get("value") in df.columns:
+                state.x_axis_column = config.x_axis.get("value")
+            else:
+                st.warning("Assigned x-axis column is not in the DataFrame.")
+            # x units
+            if config.x_axis.get("units"):
+                if config.x_axis["units"].get("column") in df.columns:
+                    state.x_axis_units_column = config.x_axis["units"].get("column")
+                elif config.x_axis["units"].get("column") is not None:
+                    st.warning("Assigned x-axis units column is not in the DataFrame.")
+                state.x_axis_units_custom = config.x_axis["units"].get("custom")
+
+            # y-axis
+            if config.y_axis.get("value") in df.columns:
+                state.y_axis_column = config.y_axis.get("value")
+            else:
+                st.warning("Assigned y-axis column is not in the DataFrame.")
+            # y units
+            if config.y_axis.get("units"):
+                if config.y_axis["units"].get("column") in df.columns:
+                    state.y_axis_units_column = config.y_axis["units"].get("column")
+                elif config.y_axis["units"].get("column") is not None:
+                    st.warning("Assigned y-axis units column is not in the DataFrame.")
+                state.y_axis_units_custom = config.y_axis["units"].get("custom")
+
+            # y scaling
+            if config.y_axis.get("scaling"):
+                if config.y_axis["scaling"].get("column"):
+                    # y scaling column
+                    if config.y_axis["scaling"]["column"].get("name") in df.columns:
+                        state.y_axis_scaling_column = config.y_axis["scaling"]["column"].get("name")
+                    else:
+                        st.warning("Assigned y-axis scaling column is not in the DataFrame.")
+                    # y scaling series
+                    series_index = config.y_axis["scaling"]["column"].get("series")
+                    if series_index is not None:
+                        if isinstance(series_index, int):
+                            if 0 <= series_index < len(config.series_filters):
+                                state.y_axis_scaling_series = config.series_filters[series_index]
+                            else:
+                                st.warning("Assigned series index is out of range.")
+                        else:
+                            st.warning("Assigned series index is not an integer.")
+                    # y scaling x-axis value
+                    x_value = config.y_axis["scaling"]["column"].get("x_value")
+                    if config.x_axis.get("value") in df.columns:
+                        # ensure types match for accurate comparison
+                        if x_value in df[config.x_axis.get("value")].copy().astype(
+                                dtype_lookup.get(type(x_value))).values:
+                            state.y_axis_scaling_x_value = x_value
+                        else:
+                            st.warning("Assigned scaling x value is not in the x-axis column.")
+                state.y_axis_custom_scaling_val = (str(config.y_axis["scaling"].get("custom"))
+                                                   if config.y_axis["scaling"].get("custom") else None)
+
             # update dataframe types
-            state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+            if all([c in df.columns for c in config.all_columns]):
+                state.post.apply_df_types(config.all_columns, config.column_types)
+
         except Exception as e:
             st.exception(e)
             state.post.plot = None
