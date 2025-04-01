@@ -87,13 +87,13 @@ class ConfigHandler:
 
         # filters
         if self.filters:
-            self.filters["and"] = ([[f[0], f[1], str(f[2])] for f in self.filters["and"]]
+            self.filters["and"] = ([[f[0], f[1], f[2]] for f in self.filters["and"]]
                                    if self.filters.get("and") else [])
-            self.filters["or"] = ([[f[0], f[1], str(f[2])] for f in self.filters["or"]]
+            self.filters["or"] = ([[f[0], f[1], f[2]] for f in self.filters["or"]]
                                   if self.filters.get("or") else [])
 
         # series
-        self.series = [[s[0], str(s[1])] for s in self.series] if self.series else []
+        self.series = [[s[0], s[1]] for s in self.series] if self.series else []
 
     def parse_filters(self):
         """

@@ -1,4 +1,5 @@
 import argparse
+import json
 import traceback
 from pathlib import Path
 
@@ -355,7 +356,8 @@ def scaling_select(axis: dict):
                      key="y_axis_scaling_x_value")
 
     if "y_axis_custom_scaling_val" not in state:
-        state["y_axis_custom_scaling_val"] = axis["scaling"].get("custom") if axis.get("scaling") else None
+        state["y_axis_custom_scaling_val"] = (str(axis["scaling"].get("custom")) if axis["scaling"].get("custom")
+                                              else None if axis.get("scaling") else None)
     st.text_input("custom scaling value", placeholder="None", key="y_axis_custom_scaling_val",
                   help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
@@ -402,13 +404,13 @@ def update_axes():
         config.column_types[y_units_column] = "str"
 
     # update scaling
-    config.y_axis["scaling"] = {"custom": y_scaling_custom if y_scaling_custom else None}
+    config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
     if not y_scaling_custom and y_scaling_column:
         # NOTE: series index needs to be kept as int for now
         config.y_axis["scaling"] = {"column": {"name": y_scaling_column,
                                                "series": (state.config.series_filters.index(y_scaling_series)
                                                           if y_scaling_series else None),
-                                               "x_value": str(y_scaling_x)}}
+                                               "x_value": json.loads(str(y_scaling_x)) if y_scaling_x else None}}
         config.column_types[y_scaling_column] = state.y_axis_scaling_type
 
     config.parse_scaling()
