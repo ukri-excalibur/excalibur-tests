@@ -403,17 +403,19 @@ def update_types():
 
     post = st.session_state.post
     config = st.session_state.config
+    df = st.session_state.post.df
 
     # re-parse column names
     config.parse_columns()
     # remove redundant types from config
     config.remove_redundant_types()
-    try:
-        # update dataframe types
-        post.apply_df_types(config.all_columns, config.column_types)
-    except Exception as e:
-        st.exception(e)
-        post.plot = None
+    if all([c in df.columns for c in config.all_columns]):
+        try:
+            # update dataframe types
+            post.apply_df_types(config.all_columns, config.column_types)
+        except Exception as e:
+            st.exception(e)
+            post.plot = None
 
 
 def filter_options():
