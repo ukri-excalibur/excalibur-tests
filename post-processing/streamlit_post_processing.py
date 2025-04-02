@@ -55,11 +55,14 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        if len(config.plot_columns + config.extra_columns) > 0:
-            st.dataframe(post.df[post.mask][config.plot_columns + config.extra_columns],
-                         hide_index=True, use_container_width=True)
-        else:
-            st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
+        try:
+            if len(config.plot_columns + config.extra_columns) > 0:
+                st.dataframe(post.df[post.mask][config.plot_columns + config.extra_columns],
+                             hide_index=True, use_container_width=True)
+            else:
+                st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
+        except Exception as e:
+            st.exception(e)
 
     # display config in current session state
     show_config = st.toggle("Show Config", key="show_config")
