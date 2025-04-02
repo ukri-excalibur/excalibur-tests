@@ -18,7 +18,6 @@ class HemepureBenchmark(SpackTest):
     valid_prog_environs = ['default']
 
     # Variables consistent in all tests
-    exclusive_access = True
     time_limit = '45m'
 
     # expected_output_file = 'md.log'
