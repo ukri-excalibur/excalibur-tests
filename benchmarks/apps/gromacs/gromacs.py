@@ -56,7 +56,7 @@ class GROMACSBenchmark(SpackTest):
         energy = sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
                                 r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
                                 r'\s+Pressure \(bar\)\s+Constr\. rmsd',
-                                self.expected_output_file, 'energy', float),
+                                self.stagedir / self.expected_output_file, 'energy', float)
 
         self.sanity_patterns = (
             sn.assert_found('Finished mdrun', self.expected_output_file) and 
