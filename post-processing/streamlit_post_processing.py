@@ -354,13 +354,16 @@ def filter_options():
     """
 
     st.write("#### Filter Options")
-    # FIXME (issue #300): inherit max width can be too large for sidebar
     # allow wide multiselect labels
     st.markdown(
         """
         <style>
-            .stMultiSelect [data-baseweb=select] span{
+            .stMultiSelect
+            [data-baseweb=select] span{
                 max-width: inherit;
+            }
+            [data-baseweb=select] div{
+                overflow: auto;
             }
         </style>""",
         unsafe_allow_html=True)
