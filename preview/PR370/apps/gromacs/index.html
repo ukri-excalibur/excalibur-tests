@@ -1532,24 +1532,21 @@ This directory includes a data file, <code>gromacs_1400k_atoms.tpr</code>, which
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report
 </span></code></pre></div>
-<p>Or GPU benchmarks.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report
-</span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
 <p>Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the <code>-n</code> option like so</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*&#39;</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*&#39;</span>
 </span></code></pre></div>
 <p>Again, depending on the system's rules/machine size, further filtering may be needed for GPU tests i.e.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*num_gpus_per_node_param=&lt;1|2|4&gt;&#39;</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*num_gpus_per_node_param=&lt;1|2|4&gt;&#39;</span>
 </span></code></pre></div>
 <h2 id="figure-of-merit">Figure of Merit</h2>
 <p>The figure of merit captured by these benchmarks is the performance metric Rate, measured in ns/day. Here, ns/day refers to the number of nanoseconds of simulation that you can do in a day of computation.</p>
 <p>This output can be found in the <code>md.log</code> file within the output directory produced by Reframe. If the end of this file resembles what is shown below, the Rate <code>4.892</code> would be captured.
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>               Core t (s)   Wall t (s)        (%)
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>       Time:    28258.913      353.239     7999.9
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                 (ns/day)    (hour/ns)
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Performance:        4.892        4.906
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Finished mdrun on rank 0 Tue Apr  1 13:43:36 2025
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>               Core t (s)   Wall t (s)        (%)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       Time:    28258.913      353.239     7999.9
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                 (ns/day)    (hour/ns)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Performance:        4.892        4.906
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Finished mdrun on rank 0 Tue Apr  1 13:43:36 2025
 </span></code></pre></div></p>
 
 
