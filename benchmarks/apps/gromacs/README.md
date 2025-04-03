@@ -7,30 +7,30 @@ The benchmarks are designed as strong scaling tests which run across multiple fu
 
 ## Usage 
 
-Without filtering, all benchmarks (CPU and GPU) will be run. This is unlikely to be what we want. Therefore, from the top-level directory of the repository, you can run the benchmarks using tags to filter for CPU benchmarks.
+From the top-level directory of the repository, you can run the benchmarks with
 
 ```sh
-reframe --system <your_system> -c benchmarks/apps/gromacs -r --tag cpu --performance-report
+reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report
 ```
 
 Or GPU benchmarks.
 
 ```sh
-reframe --system <your_system> -c benchmarks/apps/gromacs -r --tag gpu --performance-report
+reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report
 ```
 
 ### Filtering the benchmarks
 
-Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be further filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the `-n` option like so
+Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the `-n` option like so
 
 ```sh
-reframe --system <your_system> -c benchmarks/apps/gromacs -r --tag cpu --performance-report -n '.*num_nodes_param=<2|4|8|16>.*'
+reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report -n '.*num_nodes_param=<2|4|8|16>.*'
 ```
 
-Again, depending on the system's rules/machine size, additional filtering may be needed for GPU tests i.e.
+Again, depending on the system's rules/machine size, further filtering may be needed for GPU tests i.e.
 
 ```sh
-reframe --system <your_system> -c benchmarks/apps/gromacs -r --tag gpu --performance-report -n '.*num_nodes_param=<2|4|8|16>.*num_gpus_per_node_param=<1|2|4>'
+reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report -n '.*num_nodes_param=<2|4|8|16>.*num_gpus_per_node_param=<1|2|4>'
 ```
 
 ## Figure of Merit
