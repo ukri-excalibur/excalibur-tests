@@ -61,7 +61,7 @@ class HemepureBenchmark(SpackTest):
 
 @rfm.simple_test
 class StrongScalingPipeCPU(HemepureBenchmark):
-    tags = {"cpu"}
+    valid_systems = ['-gpu']
     spack_spec = "hemepure +pressure_bc"
     executable = 'hemepure'
     output_file_prefix = 'PipeCPU_PBC'
@@ -70,7 +70,7 @@ class StrongScalingPipeCPU(HemepureBenchmark):
 
 @rfm.simple_test
 class StrongScalingPipeGPU(HemepureBenchmark):
-    tags = {"gpu"}
+    valid_systems = ['+gpu +cuda']
     spack_spec = "hemepure-gpu +pressure_bc"
     executable = 'hemepure_gpu'
     output_file_prefix = 'PipeGPU_PBC'
