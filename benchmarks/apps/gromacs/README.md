@@ -13,12 +13,6 @@ From the top-level directory of the repository, you can run the benchmarks with
 reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report
 ```
 
-Or GPU benchmarks.
-
-```sh
-reframe --system <your_system> -c benchmarks/apps/gromacs -r --performance-report
-```
-
 ### Filtering the benchmarks
 
 Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the `-n` option like so
