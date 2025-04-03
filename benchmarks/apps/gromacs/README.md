@@ -37,7 +37,7 @@ reframe --system <your_system> -c benchmarks/apps/gromacs -r --tag gpu --perform
 
 The figure of merit captured by these benchmarks is the performance metric Rate, measured in ns/day. Here, ns/day refers to the number of nanoseconds of simulation that you can do in a day of computation.
 
-This output can be found in the `md.log` file within the output directory produced by Reframe. If the end of this file resembles was as below, the Rate `4.892` would be captured.
+This output can be found in the `md.log` file within the output directory produced by Reframe. If the end of this file resembles what is shown below, the Rate `4.892` would be captured.
 ```
                Core t (s)   Wall t (s)        (%)
        Time:    28258.913      353.239     7999.9
