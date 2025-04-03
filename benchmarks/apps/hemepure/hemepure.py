@@ -76,16 +76,18 @@ class StrongScalingPipeCPU(HemepureBenchmark):
     
     num_nodes_param = parameter([1, 2, 3, 4])
 
-@rfm.simple_test
-class StrongScalingPipeGPU(HemepureBenchmark):
-    valid_systems = ['+gpu +cuda']
-    spack_spec = "hemepure-gpu +pressure_bc"
-    executable = 'hemepure_gpu'
-    output_file_prefix = 'PipeGPU_PBC'
+# This test is incomplete and thus has been disabled 
+# until future work can complete it.
+# @rfm.simple_test
+# class StrongScalingPipeGPU(HemepureBenchmark):
+#     valid_systems = ['+gpu +cuda']
+#     spack_spec = "hemepure-gpu +pressure_bc"
+#     executable = 'hemepure_gpu'
+#     output_file_prefix = 'PipeGPU_PBC'
     
-    num_nodes_param = parameter([2, 4, 8, 16])
-    num_gpus_per_node_param = parameter([1, 2, 4])
+#     num_nodes_param = parameter([2, 4, 8, 16])
+#     num_gpus_per_node_param = parameter([1, 2, 4])
     
-    @run_before('compile')
-    def set_num_tasks(self):
-        self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node_param}
+#     @run_before('compile')
+#     def set_num_tasks(self):
+#         self.extra_resources['gpu'] = {'num_gpus_per_node': self.num_gpus_per_node_param}
