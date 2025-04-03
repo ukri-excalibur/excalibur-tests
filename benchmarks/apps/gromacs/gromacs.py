@@ -30,15 +30,12 @@ class GROMACSBenchmark(SpackTest):
     reference = {
         'tursa:gpu-a100-40': {
             'Rate': (6.8, -0.1, None, 'ns/day'),
-            'Energy': (-12070100.0, -1.0, 1.0, 'kJ/mol')
         },
         'kathleen:compute-node': {
             'Rate': (1, -0.1, None, 'ns/day'),
-            'Energy': (-12070100.0, -1.0, 1.0, 'kJ/mol')
         },
         '*': {
             'Rate': (1, None, None, 'ns/day'),
-            'Energy': (1, None, None, 'kJ/mol')
         }
     }
         
@@ -56,8 +53,14 @@ class GROMACSBenchmark(SpackTest):
     @run_before('sanity')
     def set_test_sanity_patterns(self):
         """Set the required string in the output for a sanity check"""
-        self.sanity_patterns = sn.assert_found(
-            'Finished mdrun', self.expected_output_file
+        energy = sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
+                                r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
+                                r'\s+Pressure \(bar\)\s+Constr\. rmsd',
+                                self.expected_output_file, 'energy', float),
+
+        self.sanity_patterns = (
+            sn.assert_found('Finished mdrun', self.expected_output_file) and 
+            sn.assert_bounded(energy, -12100000.0, -11900000.0)
         )
 
     @run_before('performance')
@@ -66,16 +69,12 @@ class GROMACSBenchmark(SpackTest):
         self.perf_patterns = {
             'Rate': sn.extractsingle(r'Performance:\s+(?P<rate>\S+)(\s+\S+){1}',
                                      self.expected_output_file, 'rate', float),
-            'Energy': sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
-                                       r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
-                                       r'\s+Pressure \(bar\)\s+Constr\. rmsd',
-                                       self.expected_output_file, 'energy', float),
         }
 
 @rfm.simple_test
 class StrongScalingCPU(GROMACSBenchmark):
+    valid_systems = ['-gpu']
     spack_spec = 'gromacs@2024 +mpi'
-    tags = {"cpu"}
 
     executable_opts = ['mdrun', '-noconfout', '-dlb', 'yes', '-s', input_data_file]
     num_nodes_param = parameter([1, 2, 3, 4])
@@ -83,8 +82,8 @@ class StrongScalingCPU(GROMACSBenchmark):
 
 @rfm.simple_test
 class StrongScalingSpackGPU(GROMACSBenchmark):
+    valid_systems = ['+gpu +cuda']
     spack_spec = 'gromacs@2024 +mpi+cuda'
-    tags = {"gpu"}
 
     num_nodes_param = parameter([2, 4, 8, 16])
     num_gpus_per_node_param = parameter([1, 2, 4])
