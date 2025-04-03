@@ -50,17 +50,20 @@ class GROMACSBenchmark(SpackTest):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 
+    @run_after('run')
+    def set_output_datafile(self):
+        # If other outputfiles in stage directory before running, ensure use latest one
+        self.energy = sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
+                                r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
+                                r'\s+Pressure \(bar\)\s+Constr\. rmsd',
+                                self.expected_output_file, 'energy', float)
+
     @run_before('sanity')
     def set_test_sanity_patterns(self):
         """Set the required string in the output for a sanity check"""
-        energy = sn.extractsingle(r'\s+Potential\s+Kinetic En\.\s+Total Energy\s+Conserved En\.\s+Temperature\n'
-                                r'(\s+\S+){2}\s+(?P<energy>\S+)(\s+\S+){2}\n'
-                                r'\s+Pressure \(bar\)\s+Constr\. rmsd',
-                                self.stagedir / self.expected_output_file, 'energy', float)
-
         self.sanity_patterns = (
             sn.assert_found('Finished mdrun', self.expected_output_file) and 
-            sn.assert_bounded(energy, -12100000.0, -11900000.0)
+            sn.assert_bounded(self.energy, -12100000.0, -11900000.0)
         )
 
     @run_before('performance')
