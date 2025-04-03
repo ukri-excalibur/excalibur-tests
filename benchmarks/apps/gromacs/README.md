@@ -1,6 +1,6 @@
 # GROMACS benchmark
 
-[GROMACS]() is a free and open-source software suite for high-performance molecular dynamics and output analysis.
+[GROMACS](https://manual.gromacs.org/documentation/current/index.html) is a free and open-source software suite for high-performance molecular dynamics and output analysis.
 This directory includes a data file, `gromacs_1400k_atoms.tpr`, which can be used to benchmark both GPU and CPU machines. This data file was taken from https://www.hecbiosim.ac.uk/access-hpc/benchmarks.
 
 The benchmarks are designed as strong scaling tests which run across multiple full nodes for a given system.
