@@ -26,7 +26,7 @@ class HemepureBenchmark(SpackTest):
     
     reference = {
         '*': {
-            'Runtime': (623.0, None, None, 's'),
+            'Runtime': (160.0, None, None, 'MLUPS'),
         }
     }
         
@@ -54,9 +54,17 @@ class HemepureBenchmark(SpackTest):
     @run_before('performance')
     def set_test_perf_patterns(self):
         """Set the regex performance pattern to locate"""
+        runtime = sn.extractsingle(r'\[Rank \d+, (?P<runtime>\S+) s, \d+ kB] :: SIMULATION FINISHED',
+            self.stdout, 'runtime', float, item=-1)
+
+        timesteps = sn.extractsingle(r'\<steps\>(?P<timesteps>\S+)\<\/steps\>',
+            self.output_file, 'runtime', float, item=-1)
+
+        sites = sn.extractsingle(r'\<sites\>(?P<sites>\S+)\<\/sites\>',
+            self.output_file, 'sites', float, item=-1)
+
         self.perf_patterns = {
-            'Runtime': sn.extractsingle(r'\[Rank \d+, (?P<runtime>\S+) s, \d+ kB] :: SIMULATION FINISHED',
-                                     self.stdout, 'runtime', float, item=-1)
+            'Performance': (sites * timesteps) / (1e6 * runtime)
         }
 
 @rfm.simple_test
