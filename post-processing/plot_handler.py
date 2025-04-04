@@ -52,9 +52,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             print(grouped_df.get_group(key))
 
     # adjust y-axis range
-    min_y = (0 if min(df[y_column]) >= 0
+    min_y = (0 if np.nanmin(df[y_column]) >= 0
              else math.floor(np.nanmin(df[y_column])*1.2))
-    max_y = (0 if max(df[y_column]) <= 0
+    max_y = (0 if np.nanmax(df[y_column]) <= 0
              else math.ceil(np.nanmax(df[y_column])*1.2))
 
     # create html file to store plot in
@@ -109,7 +109,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.add_layout(Legend(), "right")
     # add bars
     plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
-              line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
+              line_color=index_cmap, fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
     # add labels
     plot.xaxis.axis_label = x_label
     plot.yaxis.axis_label = y_label
@@ -173,9 +173,10 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling = str(custom) if custom else ""
 
     # determine axis label
-    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                               if scaling else "",
-                               " ({0})".format(units) if units else "")
+    label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
+                                  " [Log Scale]" if axis.get("logarithmic") else "",
+                                  titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
+                                  if scaling else "",
+                                  " ({0})".format(units) if units else "")
 
     return col_name, label

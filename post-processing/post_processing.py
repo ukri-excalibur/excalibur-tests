@@ -5,6 +5,7 @@ import traceback
 from functools import reduce
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from config_handler import ConfigHandler
 from perflog_handler import PerflogHandler
@@ -63,6 +64,13 @@ class PostProcessing:
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
+        # log axes
+        if (config.x_axis.get("logarithmic") and
+            pd.api.types.is_numeric_dtype(self.df[config.x_axis["value"]].dtype)):
+            self.df[config.x_axis["value"]] = np.log10(self.df[config.x_axis["value"]])
+        if (config.y_axis.get("logarithmic") and
+            pd.api.types.is_numeric_dtype(self.df[config.y_axis["value"]].dtype)):
+            self.df[config.y_axis["value"]] = np.log10(self.df[config.y_axis["value"]])
         if self.debug:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
@@ -242,6 +250,11 @@ class PostProcessing:
         scaling_series_mask = None
         scaling_x_value_mask = None
 
+        if scaling_column or scaling_custom:
+            # pre-convert numeric scaled column to float to avoid type issues
+            if pd.api.types.is_numeric_dtype(self.df[y_column].dtype):
+                self.df[y_column] = self.df[y_column].astype("float64")
+
         # scale by custom
         if scaling_custom:
             try:
@@ -383,7 +396,7 @@ class PostProcessing:
                     "Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
                     .format(axis_column, self.df[mask][axis_column].dtype,
                             scaling_column_name, scaling_value.dtype),
-                    "Scaled column must be float and scaling column must be numeric."))
+                    "Scaled and scaling column must both be numeric."))
 
             # get mask of scaling values
             scaling_mask = mask.copy()
