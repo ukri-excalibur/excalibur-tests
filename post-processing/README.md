@@ -19,7 +19,7 @@ There are four main post-processing components:
 
 ### Installation
 
-Post-processing is an optional dependency of the ExCALIBUR tests package, as it requires Python version 3.9 or later (while the base package requires Python version 3.7 or later).
+Post-processing is an optional dependency of the ExCALIBUR tests package, as it requires Python version 3.10 or later (while the base package requires Python version 3.7 or later).
 
 You can include post-processing in your `pip` installation of the package with the following command:
 
@@ -44,6 +44,10 @@ Run `post_processing.py -h` for more information (including debugging and file o
 #### Streamlit
 
 You may also run post-processing with Streamlit to interact with your plots:
+
+>```python -m streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
+
+or
 
 >```streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
 
@@ -92,6 +96,8 @@ x_axis:
     custom: <custom_label>
   # optional (default: ascending)
   sort: "descending"
+  # optional (default: False)
+  logarithmic: True
 
 y_axis:
   value: <column_name>
@@ -107,6 +113,8 @@ y_axis:
       series: <index>
       x_value: <column_value>
     custom: <custom_value>
+  # optional (default: False)
+  logarithmic: True
 
 # optional (default: include all data)
 # entry format: [<column_name>, <operator>, <column_value>]
