@@ -23,7 +23,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
             x_axis: dict, x-axis column and units.
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
-            output_path: Path, path to a directory for storing the generated plot.
+            output_path: Path, path to a directory for storing the generated plot and csv data. Default is current directory.
             debug: bool, flag to print additional information to console.
     """
 

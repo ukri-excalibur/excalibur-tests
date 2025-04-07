@@ -21,7 +21,8 @@ class PostProcessing:
                 log_path: Path, path to performance log file or directory.
                 plot_type: str, type of plot to be generated and stored in an html file.
                 save: str, state of dataframe to save to csv file.
-                output_path: Path, path to a directory for storing outputs.
+                output_path: Path, path to a directory for storing outputs. Default is current directory.
+
                 debug: bool, flag to print additional information to console.
         """
 
