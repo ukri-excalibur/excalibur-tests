@@ -1846,14 +1846,22 @@
 </span></code></pre></div>
 <h3 id="usage">Usage</h3>
 <h4 id="command-line">Command line</h4>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>post_processing.py<span class="w"> </span>log_path<span class="w"> </span>config_path<span class="w"> </span><span class="o">[</span>-p<span class="w"> </span>plot_type<span class="o">]</span>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>post_processing.py<span class="w"> </span>log_path<span class="w"> </span>config_path<span class="w"> </span><span class="o">[</span>-p<span class="w"> </span>plot_type<span class="o">]</span><span class="w"> </span><span class="o">[</span>-s<span class="w"> </span>save<span class="o">]</span><span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>output_path<span class="o">]</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span>debug<span class="o">]</span>
 </span></code></pre></div>
 <ul>
 <li><code>log_path</code> - Path to a perflog file, or a directory containing perflog files.</li>
 <li><code>config_path</code> - Path to a configuration file containing plot details.</li>
-<li><code>plot_type</code> - (Optional.) Type of plot to be generated. (<code>Note: only a generic bar chart is currently implemented.</code>)</li>
+<li><code>plot_type</code> - (Optional.) Type of plot to be generated. By default, no plotting occurs.</li>
+<li><code>generic</code> - Bar chart.</li>
+<li><code>line</code> - Line chart. (<strong>TODO</strong>)</li>
+<li><code>save</code> - (Optional.) State in which to save perflog data to a csv file. By default, no data is saved.</li>
+<li><code>original</code> - Save the original perflog data with no filters or transformations applied.</li>
+<li><code>filtered</code> - Save the original filtered perflog data with no transformations applied.</li>
+<li><code>transformed</code> - Save the processed perflog data with all filters and transformations applied (log and scaling).</li>
+<li><code>output_path</code> - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.</li>
+<li><code>debug</code> - (Optional.) Print additional debug information.</li>
 </ul>
-<p>Run <code>post_processing.py -h</code> for more information (including debugging and file output flags).</p>
+<p>Run <code>post_processing.py -h</code> for a summary of this information.</p>
 <h4 id="streamlit">Streamlit</h4>
 <p>You may also run post-processing with Streamlit to interact with your plots:</p>
 <blockquote>
