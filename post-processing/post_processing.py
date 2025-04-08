@@ -428,12 +428,13 @@ def read_args():
 
     # optional arguments
     parser.add_argument("-p", "--plot_type", type=str,
-                        help="type of plot to be generated")
+                        help="type of plot to be generated (default is no plot); \
+                            options: ['generic', 'line' (TODO)]")
     parser.add_argument("-s", "--save", type=str,
-                        help="one of 'original', 'filtered', or 'transformed' states in which \
-                            to save perflog data to a csv file")
+                        help="state in which to save perflog data to a csv file (default is no data saved); \
+                            options: ['original', 'filtered', 'transformed']")
     parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
-                        help="path to a directory for storing outputs")
+                        help="path to a directory for storing outputs (default is current directory)")
     parser.add_argument("-d", "--debug", action="store_true",
                         help="debug flag for printing additional information")
 
