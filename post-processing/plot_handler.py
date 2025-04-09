@@ -30,7 +30,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
 
     # get column names and labels for axes
     x_column, x_label = get_axis_labels(df, x_axis, series_filters)
-    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters, x_column)
 
     # find x-axis groups (series columns)
     groups = [x_column]
@@ -139,7 +139,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     return plot
 
 
-def get_axis_labels(df: pd.DataFrame, axis, series_filters):
+def get_axis_labels(df: pd.DataFrame, axis, series_filters, x_column="x"):
     """
         Return the column name and label for a given axis. If a column name is supplied as
         units information, the actual units will be extracted from a dataframe.
@@ -148,6 +148,7 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             df: dataframe, data to plot.
             axis: dict, axis column, units, and values to scale by.
             series_filters: list, filters for x-axis groups.
+            x_column: string, name of x-axis column (for scaling label).
     """
 
     # get column name of axis
@@ -168,10 +169,11 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling_column = axis["scaling"]["column"]["name"]
             series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            # FIXME (issue #263): make scaling label more clear
-            series_col = ("{0} in {1}".format(series_filters[series_index][2], scaling_column)
-                          if series_index is not None else scaling_column)
-            scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
+
+            series = " ".join(str(s) for s in series_filters[series_index]) if series_index is not None else ""
+            x = "{0} == {1}{2}".format(x_column, x_value, ", " if series else "") if x_value is not None else ""
+            scaling = "Scaled by {0}{1}".format(scaling_column,
+                                                "\nfor {0}{1}".format(x, series) if x or series else "")
         else:
             custom = axis["scaling"].get("custom")
             scaling = str(custom) if custom else ""
@@ -179,8 +181,7 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
     # determine axis label
     label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
                                   " [Log Scale]" if axis.get("logarithmic") else "",
-                                  titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                                  if scaling else "",
-                                  " ({0})".format(units) if units else "")
+                                  titlecase("\n{0}".format(scaling.replace("_", " "))) if scaling else "",
+                                  "\n({0})".format(units) if units else "")
 
     return col_name, label
