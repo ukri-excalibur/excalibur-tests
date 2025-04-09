@@ -19,7 +19,7 @@ There are four main post-processing components:
 
 ### Installation
 
-Post-processing is an optional dependency of the ExCALIBUR tests package, as it requires Python version 3.9 or later (while the base package requires Python version 3.7 or later).
+Post-processing is an optional dependency of the ExCALIBUR tests package, as it requires Python version 3.10 or later (while the base package requires Python version 3.7 or later).
 
 You can include post-processing in your `pip` installation of the package with the following command:
 
@@ -32,18 +32,30 @@ pip install -e .[post-processing]
 #### Command line
 
 ```sh
-python post_processing.py log_path config_path [-p plot_type]
+python post_processing.py log_path config_path [-p plot_type] [-s save] [-o output_path] [-d debug]
 ```
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
 - `config_path` - Path to a configuration file containing plot details.
-- `plot_type` - (Optional.) Type of plot to be generated. (`Note: only a generic bar chart is currently implemented.`)
+- `plot_type` - (Optional.) Type of plot to be generated. By default, no plotting occurs.
+  - `generic` - Bar chart.
+  - `line` - Line chart. (**TODO**)
+- `save` - (Optional.) State in which to save perflog data to a csv file. By default, no data is saved.
+  - `original` - Save the original perflog data with no filters or transformations applied.
+  - `filtered` - Save the original filtered perflog data with no transformations applied.
+  - `transformed` - Save the processed perflog data with all filters and transformations applied (log and scaling).
+- `output_path` - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.
+- `debug` - (Optional.) Print additional debug information.
 
-Run `post_processing.py -h` for more information (including debugging and file output flags).
+Run `post_processing.py -h` for a summary of this information.
 
 #### Streamlit
 
 You may also run post-processing with Streamlit to interact with your plots:
+
+>```python -m streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
+
+or
 
 >```streamlit run streamlit_post_processing.py log_path -- [-c config_path]```
 
@@ -57,8 +69,9 @@ Before running post-processing, create a config file including all necessary inf
 - `x_axis`, `y_axis` - Axis information.
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
-    - `scaling` - (Optional.) Scale axis values by either a column or a custom value.
+    - `scaling` - (Optional.) Scale (numeric) axis values by either a column or a custom value.
     - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
+    - `logarithmic` - (Optional.) Apply the base 10 logarithm to (numeric) axis values.
 - `filters` - (Optional.) Filter data rows based on specified conditions. (Specify an empty list if no filters are required.)
     - `and` - Filter mask is determined from a logical AND of conditions in list.
     - `or` - Filter mask is determined from a logical OR of conditions in list.
@@ -91,6 +104,8 @@ x_axis:
     custom: <custom_label>
   # optional (default: ascending)
   sort: "descending"
+  # optional (default: False)
+  logarithmic: True
 
 y_axis:
   value: <column_name>
@@ -106,6 +121,8 @@ y_axis:
       series: <index>
       x_value: <column_value>
     custom: <custom_value>
+  # optional (default: False)
+  logarithmic: True
 
 # optional (default: include all data)
 # entry format: [<column_name>, <operator>, <column_value>]

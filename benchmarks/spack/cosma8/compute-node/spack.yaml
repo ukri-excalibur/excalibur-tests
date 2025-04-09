@@ -498,7 +498,7 @@ spack:
       - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           schedulers=slurm %aocc@1.3.0
         prefix: /cosma/local/openmpi/aocc_1.3.0/4.0.1
-      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath%aocc
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
           schedulers=slurm %aocc@2.0.0
         prefix: /cosma/local/openmpi/aocc_2.0.0/4.0.1
       - spec: openmpi@4.0.3~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath

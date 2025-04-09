@@ -559,7 +559,7 @@ def test_high_level_script(run_sombrero):
     assert len(df) == 1
 
     # get filtered dataframe with extra columns for csv
-    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+    df = PostProcessing(sombrero_log_path, save="filtered").run_post_processing(
         ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
@@ -589,7 +589,7 @@ def test_high_level_script(run_sombrero):
     assert len(df_saved) == 1
 
     # get filtered dataframe with duplicated extra columns for csv
-    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+    df = PostProcessing(sombrero_log_path, save="filtered").run_post_processing(
         ConfigHandler(
             {"title": "Title",
              "x_axis": {"value": "tasks",
