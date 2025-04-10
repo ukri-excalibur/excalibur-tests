@@ -377,4 +377,3 @@ spack:
         prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
       - spec: xz@5.2.2
         prefix: /usr
-        
