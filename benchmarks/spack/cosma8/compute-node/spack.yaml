@@ -1,3 +1,7 @@
+# This is a Spack Environment file.
+ #
+ # It describes a set of packages to be installed, along with
+ # COSMA8 Rocky configuration settings.
 spack:
   specs: []
   view: false
