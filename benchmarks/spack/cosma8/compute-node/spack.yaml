@@ -1,13 +1,143 @@
 # This is a Spack Environment file.
- #
- # It describes a set of packages to be installed, along with
- # COSMA8 Rocky configuration settings.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
 spack:
+  # add package specs to the `specs` list
   specs: []
   view: false
   include:
   - ../../common.yaml
   compilers:
+  - compiler:
+      spec: gcc@4.8.2
+      paths:
+        cc: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gcc
+        cxx: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/g++
+        f77: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gfortran
+        fc: /cosma/local/aocc/AOCC-1.3.0-Fortran-Prerequisites/gcc_4.8.2_install/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@4.8.5
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@2.2.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-2.2.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-2.2.0/bin/flang
+      flags:
+        cflags: null
+        cxxflags: null
+        fflags: null
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@3.0.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-3.0.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-3.0.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@3.1.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: aocc@4.0.0
+      paths:
+        cc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang
+        cxx: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang++
+        f77: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
+        fc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
+      flags:
+        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@7.3.0
+      paths:
+        cc: /cosma/local/gcc/7.3.0/bin/gcc
+        cxx: /cosma/local/gcc/7.3.0/bin/g++
+        f77: /cosma/local/gcc/7.3.0/bin/gfortran
+        fc: /cosma/local/gcc/7.3.0/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@8.2.0
+      paths:
+        cc: /cosma/local/gcc/8.2.0/bin/gcc
+        cxx: /cosma/local/gcc/8.2.0/bin/g++
+        f77: /cosma/local/gcc/8.2.0/bin/gfortran
+        fc: /cosma/local/gcc/8.2.0/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
+  - compiler:
+      spec: gcc@9.1.0
+      paths:
+        cc: /cosma/local/gcc/9.1.0/bin/gcc
+        cxx: /cosma/local/gcc/9.1.0/bin/g++
+        f77: /cosma/local/gcc/9.1.0/bin/gfortran
+        fc: /cosma/local/gcc/9.1.0/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
   - compiler:
       spec: gcc@9.3.0
       paths:
@@ -61,58 +191,13 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: gcc@13.2.0
+      spec: intel@2021.1
       paths:
-        cc: /cosma/local/gcc/13.2.0/bin/gcc
-        cxx: /cosma/local/gcc/13.2.0/bin/g++
-        f77: /cosma/local/gcc/13.2.0/bin/gfortran
-        fc: /cosma/local/gcc/13.2.0/bin/gfortran
+        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/icc
+        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/icpc
+        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/ifort
+        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/intel64/ifort
       flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: gcc@14.1.0
-      paths:
-        cc: /cosma/local/gcc/14.1.0/bin/gcc
-        cxx: /cosma/local/gcc/14.1.0/bin/g++
-        f77: /cosma/local/gcc/14.1.0/bin/gfortran
-        fc: /cosma/local/gcc/14.1.0/bin/gfortran
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: aocc@3.1.0
-      paths:
-        cc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang
-        cxx: /cosma/local/aocc/aocc-compiler-3.1.0/bin/clang++
-        f77: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
-        fc: /cosma/local/aocc/aocc-compiler-3.1.0/bin/flang
-      flags:
-        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
-        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
-        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment: {}
-      extra_rpaths: []
-  - compiler:
-      spec: aocc@4.0.0
-      paths:
-        cc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang
-        cxx: /cosma/local/aocc/aocc-compiler-4.0.0/bin/clang++
-        f77: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
-        fc: /cosma/local/aocc/aocc-compiler-4.0.0/bin/flang
-      flags:
-        cflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
-        cxxflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
-        fflags: -Wno-unused-command-line-argument -mllvm -eliminate-similar-expr=false
       operating_system: rocky9
       target: x86_64
       modules: []
@@ -132,22 +217,6 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
-      spec: intel@2025.0
-      paths:
-        cc: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/icx
-        cxx: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/icpx
-        f77: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/ifx
-        fc: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/ifx
-      flags: {}
-      operating_system: rocky9
-      target: x86_64
-      modules: []
-      environment:
-        prepend_path:
-          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/lib
-      extra_rpaths:
-      - /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/lib
-  - compiler:
       spec: intel@2021.7.1
       paths:
         cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/icc
@@ -163,6 +232,22 @@ spack:
           LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
       extra_rpaths:
       - /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/compiler/lib/intel64_lin
+  - compiler:
+      spec: oneapi@2021.1
+      paths:
+        cc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/bin/ifx
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/compiler/lib/intel64_lin
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2021.1.0/compiler/2021.1.1/linux/compiler/lib/intel64_lin
   - compiler:
       spec: oneapi@2021.3.0
       paths:
@@ -196,6 +281,19 @@ spack:
           LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
       extra_rpaths:
       - /cosma/local/intel/oneAPI_2024.2.0/compiler/2024.2/lib
+  - compiler:
+      spec: gcc@=11.5.0
+      paths:
+        cc: /usr/bin/gcc
+        cxx: /usr/bin/g++
+        f77: /usr/bin/gfortran
+        fc: /usr/bin/gfortran
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment: {}
+      extra_rpaths: []
   packages:
     autoconf:
       externals:
@@ -221,6 +319,18 @@ spack:
       externals:
       - spec: bzip2@1.0.6
         prefix: /usr
+    cmake:
+      externals:
+      - spec: cmake@2.8.12.2
+        prefix: /usr
+      - spec: cmake@3.11.4
+        prefix: /cosma/local/cmake/3.11.4/
+      - spec: cmake@3.18.1
+        prefix: /cosma/local/cmake/3.18.1/
+      - spec: cmake@3.25.1
+        prefix: /cosma/local/cmake/3.25.1/
+      - spec: cmake@3.28.3
+        prefix: /cosma/local/cmake/3.28.3/
     cpio:
       externals:
       - spec: cpio@2.11
@@ -280,21 +390,59 @@ spack:
     hdf5:
       externals:
       - spec: hdf5@1.14.4
-        prefix: /cosma/local/hdf5/intel_2025.0.1/1.14.4
+        prefix: /cosma/local/hdf5/intel_2024.2.0/1.14.4
     krb5:
       externals:
       - spec: krb5@1.15.1
         prefix: /usr
     intel-mkl:
       externals:
+      - spec: intel-mkl@2017.1.132
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.1.132/linux/mkl
+      - spec: intel-mkl@2017.2.174
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1/compilers_and_libraries_2017.2.174/linux/mkl
+      - spec: intel-mkl@2018.2.199
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2018/compilers_and_libraries_2018.2.199/linux/mkl
+      - spec: intel-mkl@2019.1.144
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.1.144/linux/mkl
+      - spec: intel-mkl@2019.2.187
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.2.187/linux/mkl
+      - spec: intel-mkl@2019.3.199
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.3.199/linux/mkl
+      - spec: intel-mkl@2019.4.243
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019/compilers_and_libraries_2019.4.243/linux/mkl
+      - spec: intel-mkl@2020.0.166
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.0.166/linux/mkl
+      - spec: intel-mkl@2020.1.217
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.1.217/linux/mkl
       - spec: intel-mkl@2020.2.254
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020/compilers_and_libraries_2020.2.254/linux/mkl
     intel-mpi:
       externals:
+      - spec: intel-mpi@2017.1.132%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1
+      - spec: intel-mpi@2017.2.174%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2017-update1
+      - spec: intel-mpi@2018.2.199%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2018
+      - spec: intel-mpi@2019.1.144%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019
+      - spec: intel-mpi@2019.2.187%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019
+      - spec: intel-mpi@2019.3.199%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019
+      - spec: intel-mpi@2019.4.243%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2019
+      - spec: intel-mpi@2020.0.166%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020
+      - spec: intel-mpi@2020.1.217%intel
+        prefix: /cosma/local/intel/Parallel_Studio_XE_2020
       - spec: intel-mpi@2020.2.254%intel
         prefix: /cosma/local/intel/Parallel_Studio_XE_2020
     intel-oneapi-mpi:
       externals:
+      - spec: intel-oneapi-mpi@2021.1.1+generic-names%oneapi@2021.1
+        prefix: /cosma/local/intel/oneAPI_2021.1.0
       - spec: intel-oneapi-mpi@2021.3.0+generic-names%oneapi@2021.3.0
         prefix: /cosma/local/intel/oneAPI_2021.3.0
       - spec: intel-oneapi-mpi@2021.7.1+generic-names%oneapi@2022.2.1
@@ -319,10 +467,15 @@ spack:
         prefix: /usr
     mvapich2:
       externals:
-      - spec: mvapich2@2.3.6~cuda~debug~regcache~wrapperrpath fabrics=mrail process_managers=hydra threads=multiple %gcc@11.1.0
+      - spec: mvapich2@2.3.6~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=hydra threads=multiple %gcc@11.1.0
         prefix: /cosma/local/mvapich2/gnu_11.1.0/2.3.6
-      - spec: mvapich2@2.3.6~cuda~debug~regcache~wrapperrpath fabrics=mrail process_managers=slurm threads=multiple %gcc@10.2.0
+      - spec: mvapich2@2.3.6~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=slurm threads=multiple %gcc@10.2.0
         prefix: /cosma/local/mvapich2/gnu_10.2.0/2.3.6
+      - spec: mvapich2@2.3.6~cuda~debug~regcache~wrapperrpath fabrics=mrail
+          process_managers=slurm threads=multiple %gcc@9.3.0
+        prefix: /cosma/local/mvapich2/gnu_9.3.0/2.3.6
     ncurses:
       externals:
       - spec: ncurses@5.9.20130511+termlib abi=5
@@ -333,12 +486,48 @@ spack:
         prefix: /usr
     openmpi:
       externals:
-      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath fabrics=ucx schedulers=slurm %gcc@9.3.0
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %intel
+        prefix: /cosma/local/openmpi/intel_2018/3.0.1
+      - spec: openmpi@3.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@7.3.0
+        prefix: /cosma/local/openmpi/gnu_7.3.0/3.0.1
+      - spec: openmpi@3.0.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@10.2.0
+        prefix: /cosma/local/openmpi/gnu_10.2.0/3.0.1
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          schedulers=slurm %aocc@1.3.0
+        prefix: /cosma/local/openmpi/aocc_1.3.0/4.0.1
+      - spec: openmpi@4.0.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          schedulers=slurm %aocc@2.0.0
+        prefix: /cosma/local/openmpi/aocc_2.0.0/4.0.1
+      - spec: openmpi@4.0.3~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@9.3.0
+        prefix: /cosma/local/openmpi/gnu_9.3.0/4.0.3
+      - spec: openmpi@4.0.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm %aocc@2.2.0
+        prefix: /cosma/local/openmpi/aocc_2.2.0/4.0.5
+      - spec: openmpi@4.1.1~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm %gcc@7.3.0
+        prefix: /cosma/local/openmpi/gnu_7.3.0/20190429
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          fabrics=ucx schedulers=slurm %gcc@9.3.0
         prefix: /cosma/local/openmpi/gnu_9.3.0/4.1.1
-      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath schedulers=slurm %gcc@11.1.0
+      - spec: openmpi@4.1.1~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@11.1.0
+        prefix: /cosma/local/openmpi/gnu_11.1.0/4.1.1.no-ucx
+      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@11.1.0
         prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
-      - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath schedulers=slurm %gcc@13.1.0
+      - spec: openmpi@4.1.4~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@13.1.0
+        prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.4
+      - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@13.1.0
         prefix: /cosma/local/openmpi/gnu_13.1.0/4.1.5
+      - spec: openmpi@4.1.5~cuda+cxx+cxx_exceptions~java+lustre~memchecker+pmi~sqlite3+static~thread_multiple~wrapper-rpath
+          schedulers=slurm %gcc@14.1.0
+        prefix: /cosma/local/openmpi/gnu_14.1.0/4.1.5
     openssh:
       externals:
       - spec: openssh@7.4p1
@@ -347,6 +536,10 @@ spack:
       externals:
       - spec: openssl@1.1.1k
         prefix: /cosma/local/intel/oneAPI_2021.3.0/intelpython/latest
+      - spec: openssl@1.1.1h
+        prefix: /cosma/local/intel/oneAPI_2021.1.0/intelpython/latest
+      - spec: openssl@1.1.1g
+        prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
       - spec: openssl@1.0.2k-fips
         prefix: /usr
     perl:
@@ -361,8 +554,16 @@ spack:
       externals:
       - spec: python@3.7.10+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
         prefix: /cosma/local/intel/oneAPI_2021.3.0/intelpython/latest
+      - spec: python@3.7.7+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/intel/oneAPI_2021.1.8/intelpython/latest
+      - spec: python@3.7.9+bz2+ctypes+dbm+lzma+pyexpat~readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/intel/oneAPI_2021.1.0/intelpython/latest
+      - spec: python@2.7.5+bz2+ctypes+dbm+lzma+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /usr
       - spec: python@3.6.8+bz2+ctypes+dbm+lzma+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
         prefix: /usr
+      - spec: python@2.7.15+bz2+ctypes+dbm~lzma+pyexpat+readline+sqlite3+ssl+tix+tkinter+uuid+zlib
+        prefix: /cosma/local/Python/2.7.15
     rsync:
       externals:
       - spec: rsync@3.1.2
