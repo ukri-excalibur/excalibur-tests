@@ -132,6 +132,22 @@ spack:
       environment: {}
       extra_rpaths: []
   - compiler:
+      spec: intel@2025.0
+      paths:
+        cc: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/icx
+        cxx: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/icpx
+        f77: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/ifx
+        fc: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/bin/ifx
+      flags: {}
+      operating_system: rocky9
+      target: x86_64
+      modules: []
+      environment:
+        prepend_path:
+          LD_LIBRARY_PATH: /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/lib
+      extra_rpaths:
+      - /cosma/local/intel/oneAPI_2025.0.1/compiler/2025.0/lib
+  - compiler:
       spec: intel@2021.7.1
       paths:
         cc: /cosma/local/intel/oneAPI_2022.3.0/compiler/2022.2.1/linux/bin/intel64/icc
