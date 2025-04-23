@@ -41,7 +41,8 @@ class HemepureBenchmark(SpackTest):
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
         self.env_vars['OMP_PLACES'] = 'cores'
 
-        self.keep_files = [self.output_file_prefix + '_NN' + str(self.num_nodes_param) + '_NP' + str(self.num_tasks)]
+        self.output_dir = self.output_file_prefix + '_NN' + str(self.num_nodes_param) + '_NP' + str(self.num_tasks)
+        self.keep_files = [self.output_dir]
         self.executable_opts = ['-in', input_data + '/input.xml', '-out', self.keep_files[0]]
 
     @run_before('sanity')
@@ -57,11 +58,12 @@ class HemepureBenchmark(SpackTest):
         runtime = sn.extractsingle(r'\[Rank \d+, (?P<runtime>\S+) s, \d+ kB] :: SIMULATION FINISHED',
             self.stdout, 'runtime', float, item=-1)
 
+        output_file = self.output_dir + "/report.xml"
         timesteps = sn.extractsingle(r'\<steps\>(?P<timesteps>\S+)\<\/steps\>',
-            self.output_file, 'runtime', float, item=-1)
+            output_file, 'runtime', float, item=-1)
 
         sites = sn.extractsingle(r'\<sites\>(?P<sites>\S+)\<\/sites\>',
-            self.output_file, 'sites', float, item=-1)
+            output_file, 'sites', float, item=-1)
 
         self.perf_patterns = {
             'Performance': (sites * timesteps) / (1e6 * runtime)
