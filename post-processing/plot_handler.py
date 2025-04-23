@@ -12,7 +12,8 @@ from bokeh.transform import factor_cmap
 from titlecase import titlecase
 
 
-def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
+def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
+                 output_path=Path(__file__).parent, debug=False):
     """
         Create a bar chart for the supplied data using bokeh.
 
@@ -22,6 +23,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             x_axis: dict, x-axis column and units.
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
+            output_path: Path, path to a directory for storing the generated plot and csv data.
+                Default is current directory.
+            debug: bool, flag to print additional information to console.
     """
 
     # get column names and labels for axes
@@ -52,14 +56,14 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             print(grouped_df.get_group(key))
 
     # adjust y-axis range
-    min_y = (0 if min(df[y_column]) >= 0
+    min_y = (0 if np.nanmin(df[y_column]) >= 0
              else math.floor(np.nanmin(df[y_column])*1.2))
-    max_y = (0 if max(df[y_column]) <= 0
+    max_y = (0 if np.nanmax(df[y_column]) <= 0
              else math.ceil(np.nanmax(df[y_column])*1.2))
 
     # create html file to store plot in
     output_file(filename=os.path.join(
-        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+        output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
     # create plot
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
@@ -109,7 +113,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.add_layout(Legend(), "right")
     # add bars
     plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
-              line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
+              line_color=index_cmap, fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
     # add labels
     plot.xaxis.axis_label = x_label
     plot.yaxis.axis_label = y_label
@@ -173,9 +177,10 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling = str(custom) if custom else ""
 
     # determine axis label
-    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                               if scaling else "",
-                               " ({0})".format(units) if units else "")
+    label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
+                                  " [Log Scale]" if axis.get("logarithmic") else "",
+                                  titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
+                                  if scaling else "",
+                                  " ({0})".format(units) if units else "")
 
     return col_name, label

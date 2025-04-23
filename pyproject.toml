@@ -34,9 +34,10 @@ test = [
 ]
 post-processing = [
     "pandas >= 2.0.1",
-    "bokeh == 2.4.3",
+    "bokeh >= 3.7.0",
     "titlecase >= 2.4.1",
-    "streamlit == 1.30.0",
+    "streamlit >= 1.44.0",
+    "streamlit-bokeh >= 3.7.0",
     "numpy < 2.0.0",
 ]
 

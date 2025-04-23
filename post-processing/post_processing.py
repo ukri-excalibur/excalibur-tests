@@ -5,6 +5,7 @@ import traceback
 from functools import reduce
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from config_handler import ConfigHandler
 from perflog_handler import PerflogHandler
@@ -13,23 +14,25 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, debug=False, verbose=False, save=False, plotting=True):
+    def __init__(self, log_path: Path, plot_type=None, save=None, output_path=Path(__file__).parent, debug=False):
         """
             Initialise class.
 
             Args:
                 log_path: Path, path to performance log file or directory.
+                plot_type: str, type of plot to be generated and stored in an html file.
+                    Options: ['generic', 'line' (TODO)]
+                save: str, state of dataframe to save to csv file.
+                    Options: ['original', 'filtered', 'transformed']
+                output_path: Path, path to a directory for storing outputs. Default is current directory.
                 debug: bool, flag to print additional information to console.
-                verbose: bool, flag to print more additional information to console.
-                save: bool, flag to save the filtered dataframe in csv file
-                plotting: bool, flag to generate and store a plot in html file
         """
 
         # FIXME (issue #264): add proper logging
-        self.debug = debug
-        self.verbose = verbose
+        self.plot_type = plot_type
         self.save = save
-        self.plotting = plotting
+        self.output_path = output_path
+        self.debug = debug
         # find and read perflogs
         self.original_df = PerflogHandler(log_path, self.debug).get_df()
         # copy original data for modification during post-processing
@@ -63,25 +66,42 @@ class PostProcessing:
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
+        # log axes
+        if (config.x_axis.get("logarithmic") and
+            pd.api.types.is_numeric_dtype(self.df[config.x_axis["value"]].dtype)):
+            self.df[config.x_axis["value"]] = np.log10(self.df[config.x_axis["value"]])
+        if (config.y_axis.get("logarithmic") and
+            pd.api.types.is_numeric_dtype(self.df[config.y_axis["value"]].dtype)):
+            self.df[config.y_axis["value"]] = np.log10(self.df[config.y_axis["value"]])
         if self.debug:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
+
         if self.save:
-            # set index=False to exclude the dataframe index from the csv
-            self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
-                path_or_buf=os.path.join(Path(__file__).parent, 'output.csv'), index=True)
+            os.makedirs(self.output_path, exist_ok=True)
+            csv_path = os.path.join(self.output_path, "output.csv")
+            # save original dataframe with no filters or transformations applied
+            if self.save == "original":
+                self.original_df.to_csv(path_or_buf=csv_path, index=True)
+            # save original filtered dataframe with no transformations applied
+            elif self.save == "filtered":
+                self.original_df[self.mask][config.plot_columns + config.extra_columns].to_csv(
+                    path_or_buf=csv_path, index=True)
+            # save processed dataframe
+            elif self.save == "transformed":
+                # set index=False to exclude the dataframe index from the csv
+                self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
+                    path_or_buf=csv_path, index=True)
+            print("Saved {0} dataframe to {1}".format(self.save, self.output_path))
 
         # call a plotting script
-        if self.plotting:
-            self.plot = plot_generic(
-                config.title, self.df[self.mask][config.plot_columns],
-                config.x_axis, config.y_axis, config.series_filters, self.debug)
-
-        # FIXME (#issue #255): maybe save this bit to a file as well for easier viewing
-        if self.debug & self.verbose:
-            print("")
-            print("Full dataframe:")
-            print(self.df.to_json(orient="columns", indent=2))
+        if self.plot_type:
+            os.makedirs(self.output_path, exist_ok=True)
+            if self.plot_type == "generic":
+                self.plot = plot_generic(
+                    config.title, self.df[self.mask][config.plot_columns],
+                    config.x_axis, config.y_axis, config.series_filters, self.output_path, self.debug)
+            print("Saved {0} dataframe to {1}".format(self.plot_type, self.output_path))
 
         return self.df[self.mask][config.plot_columns]
 
@@ -242,6 +262,11 @@ class PostProcessing:
         scaling_series_mask = None
         scaling_x_value_mask = None
 
+        if scaling_column or scaling_custom:
+            # pre-convert numeric scaled column to float to avoid type issues
+            if pd.api.types.is_numeric_dtype(self.df[y_column].dtype):
+                self.df[y_column] = self.df[y_column].astype("float64")
+
         # scale by custom
         if scaling_custom:
             try:
@@ -345,9 +370,8 @@ class PostProcessing:
                 e.args = (e.args[0] + " for column '{0}' and value '{1}'".format(column, value),)
                 raise
 
-        if self.debug & self.verbose:
-            print(mask)
         if self.debug:
+            print(mask)
             print("")
 
         return mask
@@ -383,7 +407,7 @@ class PostProcessing:
                     "Cannot scale column '{0}' of type {1} by column '{2}' of type {3}."
                     .format(axis_column, self.df[mask][axis_column].dtype,
                             scaling_column_name, scaling_value.dtype),
-                    "Scaled column must be float and scaling column must be numeric."))
+                    "Scaled and scaling column must both be numeric."))
 
             # get mask of scaling values
             scaling_mask = mask.copy()
@@ -410,26 +434,23 @@ def read_args():
     parser = argparse.ArgumentParser(
         description="Plot benchmark data. At least one perflog must be supplied.")
 
-    # required positional arguments (log path, config path)
+    # required positional arguments
     parser.add_argument("log_path", type=Path,
                         help="path to a perflog file or a directory containing perflog files")
     parser.add_argument("config_path", type=Path,
                         help="path to a configuration file specifying what to plot")
 
-    # optional argument (plot type)
-    parser.add_argument("-p", "--plot_type", type=str, default="generic",
-                        help="type of plot to be generated (default: 'generic')")
-
-    # info dump flags
+    # optional arguments
+    parser.add_argument("-p", "--plot_type", type=str,
+                        help="type of plot to be generated (default is no plot); \
+                            options: ['generic', 'line' (TODO)]")
+    parser.add_argument("-s", "--save", type=str,
+                        help="state in which to save perflog data to a csv file (default is no data saved); \
+                            options: ['original', 'filtered', 'transformed']")
+    parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
+                        help="path to a directory for storing outputs (default is current directory)")
     parser.add_argument("-d", "--debug", action="store_true",
                         help="debug flag for printing additional information")
-    parser.add_argument("-v", "--verbose", action="store_true",
-                        help="verbose flag for printing more debug information \
-                              (must be used in conjunction with the debug flag)")
-    parser.add_argument("-s", "--save", action="store_true",
-                        help="save flag for saving the filtered dataframe in csv file")
-    parser.add_argument("-np", "--no_plot", action="store_true",
-                        help="no-plot flag for disabling plotting")
 
     return parser.parse_args()
 
@@ -439,7 +460,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.debug, args.verbose, args.save, not args.no_plot)
+        post = PostProcessing(args.log_path, args.plot_type, args.save, args.output_path, args.debug)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 
