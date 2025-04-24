@@ -26,7 +26,7 @@ class HemepureBenchmark(SpackTest):
     
     reference = {
         '*': {
-            'Runtime': (160.0, None, None, 'MLUPS'),
+            'Performance': (2.5, None, None, 'MLUPS'),
         }
     }
         
@@ -59,10 +59,10 @@ class HemepureBenchmark(SpackTest):
             self.stdout, 'runtime', float, item=-1)
 
         output_file = self.output_dir + "/report.xml"
-        timesteps = sn.extractsingle(r'\<steps\>(?P<timesteps>\S+)\<\/steps\>',
-            output_file, 'runtime', float, item=-1)
+        timesteps = sn.extractsingle(r'<steps>(?P<timesteps>\S+)<\/steps>',
+            output_file, 'timesteps', float, item=-1)
 
-        sites = sn.extractsingle(r'\<sites\>(?P<sites>\S+)\<\/sites\>',
+        sites = sn.extractsingle(r'<sites>(?P<sites>\S+)<\/sites>',
             output_file, 'sites', float, item=-1)
 
         self.perf_patterns = {
