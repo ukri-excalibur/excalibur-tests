@@ -246,11 +246,12 @@ def axis_select(label: str, axis: dict):
         st.warning("Missing {0}-axis value information.".format(label))
 
     # units select
-    units_select(label, axis)
+    with st.expander("Units"):
+        units_select(label, axis)
     # scaling select
     if label == "y":
-        st.write("---")
-        scaling_select(axis)
+        with st.expander("Scaling"):
+            scaling_select(axis)
 
     # sort checkbox
     if label == "x":
@@ -529,8 +530,7 @@ def new_filter_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Filter")
-    with st.container(border=True):
+    with st.expander("Add New Filter"):
 
         c1, c2 = st.columns(2)
         with c1:
@@ -664,8 +664,7 @@ def new_extra_column_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Extra Column")
-    with st.container(border=True):
+    with st.expander("Add New Extra Column"):
 
         st.selectbox("extra column", post.df.columns, key="extra_col",
                      help="{0} {1}".format(
