@@ -176,7 +176,7 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters, x_column="x"):
                                                 "\nfor {0}{1}".format(x, series) if x or series else "")
         else:
             custom = axis["scaling"].get("custom")
-            scaling = str(custom) if custom else ""
+            scaling = "Scaled by {0}".format(custom) if custom else ""
 
     # determine axis label
     label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
