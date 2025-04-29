@@ -85,6 +85,20 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         if not title:
             st.warning("Missing plot title information.")
 
+        # style expander labels as markdown h6
+        # and hover colour as that of the multiselect labels
+        st.markdown(
+            """<style>
+                div[data-testid="stExpander"] details summary span div p{
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+                [data-testid="stExpander"] details:hover summary{
+                    background-color: rgba(255, 75, 75, 0.1);
+                }
+            </style>""",
+            unsafe_allow_html=True)
+
         # display axis options
         axis_options()
         # display filter options
