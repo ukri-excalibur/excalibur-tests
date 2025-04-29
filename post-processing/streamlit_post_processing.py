@@ -473,15 +473,19 @@ def filter_options():
 
     st.write("#### Filter Options")
     # allow wide multiselect labels
+    # but hidden overflow for selectboxes
     st.markdown(
-        """
-        <style>
+        """<style>
             .stMultiSelect
             [data-baseweb=select] span{
                 max-width: inherit;
             }
             [data-baseweb=select] div{
                 overflow: auto;
+            }
+            .stSelectbox
+            [data-baseweb=select] div{
+                overflow: hidden;
             }
         </style>""",
         unsafe_allow_html=True)
