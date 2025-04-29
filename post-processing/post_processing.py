@@ -14,7 +14,8 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, plot_type=None, save=None, output_path=Path(__file__).parent, debug=False):
+    def __init__(self, log_path: Path, plot_type=None, save=None, output_path=Path(__file__).parent,
+                 streamlit_mode=False, debug=False):
         """
             Initialise class.
 
@@ -25,6 +26,8 @@ class PostProcessing:
                 save: str, state of dataframe to save to csv file.
                     Options: ['original', 'filtered', 'transformed']
                 output_path: Path, path to a directory for storing outputs. Default is current directory.
+                streamlit_mode: bool, flag to signify post-processing is being run for Streamlit and
+                    that a plot should be produced but not saved.
                 debug: bool, flag to print additional information to console.
         """
 
@@ -32,6 +35,7 @@ class PostProcessing:
         self.plot_type = plot_type
         self.save = save
         self.output_path = output_path
+        self.streamlit_mode = streamlit_mode
         self.debug = debug
         # find and read perflogs
         self.original_df = PerflogHandler(log_path, self.debug).get_df()
@@ -99,9 +103,10 @@ class PostProcessing:
             os.makedirs(self.output_path, exist_ok=True)
             if self.plot_type == "generic":
                 self.plot = plot_generic(
-                    config.title, self.df[self.mask][config.plot_columns],
-                    config.x_axis, config.y_axis, config.series_filters, self.output_path, self.debug)
-            print("Saved {0} dataframe to {1}".format(self.plot_type, self.output_path))
+                    config.title, self.df[self.mask][config.plot_columns], config.x_axis, config.y_axis,
+                    config.series_filters, self.output_path, self.streamlit_mode, self.debug)
+            if not self.streamlit_mode:
+                print("Saved {0} dataframe to {1}".format(self.plot_type, self.output_path))
 
         return self.df[self.mask][config.plot_columns]
 

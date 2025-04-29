@@ -776,7 +776,8 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path)
+        # FIXME (issue #182): move plot type to be part of config
+        post = PostProcessing(args.log_path, plot_type="generic", streamlit_mode=True)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path

@@ -13,7 +13,7 @@ from titlecase import titlecase
 
 
 def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
-                 output_path=Path(__file__).parent, debug=False):
+                 output_path=Path(__file__).parent, streamlit_mode=False, debug=False):
     """
         Create a bar chart for the supplied data using bokeh.
 
@@ -25,6 +25,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
             series_filters: list, x-axis groups used to filter graph data.
             output_path: Path, path to a directory for storing the generated plot and csv data.
                 Default is current directory.
+            streamlit_mode: bool, flag to signify that a plot should be produced but not saved.
             debug: bool, flag to print additional information to console.
     """
 
@@ -62,8 +63,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
              else math.ceil(np.nanmax(df[y_column])*1.2))
 
     # create html file to store plot in
-    output_file(filename=os.path.join(
-        output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
+    if not streamlit_mode:
+        output_file(filename=os.path.join(
+            output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
     # create plot
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
@@ -134,7 +136,8 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     plot.legend[0].items = sorted_legend_items
 
     # save to file
-    save(plot)
+    if not streamlit_mode:
+        save(plot)
 
     return plot
 
