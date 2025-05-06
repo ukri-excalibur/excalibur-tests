@@ -85,6 +85,20 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         if not title:
             st.warning("Missing plot title information.")
 
+        # style expander labels as markdown h6
+        # and hover colour as that of the multiselect labels
+        st.markdown(
+            """<style>
+                div[data-testid="stExpander"] details summary span div p{
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+                [data-testid="stExpander"] details:hover summary{
+                    background-color: rgba(255, 75, 75, 0.1);
+                }
+            </style>""",
+            unsafe_allow_html=True)
+
         # display axis options
         axis_options()
         # display filter options
@@ -246,11 +260,12 @@ def axis_select(label: str, axis: dict):
         st.warning("Missing {0}-axis value information.".format(label))
 
     # units select
-    units_select(label, axis)
+    with st.expander("Units"):
+        units_select(label, axis)
     # scaling select
     if label == "y":
-        st.write("---")
-        scaling_select(axis)
+        with st.expander("Scaling"):
+            scaling_select(axis)
 
     # sort checkbox
     if label == "x":
@@ -473,15 +488,19 @@ def filter_options():
 
     st.write("#### Filter Options")
     # allow wide multiselect labels
+    # but hidden overflow for selectboxes
     st.markdown(
-        """
-        <style>
+        """<style>
             .stMultiSelect
             [data-baseweb=select] span{
                 max-width: inherit;
             }
             [data-baseweb=select] div{
                 overflow: auto;
+            }
+            .stSelectbox
+            [data-baseweb=select] div{
+                overflow: hidden;
             }
         </style>""",
         unsafe_allow_html=True)
@@ -525,8 +544,7 @@ def new_filter_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Filter")
-    with st.container(border=True):
+    with st.expander("Add New Filter"):
 
         c1, c2 = st.columns(2)
         with c1:
@@ -660,8 +678,7 @@ def new_extra_column_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Extra Column")
-    with st.container(border=True):
+    with st.expander("Add New Extra Column"):
 
         st.selectbox("extra column", post.df.columns, key="extra_col",
                      help="{0} {1}".format(
@@ -759,7 +776,8 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path)
+        # FIXME (issue #182): move plot type to be part of config
+        post = PostProcessing(args.log_path, plot_type="generic", save_plot=False)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path
