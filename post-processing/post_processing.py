@@ -14,8 +14,8 @@ from plot_handler import plot_generic
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, plot_type=None, save=None, output_path=Path(__file__).parent,
-                 streamlit_mode=False, debug=False):
+    def __init__(self, log_path: Path, plot_type=None, save_data=None, output_path=Path(__file__).parent,
+                 save_plot=True, debug=False):
         """
             Initialise class.
 
@@ -23,19 +23,19 @@ class PostProcessing:
                 log_path: Path, path to performance log file or directory.
                 plot_type: str, type of plot to be generated and stored in an html file.
                     Options: ['generic', 'line' (TODO)]
-                save: str, state of dataframe to save to csv file.
+                save_data: str, state of dataframe to save to csv file.
                     Options: ['original', 'filtered', 'transformed']
                 output_path: Path, path to a directory for storing outputs. Default is current directory.
-                streamlit_mode: bool, flag to signify post-processing is being run for Streamlit and
-                    that a plot should be produced but not saved.
+                save_plot: bool, flag to signify that a plot should be saved after production.
+                    Disable when running with Streamlit.
                 debug: bool, flag to print additional information to console.
         """
 
         # FIXME (issue #264): add proper logging
         self.plot_type = plot_type
-        self.save = save
+        self.save_data = save_data
         self.output_path = output_path
-        self.streamlit_mode = streamlit_mode
+        self.save_plot = save_plot
         self.debug = debug
         # find and read perflogs
         self.original_df = PerflogHandler(log_path, self.debug).get_df()
@@ -81,22 +81,24 @@ class PostProcessing:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
 
-        if self.save:
+        if self.save_data in ["original", "filtered", "transformed"]:
             os.makedirs(self.output_path, exist_ok=True)
             csv_path = os.path.join(self.output_path, "output.csv")
             # save original dataframe with no filters or transformations applied
-            if self.save == "original":
+            if self.save_data == "original":
                 self.original_df.to_csv(path_or_buf=csv_path, index=True)
             # save original filtered dataframe with no transformations applied
-            elif self.save == "filtered":
+            elif self.save_data == "filtered":
                 self.original_df[self.mask][config.plot_columns + config.extra_columns].to_csv(
                     path_or_buf=csv_path, index=True)
             # save processed dataframe
-            elif self.save == "transformed":
+            elif self.save_data == "transformed":
                 # set index=False to exclude the dataframe index from the csv
                 self.df[self.mask][config.plot_columns + config.extra_columns].to_csv(
                     path_or_buf=csv_path, index=True)
-            print("Saved {0} dataframe to {1}".format(self.save, self.output_path))
+            print("Saved {0} dataframe to {1}".format(self.save_data, self.output_path))
+        elif self.save_data:
+            print("Save data option '{0}' not one of ['original', 'filtered', 'transformed']".format(self.save_data))
 
         # call a plotting script
         if self.plot_type:
@@ -104,9 +106,9 @@ class PostProcessing:
             if self.plot_type == "generic":
                 self.plot = plot_generic(
                     config.title, self.df[self.mask][config.plot_columns], config.x_axis, config.y_axis,
-                    config.series_filters, self.output_path, self.streamlit_mode, self.debug)
-            if not self.streamlit_mode:
-                print("Saved {0} dataframe to {1}".format(self.plot_type, self.output_path))
+                    config.series_filters, self.output_path, self.save_plot, self.debug)
+            if self.save_plot:
+                print("Saved {0} plot to {1}".format(self.plot_type, self.output_path))
 
         return self.df[self.mask][config.plot_columns]
 
@@ -449,7 +451,7 @@ def read_args():
     parser.add_argument("-p", "--plot_type", type=str,
                         help="type of plot to be generated (default is no plot); \
                             options: ['generic', 'line' (TODO)]")
-    parser.add_argument("-s", "--save", type=str,
+    parser.add_argument("-s", "--save_data", type=str,
                         help="state in which to save perflog data to a csv file (default is no data saved); \
                             options: ['original', 'filtered', 'transformed']")
     parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
@@ -465,7 +467,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.plot_type, args.save, args.output_path, args.debug)
+        post = PostProcessing(args.log_path, args.plot_type, args.save_data, args.output_path, args.debug)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 
