@@ -19,8 +19,8 @@ class ConfigHandler:
             config = read_config(config)
 
         # extract config information
-        self.plot_type = config.get("plot_type")
         self.title = config.get("title")
+        self.plot_type = config.get("plot_type")
         self.x_axis = config.get("x_axis")
         self.y_axis = config.get("y_axis")
         self.filters = config.get("filters")
@@ -61,8 +61,8 @@ class ConfigHandler:
         """
 
         return self(dict({
-            "plot_type": None,
             "title": None,
+            "plot_type": None,
             "x_axis": {"value": None, "units": {"custom": None},
                        "range": {"min": None, "max": None}},
             "y_axis": {"value": None, "units": {"custom": None},
@@ -196,8 +196,8 @@ class ConfigHandler:
         """
 
         return dict({
-            "plot_type": self.plot_type,
             "title": self.title,
+            "plot_type": self.plot_type,
             "x_axis": self.x_axis,
             "y_axis": self.y_axis,
             "filters": self.filters,
@@ -243,16 +243,16 @@ def read_config(config: dict):
             config: dict, plot configuration information.
     """
 
-    # check plot_type information
-    plot_type = config.get("plot_type")
-    if not plot_type:
-        raise KeyError("Missing plot type information.")
-    elif (plot_type != 'generic') and (plot_type != 'line'):
-        raise RuntimeError("Plot type must be one of 'generic' or 'line'.")
-
     # check plot title information
     if not config.get("title"):
         raise KeyError("Missing plot title information.")
+
+    # check plot type information
+    plot_type = config.get("plot_type")
+    if not plot_type:
+        raise KeyError("Missing plot type information.")
+    elif (plot_type != "generic") and (plot_type != "line"):
+        raise RuntimeError("Plot type must be one of 'generic' or 'line'.")
 
     # check x-axis information
     if not config.get("x_axis"):
@@ -297,10 +297,10 @@ def read_config(config: dict):
 
     # check optional series information
     if config.get("series"):
-        if plot_type == 'generic':
+        if plot_type == "generic":
             if len(config.get("series")) == 1:
                 raise RuntimeError("Number of series must be >= 2 for generic plot.")
-        if plot_type == 'line':
+        if plot_type == "line":
             if len(config.get("series")) < 1:
                 raise RuntimeError("Number of series must be >= 1 for line plot.")
         if len(set([s[0] for s in config.get("series")])) > 1:

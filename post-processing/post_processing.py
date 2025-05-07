@@ -14,24 +14,24 @@ from plot_handler import plot_generic, plot_line_chart
 
 class PostProcessing:
 
-    def __init__(self, log_path: Path, save_data=None, output_path=Path(__file__).parent,
-                 save_plot=True, debug=False):
+    def __init__(self, log_path: Path, output_path=Path(__file__).parent,
+                 save_data=None, save_plot=True, debug=False):
         """
             Initialise class.
 
             Args:
                 log_path: Path, path to performance log file or directory.
+                output_path: Path, path to a directory for storing outputs. Default is current directory.
                 save_data: str, state of dataframe to save to csv file.
                     Options: ['original', 'filtered', 'transformed']
-                output_path: Path, path to a directory for storing outputs. Default is current directory.
                 save_plot: bool, flag to signify that a plot should be saved after production.
                     Disable when running with Streamlit.
                 debug: bool, flag to print additional information to console.
         """
 
         # FIXME (issue #264): add proper logging
-        self.save_data = save_data
         self.output_path = output_path
+        self.save_data = save_data
         self.save_plot = save_plot
         self.debug = debug
         # find and read perflogs
@@ -64,6 +64,7 @@ class PostProcessing:
         self.mask = self.filter_df(*config.get_filters())
         self.check_filtered_row_count(
             config.x_axis["value"], [s[0] for s in config.series_filters], config.plot_columns)
+
         # scale y-axis
         self.transform_df_data(
             config.x_axis["value"], config.y_axis["value"], *config.get_y_scaling(), config.series_filters)
@@ -78,6 +79,7 @@ class PostProcessing:
             print("Selected dataframe:")
             print(self.df[self.mask][config.plot_columns + config.extra_columns])
 
+        # save dataframe as csv
         if self.save_data in ["original", "filtered", "transformed"]:
             os.makedirs(self.output_path, exist_ok=True)
             csv_path = os.path.join(self.output_path, "output.csv")
@@ -107,7 +109,7 @@ class PostProcessing:
             elif config.plot_type == "line":
                 self.plot = plot_line_chart(
                     config.title, self.df[self.mask][config.plot_columns], config.x_axis, config.y_axis,
-                    config.series_filters, self.output_path, self.save_plot, self.debug)
+                    config.series_filters, self.output_path, self.save_plot)
             if self.save_plot:
                 print("Saved {0} plot to {1}".format(config.plot_type, self.output_path))
         elif config.plot_type:
@@ -451,11 +453,11 @@ def read_args():
                         help="path to a configuration file specifying what to plot")
 
     # optional arguments
+    parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
+                        help="path to a directory for storing outputs (default is current directory)")
     parser.add_argument("-s", "--save_data", type=str,
                         help="state in which to save perflog data to a csv file (default is no data saved); \
                             options: ['original', 'filtered', 'transformed']")
-    parser.add_argument("-o", "--output_path", type=Path, default=Path(__file__).parent,
-                        help="path to a directory for storing outputs (default is current directory)")
     parser.add_argument("-d", "--debug", action="store_true",
                         help="debug flag for printing additional information")
 
@@ -467,7 +469,7 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path, args.save_data, args.output_path, args.debug)
+        post = PostProcessing(args.log_path, args.output_path, args.save_data, args.debug)
         config = ConfigHandler.from_path(args.config_path)
         post.run_post_processing(config)
 

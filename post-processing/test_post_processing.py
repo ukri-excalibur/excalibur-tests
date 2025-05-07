@@ -226,8 +226,8 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -250,8 +250,8 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -274,8 +274,8 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -298,8 +298,8 @@ def test_high_level_script(run_sombrero):
     try:
         PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -322,8 +322,8 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -345,8 +345,8 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_changed_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -370,8 +370,8 @@ def test_high_level_script(run_sombrero):
     # check correct date filtering
     df = PostProcessing(sombrero_changed_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "job_completion_time",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -391,8 +391,8 @@ def test_high_level_script(run_sombrero):
     # check correct or filtering
     df = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -413,8 +413,8 @@ def test_high_level_script(run_sombrero):
     # check correct column scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -437,8 +437,8 @@ def test_high_level_script(run_sombrero):
     # check correct column + series scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -464,8 +464,8 @@ def test_high_level_script(run_sombrero):
     # check correct column + series + x value scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -488,8 +488,8 @@ def test_high_level_script(run_sombrero):
     # check correct custom scaling
     dfs = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -512,8 +512,8 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -536,8 +536,8 @@ def test_high_level_script(run_sombrero):
     try:
         df = PostProcessing(sombrero_log_path).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -561,8 +561,8 @@ def test_high_level_script(run_sombrero):
         # get collated dataframe subset
         df = PostProcessing(Path(sombrero_log_path).parent).run_post_processing(
             ConfigHandler(
-                {"plot_type": "generic",
-                 "title": "Title",
+                {"title": "Title",
+                 "plot_type": "generic",
                  "x_axis": {"value": "tasks",
                             "units": {"custom": None},
                             "range": {"min": None, "max": None}},
@@ -584,8 +584,8 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe subset
     df = PostProcessing(sombrero_log_path).run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -609,8 +609,8 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe with extra columns for csv
     df = PostProcessing(sombrero_log_path, save_data="filtered").run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},
@@ -642,8 +642,8 @@ def test_high_level_script(run_sombrero):
     # get filtered dataframe with duplicated extra columns for csv
     df = PostProcessing(sombrero_log_path, save_data="filtered").run_post_processing(
         ConfigHandler(
-            {"plot_type": "generic",
-             "title": "Title",
+            {"title": "Title",
+             "plot_type": "generic",
              "x_axis": {"value": "tasks",
                         "units": {"custom": None},
                         "range": {"min": None, "max": None}},

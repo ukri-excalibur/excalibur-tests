@@ -5,11 +5,12 @@ from pathlib import Path
 
 import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
-from post_processing import PostProcessing
 from plot_handler import get_axis_min_max
+from post_processing import PostProcessing
 from streamlit_bokeh import streamlit_bokeh
 
 # drop-down lists
+plot_types = ["generic", "line"]
 operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
 filter_types = ["and", "or", "series"]
@@ -76,14 +77,6 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # config file uploader
         st.file_uploader("Upload Config", type="yaml", key="uploaded_config", on_change=update_config)
 
-        # set plot type
-        plot_type_options = ['generic', 'line']
-        plot_type_index = plot_type_options.index(config.plot_type) if config.plot_type else 0
-        plot_type = st.selectbox("#### Plot type", plot_type_options,
-                                 key="plot_type", index=plot_type_index)
-        if plot_type != config.plot_type:
-            config.plot_type = plot_type
-
         # set plot title
         if "title" not in state:
             state["title"] = config.title
@@ -93,6 +86,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # warn if title is blank
         if not title:
             st.warning("Missing plot title information.")
+
+        # set plot type
+        plot_type_index = plot_types.index(config.plot_type) if config.plot_type in plot_types else 0
+        plot_type = st.selectbox("#### Plot type", plot_types,
+                                 key="plot_type", index=plot_type_index)
+        if plot_type != config.plot_type:
+            config.plot_type = plot_type
 
         # style expander labels as markdown h6
         # and hover colour as that of the multiselect labels
@@ -225,16 +225,16 @@ def axis_options():
 
     with st.container(border=True):
         # x-axis select
-        axis_select("x", config.x_axis, config.plot_type)
+        axis_select("x", config.x_axis)
     with st.container(border=True):
         # y-axis select
-        axis_select("y", config.y_axis, config.plot_type)
+        axis_select("y", config.y_axis)
 
     # apply changes
     update_axes()
 
 
-def axis_select(label: str, axis: dict, plot_type: str):
+def axis_select(label: str, axis: dict):
     """
         Allow the user to select axis column and type for post-processing.
 
@@ -271,6 +271,8 @@ def axis_select(label: str, axis: dict, plot_type: str):
     # units select
     with st.expander("Units"):
         units_select(label, axis)
+    # range select
+    with st.expander("Range"):
         # FIXME: add ability to use a custom value for only one of min or max
         range = get_axis_min_max(df, axis)
         axis_range_min, axis_range_max = st.columns(2)
@@ -805,8 +807,7 @@ def main():
     args = read_args()
 
     try:
-        # FIXME (issue #182): move plot type to be part of config
-        post = PostProcessing(args.log_path, plot_type="generic", save_plot=False)
+        post = PostProcessing(args.log_path, save_plot=False)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path

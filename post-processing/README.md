@@ -37,11 +37,11 @@ python post_processing.py log_path config_path [-s save_data] [-o output_path] [
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
 - `config_path` - Path to a configuration file containing plot details.
+- `output_path` - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.
 - `save_data` - (Optional.) State in which to save perflog data to a csv file. By default, no data is saved.
   - `original` - Save the original perflog data with no filters or transformations applied.
   - `filtered` - Save the original filtered perflog data with no transformations applied.
   - `transformed` - Save the processed perflog data with all filters and transformations applied (log and scaling).
-- `output_path` - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.
 - `debug` - (Optional.) Print additional debug information.
 
 Run `post_processing.py -h` for a summary of this information.

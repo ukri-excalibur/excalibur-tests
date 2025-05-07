@@ -192,7 +192,8 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters, x_column="x"):
     return col_name, label
 
 
-def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
+def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
+                    output_path=Path(__file__).parent, save_plot=True):
     """
         Create a line chart for the supplied data using bokeh.
 
@@ -202,6 +203,10 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
             x_axis: dict, x-axis column and units.
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
+            output_path: Path, path to a directory for storing the generated plot and csv data.
+                Default is current directory.
+            save_plot: bool, flag to signify that a plot should be saved after production.
+                Disable when running with Streamlit.
     """
 
     # get column names and labels for axes
@@ -213,8 +218,9 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
     min_y, max_y = get_axis_min_max(df, y_axis)
 
     # create html file to store plot in
-    output_file(filename=os.path.join(
-        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+    if save_plot:
+        output_file(filename=os.path.join(
+            output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
     # create plot
     plot = figure(x_range=(min_x, max_x), y_range=(min_y, max_y), title=title,
@@ -232,9 +238,9 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
 
     for filter in series_filters:
         filtered_df = None
-        if filter[1] == '==':
+        if filter[1] == "==":
             filtered_df = df[df[filter[0]] == int(filter[2])]
-            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=' '.join(filter),
+            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=" ".join(filter),
                       line_width=2, color=next(colours))
 
     # add labels
@@ -252,7 +258,8 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters):
             plot.x_range.end = start
 
     # save to file
-    save(plot)
+    if save_plot:
+        save(plot)
 
     return plot
 
