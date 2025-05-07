@@ -5,10 +5,12 @@ from pathlib import Path
 
 import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
+from plot_handler import get_axis_min_max
 from post_processing import PostProcessing
 from streamlit_bokeh import streamlit_bokeh
 
 # drop-down lists
+plot_types = ["generic", "line"]
 operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
 filter_types = ["and", "or", "series"]
@@ -84,6 +86,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # warn if title is blank
         if not title:
             st.warning("Missing plot title information.")
+
+        # set plot type
+        plot_type_index = plot_types.index(config.plot_type) if config.plot_type in plot_types else 0
+        plot_type = st.selectbox("#### Plot type", plot_types,
+                                 key="plot_type", index=plot_type_index)
+        if plot_type != config.plot_type:
+            config.plot_type = plot_type
 
         # style expander labels as markdown h6
         # and hover colour as that of the multiselect labels
@@ -262,6 +271,19 @@ def axis_select(label: str, axis: dict):
     # units select
     with st.expander("Units"):
         units_select(label, axis)
+    # range select
+    with st.expander("Range"):
+        # FIXME: add ability to use a custom value for only one of min or max
+        range = get_axis_min_max(df, axis)
+        axis_range_min, axis_range_max = st.columns(2)
+        with axis_range_min:
+            st.number_input("{0}-axis minimum".format(label),
+                            value=range[0],
+                            key="{0}_axis_range_min".format(label))
+        with axis_range_max:
+            st.number_input("{0}-axis maximum".format(label),
+                            value=range[1],
+                            key="{0}_axis_range_max".format(label))
     # scaling select
     if label == "y":
         with st.expander("Scaling"):
@@ -409,6 +431,8 @@ def update_axes():
     x_column = state.x_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+    x_range_min = state.x_axis_range_min
+    x_range_max = state.x_axis_range_max
     x_sort = state.x_axis_sort
     x_log = state.x_axis_log
 
@@ -419,6 +443,8 @@ def update_axes():
     y_scaling_series = state.y_axis_scaling_series
     y_scaling_x = state.y_axis_scaling_x_value
     y_scaling_custom = state.y_axis_custom_scaling_val
+    y_range_min = state.y_axis_range_min
+    y_range_max = state.y_axis_range_max
     y_log = state.y_axis_log
 
     # update columns
@@ -438,6 +464,11 @@ def update_axes():
     if not y_units_custom and y_units_column:
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
+
+    config.x_axis["range"]["min"] = x_range_min
+    config.x_axis["range"]["max"] = x_range_max
+    config.y_axis["range"]["min"] = y_range_min
+    config.y_axis["range"]["max"] = y_range_max
 
     # update scaling
     config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
@@ -776,8 +807,7 @@ def main():
     args = read_args()
 
     try:
-        # FIXME (issue #182): move plot type to be part of config
-        post = PostProcessing(args.log_path, plot_type="generic", save_plot=False)
+        post = PostProcessing(args.log_path, save_plot=False)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path
