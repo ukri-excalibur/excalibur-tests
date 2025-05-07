@@ -23,6 +23,7 @@ nav:
     - 'Applications':
       - cp2k: apps/cp2k/README.md
       - grid: apps/grid/README.md
+      - gromacs: apps/gromacs/README.md
       - openmm: apps/openmm/README.md
       - ramses: apps/ramses/README.md
       - sphng: apps/sphng/README.md
