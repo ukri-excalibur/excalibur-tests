@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/apps/grid/">
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/apps/gromacs/">
       
       
-        <link rel="prev" href="../cp2k/">
+        <link rel="prev" href="../grid/">
       
       
-        <link rel="next" href="../gromacs/">
+        <link rel="next" href="../openmm/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>grid - ExCALIBUR-tests Docs</title>
+        <title>gromacs - ExCALIBUR-tests Docs</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#grid" class="md-skip">
+        <a href="#gromacs-benchmark" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              grid
+              gromacs
             
           </span>
         </div>
@@ -741,6 +741,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../grid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    grid
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -758,7 +781,7 @@
   
   
   <span class="md-ellipsis">
-    grid
+    gromacs
     
   </span>
   
@@ -771,7 +794,7 @@
   
   
   <span class="md-ellipsis">
-    grid
+    gromacs
     
   </span>
   
@@ -812,15 +835,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#options-memory-number-of-threads-and-mpi-processes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options (memory, number of threads and MPI processes)
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -829,7 +843,7 @@
         <li class="md-nav__item">
   <a href="#figure-of-merit" class="md-nav__link">
     <span class="md-ellipsis">
-      Figure of merit
+      Figure of Merit
     </span>
   </a>
   
@@ -839,29 +853,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../gromacs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    gromacs
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1500,15 +1491,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#options-memory-number-of-threads-and-mpi-processes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options (memory, number of threads and MPI processes)
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1517,7 +1499,7 @@
         <li class="md-nav__item">
   <a href="#figure-of-merit" class="md-nav__link">
     <span class="md-ellipsis">
-      Figure of merit
+      Figure of Merit
     </span>
   </a>
   
@@ -1542,51 +1524,30 @@
   
 
 
-<h1 id="grid">GRID</h1>
-<p>ReFrame benchmarks for the <a href="https://github.com/paboyle/Grid">GRID</a> code, a data
-parallel C++ mathematical object library.</p>
+<h1 id="gromacs-benchmark">GROMACS benchmark</h1>
+<p><a href="https://manual.gromacs.org/documentation/current/index.html">GROMACS</a> is a free and open-source software suite for high-performance molecular dynamics and output analysis.
+This directory includes a data file, <code>gromacs_1400k_atoms.tpr</code>, which can be used to benchmark both GPU and CPU machines. This data file was taken from https://www.hecbiosim.ac.uk/access-hpc/benchmarks.</p>
+<p>The benchmarks are designed as strong scaling tests which run across multiple full nodes for a given system.</p>
 <h2 id="usage">Usage</h2>
 <p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report
 </span></code></pre></div>
 <h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
-<p>You can run individual benchmarks with the
-<a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a>
-option.  At the moment we have the following tags:</p>
-<ul>
-<li><code>ITT</code> to run the <code>Benchmark_ITT</code> application.</li>
-</ul>
-<p>Examples:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>ITT
+<p>Note that, since we are running strong scaling tests over multiple nodes, the benchmarks may need to be filtered if usage rules restrict the size of jobs which can be run on any given system. To do this filtering, use the <code>-n</code> option like so</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*&#39;</span>
 </span></code></pre></div>
-<h3 id="options-memory-number-of-threads-and-mpi-processes">Options (memory, number of threads and MPI processes)</h3>
-<p>There are some options you can set to control the settings of the benchmark.
-These are the currently available options, with their default values:</p>
-<ul>
-<li><code>mpi</code>: <code>'1.1.1.1'</code>.  This is the string to pass to the benchmarking applications with the
-  <code>--mpi</code> flag.  This will also automatically set the ReFrame variable
-  <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks"><code>num_tasks</code></a></li>
-<li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_cpus_per_task"><code>num_cpus_per_task</code></a>:
-  <code>current_partition.processor.num_cpus // min(1, current_partition.processor.num_cpus_per_core)</code></li>
-<li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node"><code>num_tasks_per_node</code></a>:
-  <code>current_partition.processor.num_cpus // num_cpus_per_task</code></li>
-<li><code>shm</code>: <code>1024</code>.  This is the size of the shared memory used by the benchmark, in MiB, as an
-  integer.</li>
-</ul>
-<p>You can override the values of these variables from the command line with the
-<a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>--setvar</code></a>
-option, for example</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;2.2.1.1&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">12</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;4.4.4.4&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">shm</span><span class="o">=</span><span class="m">4096</span>
+<p>Again, depending on the system's rules/machine size, further filtering may be needed for GPU tests i.e.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>--system<span class="w"> </span>&lt;your_system&gt;<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/gromacs<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;.*num_nodes_param=&lt;2|4|8|16&gt;.*num_gpus_per_node_param=&lt;1|2|4&gt;&#39;</span>
 </span></code></pre></div>
-<p><em><strong>Note</strong></em>: you're responsible for overriding these variables in a consistent
-way, so that, for example, <code>num_tasks_per_node</code> doesn't exceed the number of
-total tasks runnable on each node.</p>
-<h2 id="figure-of-merit">Figure of merit</h2>
-<p>If the output of the program contains</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Grid : Message : 380809 ms :  Comparison point  result: 143382.7 Mflop/s per node
-</span></code></pre></div>
-<p>the number <code>143382.7</code> will be captured as figure of merit.</p>
+<h2 id="figure-of-merit">Figure of Merit</h2>
+<p>The figure of merit captured by these benchmarks is the performance metric Rate, measured in ns/day. Here, ns/day refers to the number of nanoseconds of simulation that you can do in a day of computation.</p>
+<p>This output can be found in the <code>md.log</code> file within the output directory produced by Reframe. If the end of this file resembles what is shown below, the Rate <code>4.892</code> would be captured.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>               Core t (s)   Wall t (s)        (%)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       Time:    28258.913      353.239     7999.9
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                 (ns/day)    (hour/ns)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Performance:        4.892        4.906
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Finished mdrun on rank 0 Tue Apr  1 13:43:36 2025
+</span></code></pre></div></p>
 
 
 
