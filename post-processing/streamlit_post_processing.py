@@ -1,4 +1,5 @@
 import argparse
+import json
 import traceback
 from pathlib import Path
 
@@ -6,6 +7,7 @@ import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
 from post_processing import PostProcessing
 from plot_handler import get_axis_min_max
+from streamlit_bokeh import streamlit_bokeh
 
 # drop-down lists
 operators = ["==", "!=", "<", ">", "<=", ">="]
@@ -14,6 +16,8 @@ filter_types = ["and", "or", "series"]
 # pandas to user type mapping
 type_lookup = {"datetime64[ns]": "datetime",
                "float64": "float",
+               "Float64": "float",
+               "int64": "int",
                "Int64": "int",
                "object": "str"}
 # user to pandas type mapping
@@ -47,16 +51,19 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
 
     # display graph
     if post.plot:
-        st.bokeh_chart(post.plot, use_container_width=True)
+        streamlit_bokeh(post.plot, use_container_width=True, theme="streamlit")
 
     # display dataframe data
     show_df = st.toggle("Show DataFrame")
     if show_df:
-        if len(config.plot_columns + config.extra_columns) > 0:
-            st.dataframe(post.df[post.mask][config.plot_columns + config.extra_columns],
-                         hide_index=True, use_container_width=True)
-        else:
-            st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
+        try:
+            if len(config.plot_columns + config.extra_columns) > 0:
+                st.dataframe(post.df[post.mask][config.plot_columns + config.extra_columns],
+                             hide_index=True, use_container_width=True)
+            else:
+                st.dataframe(post.df[post.mask], hide_index=True, use_container_width=True)
+        except Exception as e:
+            st.exception(e)
 
     # display config in current session state
     show_config = st.toggle("Show Config", key="show_config")
@@ -78,12 +85,28 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
             config.plot_type = plot_type
 
         # set plot title
-        title = st.text_input("#### Title", config.title, placeholder="None")
+        if "title" not in state:
+            state["title"] = config.title
+        title = st.text_input("#### Title", placeholder="None", key="title")
         if title != config.title:
             config.title = title
         # warn if title is blank
         if not title:
             st.warning("Missing plot title information.")
+
+        # style expander labels as markdown h6
+        # and hover colour as that of the multiselect labels
+        st.markdown(
+            """<style>
+                div[data-testid="stExpander"] details summary span div p{
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+                [data-testid="stExpander"] details:hover summary{
+                    background-color: rgba(255, 75, 75, 0.1);
+                }
+            </style>""",
+            unsafe_allow_html=True)
 
         # display axis options
         axis_options()
@@ -111,12 +134,77 @@ def update_config():
 
     state = st.session_state
     uploaded_config = state.uploaded_config
+    df = state.post.df
+
     if uploaded_config:
         try:
             config_dict = load_config(uploaded_config)
             state.config = ConfigHandler(config_dict)
+            config = state.config
+
+            # inputs that may have a default None value should be changed here
+            state.title = config.title
+
+            # x-axis
+            if config.x_axis.get("value") in df.columns:
+                state.x_axis_column = config.x_axis.get("value")
+            else:
+                st.warning("Assigned x-axis column is not in the DataFrame.")
+            # x units
+            if config.x_axis.get("units"):
+                if config.x_axis["units"].get("column") in df.columns:
+                    state.x_axis_units_column = config.x_axis["units"].get("column")
+                elif config.x_axis["units"].get("column") is not None:
+                    st.warning("Assigned x-axis units column is not in the DataFrame.")
+                state.x_axis_units_custom = config.x_axis["units"].get("custom")
+
+            # y-axis
+            if config.y_axis.get("value") in df.columns:
+                state.y_axis_column = config.y_axis.get("value")
+            else:
+                st.warning("Assigned y-axis column is not in the DataFrame.")
+            # y units
+            if config.y_axis.get("units"):
+                if config.y_axis["units"].get("column") in df.columns:
+                    state.y_axis_units_column = config.y_axis["units"].get("column")
+                elif config.y_axis["units"].get("column") is not None:
+                    st.warning("Assigned y-axis units column is not in the DataFrame.")
+                state.y_axis_units_custom = config.y_axis["units"].get("custom")
+
+            # y scaling
+            if config.y_axis.get("scaling"):
+                if config.y_axis["scaling"].get("column"):
+                    # y scaling column
+                    if config.y_axis["scaling"]["column"].get("name") in df.columns:
+                        state.y_axis_scaling_column = config.y_axis["scaling"]["column"].get("name")
+                    else:
+                        st.warning("Assigned y-axis scaling column is not in the DataFrame.")
+                    # y scaling series
+                    series_index = config.y_axis["scaling"]["column"].get("series")
+                    if series_index is not None:
+                        if isinstance(series_index, int):
+                            if 0 <= series_index < len(config.series_filters):
+                                state.y_axis_scaling_series = config.series_filters[series_index]
+                            else:
+                                st.warning("Assigned series index is out of range.")
+                        else:
+                            st.warning("Assigned series index is not an integer.")
+                    # y scaling x-axis value
+                    x_value = config.y_axis["scaling"]["column"].get("x_value")
+                    if config.x_axis.get("value") in df.columns:
+                        # ensure types match for accurate comparison
+                        if x_value in df[config.x_axis.get("value")].copy().astype(
+                                dtype_lookup.get(type(x_value))).values:
+                            state.y_axis_scaling_x_value = x_value
+                        else:
+                            st.warning("Assigned scaling x value is not in the x-axis column.")
+                state.y_axis_custom_scaling_val = (str(config.y_axis["scaling"].get("custom"))
+                                                   if config.y_axis["scaling"].get("custom") else None)
+
             # update dataframe types
-            state.post.apply_df_types(state.config.all_columns, state.config.column_types)
+            if all([c in df.columns for c in config.all_columns]):
+                state.post.apply_df_types(config.all_columns, config.column_types)
+
         except Exception as e:
             st.exception(e)
             state.post.plot = None
@@ -138,14 +226,12 @@ def axis_options():
     with st.container(border=True):
         # x-axis select
         axis_select("x", config.x_axis, config.plot_type)
-        sort = st.checkbox("sort descending", True if config.x_axis.get("sort") == "descending" else False)
     with st.container(border=True):
         # y-axis select
         axis_select("y", config.y_axis, config.plot_type)
 
     # apply changes
     update_axes()
-    config.x_axis["sort"] = "descending" if sort else "ascending"
 
 
 def axis_select(label: str, axis: dict, plot_type: str):
@@ -157,10 +243,14 @@ def axis_select(label: str, axis: dict, plot_type: str):
             axis: dict, axis column, units, and scaling from config.
     """
 
-    df = st.session_state.post.df
+    state = st.session_state
+    df = state.post.df
     # default drop-down selections
-    type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype))) if axis.get("value") else 0
-    column_index = list(df.columns).index(axis["value"]) if axis.get("value") in df.columns else None
+    type_index = 0
+    column_index = None
+    if axis.get("value") in df.columns:
+        type_index = column_types.index(type_lookup.get(str(df[axis["value"]].dtype)))
+        column_index = list(df.columns).index(axis["value"])
 
     # axis information drop-downs
     axis_type, axis_column = st.columns(2)
@@ -170,31 +260,49 @@ def axis_select(label: str, axis: dict, plot_type: str):
                      key="{0}_axis_type".format(label), index=type_index)
     # column select
     with axis_column:
-        st.selectbox("{0}-axis column".format(label), df.columns,
-                     key="{0}_axis_column".format(label), index=column_index)
+        if "{0}_axis_column".format(label) not in state:
+            state["{0}_axis_column".format(label)] = df.columns[column_index] if column_index is not None else None
+        st.selectbox("{0}-axis column".format(label), df.columns, placeholder="None",
+                     key="{0}_axis_column".format(label))
     # warn if no axis column is selected
     if not st.session_state["{0}_axis_column".format(label)]:
         st.warning("Missing {0}-axis value information.".format(label))
 
     # units select
-    units_select(label, axis)
-
-    # FIXME: add ability to use a custom value for only one of min or max
-    range = get_axis_min_max(df, axis)
-    axis_range_min, axis_range_max = st.columns(2)
-    with axis_range_min:
-        st.number_input("{0}-axis minimum".format(label),
-                        value=range[0],
-                        key="{0}_axis_range_min".format(label))
-    with axis_range_max:
-        st.number_input("{0}-axis maximum".format(label),
-                        value=range[1],
-                        key="{0}_axis_range_max".format(label))
-
+    with st.expander("Units"):
+        units_select(label, axis)
+        # FIXME: add ability to use a custom value for only one of min or max
+        range = get_axis_min_max(df, axis)
+        axis_range_min, axis_range_max = st.columns(2)
+        with axis_range_min:
+            st.number_input("{0}-axis minimum".format(label),
+                            value=range[0],
+                            key="{0}_axis_range_min".format(label))
+        with axis_range_max:
+            st.number_input("{0}-axis maximum".format(label),
+                            value=range[1],
+                            key="{0}_axis_range_max".format(label))
     # scaling select
     if label == "y":
-        st.write("---")
-        scaling_select(axis)
+        with st.expander("Scaling"):
+            scaling_select(axis)
+
+    # sort checkbox
+    if label == "x":
+        st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
+                    key="{0}_axis_sort".format(label))
+
+    # log checkbox
+    if (st.session_state["{0}_axis_type".format(label)] == "float" or
+        st.session_state["{0}_axis_type".format(label)] == "int"):
+        st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
+                    key="{0}_axis_log".format(label))
+    else:
+        # set checkbox to false if already in session state
+        if "{0}_axis_log".format(label) in st.session_state:
+            st.session_state["{0}_axis_log".format(label)] = False
+        # disable for non-numeric axis types
+        st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
 
 
 def units_select(label: str, axis: dict):
@@ -206,24 +314,27 @@ def units_select(label: str, axis: dict):
             axis: dict, axis column, units, and scaling from config.
     """
 
-    df = st.session_state.post.df
+    state = st.session_state
+    df = state.post.df
     # default drop-down selection
     units_index = None
     if axis.get("units"):
-        if axis["units"].get("column"):
+        if axis["units"].get("column") in df.columns:
             units_index = list(df.columns).index(axis["units"]["column"])
 
     units_column, units_custom = st.columns(2)
     # units select
     with units_column:
-        # NOTE: initialising with index=None allows value to be cleared, but doesn't allow a default value
+        if "{0}_axis_units_column".format(label) not in state:
+            state["{0}_axis_units_column".format(label)] = df.columns[units_index] if units_index is not None else None
         st.selectbox("{0}-axis units column".format(label), df.columns, placeholder="None",
-                     key="{0}_axis_units_column".format(label), index=units_index)
+                     key="{0}_axis_units_column".format(label))
     # set custom units
     with units_custom:
-        st.text_input("{0}-axis units custom".format(label),
-                      axis["units"].get("custom") if axis.get("units") else None,
-                      placeholder="None", key="{0}_axis_units_custom".format(label),
+        if "{0}_axis_units_custom".format(label) not in state:
+            state["{0}_axis_units_custom".format(label)] = axis["units"].get("custom") if axis.get("units") else None
+        st.text_input("{0}-axis units custom".format(label), placeholder="None",
+                      key="{0}_axis_units_custom".format(label),
                       help="Assign a custom units label. Will clear the units column selection.")
 
     st.button("Clear Units", key="clear_{0}_axis_units".format(label), on_click=clear_fields,
@@ -265,11 +376,12 @@ def scaling_select(axis: dict):
     x_index = None
     if axis.get("scaling"):
         if axis["scaling"].get("column"):
-            if axis["scaling"]["column"].get("name"):
+            if axis["scaling"]["column"].get("name") in df.columns:
                 type_index = column_types.index(type_lookup.get(str(df[axis["scaling"]["column"]["name"]].dtype)))
                 scaling_index = list(df.columns).index(axis["scaling"]["column"]["name"])
-            if axis["scaling"]["column"].get("series") is not None:
-                series_index = int(axis["scaling"]["column"]["series"])
+            if isinstance(axis["scaling"]["column"].get("series"), int):
+                if 0 <= axis["scaling"]["column"].get("series") < len(series_col):
+                    series_index = int(axis["scaling"]["column"]["series"])
             if axis["scaling"]["column"].get("x_value") and len(x_col) > 0:
                 if axis["scaling"]["column"]["x_value"] in x_col:
                     x_index = x_col.index(axis["scaling"]["column"]["x_value"])
@@ -279,18 +391,27 @@ def scaling_select(axis: dict):
         st.selectbox("scaling column type", column_types,
                      key="y_axis_scaling_type", index=type_index)
     with c2:
+        if "y_axis_scaling_column" not in state:
+            state["y_axis_scaling_column"] = df.columns[scaling_index] if scaling_index is not None else None
         st.selectbox("scaling column", df.columns, placeholder="None",
-                     key="y_axis_scaling_column", index=scaling_index)
+                     key="y_axis_scaling_column")
 
     c1, c2 = st.columns(2)
     with c1:
+        if "y_axis_scaling_series" not in state:
+            state["y_axis_scaling_series"] = series_col[series_index] if series_index is not None else None
         st.selectbox("scaling series", series_col, placeholder="None",
-                     key="y_axis_scaling_series", index=series_index)
+                     key="y_axis_scaling_series")
     with c2:
+        if "y_axis_scaling_x_value" not in state:
+            state["y_axis_scaling_x_value"] = x_col[x_index] if x_index is not None else None
         st.selectbox("scaling x-axis value", x_col, placeholder="None",
-                     key="y_axis_scaling_x_value", index=x_index)
+                     key="y_axis_scaling_x_value")
 
-    st.text_input("custom scaling value", None, placeholder="None", key="y_axis_custom_scaling_val",
+    if "y_axis_custom_scaling_val" not in state:
+        state["y_axis_custom_scaling_val"] = (str(axis["scaling"].get("custom")) if axis["scaling"].get("custom")
+                                              else None if axis.get("scaling") else None)
+    st.text_input("custom scaling value", placeholder="None", key="y_axis_custom_scaling_val",
                   help="Assign a scaling value that isn't in the data. Will clear all other scaling selections.")
 
     st.button("Clear Scaling", on_click=clear_fields, args=[["y_axis_scaling_column", "y_axis_scaling_series",
@@ -310,6 +431,8 @@ def update_axes():
     x_units_custom = state.x_axis_units_custom
     x_range_min = state.x_axis_range_min
     x_range_max = state.x_axis_range_max
+    x_sort = state.x_axis_sort
+    x_log = state.x_axis_log
 
     y_column = state.y_axis_column
     y_units_column = state.y_axis_units_column
@@ -320,6 +443,7 @@ def update_axes():
     y_scaling_custom = state.y_axis_custom_scaling_val
     y_range_min = state.y_axis_range_min
     y_range_max = state.y_axis_range_max
+    y_log = state.y_axis_log
 
     # update columns
     config.x_axis["value"] = x_column
@@ -345,18 +469,23 @@ def update_axes():
     config.y_axis["range"]["max"] = y_range_max
 
     # update scaling
-    config.y_axis["scaling"] = {"custom": y_scaling_custom if y_scaling_custom else None}
+    config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
     if not y_scaling_custom and y_scaling_column:
         # NOTE: series index needs to be kept as int for now
         config.y_axis["scaling"] = {"column": {"name": y_scaling_column,
                                                "series": (state.config.series_filters.index(y_scaling_series)
                                                           if y_scaling_series else None),
-                                               "x_value": str(y_scaling_x)}}
+                                               "x_value": json.loads(str(y_scaling_x)) if y_scaling_x else None}}
         config.column_types[y_scaling_column] = state.y_axis_scaling_type
 
     config.parse_scaling()
     # update types after changing axes
     update_types()
+
+    # update sort and log
+    config.x_axis["sort"] = "descending" if x_sort else "ascending"
+    config.x_axis["logarithmic"] = x_log
+    config.y_axis["logarithmic"] = y_log
 
 
 def update_types():
@@ -366,17 +495,19 @@ def update_types():
 
     post = st.session_state.post
     config = st.session_state.config
+    df = st.session_state.post.df
 
     # re-parse column names
     config.parse_columns()
     # remove redundant types from config
     config.remove_redundant_types()
-    try:
-        # update dataframe types
-        post.apply_df_types(config.all_columns, config.column_types)
-    except Exception as e:
-        st.exception(e)
-        post.plot = None
+    if all([c in df.columns for c in config.all_columns]):
+        try:
+            # update dataframe types
+            post.apply_df_types(config.all_columns, config.column_types)
+        except Exception as e:
+            st.exception(e)
+            post.plot = None
 
 
 def filter_options():
@@ -385,13 +516,20 @@ def filter_options():
     """
 
     st.write("#### Filter Options")
-    # FIXME (issue #300): inherit max width can be too large for sidebar
     # allow wide multiselect labels
+    # but hidden overflow for selectboxes
     st.markdown(
-        """
-        <style>
-            .stMultiSelect [data-baseweb=select] span{
+        """<style>
+            .stMultiSelect
+            [data-baseweb=select] span{
                 max-width: inherit;
+            }
+            [data-baseweb=select] div{
+                overflow: auto;
+            }
+            .stSelectbox
+            [data-baseweb=select] div{
+                overflow: hidden;
             }
         </style>""",
         unsafe_allow_html=True)
@@ -435,8 +573,7 @@ def new_filter_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Filter")
-    with st.container(border=True):
+    with st.expander("Add New Filter"):
 
         c1, c2 = st.columns(2)
         with c1:
@@ -457,7 +594,8 @@ def new_filter_options():
         with c1:
             # display contents of currently selected filter column
             filter_col = post.df[state.filter_col].drop_duplicates()
-            st.selectbox("column filter value", filter_col.sort_values(), key="filter_val", index=None)
+            st.selectbox("column filter value", filter_col.sort_values(), placeholder="None",
+                         key="filter_val", index=None)
         with c2:
             st.text_input("custom filter value", None, placeholder="None", key="custom_filter_val",
                           help="{0} {1}".format("Assign a filter value that isn't in the data.",
@@ -569,8 +707,7 @@ def new_extra_column_options():
 
     state = st.session_state
     post = state.post
-    st.write("###### Add New Extra Column")
-    with st.container(border=True):
+    with st.expander("Add New Extra Column"):
 
         st.selectbox("extra column", post.df.columns, key="extra_col",
                      help="{0} {1}".format(
@@ -668,7 +805,8 @@ def main():
     args = read_args()
 
     try:
-        post = PostProcessing(args.log_path)
+        # FIXME (issue #182): move plot type to be part of config
+        post = PostProcessing(args.log_path, plot_type="generic", save_plot=False)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path

@@ -172,7 +172,7 @@ def test_read_perflog(run_sombrero):
     # get dataframe from complete perflog
     df = log_hand.read_perflog(sombrero_log_path)
 
-    EXPECTED_FIELDS = ["job_completion_time", "version", "info", "jobid", "num_tasks",
+    EXPECTED_FIELDS = ["job_completion_time", "reframe version", "info", "jobid", "num_tasks",
                        "num_cpus_per_task", "num_tasks_per_node", "num_gpus_per_node",
                        "flops_value", "flops_unit", "flops_ref", "flops_lower_thres",
                        "flops_upper_thres", "spack_spec", "test_name", "tasks", "cpus_per_task",
@@ -607,7 +607,7 @@ def test_high_level_script(run_sombrero):
     assert len(df) == 1
 
     # get filtered dataframe with extra columns for csv
-    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+    df = PostProcessing(sombrero_log_path, save_data="filtered").run_post_processing(
         ConfigHandler(
             {"plot_type": "generic",
              "title": "Title",
@@ -640,7 +640,7 @@ def test_high_level_script(run_sombrero):
     assert len(df_saved) == 1
 
     # get filtered dataframe with duplicated extra columns for csv
-    df = PostProcessing(sombrero_log_path, save=True).run_post_processing(
+    df = PostProcessing(sombrero_log_path, save_data="filtered").run_post_processing(
         ConfigHandler(
             {"plot_type": "generic",
              "title": "Title",

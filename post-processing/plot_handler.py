@@ -14,7 +14,8 @@ from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from titlecase import titlecase
 
 
-def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=False):
+def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
+                 output_path=Path(__file__).parent, save_plot=True, debug=False):
     """
         Create a bar chart for the supplied data using bokeh.
 
@@ -24,11 +25,16 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             x_axis: dict, x-axis column and units.
             y_axis: dict, y-axis column and units.
             series_filters: list, x-axis groups used to filter graph data.
+            output_path: Path, path to a directory for storing the generated plot and csv data.
+                Default is current directory.
+            save_plot: bool, flag to signify that a plot should be saved after production.
+                Disable when running with Streamlit.
+            debug: bool, flag to print additional information to console.
     """
 
     # get column names and labels for axes
     x_column, x_label = get_axis_labels(df, x_axis, series_filters)
-    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters, x_column)
 
     # find x-axis groups (series columns)
     groups = [x_column]
@@ -54,14 +60,15 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
             print(grouped_df.get_group(key))
 
     # adjust y-axis range
-    min_y = (0 if min(df[y_column]) >= 0
+    min_y = (0 if np.nanmin(df[y_column]) >= 0
              else math.floor(np.nanmin(df[y_column])*1.2))
-    max_y = (0 if max(df[y_column]) <= 0
+    max_y = (0 if np.nanmax(df[y_column]) <= 0
              else math.ceil(np.nanmax(df[y_column])*1.2))
 
     # create html file to store plot in
-    output_file(filename=os.path.join(
-        Path(__file__).parent, "{0}.html".format(title.replace(" ", "_"))), title=title)
+    if save_plot:
+        output_file(filename=os.path.join(
+            output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
 
     # create plot
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
@@ -110,7 +117,7 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.add_layout(Legend(), "right")
     # add bars
     plot.vbar(x=index_group_col, top="{0}_mean".format(y_column), width=0.9, source=data_source,
-              line_color="white", fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
+              line_color=index_cmap, fill_color=index_cmap, legend_group="legend_labels", hover_alpha=0.9)
     # add labels
     plot.xaxis.axis_label = x_label
     plot.yaxis.axis_label = y_label
@@ -131,12 +138,13 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters, debug=
     plot.legend[0].items = sorted_legend_items
 
     # save to file
-    save(plot)
+    if save_plot:
+        save(plot)
 
     return plot
 
 
-def get_axis_labels(df: pd.DataFrame, axis, series_filters):
+def get_axis_labels(df: pd.DataFrame, axis, series_filters, x_column="x"):
     """
         Return the column name and label for a given axis. If a column name is supplied as
         units information, the actual units will be extracted from a dataframe.
@@ -145,6 +153,7 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             df: dataframe, data to plot.
             axis: dict, axis column, units, and values to scale by.
             series_filters: list, filters for x-axis groups.
+            x_column: string, name of x-axis column (for scaling label).
     """
 
     # get column name of axis
@@ -165,19 +174,20 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters):
             scaling_column = axis["scaling"]["column"]["name"]
             series_index = axis["scaling"]["column"].get("series")
             x_value = axis["scaling"]["column"].get("x_value")
-            # FIXME (issue #263): make scaling label more clear
-            series_col = ("{0} in {1}".format(series_filters[series_index][2], scaling_column)
-                          if series_index is not None else scaling_column)
-            scaling = "{0} {1}".format(x_value, series_col) if x_value else series_col
+
+            series = " ".join(str(s) for s in series_filters[series_index]) if series_index is not None else ""
+            x = "{0} == {1}{2}".format(x_column, x_value, ", " if series else "") if x_value is not None else ""
+            scaling = "Scaled by {0}{1}".format(scaling_column,
+                                                "\nfor {0}{1}".format(x, series) if x or series else "")
         else:
             custom = axis["scaling"].get("custom")
-            scaling = str(custom) if custom else ""
+            scaling = "Scaled by {0}".format(custom) if custom else ""
 
     # determine axis label
-    label = "{0}{1}{2}".format(titlecase(col_name.replace("_", " ")),
-                               titlecase(" Scaled by {0}".format(scaling.replace("_", " ")))
-                               if scaling else "",
-                               " ({0})".format(units) if units else "")
+    label = "{0}{1}{2}{3}".format(titlecase(col_name.replace("_", " ")),
+                                  " [Log Scale]" if axis.get("logarithmic") else "",
+                                  titlecase("\n{0}".format(scaling.replace("_", " "))) if scaling else "",
+                                  "\n({0})".format(units) if units else "")
 
     return col_name, label
 

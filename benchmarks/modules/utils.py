@@ -7,7 +7,7 @@ import sys
 import pprint
 
 import reframe as rfm
-from reframe.core.exceptions import BuildSystemError
+from reframe.core.exceptions import BuildSystemError, CommandLineError
 from reframe.core.logging import getlogger
 from reframe.utility.osext import run_command
 import reframe.utility.osext as osext
@@ -244,6 +244,7 @@ class SpackTest(rfm.RegressionTest):
     build_system = 'Spack'
     spack_spec = variable(str, value='', loggable=True)
     spack_spec_dict = variable(str, value='', loggable=True)
+    profiler = variable(str, value='', loggable=True)
 
     @run_before('compile')
     def setup_spack_environment(self):
@@ -265,7 +266,7 @@ class SpackTest(rfm.RegressionTest):
             # Copy Spack environment (only specific YAML files) to the stage
             # directory.
             f'mkdir -p {dest}',
-            f'(cd {cp_dir}; find . \( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" \) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
+            f'(cd {cp_dir}; find . \\( -name "spack.yaml" -o -name "compilers.yaml" -o -name "packages.yaml" -o -name "upstreams.yaml" \\) -print0 | xargs -0 tar cf - | tar -C {dest} -xvf -)',
             f'spack -e {self.build_system.environment} config add "config:install_tree:root:{env_dir}/opt"',
         ]
         cmd_spack_spec_dict =   'from spack import environment;\
@@ -274,7 +275,7 @@ class SpackTest(rfm.RegressionTest):
                                 result_dict = {spec.name: {"compiler": {"name": spec.compiler.name, "version": str(spec.compiler.versions).lstrip("=")}, "variants": {key: str(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, bool) else "" if spec.variants.dict[key].value is None else list(spec.variants.dict[key].value) if isinstance(spec.variants.dict[key].value, tuple) else spec.variants.dict[key].value for key in key_list_for_each[i]},"mpi":str(spec["mpi"]) if "mpi" in spec else ""  } for i, spec in enumerate(spec_list)};\
                                 print(result_dict)'
         self.postrun_cmds.append(f'echo "spack_spec_dict: $(spack -e {self.build_system.environment} python -c \'{cmd_spack_spec_dict}\')"')
-        
+
         # Keep the `spack.lock` file in the output directory so that the Spack
         # environment can be faithfully reproduced later.
         self.keep_files.append(os.path.realpath(os.path.join(self.build_system.environment, 'spack.lock')))
@@ -287,13 +288,84 @@ class SpackTest(rfm.RegressionTest):
             # convert all single quotes to double quotes since JSON does not recognise it
             self.spack_spec_dict = self.spack_spec_dict.replace("'", "\"")
 
+
     @run_before('compile')
     def setup_build_system(self):
         # The `self.spack_spec` attribute is the user-facing and loggable
         # variable we use for setting the Spack spec, but then we need to
         # forward its value to `self.build_system.specs`, which is the way to
         # inform ReFrame which Spack specs to use.
-        self.build_system.specs = [self.spack_spec]
+        self.build_system.specs.append(self.spack_spec)
+
+
+    @run_before('compile')
+    def add_profiler(self):
+        if self.profiler:
+            # Command to use to view profiling traces
+            viewer_cmd = None
+            # Arguments to pass to the viewer
+            viewer_args = ''
+            if self.profiler == 'advisor-roofline':
+                pkg_spec = 'intel-oneapi-advisor'
+                # Spack package providing the profiler
+                self.build_system.specs.append(pkg_spec)
+                # Name of output directory
+                output_path = 'advisor-roofline'
+                # Prepend advisor call to the executable
+                self.executable = f'advisor -collect roofline --project-dir={output_path} -- ' + self.executable
+                # Save the output directory
+                self.keep_files.append(output_path)
+                viewer_cmd = 'advisor-gui'
+                viewer_args = f'{self.outputdir}/{output_path}'
+            elif self.profiler == 'nsight':
+                # Spack package providing the profiler
+                self.build_system.specs.append('nvidia-nsight-systems')
+                # Name of output file
+                output_path = 'nsys-trace'
+                # Prepend nsys call to the executable
+                self.executable = f'nsys profile --trace=cuda,mpi,nvtx,openmp,osrt,opengl,syscall --output {output_path} ' + self.executable
+                # Save the output file
+                self.keep_files.append(f'{output_path}.nsys-rep')
+                viewer_cmd = 'nsys-ui'
+                viewer_args = f'{self.outputdir}/{output_path}.nsys-rep'
+            elif self.profiler == 'vtune':
+                pkg_spec = 'intel-oneapi-vtune'
+                # Spack package providing the profiler
+                self.build_system.specs.append(pkg_spec)
+                # Name of output directory
+                output_path = 'vtune-profiling'
+                # Prepend VTune call to the executable
+                self.executable = f'vtune -collect hotspots -r {output_path} -- ' + self.executable
+                # Save the output directory
+                self.keep_files.append(f'{output_path}*')
+                viewer_cmd = 'vtune-gui'
+                viewer_args = f'{self.outputdir}/{output_path}*'
+            else:
+                raise CommandLineError(f'Unknown profiler {self.profiler}')
+
+            # Hack time! On ARCHER2 the home partition isn't mounted on compute
+            # nodes, but due to a longstanding upstream bug
+            # (<https://community.intel.com/t5/Intel-MPI-Library/How-to-install-beta8-without-it-getting-near-home-directory/m-p/1211465>),
+            # Intel tools want to *write* into the home directory at any cost.
+            # We trick them by setting the HOME env var to their installation
+            # directory.  Note: we use `prerun_cmds` instead of `env_vars` so
+            # that we do this only right before running the benchmark command
+            # and not also before compilation, where `spack location` wouldn't
+            # even work.  Let's hope nothing else relies on HOME being set to
+            # the actual home directory (also because it isn't accessible, you
+            # know).
+            if self.profiler in ('advisor-roofline', 'vtune') and self.current_system.name == 'archer2':
+                self.prerun_cmds.append(f'export HOME=$(spack -e {self.build_system.environment} location --install-dir {pkg_spec})')
+
+            if viewer_cmd:
+                # Print to stdout the command to use for viewing the profiling
+                # results.
+                self.postrun_cmds.append(f'''
+if which {viewer_cmd} 2> /dev/null; then
+    echo "You can view the profiler output with the command"
+    echo "    $(which {viewer_cmd}) {viewer_args}"
+fi''')
+
 
     @run_before('compile')
     def set_sge_num_slots(self):
@@ -303,7 +375,10 @@ class SpackTest(rfm.RegressionTest):
             num_tasks = self.num_tasks or 1
             num_cpus_per_task = self.num_cpus_per_task or 1
             # Set the total number of CPUs to be requested for the SGE scheduler.
-            self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
+            if self.current_system.name == 'kathleen':
+                self.extra_resources['mpi'] = {'num_slots': max(41, num_tasks * num_cpus_per_task)}
+            else:
+                self.extra_resources['mpi'] = {'num_slots': num_tasks * num_cpus_per_task}
 
     @run_before('compile')
     def set_isambard_memory(self):

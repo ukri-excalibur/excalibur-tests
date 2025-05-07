@@ -9,7 +9,10 @@ spack:
   include:
   - ../../common.yaml
   - ../compilers.yaml
-  - ../packages.yaml
+  - ../upstreams.yaml
   packages:
     all:
-      require: 'target=zen2'
+      providers:
+        mpi: [intel-oneapi-mpi] # Prefer Intel MPI
+      compiler: [intel] # Prefer Intel Classic Compilers
+      target: [cascadelake] # Prefer targetting cascadelake

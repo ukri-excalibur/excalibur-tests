@@ -36,15 +36,15 @@ class GridBenchmark_ITT(GridBenchmark):
 
     reference = {
         'cosma8': {
-            'Performance': (425000, None, None, 'Mflop/s per node')
+            'Performance': (625000, None, None, 'Mflop/s per node')
         },
-        'csd3-centos7:cascadelake': {
+        'csd3:cascadelake': {
             'Performance': (350000, None, None, 'Mflop/s per node')
         },
-        'csd3-rocky8:icelake': {
+        'csd3:icelake': {
             'Performance': (500000, None, None, 'Mflop/s per node')
         },
-        'csd3-rocky8:sapphirerapids': {
+        'csd3:sapphirerapids': {
             'Performance': (1000000, None, None, 'Mflop/s per node')
         },
         'dial3': {

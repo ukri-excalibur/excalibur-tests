@@ -75,6 +75,13 @@ reframe -c benchmarks/apps/sombrero -r --performance-report -S env_vars=OMP_PLAC
 runs the `benchmarks/apps/sombrero` benchmark setting the environment variable `OMP_PLACES`
 to `threads`.
 
+### Output directories
+
+By default `reframe` creates three output directories (`stage`, `output` and `perflogs`) in the directory 
+where it is run. Output can be written to a different base directory using the [`--prefix` command-line option](https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-prefix).
+
+The individual output directories can also be changed using the `--stage`, `--outputdir` and `--perflogdir` options.
+
 ## Usage on unsupported systems
 
 The configuration provided in [`reframe_config.py`](https://github.com/ukri-excalibur/excalibur-tests/blob/main/benchmarks/reframe_config.py) lets you run the
@@ -104,3 +111,36 @@ reframe -c benchmarks/ -R -r -t example
 ```
 
 Tests can contain multiple tags. To create a custom set of benchmarks, add a new tag to the tests you want to include in the set.
+
+## Running a benchmark with a profiler (experimental)
+
+!!! note "Experimental feature"
+
+    This is an experimental feature and its interface may be changed in the future on short notice.
+    Feedback to improve it is welcome!
+
+This framework allows you to run a profiler together with a benchmark application.
+To do this, you can set the `profiler` attribute on the command line using the `-S profiler=...` syntax, e.g.
+
+```bash
+reframe -c benchmarks/ -R -r -t example -S profiler=vtune
+```
+
+Currently supported values for the profiler attribute are:
+
+* `advisor-roofline`: it produces a [roofline model](https://en.wikipedia.org/wiki/Roofline_model) of your program using [Intel Advisor](https://www.intel.com/content/www/us/en/developer/tools/oneapi/advisor.html);
+* `nsight`: it runs the code with the [NVIDIA Nsight Systems](https://developer.nvidia.com/nsight-systems) profiler;
+* `vtune`: it runs the code with the [Intel VTune](https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html) profiler.
+
+!!! info "Availability and requirements"
+
+    Many profilers, especially those provided by vendors, are available only on some platforms (e.g. Intel profilers are only available on the x86 architecture), double check if the Spack package for your desired profiler is available for the system you want to use.
+    Furthermore, to collect useful information with some profilers you may need specific values of the Linux `perf_event_paranoid` setting, typically less than or equal to 2, you can check the value on a specific node by reading the content of the file `/proc/sys/kernel/perf_event_paranoid`.
+
+The profiler trace collected during the run will be automatically copied to the output directory after a successful run.
+Toward the bottom of the standard output file (`rfm_job.out`) you should find some information about how to visualise the profiling trace with the tools corresponding to the profiler used.
+
+!!! tip "Running graphic visualisers"
+
+    Using graphic visualisers requires being able to run graphic applications on the machine where you ran the benchmakrs, in the case of remote ones you will need to ensure your connection supports forwarding graphic applications, and consider that the interaction may be slow due to the network latency.
+    An alternative is to copy the profile trace to your local machine and using a locally-installed visualiser.
