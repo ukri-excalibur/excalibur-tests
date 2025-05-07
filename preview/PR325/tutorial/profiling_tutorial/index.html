@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR325/apps/grid/">
+        <link rel="canonical" href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR325/tutorial/profiling_tutorial/">
       
       
-        <link rel="prev" href="../cp2k/">
+        <link rel="prev" href="../postprocessing_tutorial/">
       
-      
-        <link rel="next" href="../gromacs/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +20,7 @@
     
     
       
-        <title>grid - ExCALIBUR-tests Docs</title>
+        <title>Profiling benchmarks - ExCALIBUR-tests Docs</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#grid" class="md-skip">
+        <a href="#profiling-tutorial-work-in-progress" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              grid
+              Profiling benchmarks
             
           </span>
         </div>
@@ -385,20 +383,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -414,7 +410,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Supported Benchmarks
@@ -466,7 +462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpl/" class="md-nav__link">
+      <a href="../../apps/hpl/" class="md-nav__link">
         
   
   
@@ -489,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../imb/" class="md-nav__link">
+      <a href="../../apps/imb/" class="md-nav__link">
         
   
   
@@ -512,7 +508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../omb/" class="md-nav__link">
+      <a href="../../apps/omb/" class="md-nav__link">
         
   
   
@@ -581,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpcg/" class="md-nav__link">
+      <a href="../../apps/hpcg/" class="md-nav__link">
         
   
   
@@ -604,7 +600,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hpgmg/" class="md-nav__link">
+      <a href="../../apps/hpgmg/" class="md-nav__link">
         
   
   
@@ -627,7 +623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sombrero/" class="md-nav__link">
+      <a href="../../apps/sombrero/" class="md-nav__link">
         
   
   
@@ -650,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../babelstream/" class="md-nav__link">
+      <a href="../../apps/babelstream/" class="md-nav__link">
         
   
   
@@ -678,20 +674,18 @@
                 
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
         
           
           <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
@@ -707,7 +701,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
             Applications
@@ -721,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cp2k/" class="md-nav__link">
+      <a href="../../apps/cp2k/" class="md-nav__link">
         
   
   
@@ -741,32 +735,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    grid
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../apps/grid/" class="md-nav__link">
         
   
   
@@ -777,68 +749,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#filtering-the-benchmarks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Filtering the benchmarks
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#options-memory-number-of-threads-and-mpi-processes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options (memory, number of threads and MPI processes)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#figure-of-merit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Figure of merit
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -851,7 +761,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gromacs/" class="md-nav__link">
+      <a href="../../apps/gromacs/" class="md-nav__link">
         
   
   
@@ -874,7 +784,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../openmm/" class="md-nav__link">
+      <a href="../../apps/openmm/" class="md-nav__link">
         
   
   
@@ -897,7 +807,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ramses/" class="md-nav__link">
+      <a href="../../apps/ramses/" class="md-nav__link">
         
   
   
@@ -920,7 +830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sphng/" class="md-nav__link">
+      <a href="../../apps/sphng/" class="md-nav__link">
         
   
   
@@ -943,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swift/" class="md-nav__link">
+      <a href="../../apps/swift/" class="md-nav__link">
         
   
   
@@ -966,7 +876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove/" class="md-nav__link">
+      <a href="../../apps/trove/" class="md-nav__link">
         
   
   
@@ -989,7 +899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../trove-pdsyev/" class="md-nav__link">
+      <a href="../../apps/trove-pdsyev/" class="md-nav__link">
         
   
   
@@ -1012,7 +922,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../wrf/" class="md-nav__link">
+      <a href="../../apps/wrf/" class="md-nav__link">
         
   
   
@@ -1299,18 +1209,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
@@ -1326,7 +1238,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
@@ -1340,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -1363,7 +1275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/reframe_tutorial/" class="md-nav__link">
+      <a href="../reframe_tutorial/" class="md-nav__link">
         
   
   
@@ -1386,7 +1298,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/excalibur-tests_tutorial/" class="md-nav__link">
+      <a href="../excalibur-tests_tutorial/" class="md-nav__link">
         
   
   
@@ -1409,7 +1321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/postprocessing_tutorial/" class="md-nav__link">
+      <a href="../postprocessing_tutorial/" class="md-nav__link">
         
   
   
@@ -1429,10 +1341,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tutorial/profiling_tutorial/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Profiling benchmarks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1443,6 +1377,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#outline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profilers-in-excalibur-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profilers in excalibur-tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-nsight" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with Nsight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-vtune" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with VTune
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roofline-analysis-with-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Roofline analysis with Advisor
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1482,42 +1481,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#outline" class="md-nav__link">
     <span class="md-ellipsis">
-      Usage
+      Outline
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#filtering-the-benchmarks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Filtering the benchmarks
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#options-memory-number-of-threads-and-mpi-processes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options (memory, number of threads and MPI processes)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#figure-of-merit" class="md-nav__link">
+  <a href="#profilers-in-excalibur-tests" class="md-nav__link">
     <span class="md-ellipsis">
-      Figure of merit
+      Profilers in excalibur-tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-nsight" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with Nsight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiling-with-vtune" class="md-nav__link">
+    <span class="md-ellipsis">
+      Profiling with VTune
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roofline-analysis-with-advisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Roofline analysis with Advisor
     </span>
   </a>
   
@@ -1542,51 +1544,67 @@
   
 
 
-<h1 id="grid">GRID</h1>
-<p>ReFrame benchmarks for the <a href="https://github.com/paboyle/Grid">GRID</a> code, a data
-parallel C++ mathematical object library.</p>
-<h2 id="usage">Usage</h2>
-<p>From the top-level directory of the repository, you can run the benchmarks with</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report
-</span></code></pre></div>
-<h3 id="filtering-the-benchmarks">Filtering the benchmarks</h3>
-<p>You can run individual benchmarks with the
-<a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-0"><code>--tag</code></a>
-option.  At the moment we have the following tags:</p>
+<h1 id="profiling-tutorial-work-in-progress">Profiling tutorial -- !Work in progress!</h1>
+<h2 id="outline">Outline</h2>
+<ol>
+<li>Running a benchmark with a profiler</li>
+<li>Sampling profilers (Nsight &amp; Vtune)</li>
+<li>Collecting roofline data (advisor-roofline)</li>
+</ol>
+<h2 id="profilers-in-excalibur-tests">Profilers in excalibur-tests</h2>
+<p>The <code>excalibur-tests</code> framework allows you to run a profiler together with a benchmark application. To do this, you can set the profiler attribute on the command line using the <code>-S profiler=...</code> syntax</p>
+<p>We support profilers that can be spack installed without a lincense and don't require modifying the source code or the build system. Currently supported values for the profiler attribute are:</p>
 <ul>
-<li><code>ITT</code> to run the <code>Benchmark_ITT</code> application.</li>
+<li><code>advisor-roofline</code>: it produces a roofline model of your program using Intel Advisor;</li>
+<li><code>nsight</code>: it runs the code with the NVIDIA Nsight Systems profiler;</li>
+<li><code>vtune</code>: it runs the code with the Intel VTune profiler.</li>
 </ul>
-<p>Examples:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--tag<span class="w"> </span>ITT
-</span></code></pre></div>
-<h3 id="options-memory-number-of-threads-and-mpi-processes">Options (memory, number of threads and MPI processes)</h3>
-<p>There are some options you can set to control the settings of the benchmark.
-These are the currently available options, with their default values:</p>
+<p>For more details, see the <a href="https://ukri-excalibur.github.io/excalibur-tests/preview/PR325/use/">User documentation</a></p>
+<h2 id="profiling-with-nsight">Profiling with Nsight</h2>
 <ul>
-<li><code>mpi</code>: <code>'1.1.1.1'</code>.  This is the string to pass to the benchmarking applications with the
-  <code>--mpi</code> flag.  This will also automatically set the ReFrame variable
-  <a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks"><code>num_tasks</code></a></li>
-<li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_cpus_per_task"><code>num_cpus_per_task</code></a>:
-  <code>current_partition.processor.num_cpus // min(1, current_partition.processor.num_cpus_per_core)</code></li>
-<li><a href="https://reframe-hpc.readthedocs.io/en/stable/regression_test_api.html#reframe.core.pipeline.RegressionTest.num_tasks_per_node"><code>num_tasks_per_node</code></a>:
-  <code>current_partition.processor.num_cpus // num_cpus_per_task</code></li>
-<li><code>shm</code>: <code>1024</code>.  This is the size of the shared memory used by the benchmark, in MiB, as an
-  integer.</li>
+<li>NVIDIA Nsight Systems is a low-overhead sampling profiler that supports both CPU and GPU applications.</li>
+<li>Supports both x86 and ARM architectures</li>
+<li>We collect <code>nsys profile --trace=cuda,mpi,nvtx,openmp,osrt,opengl,syscall</code></li>
 </ul>
-<p>You can override the values of these variables from the command line with the
-<a href="https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S"><code>--setvar</code></a>
-option, for example</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;2.2.1.1&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">num_cpus_per_task</span><span class="o">=</span><span class="m">12</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>reframe<span class="w"> </span>-c<span class="w"> </span>benchmarks/apps/grid<span class="w"> </span>-r<span class="w"> </span>--performance-report<span class="w"> </span>--setvar<span class="o">=</span><span class="nv">mpi</span><span class="o">=</span><span class="s1">&#39;4.4.4.4&#39;</span><span class="w"> </span>--setvar<span class="o">=</span><span class="nv">shm</span><span class="o">=</span><span class="m">4096</span>
+<p>Run Nsight profiling with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/application<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>nsight
+</span></code></pre></div></p>
+<ul>
+<li>Spack installs the <code>nvidia-nsight-systems</code> package in the background, including the GUI</li>
+<li>The paths to the collected profile data, and to the GUI launcher are written into <code>rfm_job.out</code></li>
+<li>To run the GUI remotely, you need to login with <code>ssh -X</code>. It may be slow on a remote system.</li>
+<li>You can (spack) install the GUI locally to view the data.</li>
+</ul>
+<h2 id="profiling-with-vtune">Profiling with VTune</h2>
+<ul>
+<li>Intel VTune is a low-overhead sampling profiler that supports CPU applications</li>
+<li>Only runs on x86 architectures</li>
+</ul>
+<p>Run VTune profiling with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/application<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>vtune
 </span></code></pre></div>
-<p><em><strong>Note</strong></em>: you're responsible for overriding these variables in a consistent
-way, so that, for example, <code>num_tasks_per_node</code> doesn't exceed the number of
-total tasks runnable on each node.</p>
-<h2 id="figure-of-merit">Figure of merit</h2>
-<p>If the output of the program contains</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Grid : Message : 380809 ms :  Comparison point  result: 143382.7 Mflop/s per node
-</span></code></pre></div>
-<p>the number <code>143382.7</code> will be captured as figure of merit.</p>
+- Spack installs <code>intel-oneapi-vtune</code> package in the background, including the GUI</p>
+<h2 id="roofline-analysis-with-advisor">Roofline analysis with Advisor</h2>
+<ul>
+<li>Intel Advisor is a tool for on-node performance optimisation. It does analysis for efficient Vectorization, Threading, Memory Usage, and Accelerator Offloading</li>
+<li>Since ~2018 it has had support for automated roofline analysis</li>
+<li>Is only supports x86 CPU architecture</li>
+<li>Won't run on the MPI launcher (because it does on-node analysis). In our benchmarks we have to override it. It can run inside an MPI job on a single rank but we don't currently support it, hopefully will be available in the future.</li>
+</ul>
+<p>To run on a single MPI rank without <code>mpirun</code>, add the following decorated function to the test class
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>    <span class="nd">@run_before</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">replace_launcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">launcher</span> <span class="o">=</span> <span class="n">getlauncher</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">)()</span>
+</span></code></pre></div></p>
+<ul>
+<li>We collect <code>advisor -collect roofline</code></li>
+</ul>
+<p>Run Advisor roofline collection with
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>reframe<span class="w"> </span>-c<span class="w"> </span>path/to/stream<span class="w"> </span>-r<span class="w"> </span>-S<span class="w"> </span><span class="nv">profiler</span><span class="o">=</span>advisor-roofline
+</span></code></pre></div></p>
+<ul>
+<li>Similar to Nsight, the GUI is installed by Spack but is slow to run remotely.</li>
+</ul>
 
 
 
