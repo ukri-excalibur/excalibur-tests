@@ -211,7 +211,7 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
 
     # get column names and labels for axes
     x_column, x_label = get_axis_labels(df, x_axis, series_filters)
-    y_column, y_label = get_axis_labels(df, y_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters, x_column)
 
     # adjust axis ranges
     min_x, max_x = get_axis_min_max(df, x_axis)
