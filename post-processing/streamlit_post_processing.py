@@ -282,12 +282,14 @@ def axis_select(label: str, axis: dict):
                 st.number_input("{0}-axis minimum".format(label),
                                 value=axis["range"].get("min") if axis.get("range") else None,
                                 key="{0}_axis_range_min".format(label),
-                                help="Custom minimum {0}-axis (line plot) value.".format(label))
+                                help="Custom minimum {0}-axis (line plot) value.".format(label),
+                                on_change=round_val("{0}_axis_range_min".format(label)))
             with axis_range_max:
                 st.number_input("{0}-axis maximum".format(label),
                                 value=axis["range"].get("max") if axis.get("range") else None,
                                 key="{0}_axis_range_max".format(label),
-                                help="Custom maximum {0}-axis (line plot) value.".format(label))
+                                help="Custom maximum {0}-axis (line plot) value.".format(label),
+                                on_change=round_val("{0}_axis_range_max".format(label)))
 
         else:
             # set custom ranges to none if already in session state
@@ -326,6 +328,18 @@ def axis_select(label: str, axis: dict):
             st.session_state["{0}_axis_log".format(label)] = False
         # disable for non-numeric axis types
         st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
+
+
+def round_val(key: str):
+    """
+        Round a numeric value in session state to 2 decimal places.
+
+        Args:
+            key: str, key of a field in session state.
+    """
+
+    if st.session_state[key]:
+        st.session_state[key] = round(st.session_state[key], 2)
 
 
 def units_select(label: str, axis: dict):
