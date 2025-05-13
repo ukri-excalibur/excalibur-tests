@@ -89,7 +89,7 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
 
         # set plot type
         plot_type_index = plot_types.index(config.plot_type) if config.plot_type in plot_types else 0
-        plot_type = st.selectbox("#### Plot type", plot_types,
+        plot_type = st.selectbox("#### Plot Type", plot_types,
                                  key="plot_type", index=plot_type_index)
         if plot_type != config.plot_type:
             config.plot_type = plot_type
