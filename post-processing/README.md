@@ -68,6 +68,7 @@ Before running post-processing, create a config file including all necessary inf
 - `x_axis`, `y_axis` - Axis information.
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
+    - `range` - (Optional.) Axis range. Custom minimum and maximum (numeric) axis values. (Currently only applied to line plots.)
     - `scaling` - (Optional.) Scale (numeric) axis values by either a column or a custom value.
     - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
     - `logarithmic` - (Optional.) Apply the base 10 logarithm to (numeric) axis values.
@@ -103,6 +104,10 @@ x_axis:
   units:
     column: <column_name>
     custom: <custom_label>
+  # optional (default: automatic min/max)
+  range:
+    min: <min_value>
+    max: <max_value>
   # optional (default: ascending)
   sort: "descending"
   # optional (default: False)
@@ -114,6 +119,10 @@ y_axis:
   units:
     column: <column_name>
     custom: <custom_label>
+  # optional (default: automatic min/max)
+  range:
+    min: <min_value>
+    max: <max_value>
   # optional (default: no data transformation)
   # use one of 'column' or 'custom'
   scaling:
