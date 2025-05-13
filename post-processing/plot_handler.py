@@ -273,27 +273,27 @@ def get_axis_min_max(df, axis):
             axis: dict, axis column, units, and values to scale by.
     """
 
-    column = axis["value"]
-    axis_range = axis["range"]
-    axis_min = axis_range["min"] if axis_range["min"] else 0.0
-    axis_max = axis_range["max"] if axis_range["max"] else 0.0
+    # get column name of axis
+    col_name = axis.get("value")
+    # get range
+    axis_min = axis.get("range").get("min") if axis.get("range") else None
+    axis_max = axis.get("range").get("max") if axis.get("range") else None
 
     # FIXME: str types and user defined datetime ranges not currently supported
-    if (column):
-        axis_min_element = np.nanmin(df[column])
-        axis_max_element = np.nanmax(df[column])
+    axis_min_element = np.nanmin(df[col_name])
+    axis_max_element = np.nanmax(df[col_name])
 
-        # use defaults if type is datetime
-        if (is_datetime(df[column])):
-            datetime_range = axis_max_element - axis_min_element
-            buffer_time = datetime_range*0.2
-            axis_min = axis_min_element - buffer_time
-            axis_max = axis_max_element + buffer_time
-
-        elif axis_min is None or axis_max is None or axis_min == axis_max:
-            axis_min = (axis_min_element*0.6 if min(df[column]) >= 0
-                        else math.floor(axis_min_element*1.2))
-            axis_max = (axis_max_element*0.6 if max(df[column]) <= 0
-                        else math.ceil(axis_max_element*1.2))
+    # use defaults if type is datetime
+    if (is_datetime(df[col_name])):
+        datetime_range = axis_max_element - axis_min_element
+        buffer_time = datetime_range * 0.2
+        axis_min = axis_min_element - buffer_time
+        axis_max = axis_max_element + buffer_time
+    # use defaults if no valid custom endpoints are specified
+    else:
+        if axis_min is None or axis_min == axis_max:
+            axis_min = math.floor(axis_min_element*1.2)
+        if axis_max is None or axis_min == axis_max:
+            axis_max = math.ceil(axis_max_element*1.2)
 
     return axis_min, axis_max
