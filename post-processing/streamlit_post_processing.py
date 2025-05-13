@@ -5,7 +5,6 @@ from pathlib import Path
 
 import streamlit as st
 from config_handler import ConfigHandler, load_config, read_config
-from plot_handler import get_axis_min_max
 from post_processing import PostProcessing
 from streamlit_bokeh import streamlit_bokeh
 
@@ -273,17 +272,39 @@ def axis_select(label: str, axis: dict):
         units_select(label, axis)
     # range select
     with st.expander("Range"):
-        # FIXME: add ability to use a custom value for only one of min or max
-        range = get_axis_min_max(df, axis)
         axis_range_min, axis_range_max = st.columns(2)
-        with axis_range_min:
-            st.number_input("{0}-axis minimum".format(label),
-                            value=range[0],
-                            key="{0}_axis_range_min".format(label))
-        with axis_range_max:
-            st.number_input("{0}-axis maximum".format(label),
-                            value=range[1],
-                            key="{0}_axis_range_max".format(label))
+
+        # custom range only applies to line plots
+        if (st.session_state.plot_type == "line" and
+            (st.session_state["{0}_axis_type".format(label)] == "float" or
+             st.session_state["{0}_axis_type".format(label)] == "int")):
+            with axis_range_min:
+                st.number_input("{0}-axis minimum".format(label),
+                                value=axis["range"].get("min") if axis.get("range") else None,
+                                key="{0}_axis_range_min".format(label),
+                                help="Custom minimum {0}-axis (line plot) value.".format(label))
+            with axis_range_max:
+                st.number_input("{0}-axis maximum".format(label),
+                                value=axis["range"].get("max") if axis.get("range") else None,
+                                key="{0}_axis_range_max".format(label),
+                                help="Custom maximum {0}-axis (line plot) value.".format(label))
+
+        else:
+            # set custom ranges to none if already in session state
+            if "{0}_axis_range_min".format(label) in st.session_state:
+                st.session_state["{0}_axis_range_min".format(label)] = None
+            if "{0}_axis_range_max".format(label) in st.session_state:
+                st.session_state["{0}_axis_range_max".format(label)] = None
+            # disable for generic plots and non-numeric axis types
+            with axis_range_min:
+                st.number_input("{0}-axis minimum".format(label), value=None,
+                                disabled=True, key="{0}_axis_range_min".format(label),
+                                help="Custom minimum {0}-axis (line plot) value.".format(label))
+            with axis_range_max:
+                st.number_input("{0}-axis maximum".format(label), value=None,
+                                disabled=True, key="{0}_axis_range_max".format(label),
+                                help="Custom maximum {0}-axis (line plot) value.".format(label))
+
     # scaling select
     if label == "y":
         with st.expander("Scaling"):
