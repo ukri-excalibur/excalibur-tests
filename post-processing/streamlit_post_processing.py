@@ -307,6 +307,9 @@ def axis_select(label: str, axis: dict):
                                 disabled=True, key="{0}_axis_range_max".format(label),
                                 help="Custom maximum {0}-axis (line plot) value.".format(label))
 
+        st.button("Clear Range", key="clear_{0}_axis_range".format(label), on_click=clear_fields,
+                  args=[["{0}_axis_range_min".format(label), "{0}_axis_range_max".format(label)]])
+
     # scaling select
     if label == "y":
         with st.expander("Scaling"):
@@ -340,6 +343,18 @@ def round_val(key: str):
 
     if st.session_state[key]:
         st.session_state[key] = round(st.session_state[key], 2)
+
+
+def clear_fields(field_keys: 'list[str]'):
+    """
+        Reset the state of all provided fields to None.
+
+        Args:
+            field_keys: list, keys of fields in the session state.
+    """
+
+    for k in field_keys:
+        st.session_state[k] = None
 
 
 def units_select(label: str, axis: dict):
@@ -376,18 +391,6 @@ def units_select(label: str, axis: dict):
 
     st.button("Clear Units", key="clear_{0}_axis_units".format(label), on_click=clear_fields,
               args=[["{0}_axis_units_column".format(label), "{0}_axis_units_custom".format(label)]])
-
-
-def clear_fields(field_keys: 'list[str]'):
-    """
-        Reset the state of all provided fields to None.
-
-        Args:
-            field_keys: list, keys of fields in the session state.
-    """
-
-    for k in field_keys:
-        st.session_state[k] = None
 
 
 def scaling_select(axis: dict):
