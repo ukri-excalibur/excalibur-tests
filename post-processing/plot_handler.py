@@ -1,3 +1,4 @@
+import itertools
 import math
 import os
 from pathlib import Path
@@ -9,6 +10,7 @@ from bokeh.models.sources import ColumnDataSource
 from bokeh.palettes import viridis
 from bokeh.plotting import figure, output_file, save
 from bokeh.transform import factor_cmap
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from titlecase import titlecase
 
 
@@ -72,10 +74,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     plot = figure(x_range=grouped_df, y_range=(min_y, max_y), title=title,
                   width=800, toolbar_location="above")
     # configure tooltip
-    plot.add_tools(HoverTool(tooltips=[
-                                (y_label, "@{0}_mean".format(y_column)
-                                    + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
-                                       else ""))],
+    plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}_mean".format(y_column)
+                                        + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                           else ""))],
                              formatters={"@{0}_mean".format(y_column): "printf"}))
 
     # sort x-axis values in descending order (otherwise default sort is ascending)
@@ -189,3 +190,110 @@ def get_axis_labels(df: pd.DataFrame, axis, series_filters, x_column="x"):
                                   "\n({0})".format(units) if units else "")
 
     return col_name, label
+
+
+def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
+                    output_path=Path(__file__).parent, save_plot=True):
+    """
+        Create a line chart for the supplied data using bokeh.
+
+        Args:
+            title: str, plot title.
+            df: dataframe, data to plot.
+            x_axis: dict, x-axis column and units.
+            y_axis: dict, y-axis column and units.
+            series_filters: list, x-axis groups used to filter graph data.
+            output_path: Path, path to a directory for storing the generated plot and csv data.
+                Default is current directory.
+            save_plot: bool, flag to signify that a plot should be saved after production.
+                Disable when running with Streamlit.
+    """
+
+    # get column names and labels for axes
+    x_column, x_label = get_axis_labels(df, x_axis, series_filters)
+    y_column, y_label = get_axis_labels(df, y_axis, series_filters, x_column)
+
+    # adjust axis ranges
+    min_x, max_x = get_axis_min_max(df, x_axis)
+    min_y, max_y = get_axis_min_max(df, y_axis)
+
+    # create html file to store plot in
+    if save_plot:
+        output_file(filename=os.path.join(
+            output_path, "{0}.html".format(title.replace(" ", "_"))), title=title)
+
+    # create plot
+    plot = figure(x_range=(min_x, max_x), y_range=(min_y, max_y), title=title,
+                  width=800, toolbar_location="above")
+
+    # configure tooltip
+    plot.add_tools(HoverTool(tooltips=[(y_label, "@{0}".format(y_column)
+                                        + ("{%0.2f}" if pd.api.types.is_float_dtype(df[y_column].dtype)
+                                           else ""))],
+                             formatters={"@{0}".format(y_column): "printf"}))
+
+    # create legend outside plot
+    plot.add_layout(Legend(), "right")
+    colours = itertools.cycle(viridis(len(series_filters)))
+
+    for filter in series_filters:
+        filtered_df = None
+        if filter[1] == "==":
+            filtered_df = df[df[filter[0]] == int(filter[2])]
+            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=" ".join(filter),
+                      line_width=2, color=next(colours))
+
+    # add labels
+    plot.xaxis.axis_label = x_label
+    plot.yaxis.axis_label = y_label
+    # adjust font size
+    plot.title.text_font_size = "15pt"
+
+    # flip x-axis if sort is descending
+    if x_axis.get("sort"):
+        if x_axis["sort"] == "descending":
+            end = plot.x_range.end
+            start = plot.x_range.start
+            plot.x_range.start = end
+            plot.x_range.end = start
+
+    # save to file
+    if save_plot:
+        save(plot)
+
+    return plot
+
+
+def get_axis_min_max(df, axis):
+    """
+        Return the minimum and maximum numeric values for a given axis.
+
+        Args:
+            df: dataframe, data to plot.
+            axis: dict, axis column, units, and values to scale by.
+    """
+
+    # get column name of axis
+    col_name = axis.get("value")
+    # get range
+    axis_min = axis.get("range").get("min") if axis.get("range") else None
+    axis_max = axis.get("range").get("max") if axis.get("range") else None
+
+    # FIXME: str types and user defined datetime ranges not currently supported
+    axis_min_element = np.nanmin(df[col_name])
+    axis_max_element = np.nanmax(df[col_name])
+
+    # use defaults if type is datetime
+    if (is_datetime(df[col_name])):
+        datetime_range = axis_max_element - axis_min_element
+        buffer_time = datetime_range * 0.2
+        axis_min = axis_min_element - buffer_time
+        axis_max = axis_max_element + buffer_time
+    # use defaults if no valid custom endpoints are specified
+    else:
+        if axis_min is None or axis_min == axis_max:
+            axis_min = math.floor(axis_min_element*1.2)
+        if axis_max is None or axis_min == axis_max:
+            axis_max = math.ceil(axis_max_element*1.2)
+
+    return axis_min, axis_max

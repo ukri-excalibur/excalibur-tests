@@ -32,19 +32,16 @@ pip install -e .[post-processing]
 #### Command line
 
 ```sh
-python post_processing.py log_path config_path [-p plot_type] [-s save] [-o output_path] [-d debug]
+python post_processing.py log_path config_path [-s save_data] [-o output_path] [-d debug]
 ```
 
 - `log_path` - Path to a perflog file, or a directory containing perflog files.
 - `config_path` - Path to a configuration file containing plot details.
-- `plot_type` - (Optional.) Type of plot to be generated. By default, no plotting occurs.
-  - `generic` - Bar chart.
-  - `line` - Line chart. (**TODO**)
-- `save` - (Optional.) State in which to save perflog data to a csv file. By default, no data is saved.
+- `output_path` - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.
+- `save_data` - (Optional.) State in which to save perflog data to a csv file. By default, no data is saved.
   - `original` - Save the original perflog data with no filters or transformations applied.
   - `filtered` - Save the original filtered perflog data with no transformations applied.
   - `transformed` - Save the processed perflog data with all filters and transformations applied (log and scaling).
-- `output_path` - (Optional.) Path to a directory for storing a generated plot and csv data. By default, outputs are saved in the current directory.
 - `debug` - (Optional.) Print additional debug information.
 
 Run `post_processing.py -h` for a summary of this information.
@@ -66,9 +63,12 @@ The config path is optional when running with Streamlit, as the UI allows you to
 Before running post-processing, create a config file including all necessary information for graph generation (you must specify at least plot title, x-axis, y-axis, and column types). See below for a template, an example, and some clarifying notes.
 
 - `title` - Plot title.
+- `plot_type` - Type of plot to be generated.
+  - `Accepted types: "generic" (bar chart), "line"`
 - `x_axis`, `y_axis` - Axis information.
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
+    - `range` - (Optional.) Axis range. Custom minimum and maximum (numeric) axis values. (Currently only applied to line plots.)
     - `scaling` - (Optional.) Scale (numeric) axis values by either a column or a custom value.
     - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
     - `logarithmic` - (Optional.) Apply the base 10 logarithm to (numeric) axis values.
@@ -95,6 +95,8 @@ This template includes all possible config fields, some of which are optional or
 
 ```yaml
 title: <custom_label>
+# accepted types: generic, line
+plot_type: <plot_type>
 
 x_axis:
   value: <column_name>
@@ -102,6 +104,10 @@ x_axis:
   units:
     column: <column_name>
     custom: <custom_label>
+  # optional (default: automatic min/max)
+  range:
+    min: <min_value>
+    max: <max_value>
   # optional (default: ascending)
   sort: "descending"
   # optional (default: False)
@@ -113,6 +119,10 @@ y_axis:
   units:
     column: <column_name>
     custom: <custom_label>
+  # optional (default: automatic min/max)
+  range:
+    min: <min_value>
+    max: <max_value>
   # optional (default: no data transformation)
   # use one of 'column' or 'custom'
   scaling:

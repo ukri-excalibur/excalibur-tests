@@ -9,6 +9,7 @@ from post_processing import PostProcessing
 from streamlit_bokeh import streamlit_bokeh
 
 # drop-down lists
+plot_types = ["generic", "line"]
 operators = ["==", "!=", "<", ">", "<=", ">="]
 column_types = ["datetime", "int", "float", "str"]
 filter_types = ["and", "or", "series"]
@@ -84,6 +85,13 @@ def update_ui(post: PostProcessing, config: ConfigHandler, e: 'Exception | None'
         # warn if title is blank
         if not title:
             st.warning("Missing plot title information.")
+
+        # set plot type
+        plot_type_index = plot_types.index(config.plot_type) if config.plot_type in plot_types else 0
+        plot_type = st.selectbox("#### Plot Type", plot_types,
+                                 key="plot_type", index=plot_type_index)
+        if plot_type != config.plot_type:
+            config.plot_type = plot_type
 
         # style expander labels as markdown h6
         # and hover colour as that of the multiselect labels
@@ -262,6 +270,46 @@ def axis_select(label: str, axis: dict):
     # units select
     with st.expander("Units"):
         units_select(label, axis)
+    # range select
+    with st.expander("Range"):
+        axis_range_min, axis_range_max = st.columns(2)
+
+        # custom range only applies to line plots
+        if (st.session_state.plot_type == "line" and
+            (st.session_state["{0}_axis_type".format(label)] == "float" or
+             st.session_state["{0}_axis_type".format(label)] == "int")):
+            with axis_range_min:
+                st.number_input("{0}-axis minimum".format(label),
+                                value=axis["range"].get("min") if axis.get("range") else None,
+                                key="{0}_axis_range_min".format(label),
+                                help="Custom minimum {0}-axis (line plot) value.".format(label),
+                                on_change=round_val("{0}_axis_range_min".format(label)))
+            with axis_range_max:
+                st.number_input("{0}-axis maximum".format(label),
+                                value=axis["range"].get("max") if axis.get("range") else None,
+                                key="{0}_axis_range_max".format(label),
+                                help="Custom maximum {0}-axis (line plot) value.".format(label),
+                                on_change=round_val("{0}_axis_range_max".format(label)))
+
+        else:
+            # set custom ranges to none if already in session state
+            if "{0}_axis_range_min".format(label) in st.session_state:
+                st.session_state["{0}_axis_range_min".format(label)] = None
+            if "{0}_axis_range_max".format(label) in st.session_state:
+                st.session_state["{0}_axis_range_max".format(label)] = None
+            # disable for generic plots and non-numeric axis types
+            with axis_range_min:
+                st.number_input("{0}-axis minimum".format(label), value=None,
+                                disabled=True, key="{0}_axis_range_min".format(label),
+                                help="Custom minimum {0}-axis (line plot) value.".format(label))
+            with axis_range_max:
+                st.number_input("{0}-axis maximum".format(label), value=None,
+                                disabled=True, key="{0}_axis_range_max".format(label),
+                                help="Custom maximum {0}-axis (line plot) value.".format(label))
+
+        st.button("Clear Range", key="clear_{0}_axis_range".format(label), on_click=clear_fields,
+                  args=[["{0}_axis_range_min".format(label), "{0}_axis_range_max".format(label)]])
+
     # scaling select
     if label == "y":
         with st.expander("Scaling"):
@@ -283,6 +331,30 @@ def axis_select(label: str, axis: dict):
             st.session_state["{0}_axis_log".format(label)] = False
         # disable for non-numeric axis types
         st.checkbox("logarithmic axis", False, disabled=True, key="{0}_axis_log".format(label))
+
+
+def round_val(key: str):
+    """
+        Round a numeric value in session state to 2 decimal places.
+
+        Args:
+            key: str, key of a field in session state.
+    """
+
+    if st.session_state[key]:
+        st.session_state[key] = round(st.session_state[key], 2)
+
+
+def clear_fields(field_keys: 'list[str]'):
+    """
+        Reset the state of all provided fields to None.
+
+        Args:
+            field_keys: list, keys of fields in the session state.
+    """
+
+    for k in field_keys:
+        st.session_state[k] = None
 
 
 def units_select(label: str, axis: dict):
@@ -319,18 +391,6 @@ def units_select(label: str, axis: dict):
 
     st.button("Clear Units", key="clear_{0}_axis_units".format(label), on_click=clear_fields,
               args=[["{0}_axis_units_column".format(label), "{0}_axis_units_custom".format(label)]])
-
-
-def clear_fields(field_keys: 'list[str]'):
-    """
-        Reset the state of all provided fields to None.
-
-        Args:
-            field_keys: list, keys of fields in the session state.
-    """
-
-    for k in field_keys:
-        st.session_state[k] = None
 
 
 def scaling_select(axis: dict):
@@ -409,6 +469,8 @@ def update_axes():
     x_column = state.x_axis_column
     x_units_column = state.x_axis_units_column
     x_units_custom = state.x_axis_units_custom
+    x_range_min = state.x_axis_range_min
+    x_range_max = state.x_axis_range_max
     x_sort = state.x_axis_sort
     x_log = state.x_axis_log
 
@@ -419,6 +481,8 @@ def update_axes():
     y_scaling_series = state.y_axis_scaling_series
     y_scaling_x = state.y_axis_scaling_x_value
     y_scaling_custom = state.y_axis_custom_scaling_val
+    y_range_min = state.y_axis_range_min
+    y_range_max = state.y_axis_range_max
     y_log = state.y_axis_log
 
     # update columns
@@ -438,6 +502,11 @@ def update_axes():
     if not y_units_custom and y_units_column:
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
+
+    config.x_axis["range"]["min"] = x_range_min
+    config.x_axis["range"]["max"] = x_range_max
+    config.y_axis["range"]["min"] = y_range_min
+    config.y_axis["range"]["max"] = y_range_max
 
     # update scaling
     config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
@@ -776,8 +845,7 @@ def main():
     args = read_args()
 
     try:
-        # FIXME (issue #182): move plot type to be part of config
-        post = PostProcessing(args.log_path, plot_type="generic", save_plot=False)
+        post = PostProcessing(args.log_path, save_plot=False)
         # set up empty template config
         config, err = ConfigHandler.from_template(), None
         # optionally load config from file path
