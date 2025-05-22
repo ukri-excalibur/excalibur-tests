@@ -297,8 +297,6 @@ def read_config(config: dict):
 
     # check optional series information
     if config.get("series"):
-        if len(config.get("series")) == 1:
-            raise RuntimeError("Number of series must be >= 2.")
         if len(set([s[0] for s in config.get("series")])) > 1:
             raise RuntimeError("Currently supporting grouping of series by only one column. \
                                Please use a single column name in your series configuration.")
