@@ -321,8 +321,10 @@ def axis_select(label: str, axis: dict):
                     key="{0}_axis_sort".format(label))
 
     # log checkbox
-    if (st.session_state["{0}_axis_type".format(label)] == "float" or
-        st.session_state["{0}_axis_type".format(label)] == "int"):
+    if ((st.session_state.plot_type != "generic" or
+         (st.session_state.plot_type == "generic" and label != "x")) and
+        (st.session_state["{0}_axis_type".format(label)] == "float" or
+         st.session_state["{0}_axis_type".format(label)] == "int")):
         st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
                     key="{0}_axis_log".format(label))
     else:
