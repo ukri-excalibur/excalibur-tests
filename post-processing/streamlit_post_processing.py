@@ -505,10 +505,9 @@ def update_axes():
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
 
-    config.x_axis["range"]["min"] = x_range_min
-    config.x_axis["range"]["max"] = x_range_max
-    config.y_axis["range"]["min"] = y_range_min
-    config.y_axis["range"]["max"] = y_range_max
+    # update ranges
+    config.x_axis["range"] = {"min": x_range_min, "max": x_range_max}
+    config.y_axis["range"] = {"min": y_range_min, "max": y_range_max}
 
     # update scaling
     config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
