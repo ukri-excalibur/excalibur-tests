@@ -68,10 +68,11 @@ Before running post-processing, create a config file including all necessary inf
 - `x_axis`, `y_axis` - Axis information.
     - `value` - Axis data points. Specified with a column name.
     - `units` - Axis units. Specified either with a column name or a custom label (may be null).
-    - `range` - (Optional.) Axis range. Custom minimum and maximum (numeric) axis values. (Currently only applied to line plots.)
-    - `scaling` - (Optional.) Scale (numeric) axis values by either a column or a custom value.
-    - `sort` - (Optional.) Sort categorical x-axis in descending order (otherwise values are sorted in ascending order by default).
-    - `logarithmic` - (Optional.) Apply the base 10 logarithm to (numeric) axis values.
+    - `range` - (Optional.) Axis range. Custom minimum and maximum numeric axis values. (Currently only applied to line plots.)
+    - `scaling` - (Optional.) Scale numeric axis values by either a column or a custom value.
+    - `sort` - (Optional.) Sort categorical x-axis in descending order, otherwise values are sorted in ascending order by default.
+    - `label_orientation` (Optional.) Display generic x-axis labels vertically, otherwise labels are horizontal by default.
+    - `logarithmic` - (Optional.) Apply the base 10 logarithm to numeric axis values.
 - `filters` - (Optional.) Filter data rows based on specified conditions. (Specify an empty list if no filters are required.)
     - `and` - Filter mask is determined from a logical AND of conditions in list.
     - `or` - Filter mask is determined from a logical OR of conditions in list.
@@ -110,6 +111,8 @@ x_axis:
     max: <max_value>
   # optional (default: ascending)
   sort: "descending"
+  # optional (default: horizontal)
+  label_orientation: "vertical"
   # optional (default: False)
   logarithmic: True
 

@@ -124,8 +124,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     # remove x-axis group ticks
     plot.xaxis.major_tick_line_color = None
     plot.xaxis.major_label_text_font_size = "0pt"
-    # FIXME (#issue #255): add this as a config option at some point
-    # plot.xaxis.group_label_orientation = "vertical"
+    if x_axis.get("label_orientation"):
+        if x_axis["label_orientation"] == "vertical":
+            plot.xaxis.group_label_orientation = "vertical"
     # adjust font size
     plot.title.text_font_size = "15pt"
 

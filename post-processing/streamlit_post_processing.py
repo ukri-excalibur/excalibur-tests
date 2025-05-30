@@ -326,10 +326,22 @@ def axis_select(label: str, axis: dict):
         with st.expander("Scaling"):
             scaling_select(axis)
 
-    # sort checkbox
+    # sort and label orientation checkbox
     if label == "x":
-        st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
-                    key="{0}_axis_sort".format(label))
+        axis_sort, axis_label = st.columns(2)
+        with axis_sort:
+            st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
+                        key="{0}_axis_sort".format(label))
+        with axis_label:
+            if st.session_state.plot_type == "generic":
+                st.checkbox("vertical labels", True if axis.get("label_orientation") == "vertical" else False,
+                            key="{0}_axis_label_orientation".format(label))
+            else:
+                # set checkbox to false if already in session state
+                if "{0}_axis_label_orientation".format(label) in st.session_state:
+                    st.session_state["{0}_axis_label_orientation".format(label)] = False
+                # disable for non-generic plots
+                st.checkbox("vertical labels", False, disabled=True, key="{0}_axis_label_orientation".format(label))
 
     # log checkbox
     if ((st.session_state.plot_type != "generic" or
@@ -485,6 +497,7 @@ def update_axes():
     x_range_min = state.x_axis_range_min
     x_range_max = state.x_axis_range_max
     x_sort = state.x_axis_sort
+    x_orient = state.x_axis_label_orientation
     x_log = state.x_axis_log
 
     y_column = state.y_axis_column
@@ -534,8 +547,9 @@ def update_axes():
     # update types after changing axes
     update_types()
 
-    # update sort and log
+    # update sort, label orientation, and log
     config.x_axis["sort"] = "descending" if x_sort else "ascending"
+    config.x_axis["label_orientation"] = "vertical" if x_orient else "horizontal"
     config.x_axis["logarithmic"] = x_log
     config.y_axis["logarithmic"] = y_log
 
