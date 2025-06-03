@@ -124,8 +124,9 @@ def plot_generic(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     # remove x-axis group ticks
     plot.xaxis.major_tick_line_color = None
     plot.xaxis.major_label_text_font_size = "0pt"
-    # FIXME (#issue #255): add this as a config option at some point
-    # plot.xaxis.group_label_orientation = "vertical"
+    if x_axis.get("label_orientation"):
+        if x_axis["label_orientation"] == "vertical":
+            plot.xaxis.group_label_orientation = "vertical"
     # adjust font size
     plot.title.text_font_size = "15pt"
 
@@ -236,12 +237,11 @@ def plot_line_chart(title, df: pd.DataFrame, x_axis, y_axis, series_filters,
     plot.add_layout(Legend(), "right")
     colours = itertools.cycle(viridis(len(series_filters)))
 
-    for filter in series_filters:
-        filtered_df = None
-        if filter[1] == "==":
-            filtered_df = df[df[filter[0]] == int(filter[2])]
-            plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=" ".join(filter),
-                      line_width=2, color=next(colours))
+    for f in series_filters:
+        filtered_df = df[df[f[0]] == int(f[2])]
+        legend_label = "{0} = {1}".format(f[0].replace("_", " "), str(f[-1]))
+        plot.line(x=x_column, y=y_column, source=filtered_df, legend_label=legend_label,
+                  line_width=2, color=next(colours))
 
     # add labels
     plot.xaxis.axis_label = x_label
@@ -292,7 +292,7 @@ def get_axis_min_max(df, axis):
     # use defaults if no valid custom endpoints are specified
     else:
         if axis_min is None or axis_min == axis_max:
-            axis_min = math.floor(axis_min_element*1.2)
+            axis_min = math.floor(axis_min_element*0.8)
         if axis_max is None or axis_min == axis_max:
             axis_max = math.ceil(axis_max_element*1.2)
 

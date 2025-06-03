@@ -156,6 +156,10 @@ def update_config():
                 elif config.x_axis["units"].get("column") is not None:
                     st.warning("Assigned x-axis units column is not in the DataFrame.")
                 state.x_axis_units_custom = config.x_axis["units"].get("custom")
+            # x range
+            if config.x_axis.get("range"):
+                state.x_axis_range_min = config.x_axis["range"].get("min")
+                state.x_axis_range_max = config.x_axis["range"].get("max")
 
             # y-axis
             if config.y_axis.get("value") in df.columns:
@@ -169,6 +173,10 @@ def update_config():
                 elif config.y_axis["units"].get("column") is not None:
                     st.warning("Assigned y-axis units column is not in the DataFrame.")
                 state.y_axis_units_custom = config.y_axis["units"].get("custom")
+            # y range
+            if config.y_axis.get("range"):
+                state.y_axis_range_min = config.y_axis["range"].get("min")
+                state.y_axis_range_max = config.y_axis["range"].get("max")
 
             # y scaling
             if config.y_axis.get("scaling"):
@@ -273,6 +281,13 @@ def axis_select(label: str, axis: dict):
     # range select
     with st.expander("Range"):
         axis_range_min, axis_range_max = st.columns(2)
+        # set initial range values
+        if "{0}_axis_range_min".format(label) not in st.session_state:
+            st.session_state["{0}_axis_range_min".format(label)] = (axis["range"].get("min")
+                                                                    if axis.get("range") else None)
+        if "{0}_axis_range_max".format(label) not in st.session_state:
+            st.session_state["{0}_axis_range_max".format(label)] = (axis["range"].get("max")
+                                                                    if axis.get("range") else None)
 
         # custom range only applies to line plots
         if (st.session_state.plot_type == "line" and
@@ -280,30 +295,26 @@ def axis_select(label: str, axis: dict):
              st.session_state["{0}_axis_type".format(label)] == "int")):
             with axis_range_min:
                 st.number_input("{0}-axis minimum".format(label),
-                                value=axis["range"].get("min") if axis.get("range") else None,
                                 key="{0}_axis_range_min".format(label),
                                 help="Custom minimum {0}-axis (line plot) value.".format(label),
                                 on_change=round_val("{0}_axis_range_min".format(label)))
             with axis_range_max:
                 st.number_input("{0}-axis maximum".format(label),
-                                value=axis["range"].get("max") if axis.get("range") else None,
                                 key="{0}_axis_range_max".format(label),
                                 help="Custom maximum {0}-axis (line plot) value.".format(label),
                                 on_change=round_val("{0}_axis_range_max".format(label)))
 
         else:
-            # set custom ranges to none if already in session state
-            if "{0}_axis_range_min".format(label) in st.session_state:
-                st.session_state["{0}_axis_range_min".format(label)] = None
-            if "{0}_axis_range_max".format(label) in st.session_state:
-                st.session_state["{0}_axis_range_max".format(label)] = None
+            # set custom ranges to none
+            st.session_state["{0}_axis_range_min".format(label)] = None
+            st.session_state["{0}_axis_range_max".format(label)] = None
             # disable for generic plots and non-numeric axis types
             with axis_range_min:
-                st.number_input("{0}-axis minimum".format(label), value=None,
+                st.number_input("{0}-axis minimum".format(label),
                                 disabled=True, key="{0}_axis_range_min".format(label),
                                 help="Custom minimum {0}-axis (line plot) value.".format(label))
             with axis_range_max:
-                st.number_input("{0}-axis maximum".format(label), value=None,
+                st.number_input("{0}-axis maximum".format(label),
                                 disabled=True, key="{0}_axis_range_max".format(label),
                                 help="Custom maximum {0}-axis (line plot) value.".format(label))
 
@@ -315,14 +326,28 @@ def axis_select(label: str, axis: dict):
         with st.expander("Scaling"):
             scaling_select(axis)
 
-    # sort checkbox
+    # sort and label orientation checkbox
     if label == "x":
-        st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
-                    key="{0}_axis_sort".format(label))
+        axis_sort, axis_label = st.columns(2)
+        with axis_sort:
+            st.checkbox("sort descending", True if axis.get("sort") == "descending" else False,
+                        key="{0}_axis_sort".format(label))
+        with axis_label:
+            if st.session_state.plot_type == "generic":
+                st.checkbox("vertical labels", True if axis.get("label_orientation") == "vertical" else False,
+                            key="{0}_axis_label_orientation".format(label))
+            else:
+                # set checkbox to false if already in session state
+                if "{0}_axis_label_orientation".format(label) in st.session_state:
+                    st.session_state["{0}_axis_label_orientation".format(label)] = False
+                # disable for non-generic plots
+                st.checkbox("vertical labels", False, disabled=True, key="{0}_axis_label_orientation".format(label))
 
     # log checkbox
-    if (st.session_state["{0}_axis_type".format(label)] == "float" or
-        st.session_state["{0}_axis_type".format(label)] == "int"):
+    if ((st.session_state.plot_type != "generic" or
+         (st.session_state.plot_type == "generic" and label != "x")) and
+        (st.session_state["{0}_axis_type".format(label)] == "float" or
+         st.session_state["{0}_axis_type".format(label)] == "int")):
         st.checkbox("logarithmic axis", True if axis.get("logarithmic") else False,
                     key="{0}_axis_log".format(label))
     else:
@@ -472,6 +497,7 @@ def update_axes():
     x_range_min = state.x_axis_range_min
     x_range_max = state.x_axis_range_max
     x_sort = state.x_axis_sort
+    x_orient = state.x_axis_label_orientation
     x_log = state.x_axis_log
 
     y_column = state.y_axis_column
@@ -503,10 +529,9 @@ def update_axes():
         config.y_axis["units"] = {"column": y_units_column}
         config.column_types[y_units_column] = "str"
 
-    config.x_axis["range"]["min"] = x_range_min
-    config.x_axis["range"]["max"] = x_range_max
-    config.y_axis["range"]["min"] = y_range_min
-    config.y_axis["range"]["max"] = y_range_max
+    # update ranges
+    config.x_axis["range"] = {"min": x_range_min, "max": x_range_max}
+    config.y_axis["range"] = {"min": y_range_min, "max": y_range_max}
 
     # update scaling
     config.y_axis["scaling"] = {"custom": json.loads(str(y_scaling_custom)) if y_scaling_custom else None}
@@ -522,8 +547,9 @@ def update_axes():
     # update types after changing axes
     update_types()
 
-    # update sort and log
+    # update sort, label orientation, and log
     config.x_axis["sort"] = "descending" if x_sort else "ascending"
+    config.x_axis["label_orientation"] = "vertical" if x_orient else "horizontal"
     config.x_axis["logarithmic"] = x_log
     config.y_axis["logarithmic"] = y_log
 
