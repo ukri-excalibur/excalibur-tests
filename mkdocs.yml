@@ -20,6 +20,7 @@ nav:
       - hpgmg: apps/hpgmg/README.md
       - sombrero: apps/sombrero/README.md
       - babelstream: apps/babelstream/README.md
+      - ziatest: apps/ziatest/README.md
     - 'Applications':
       - cp2k: apps/cp2k/README.md
       - grid: apps/grid/README.md
