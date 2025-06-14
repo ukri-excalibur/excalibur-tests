@@ -66,10 +66,10 @@ class GridBenchmark_ITT(GridBenchmark):
         self.num_tasks = reduce(mul, list(map(int, self.mpi.split("."))), 1)
         self.set_var_default(
             'num_cpus_per_task',
-            self.current_partition.processor.num_cpus //
-            min(1, self.current_partition.processor.num_cpus_per_core))
+            (self.current_partition.processor.num_cpus or 1) //
+            min(1, self.current_partition.processor.num_cpus_per_core or 1))
         self.set_var_default('num_tasks_per_node',
-                             self.current_partition.processor.num_cpus //
+                             (self.current_partition.processor.num_cpus or 1) //
                              self.num_cpus_per_task)
         self.executable_opts = [f'--mpi {self.mpi}', f'--shm {self.shm}', '--shm-hugetlb']
         self.env_vars['OMP_NUM_THREADS'] = f'{self.num_cpus_per_task}'
