@@ -25,8 +25,8 @@ class FftBenchmarkCpu(SpackTest):
     # partition which has the named feature, `-feature` is a partition which
     # does not have the named feature.  This is a CPU-only benchmark, so we use
     # `-gpu` to exclude GPU partitions.
-    valid_systems = ['']
-    valid_prog_environs = ['default']
+    valid_systems = ['*']
+    valid_prog_environs = ['*']
     # Spack specification with default value.  A different value can be set
     # from the command line with `-S spack_spec='...'`:
     # https://reframe-hpc.readthedocs.io/en/stable/manpage.html#cmdoption-S
@@ -69,8 +69,11 @@ class FftBenchmarkCpu(SpackTest):
         # for more information.  The key `*` matches all systems/partitions not
         # matched by the other entries of the dictionary and can be used to
         # provide a default reference value.
-        'cosma8': {
-            'flops': (8.0, -0.2, None, 'Gflops/seconds'),
+        'myriad': {
+            'FFTW': {
+                'size': (1., None, None, 'MB'),
+                'time': (1., None, None, 'miliseconds'),
+            },
         }
     }
 
@@ -106,33 +109,12 @@ class FftBenchmarkCpu(SpackTest):
         # This performance pattern parses the output of the program to extract
         # the desired figure of merit.
         self.perf_patterns = {
-            'FFTW': sn.extractsingle(
-                r'FFTW,\t\t\d{3,},\t\t\d{2,}.\d{0,}',
-                self.stdout, 0, str),
-        }
-
-@rfm.simple_test
-class FftBenchmarkMkl(SpackTest):
-    valid_systems = ['']
-    spack_spec = 'fft-bench@0.1+mkl'
-    executable_opts = ["-s", "500", "-m", "4", "-n", "10", "-f"]
-
-
-@rfm.simple_test
-class FftBenchmarkCuda(FftBenchmarkCpu):
-    valid_systems = ['cuda']
-    spack_spec = 'fft-bench@0.1+cuda'
-    executable_opts = ["-s", "500", "-m", "4", "-n", "10", "-f", "-c"]
-
-    @run_before('performance')
-    def set_perf_patterns(self):
-        # This performance pattern parses the output of the program to extract
-        # the desired figure of merit.
-        self.perf_patterns = {
-            'FFTW': sn.extract_all(
-                r'FFTW,\t\t\d{3,},\t\t\d{2,}.\d{0,}',
-                self.stdout, 0, str),
-            'CUDA': sn.extractsingle(
-                r'CUDA,\t\t\d{3,},\t\t\d{2,}.\d{0,}',
-                self.stdout, 0, str),
+            'FFTW': {
+                "Size": sn.extract_all(
+                    r'FFTW,\t\t<size>,\t\t<time>,',
+                    self.stdout, 'size', float),
+                "Time": sn.extract_all(
+                    r'FFTW,\t\t<size>,\t\t<time>,',
+                    self.stdout, 'time', float),
+            }
         }
