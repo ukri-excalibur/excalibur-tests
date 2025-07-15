@@ -63,7 +63,7 @@ class FftBenchmarkCpu(SpackTest):
     def set_sanity_patterns(self):
         # Check that the string `[FFT_Code][0]` appears in the standard output of
         # the program.
-        self.sanity_patterns = sn.assert_found(r'Run_Count', self.stdout)
+        self.sanity_patterns = sn.assert_found(r'Run_Finished', self.stdout)
 
     # A performance benchmark.
     @run_before('performance')
