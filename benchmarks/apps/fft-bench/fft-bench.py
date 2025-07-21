@@ -39,10 +39,9 @@ class FftBenchmarkCpu(SpackTest):
 
     reference = {
         'myriad': {
-            'FFTW': {
+		'Libarary': ("FFTW", None, None, None),
                 'Size': (1., None, None, 'MB'),
                 'Time': (1., None, None, 'miliseconds'),
-            },
         }
     }
 
@@ -74,9 +73,9 @@ class FftBenchmarkCpu(SpackTest):
         # This performance pattern parses the output of the program to extract
         # the desired figure of merit.
         self.perf_patterns = {
-            'FFTW': dict(
+            dict(
                 sn.extract_all(
-                    r'FFTW,\t\t<Size>,\t\t<Time>,',
-                    self.stdout, ['Size', 'Time'], float)
+                    r'<Library>,\t\t<Size>,\t\t<Time>,',
+                    self.stdout, ['Library', 'Size', 'Time'], [str, float, float])
             )
         }
