@@ -30,7 +30,7 @@ class FftBench(CMakePackage):
 
     maintainers("Marcus-Keil")
 
-    version("0.2", sha256="34c9a8c213a78d68c02dedfd998a6909dea32758350871e93235f6875b44e4f8")
+    version("0.2.1", sha256="0a8f130ccd48c27ae02ae1ea3fce9b3784f9f7524f35bc8a4b6714ad5bf1d88f")
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
@@ -66,4 +66,3 @@ class FftBench(CMakePackage):
         install_path = prefix + "/bin"
         mkdir(install_path)
         install(src, install_path)
-

@@ -17,6 +17,7 @@ class FftBenchmarkCpu(SpackTest):
     valid_prog_environs = ['default']
     tasks = parameter([1])  # Used to set `num_tasks` in `__init__`.
     num_tasks_per_node = 1
+    cpus_per_task = [8]
     sourcesdir = os.path.dirname(__file__)
     time_limit = '4h'
 
