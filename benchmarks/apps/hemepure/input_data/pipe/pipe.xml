@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<!-- the referenceDirection is used for the resolution -->
+<!-- see src/offLattice/triangularSurfaceMesh.hh -->
+<!-- 0 means x-direction, 1 means y-direction and 2 means z-direction -->
+<referenceDirection> 0 </referenceDirection>
+<resolution> 80 </resolution>
+<!-- *.stl containing geometry -->
+<stl> pipe.stl </stl>
+<!-- analysis points for identification of iolets -->
+<!-- first <num_Ilets> points identify inlets -->
+<!-- last <num_Olets> points identify outlets -->
+<analysisPoints> <!-- lattice units -->
+	<numIlets> 1 </numIlets>
+	<numOlets> 1 </numOlets>
+	<point id="1"> 77.99901934 18.15145738 3.000000005 </point>
+	<point id="2"> 13.71369829 18.15145738 173.3507769 </point>
+</analysisPoints>
