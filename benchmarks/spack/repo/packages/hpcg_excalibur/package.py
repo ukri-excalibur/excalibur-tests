@@ -19,8 +19,8 @@ class HpcgExcalibur(MakefilePackage):
 
     version(
         "hpcg_lfric",
-        url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/lfric_250523.tar.gz",
-        sha256="fa2824890175489e5ad43e4d30d2fd41334777b4ef9c95d798536fc9b8766229"
+        url="https://github.com/NCAS-CMS/hpcg_27ptStencil/archive/refs/tags/lfric_260723.tar.gz",
+        sha256="38b042d4dcb4c6b33d01b5671f3e80c4b6b5561bed624ba98c2075c99d586c6b"
     )        
 
     version(
