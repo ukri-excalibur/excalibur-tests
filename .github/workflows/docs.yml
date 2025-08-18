@@ -45,7 +45,7 @@ jobs:
       statuses: write
     steps:
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: actions/setup-python@v5
         with:
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout gh-pages
         # Run only if push is to `main`, or if it's a PR not from a fork.
         if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork) }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: gh-pages
           path: gh-pages
