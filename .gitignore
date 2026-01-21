@@ -31,3 +31,6 @@ site/
 
 #emacs backups
 *~
+
+.vscode
+.DS_Store

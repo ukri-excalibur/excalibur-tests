@@ -302,10 +302,6 @@ spack:
       externals:
       - spec: openssl@1.0.2k-fips
         prefix: /usr
-    perl:
-      externals:
-      - spec: perl@5.16.3~cpanm+shared+threads
-        prefix: /usr
     pkg-config:
       externals:
       - spec: pkg-config@0.27.1
